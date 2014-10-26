@@ -17,7 +17,7 @@ highlighter: pygments
 ### content configuration ###
 title: Scribbling on the Sidewalk
 keywords:
-description: Pushing the boundaries of what I can do, one circuit/one line of code at a time
+description: Pushing the boundaries of what I can do, one line of code at a time
 source_link:
 favicon:
 touch_icon:
