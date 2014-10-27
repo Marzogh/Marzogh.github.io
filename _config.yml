@@ -71,3 +71,6 @@ colors:
   seagreen:
     light: '#20b2aa'
     dark: '#2e8b57'
+  silver:
+    light: '#f5f5f5'
+    dark: '#d3d3d3'
