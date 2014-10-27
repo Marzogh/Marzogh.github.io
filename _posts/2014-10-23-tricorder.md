@@ -1,5 +1,5 @@
 ---
-title: "Tricorder"
+title: “Tricorder
 bg: turquoise
 color: white
 fa-icon: space-shuttle
