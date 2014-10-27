@@ -4,59 +4,25 @@ bg: turquoise
 color: white
 fa-icon: laptop
 ---
+##[github project page!]({{ site.source_link }})
 
-### [github project page!]({{ site.source_link }})
+The Tricorder Project is an ongoing project inspired by the mythical 'Tricorder' from the Star Trek series.
 
--------------------------
-{: .border-white}
+The final goal of this project is to create an ever evolving, modular sensor system (preferably handheld) that is capable of measuring a number of physical, environmental, electrical, chemical and biological variables.
 
-##Howto:
+The Tricorder Project - Mark I was built and tested over April 2013-July 2013. The device performed admirably under field conditions but turned out to not be very student proof.
 
-Now on [PyPi](https://pypi.python.org/pypi/SMSTools) (the python package index) and available using pip!
-`pip install smstools` puts `smstools` in your path, you're ready to roll.
+The Tricorder project - Mark I is capable of measuring soil/air temperature - separately - while concurrently measuring the amount of ambient Vis & IR light. All the readings taken are displayed on a 84 x 48 monochrome LCD display.
 
-```
-usage: smstools [-h] [--type {xml,json,android,csv,ios5,ios7,ios6}]
-                    infiles [infiles ...] outfile
-```
+The device comprises the following parts:
 
-
--------------------------
-{: .border-white}
-
-
-##Where do I get my files from?
-
-- iPhone:
-  * Pull from your iTunes backup: See below!
-  * If you're jailbroken: pull down `/private/var/mobile/Library/SMS/sms.db`
-    {: .circle}
-- Android:
-  * mmssms.db pulled from your phone: See below!
-  * [SMS Backup & Restore](http://android.riteshsahu.com/apps/sms-backup-restore) to get an XML file of your messages.
-    {: .circle}
-- Google Voice: **Work in progress**
-{: .square}
-
-#### **Getting your iPhone messages from iTunes backup**
-{: .left}
-
-1. Open the right folder:
-  - On Mac OS X open "~/Library/Application Support/MobileSync/Backup/"
-  - On Windows 7/Vista open "C:\Users\[USERNAME]\AppData\Roaming\Apple Computer\MobileSync\Backup\"
-    {: .square}
-2. Open the most recent folder (the most recent backup)
-3. Get the file named "3d0d7e5fb2ce288813306e4d4636395e047a3d28" and rename it to sms.db
-
-
-#### **What is the Android mmssms.db file?**
-{: .left}
-
-This is the sqlite file where your Android phone stores messages. To read or write it you'll need root. It's located at `/data/data/com.android.providers.telephony/databases/mmssms.db`
-
-It may be possible to read it directly using ADB by running the adb pull command as `com.android.providers.telephony`. Otherwise use [SMS Backup & Restore](http://android.riteshsahu.com/apps/sms-backup-restore) or something similar.
-
-So why use this option?
-- It's orders of magnitude faster. Perfect for load testing mms applications with different databases (why I created this)
-- Much better database performance. After importing the output.xml file with SMSBackupRestore.apk my Messaging.apk was left completely unusable. SMSBackupRestore is great, but it doesn't handle tens of thousands of messages.
-
+Arduino Fio x 1
+SHT-15 sensor in a cyindrical metal mesh casing x 1
+TSL2561 lux sensor x 1
+Nokia 5110 48 x 84 monochrome LCD screen x 1
+A 500mAH battery x 1
+Prototyping board x 1
+On/Off switch x 1
+Momentary button x 1
+Red LED x 1
+Sparkfun project case x 1
