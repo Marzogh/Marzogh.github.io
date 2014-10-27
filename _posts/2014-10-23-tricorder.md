@@ -3,6 +3,7 @@ title: "Tricorder"
 bg: turquoise
 color: white
 fa-icon: space-shuttle
+icon: img/Tricorder.png
 ---
 #[The Tricorder Project](http://marzogh.github.io/The-Tricorder-Project)
 
