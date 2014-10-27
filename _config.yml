@@ -65,9 +65,9 @@ colors:
   lavender:
     light: '#fff0f5'
     dark: '#e6e6fa'
-azureivory:
+  azureivory:
     light: '#f0ffff'
     dark: 'fffff0'
-seagreen:
+  seagreen:
     light: '#20b2aa'
     dark: '#2e8b57'
