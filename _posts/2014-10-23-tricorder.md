@@ -4,7 +4,7 @@ bg: turquoise
 color: white
 fa-icon: space-shuttle
 ---
-##[The Tricorder Project](http://marzogh.github.io/The-Tricorder-Project)
+#[The Tricorder Project](http://marzogh.github.io/The-Tricorder-Project)
 
 The Tricorder Project is an ongoing project inspired by the mythical 'Tricorder' from the Star Trek series.
 
