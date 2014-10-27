@@ -2,7 +2,7 @@
 title: "howto"
 bg: turquoise
 color: white
-fa-icon: laptop
+fa-icon: space-shuttle
 ---
 ##[The-Tricorder-Project]({{ site.source_link }})
 
