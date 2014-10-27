@@ -4,7 +4,7 @@ bg: turquoise
 color: white
 fa-icon: laptop
 ---
-##[github project page!]({{ site.source_link }})
+##[The-Tricorder-Project]({{ site.source_link }})
 
 The Tricorder Project is an ongoing project inspired by the mythical 'Tricorder' from the Star Trek series.
 
