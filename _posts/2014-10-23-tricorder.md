@@ -16,13 +16,13 @@ The Tricorder project - Mark I is capable of measuring soil/air temperature - se
 
 The device comprises the following parts:
 
-*Arduino Fio x 1
-*SHT-15 sensor in a cyindrical metal mesh casing x 1
-*TSL2561 lux sensor x 1
-*Nokia 5110 48 x 84 monochrome LCD screen x 1
-*A 500mAH battery x 1
-*Prototyping board x 1
-*On/Off switch x 1
-Momentary button x 1
-Red LED x 1
-Sparkfun project case x 1
+* Arduino Fio x 1
+* SHT-15 sensor in a cyindrical metal mesh casing x 1
+* TSL2561 lux sensor x 1
+* Nokia 5110 48 x 84 monochrome LCD screen x 1
+* A 500mAH LiPo battery x 1
+* Prototyping board x 1
+* On/Off switch x 1
+* Momentary button x 1
+* Red LED x 1
+* Sparkfun project case x 1
