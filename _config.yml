@@ -8,7 +8,7 @@ safe: false
 ### site serving configuration ###
 exclude: [CNAME, README.md, .gitignore]
 permalink: / ## disables post output
-timezone: null
+timezone: Australia/Brisbane
 lsi: false
 markdown: kramdown
 highlighter: pygments
@@ -16,11 +16,11 @@ highlighter: pygments
 
 ### content configuration ###
 title: ChipsnCode
-keywords:
+keywords: electronics, code, arduino, raspberry pi, open source, DIY, maker, hacker
 description: Pushing the boundaries of what I can do, one line of code at a time
 source_link:
-favicon: code
-touch_icon:
+favicon: rocket
+touch_icon: apple
 google_analytics_key:
 
 
