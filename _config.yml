@@ -50,3 +50,24 @@ colors:
   turquoise:
     light: '#0fbfcf'
     dark: '#0fbfcf'
+  yellow:
+    light: '#ffff66'
+    dark: '#cccc00'
+  pink:
+    light: '#ffcce5'
+    dark: '#cc0066'
+  wood:
+    light: '#fff5ee'
+    dark: '#a0522d'
+  cyan:
+    light: '#e0ffff'
+    dark: '#008b8b'
+  lavender:
+    light: '#fff0f5'
+    dark: '#e6e6fa'
+azureivory:
+    light: '#f0ffff'
+    dark: 'fffff0'
+seagreen:
+    light: '#20b2aa'
+    dark: '#2e8b57'
