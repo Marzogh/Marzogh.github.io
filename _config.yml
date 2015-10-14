@@ -16,7 +16,7 @@ highlighter: pygments
 
 ### content configuration ###
 title: ChipsnCode
-keywords: electronics, code, arduino, raspberry pi, open source, DIY, maker, hacker
+keywords: electronics, code, arduino, raspberry pi, SPIFlash, flash, memory, winbond, open source, DIY, maker, hacker
 description: Pushing the boundaries of what I can do, one line of code at a time
 source_link:
 favicon: "img/favicon.ico"
