@@ -1,14 +1,7 @@
 Fancy jekyll powered single page site
 ======================
 
-Here're some examples:
-
-- This repository is also a live demo, see it at [t413.com/SinglePaged](http://t413.com/SinglePaged)
-- [SMS-Tools](http://t413.com/SMS-Tools/) uses this template!
-- [magiciansanfrancisco.com](http://magiciansanfrancisco.com) uses it ([source](https://github.com/strongrobert/MagicianSanFrancisco))
-  * Shows a great example of the 3 / 2 column layout (used in photos)
-  * Shows how to use images as section dividers instead
-- Let me know of more!
+This is a compressed-commit version of [github.com/t413/SinglePaged] (http://github.com/t413/SinglePaged)
 
 
 ## Why?
