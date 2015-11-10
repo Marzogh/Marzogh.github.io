@@ -12,6 +12,7 @@ timezone: Australia/Brisbane
 lsi: false
 markdown: kramdown
 highlighter: pygments
+disqus: chipsncode
 
 
 ### content configuration ###
