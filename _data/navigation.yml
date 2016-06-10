@@ -6,11 +6,11 @@ main:
   - title: "SPIFlash"
     url: /spiflash
 
-  - title: "Sample Posts"
-    url: https://mmistakes.github.io/minimal-mistakes/year-archive/
+  - title: "Crawler"
+    url: /crawler
 
-  - title: "Sample Pages"
-    url: https://mmistakes.github.io/minimal-mistakes/page-archive/
+  - title: "Weather Station"
+    url: /weather
 
-  - title: "Sample Collections"
-    url: https://mmistakes.github.io/minimal-mistakes/collection-archive/
+  - title: "Tricorder"
+    url: /tricorder
