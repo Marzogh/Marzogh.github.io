@@ -6,11 +6,11 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-locale                   : "en-US"
-title                    : "Site Title"
+locale                   : "en-AU"
+title                    : "Chips 'n Code"
 title_separator          : "-"
-name                     : "Your Name"
-description              : "An amazing website."
+name                     : "Marzogh"
+description              : "Pushing the boundaries of what I can do, one line of code at a time"
 url                      : "http://www.chipsncode.com"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 gh_repo                  :
@@ -65,8 +65,8 @@ google_ad_slot           :
 author:
   name             : "Marzogh"
   avatar           : "bio-photo.jpg"
-  bio              : "I am an amazing person."
-  location         : "Somewhere"
+  bio              : "Pushing the boundaries of what I can do, one line of code at a time"
+  location         : "Brisbane, Australia"
   email            :
   uri              :
   bitbucket        :
