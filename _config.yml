@@ -1,82 +1,208 @@
----
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your entire site, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# `jekyll serve`. If you change this file, please restart the server process.
 
-port: 4000
-host: 0.0.0.0
-safe: false
+# Site Settings
+locale                   : "en-US"
+title                    : "Site Title"
+title_separator          : "-"
+name                     : "Your Name"
+description              : "An amazing website."
+url                      : "http://www.chipsncode.com"
+baseurl                  : # the subpath of your site, e.g. "/blog"
+gh_repo                  :
+teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
+# breadcrumbs            : false # true, false (default)
+words_per_minute         : 200
+comments:
+  provider               : # false (default), "disqus", "discourse", "facebook", "google-plus", custom"
+  disqus:
+    shortname            : # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+  discourse:
+    server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
+  facebook:
+    # https://developers.facebook.com/docs/plugins/comments
+    appid                :
+    num_posts            : # 5 (default)
+    colorscheme          : # "light" (default), "dark"
+
+# SEO Related
+google_site_verification :
+bing_site_verification   :
+alexa_site_verification  :
+yandex_site_verification :
+
+# Social Sharing
+twitter:
+  username               :
+facebook:
+  username               :
+  app_id                 :
+  publisher              :
+og_image                 : # Open Graph/Twitter default site image
+# For specifying social profiles
+# - https://developers.google.com/structured-data/customize/social-profiles
+social:
+  type                   : # Person or Organization (defaults to Person)
+  name                   : # If the user or organization name differs from the site's name
+  links: # An array of links to social media profiles
+
+# Analytics
+analytics:
+  provider               : false # false (default), "google", "google-universal", "custom"
+  google:
+    tracking_id          :
+
+# Google AdSense
+google_ad_client         :
+google_ad_slot           :
 
 
-### site serving configuration ###
-exclude: [CNAME, README.md, .gitignore]
-permalink: / ## disables post output
-timezone: Australia/Brisbane
-lsi: false
+# Site Author
+author:
+  name             : "Marzogh"
+  avatar           : "bio-photo.jpg"
+  bio              : "I am an amazing person."
+  location         : "Somewhere"
+  email            :
+  uri              :
+  bitbucket        :
+  codepen          :
+  dribbble         :
+  flickr           :
+  facebook         :
+  foursquare       :
+  github           :
+  google_plus      :
+  keybase          :
+  instagram        :
+  lastfm           :
+  linkedin         :
+  pinterest        :
+  soundcloud       :
+  stackoverflow    : # http://stackoverflow.com/users/123456/username
+  steam            :
+  tumblr           :
+  twitter          :
+  vine             :
+  weibo            :
+  xing             :
+  youtube          :
+
+
+# Reading Files
+include:
+  - .htaccess
+  - _pages
+exclude:
+  - "*.sublime-project"
+  - "*.sublime-workspace"
+  - .asset-cache
+  - .bundle
+  - .jekyll-assets-cache
+  - .sass-cache
+  - assets/js/plugins
+  - assets/js/_main.js
+  - assets/js/vendor
+  - Capfile
+  - CHANGELOG
+  - config
+  - Gemfile
+  - Gruntfile.js
+  - gulpfile.js
+  - LICENSE
+  - log
+  - node_modules
+  - package.json
+  - Rakefile
+  - README
+  - tmp
+keep_files:
+  - .git
+  - .svn
+encoding: "utf-8"
+markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+
+
+# Conversion
 markdown: kramdown
 highlighter: rouge
-disqus: chipsncode
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
 
+
+# Markdown Processing
 kramdown:
-  auto_ids:  false
   input: GFM
-  syntax_highlighter: rouge
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
 
 
-### content configuration ###
-title: "ChipsnCode"
-keywords: "electronics, code, arduino, raspberry pi, SPIFlash, flash, memory, winbond, open source, DIY, maker, hacker"
-description: "Pushing the boundaries of what I can do, one line of code at a time"
-source_link:
-favicon: "img/favicon.ico"
-touch_icon: "img/Tron.png"
-google_analytics_key:
+# Outputting
+permalink: /:categories/:title/
+paginate: 5 # amount of posts to show
+paginate_path: /page:num/
+timezone: # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 
-### template colors, used site-wide via css ###
-colors:
-  black:
-    light: '#303030'
-    dark: '#111111'
-  white:
-    light: '#f5f5f5'
-    dark: '#f8f8f8'
-  red:
-    light: '#DA4C47'
-    dark: '#CC4A45'
-  blue:
-    light: '#3c9eec'
-    dark: '#49a7e9'
-  green:
-    light: '#a3d832'
-    dark: '#9bcf2f'
-  purple:
-    light: '#c869bf'
-    dark: '#c869bf'
-  orange:
-    light: '#faaf22'
-    dark: '#fab125'
-  turquoise:
-    light: '#0fbfcf'
-    dark: '#0fbfcf'
-  yellow:
-    light: '#ffff66'
-    dark: '#cccc00'
-  pink:
-    light: '#ffcce5'
-    dark: '#cc0066'
-  wood:
-    light: '#fff5ee'
-    dark: '#a0522d'
-  cyan:
-    light: '#e0ffff'
-    dark: '#008b8b'
-  lavender:
-    light: '#fff0f5'
-    dark: '#e6e6fa'
-  azureivory:
-    light: '#f0ffff'
-    dark: 'fffff0'
-  seagreen:
-    light: '#20b2aa'
-    dark: '#2e8b57'
-  silver:
-    light: '#f5f5f5'
-    dark: '#d3d3d3'
+# Plugins
+gems:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+
+# mimic GitHub Pages with --safe
+whitelist:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+
+
+# Archives
+#  Type
+#  - GitHub Pages compatible archive pages built with Liquid ~> type: liquid (default)
+#  - Jekyll Archives plugin archive pages ~> type: jekyll-archives
+#  Path (examples)
+#  - Archive page should exist at path when using Liquid method or you can
+#    expect broken links (especially with breadcrumbs enabled)
+#  - <base_path>/tags/my-awesome-tag/index.html ~> path: /tags/
+#  - <base_path/categories/my-awesome-category/index.html ~> path: /categories/
+#  - <base_path/my-awesome-category/index.html ~> path: /
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
+# https://github.com/jekyll/jekyll-archives
+# jekyll-archives:
+#   enabled:
+#     - categories
+#     - tags
+#   layouts:
+#     category: archive-taxonomy
+#     tag: archive-taxonomy
+#   permalinks:
+#     category: /categories/:name/
+#     tag: /tags/:name/
+
+
+# HTML Compression
+# - http://jch.penibelst.de/
+compress_html:
+  clippings: all
+  ignore:
+    envs: development
