@@ -11,18 +11,19 @@ permalink: / ## disables post output
 timezone: Australia/Brisbane
 lsi: false
 markdown: kramdown
-highlighter: pygments
+highlighter: rouge
 disqus: chipsncode
 
-#kramdown:
- # input: GFM
-  #syntax_highlighter: rouge
+kramdown:
+  auto_ids:  false
+  input: GFM
+  syntax_highlighter: rouge
 
 
 ### content configuration ###
-title: ChipsnCode
-keywords: electronics, code, arduino, raspberry pi, SPIFlash, flash, memory, winbond, open source, DIY, maker, hacker
-description: Pushing the boundaries of what I can do, one line of code at a time
+title: "ChipsnCode"
+keywords: "electronics, code, arduino, raspberry pi, SPIFlash, flash, memory, winbond, open source, DIY, maker, hacker"
+description: "Pushing the boundaries of what I can do, one line of code at a time"
 source_link:
 favicon: "img/favicon.ico"
 touch_icon: "img/Tron.png"
