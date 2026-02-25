@@ -1,0 +1,85 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = 'Chips’nCode';
+const description = 'A living technical playground — projects, tools, documentation, and education.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main style="max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;">
+      <section style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Chips’nCode</h1>
+        <p style="font-size: 1.2rem; color: #555; max-width: 700px;">
+          A living technical playground for electronics, radio, software, and systems thinking.
+        </p>
+      </section>
+
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+
+        <a href="/blog" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; transition: 0.2s ease;">
+            <h2 style="margin-top: 0;">Blog</h2>
+            <p style="color: #555;">
+              Technical essays, field notes, experiments, and reflections.
+            </p>
+          </div>
+        </a>
+
+        <a href="/projects" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <h2 style="margin-top: 0;">Projects</h2>
+            <p style="color: #555;">
+              Builds, hardware experiments, antennas, firmware, and systems.
+            </p>
+          </div>
+        </a>
+
+        <a href="/docs" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <h2 style="margin-top: 0;">Documentation</h2>
+            <p style="color: #555;">
+              Structured guides, technical documentation, and deep dives.
+            </p>
+          </div>
+        </a>
+
+        <a href="/education" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <h2 style="margin-top: 0;">Education</h2>
+            <p style="color: #555;">
+              Teaching resources, lesson structures, and curriculum material.
+            </p>
+          </div>
+        </a>
+
+        <a href="/tools" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <h2 style="margin-top: 0;">Tools</h2>
+            <p style="color: #555;">
+              Interactive utilities, calculators, and experimental playgrounds.
+            </p>
+          </div>
+        </a>
+
+        <a href="/astrophotography" style="text-decoration: none; color: inherit;">
+          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <h2 style="margin-top: 0;">Astrophotography</h2>
+            <p style="color: #555;">
+              Imaging sessions, gear notes, calibration details, and processing pipelines.
+            </p>
+          </div>
+        </a>
+
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>

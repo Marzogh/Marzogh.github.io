@@ -1,0 +1,43 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.params;
+if (!slug) throw new Error('Missing route parameter: slug');
+
+const entry = await getEntry('projects', slug);
+if (!entry) throw new Error(`Project not found: ${slug}`);
+
+const { Content } = await render(entry);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={entry.data.title} description={entry.data.description} />
+  </head>
+  <body>
+    <Header />
+    <main style="max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem;">
+      <a href="/projects" style="text-decoration:none; color:#555; font-size:0.95rem;">← Back to Projects</a>
+      <h1 style="margin-top: 1rem;">{entry.data.title}</h1>
+      {entry.data.pubDate && (
+        <p style="color:#666; margin-top:0;">
+          Published: {entry.data.pubDate.toDateString()}
+        </p>
+      )}
+      <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e5e7eb;" />
+      <Content />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const sessions = (await getCollection('astrophotography', ({ data }) => !data.draft)).sort(
+  (a, b) => (b.data.sessionDate?.valueOf() ?? 0) - (a.data.sessionDate?.valueOf() ?? 0)
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Astrophotography — Chips’nCode"
+      description="Imaging sessions, gear notes, processing workflows, and astrophotography experiments."
+    />
+  </head>
+  <body>
+    <Header />
+    <main style="max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;">
+      <h1 style="margin-bottom: 0.5rem;">Astrophotography</h1>
+      <p style="color: #555; margin-top: 0; margin-bottom: 2rem; max-width: 850px;">
+        Sessions, targets, gear configurations, calibration details, and processing pipelines — written so future-me can reproduce the results.
+      </p>
+
+      {sessions.length === 0 ? (
+        <p style="color: #666;">First light soon ✨</p>
+      ) : (
+        <section
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;"
+        >
+          {sessions.map((session) => (
+            <a
+              href={`/astrophotography/${session.id}`}
+              style="text-decoration: none; color: inherit;"
+            >
+              <div
+                style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; height: 100%;"
+              >
+                <h2 style="margin-top: 0; margin-bottom: 0.4rem;">
+                  {session.data.title}
+                </h2>
+
+                <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 0.75rem;">
+                  {session.data.target ? <span>Target: {session.data.target}</span> : <span>Session</span>}
+                  {session.data.sessionDate ? (
+                    <span>
+                      {' '}
+                      • {new Date(session.data.sessionDate).toLocaleDateString('en-AU', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit',
+                      })}
+                    </span>
+                  ) : null}
+                </div>
+
+                <p style="color: #555; margin-bottom: 0;">
+                  {session.data.description}
+                </p>
+              </div>
+            </a>
+          ))}
+        </section>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>

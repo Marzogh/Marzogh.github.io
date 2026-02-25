@@ -1,0 +1,279 @@
+---
+title: "Kite-Lifted 40m End-Fed Activation: Field Deployment & Hard Lessons"
+description: "Kite-lifted 40m end-fed activation on Coochiemudlo Island: mechanical load path, static management, and field behaviour."
+pubDate: 2025-09-25
+draft: false
+tags: [hf, 40m, endfed, kite, portable, grounding, field-ops]
+image: /images/projects/kite-activation/hero.jpg
+---
+
+A field test demonstrating how to deploy and safely operate a kite-lifted 40m end-fed HF antenna.  
+
+This deployment was planned to evaluate a few specific practical questions:
+
+---
+
+## The Setup in Action
+
+![Kite antenna activation on the beach](/images/projects/kite-activation/hero.jpg)
+
+Kite up. Wire out as a sloper. Beach doing what beaches do best.
+
+---
+
+## Watch the Activation
+
+<div style="position: relative; padding-top: 56.25%;">
+  <iframe 
+    src="https://youtu.be/Fu6_WNSBXKg" 
+    frameborder="0" 
+    allowfullscreen
+    style="position:absolute; top:0; left:0; width:100%; height:100%;">
+  </iframe>
+</div>
+
+If you just want to see how it looks in real life, watch this first.  
+If you want to replicate it safely, read on.
+
+---
+
+## Requirements
+
+![Kite antenna activation kit laid out on sand](/images/projects/kite-activation/kit.jpg)
+
+### Antenna System
+
+- ~20 m end-fed wire (40 m band)
+- 56:1 balun / transformer
+- BNC terminated feedline
+- Wide ranging Antenna matching unit (Tuner)
+
+### Lift & Grounding
+
+- Kite with sufficient lift (example used: ~1.6 m²)
+- Strong kite line
+- Serious ground stake (do not cheap out here)
+- Bleed resistor array + ground rod
+- Elevated radial
+- Carabiners (one large/locking helps)
+- Elastic/bungee section for shock absorption
+
+---
+
+## Core Deployment Steps
+
+### Step 1 — Ground Before Launch
+
+Connect a bleed resistor array to a ground rod and elevated radial before the kite goes up.  
+Wind-driven static buildup can be substantial. Always ground first.
+
+### Step 2 — Attach the Antenna to the Kite Line
+
+Attach the end-fed wire a few metres below the top of the kite using elastic or bungee and a carabiner.  
+This reduces shock loading and prevents strain transfer directly to the connector.
+
+### Step 3 — Secure the Kite
+
+Stake the kite securely using a serious ground anchor.  
+Confirm the antenna wire is supported by the line attachment — not the balun connector.  
+Add a strain-relief loop to a stake.
+
+### Step 4 — Connect and Test
+
+Connect the feedline to the radio, check SWR, and tune if required.  
+The goal is a workable match without relying heavily on a tuner.
+
+### Step 5 — Controlled Retrieval
+
+Run the kite line through a large carabiner and walk it down rather than hauling directly by hand.  
+Disconnect the antenna at the attachment point, then continue walking down the kite.
+
+This prevents rope burn and excessive load.
+
+---
+
+## Safety & Electrical Protection
+
+Static discharge from a wind-loaded wire can be significant. The grounding system should be treated as functional, not optional.
+
+---
+
+## Site Walk
+
+A kite antenna system is mechanically simple, but small environmental changes can affect behaviour.
+
+---
+
+## Pitfall 1 — Static Is a Real Threat
+
+In dry coastal wind, measurable static potential accumulated within minutes.  
+Grounding should be established before connection to the radio and removed last during pack-down.
+
+---
+
+## Pitfall 2 — Mechanical Strain & Wire Wrapping
+
+A failed balun connector in the field ends the activation.
+
+All load paths should terminate in rope, stake, or elastic rather than in RF hardware.
+
+---
+
+## Why This Works
+
+A lightweight kite can lift a full-length 40 m end-fed quickly and efficiently.  
+
+With proper grounding, strain management, and retrieval control, this becomes a portable, high-performance field deployment option — especially in open coastal environments.
+
+---
+
+## What I Would Refine Next Time
+
+The concept works. Further refinement is largely mechanical and procedural.
+
+---
+
+---
+
+
+## Detailed System Configuration
+
+<img 
+  src="/images/projects/kite-efhw-system.svg" 
+  alt="Integrated kite-lifted EFHW system diagram showing load path, RF chain, and static grounding" 
+/>
+
+### Antenna
+
+- End-fed half-wave tuned for resonance at 7.074 MHz when deployed as a sloper from approximately 9 m down to 2 m.
+- 56:1 autotransformer (homebrew).
+- Transformer core configuration: FT82-43 with an FT50-43 nested inside.
+- PCB: UniBalun from DG1JAN.
+- Wire: Insulated SOTABeams wire.
+
+When deployed as a conventional EFHW (non-kite), this antenna presents a flat SWR below 1.5:1 on all resonant bands and approaches 1:1 on 15 m.
+
+### Counterpoise / Radial
+
+- Elevated radial length: 7.8 m.
+- Height above ground: approximately 1.5–2 m.
+- Elevated section supported by a tree.
+
+The radial was not bonded to the ground rod. The bleed path to ground was kept physically short (< 30 cm) from the resistor enclosure to the rod.
+
+### Feedline and RF Chain
+
+Signal path:
+
+Antenna wire + elevated radial  
+→ Bleed resistor array  
+→ Homebrew choke (RG58 wound on FT140-43)  
+→ AT-100M Pro tuner  
+→ FX-4CR
+
+- Feedline: 5.6 m RG-58 CU.
+- Bleed resistor array: 5 × 1 MΩ resistors in parallel (homebuilt), housed in a sealed enclosure with SO-239 connectors.
+- Effective resistance: 200 kΩ.
+
+The bleed assembly is permanent and built specifically for field use.
+
+---
+
+## Grounding and Static Behaviour
+
+- Ground rod: 1.3 m steel rod.
+- Location: Main beach at Coochiemudlo Island (sand).
+- Static potential observed: > 3 kV.
+
+Static accumulation occurred rapidly in coastal wind conditions. No resistance-to-ground measurements were taken during this activation.
+
+The bleed resistor array successfully prevented static discharge into the radio. Further measurement under varying humidity and wind conditions would be useful.
+
+---
+
+## Kite System
+
+- Kite: Rainbow LS-17.5 Lifter Sled (Skydog), purchased from kitesmart.com.au.
+- Line: Dyneema rated for 200 kg.
+- Wind speed: < 15 kph sustained, gusts < 25 kph.
+- Maximum height achieved: ~22 m.
+- Sloper angle ranged from ~60° down to ~25° depending on wind.
+
+The antenna attachment point was approximately 2 m below the kite’s line attachment, using a loop and a stretch bungee between kite line and antenna wire.
+
+The kite crashed once during operation (mid-QSO with VK3PF), reinforcing the need for mechanical separation between RF components and load-bearing line.
+
+---
+
+## Electrical Performance in the Field
+
+SWR behaviour differed significantly from fixed-height EFHW operation:
+
+- SWR fluctuated between ~1.0 and >15.
+- No stable resonant frequency observed.
+- Resonance shifted with wind variation and height changes.
+- The AT-100M Pro tuner was required continuously.
+
+Chokes were effective in preventing RF feedback into the operating position.
+
+Noise floor was notably low, likely due to beach location and absence of nearby infrastructure.
+
+---
+
+## Mechanical Observations
+
+Wire wrapping around the kite line was initially a problem. This was mitigated by:
+
+- Tying the antenna lower on the line.
+- Ensuring the kite string bore primary tension.
+- Preventing any load transfer to the balun connector.
+
+The kite was anchored to a heavy-duty dog stake rated for large breeds. Under gust load, the stake visibly flexed, indicating significant line tension.
+
+---
+
+## Retrieval Method
+
+The “carabiner walk-down” method involved clipping the line to a belt-mounted carabiner. As the operator walked downwind toward the anchor, the carabiner functioned as a controlled redirect, reducing hand load and managing descent speed.
+
+This reduced rope burn risk and provided smoother tension management during recovery.
+
+---
+
+## Environmental and Operational Factors
+
+Unexpected variables included:
+
+- Kite crashes (including interference from a dog attempting to catch it).
+- Wind variability affecting both angle and loading.
+- Rapid SWR changes with height variation.
+- Significant static accumulation.
+
+Despite these factors, deployment and pack-down were straightforward in the open beach environment.
+
+Absolute rule maintained: no flying over people.
+
+---
+
+## Future Measurement Goals
+
+- Quantify static voltage with a high-impedance probe.
+- Measure ground resistance under varying sand moisture conditions.
+- Test behaviour under higher wind speeds.
+- Evaluate humidity impact on static accumulation.
+
+---
+
+## Photo Placeholders
+
+[Insert close-up photos of transformer enclosure]
+
+[Insert bleed resistor array enclosure photo]
+
+[Insert choke winding detail photo]
+
+[Insert kite attachment point detail photo]
+
+---
+
+73s
