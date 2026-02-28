@@ -5,8 +5,12 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 
 const education = (await getCollection('education', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate?.valueOf() - a.data.pubDate?.valueOf()
+  (a, b) => (b.data.pubDate?.valueOf() ?? 0) - (a.data.pubDate?.valueOf() ?? 0)
 );
+
+function pickThumb(data: any) {
+  return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? null;
+}
 ---
 
 <!doctype html>
@@ -17,37 +21,209 @@ const education = (await getCollection('education', ({ data }) => !data.draft)).
       description="Teaching resources, lesson structures, curriculum design, and educational experiments."
     />
   </head>
-  <body>
+  <body class="theme-edu">
     <Header />
-    <main style="max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;">
-      <h1 style="margin-bottom: 2rem;">Education</h1>
+
+    <main>
+      <header class="page-header">
+        <h1 class="page-title">Education</h1>
+        <p class="page-lede">
+          Teaching resources, lesson structures, curriculum design, and classroom experiments — written clearly, with just enough personality.
+        </p>
+      </header>
 
       {education.length === 0 ? (
-        <p style="color: #666;">Education resources coming soon.</p>
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Education resources coming soon.</p>
+          <p class="empty-sub">
+            Add entries to your <code>education</code> collection and they’ll appear here automatically.
+          </p>
+        </div>
       ) : (
-        <section
-          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;"
-        >
-          {education.map((item) => (
-            <a
-              href={`/education/${item.id}`}
-              style="text-decoration: none; color: inherit;"
-            >
-              <div
-                style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; height: 100%;"
-              >
-                <h2 style="margin-top: 0; margin-bottom: 0.5rem;">
-                  {item.data.title}
-                </h2>
-                <p style="color: #555; margin-bottom: 0;">
-                  {item.data.description}
-                </p>
-              </div>
-            </a>
-          ))}
+        <section class="grid" aria-label="Education resources">
+          {education.map((item) => {
+            const thumb = pickThumb(item.data);
+
+            return (
+              <a href={`/education/${item.id}`} class="card" aria-label={`Open education resource: ${item.data.title}`}>
+                <div class="thumb" aria-hidden="true">
+                  {thumb ? (
+                    typeof thumb === 'string' ? (
+                      <img src={thumb} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      // If you later want Astro <Image /> optimisation here, we can add it.
+                      <img src={thumb.src ?? thumb} alt="" loading="lazy" decoding="async" />
+                    )
+                  ) : (
+                    <div class="thumb-placeholder">
+                      <div class="paper" />
+                      <div class="thumb-label">No thumbnail yet</div>
+                    </div>
+                  )}
+                </div>
+
+                <div class="card-body">
+                  <h2 class="card-title">{item.data.title}</h2>
+
+                  <div class="card-meta">
+                    <span class="pill">📚 Resource</span>
+                    {item.data.topic ? <span class="pill">{item.data.topic}</span> : null}
+                    {item.data.yearLevel ? <span class="pill">Year {item.data.yearLevel}</span> : null}
+                  </div>
+
+                  {item.data.description ? <p class="card-desc">{item.data.description}</p> : null}
+                </div>
+              </a>
+            );
+          })}
         </section>
       )}
     </main>
+
     <Footer />
   </body>
 </html>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 75ch;
+    color: var(--text-2);
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title {
+    margin: 0 0 0.4rem 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 80ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  .card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--paper);
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
+
+  .thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+
+  .thumb-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-5);
+    background: linear-gradient(135deg, rgba(100,116,139,0.10), rgba(15,23,42,0.06));
+    color: var(--muted);
+  }
+
+  .paper {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to bottom, rgba(100,116,139,0.12) 1px, transparent 1px);
+    background-size: 100% 24px;
+    opacity: 0.35;
+  }
+
+  .thumb-label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 10px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.22;
+    color: var(--text);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 740px) {
+    .card {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 1040px) {
+    .card {
+      grid-column: span 4;
+    }
+  }
+</style>

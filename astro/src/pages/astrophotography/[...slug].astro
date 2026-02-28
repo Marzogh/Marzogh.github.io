@@ -32,27 +32,81 @@ const { Content } = await render(entry);
   <head>
     <BaseHead title={entry.data.title} description={entry.data.description} />
   </head>
-  <body>
+  <body class="theme-photo">
     <Header />
-    <main style="max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem;">
 
-      <a href="/astrophotography" style="text-decoration: none; color: #555; font-size: 0.9rem;">
-        ← Back to Astrophotography
-      </a>
+    <main>
+      <article class="astro-session">
+        <div class="astro-back">
+          <a href="/astrophotography" class="astro-back-link">
+            ← Back to Astrophotography
+          </a>
+        </div>
 
-      <h1 style="margin-top: 1rem;">{entry.data.title}</h1>
+        <header class="astro-header">
+          <h1 class="astro-title">{entry.data.title}</h1>
 
-      {entry.data.sessionDate && (
-        <p style="color: #666; margin-top: 0;">
-          Session Date: {entry.data.sessionDate.toDateString()}
-        </p>
-      )}
+          {entry.data.sessionDate && (
+            <p class="astro-meta">
+              Session Date: {entry.data.sessionDate.toDateString()}
+            </p>
+          )}
+        </header>
 
-      <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e5e7eb;" />
+        <hr class="astro-divider" />
 
-      <Content />
-
+        <div class="prose astro-prose">
+          <Content />
+        </div>
+      </article>
     </main>
+
     <Footer />
   </body>
 </html>
+
+<style>
+  .astro-session {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .astro-back-link {
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .astro-back-link:hover {
+    color: var(--accent);
+  }
+
+  .astro-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .astro-title {
+    margin: 0;
+  }
+
+  .astro-meta {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .astro-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* Give astrophotography content more breathing room */
+  .astro-prose img {
+    margin: 1.6em 0;
+    box-shadow: var(--shadow-md);
+  }
+</style>

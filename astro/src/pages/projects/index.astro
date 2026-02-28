@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
@@ -7,6 +8,11 @@ import Header from '../../components/Header.astro';
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.title.localeCompare(b.data.title)
 );
+
+function pickThumb(data: any) {
+  // Prefer a dedicated thumbnail, otherwise fall back to typical cover fields.
+  return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? null;
+}
 ---
 
 <!doctype html>
@@ -19,35 +25,216 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
   </head>
   <body>
     <Header />
-    <main style="max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;">
-      <h1 style="margin-bottom: 2rem;">Projects</h1>
+
+    <main>
+      <header class="page-header">
+        <h1 class="page-title">Projects</h1>
+        <p class="page-lede">
+          Builds, experiments, antenna chaos, firmware rabbit holes, and the occasional “why is it doing that?” post-mortem.
+        </p>
+      </header>
 
       {projects.length === 0 ? (
-        <p style="color: #666;">Projects coming soon.</p>
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Projects coming soon.</p>
+          <p class="empty-sub">
+            Add a project entry and (optionally) give it a <code>thumbnail</code> or <code>heroImage</code> to make this page pop.
+          </p>
+        </div>
       ) : (
-        <section
-          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;"
-        >
-          {projects.map((project) => (
-            <a
-              href={`/projects/${project.id}`}
-              style="text-decoration: none; color: inherit;"
-            >
-              <div
-                style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; height: 100%;"
-              >
-                <h2 style="margin-top: 0; margin-bottom: 0.5rem;">
-                  {project.data.title}
-                </h2>
-                <p style="color: #555; margin-bottom: 0;">
-                  {project.data.description}
-                </p>
-              </div>
-            </a>
-          ))}
+        <section class="grid" aria-label="Projects">
+          {projects.map((project) => {
+            const thumb = pickThumb(project.data);
+
+            return (
+              <a href={`/projects/${project.id}`} class="card" aria-label={`Open project: ${project.data.title}`}>
+                <div class="thumb" aria-hidden="true">
+                  {thumb ? (
+                    typeof thumb === 'string' ? (
+                      <img src={thumb} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <Image
+                        src={thumb}
+                        alt=""
+                        widths={[480, 720, 960]}
+                        sizes="(max-width: 520px) 100vw, (max-width: 920px) 50vw, 33vw"
+                      />
+                    )
+                  ) : (
+                    <div class="thumb-placeholder">
+                      <div class="gridlines" />
+                      <div class="thumb-label">No thumbnail yet</div>
+                    </div>
+                  )}
+                </div>
+
+                <div class="card-body">
+                  <h2 class="card-title">{project.data.title}</h2>
+
+                  <div class="card-meta">
+                    {project.data.category ? <span class="pill">🧩 {project.data.category}</span> : <span class="pill">🛠 Project</span>}
+                    {project.data.tags && Array.isArray(project.data.tags) && project.data.tags.length > 0
+                      ? project.data.tags.slice(0, 2).map((t) => <span class="pill">#{t}</span>)
+                      : null}
+                  </div>
+
+                  {project.data.description ? <p class="card-desc">{project.data.description}</p> : null}
+                </div>
+              </a>
+            );
+          })}
         </section>
       )}
     </main>
+
     <Footer />
   </body>
 </html>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 75ch;
+    color: var(--text-2);
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title {
+    margin: 0 0 0.4rem 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 80ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* Responsive card span: 12 → 6 → 4 columns */
+  .card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 25%, var(--border) 75%);
+  }
+
+  .thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+
+  .thumb-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-5);
+    background: radial-gradient(900px 260px at 25% 25%, rgba(79, 70, 229, 0.14), transparent 55%),
+      radial-gradient(700px 240px at 75% 55%, rgba(15, 23, 42, 0.12), transparent 55%),
+      var(--surface);
+    color: var(--muted);
+  }
+
+  .gridlines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(100,116,139,0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(100,116,139,0.18) 1px, transparent 1px);
+    background-size: 34px 34px;
+    opacity: 0.35;
+  }
+
+  .thumb-label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 10px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.22;
+    color: var(--text);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 740px) {
+    .card {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 1040px) {
+    .card {
+      grid-column: span 4;
+    }
+  }
+</style>

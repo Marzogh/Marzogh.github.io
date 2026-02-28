@@ -2,9 +2,75 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { getCollection } from 'astro:content';
 
 const title = 'Chips’nCode';
 const description = 'A living technical playground — projects, tools, documentation, and education.';
+
+// Latest content (update collection names here if yours differ)
+const allBlog = await getCollection('blog');
+const latestBlog = [...allBlog]
+  .sort((a, b) => (new Date(b.data?.date ?? 0)).valueOf() - (new Date(a.data?.date ?? 0)).valueOf())
+  .slice(0, 5);
+
+const allProjects = await getCollection('projects');
+const latestProjects = [...allProjects]
+  .sort((a, b) => (new Date(b.data?.date ?? 0)).valueOf() - (new Date(a.data?.date ?? 0)).valueOf())
+  .slice(0, 5);
+
+const toTagLine = (entry) => {
+  const tags = entry?.data?.tags;
+  if (Array.isArray(tags) && tags.length) return tags.slice(0, 4).join(' · ');
+  const desc = entry?.data?.description;
+  if (typeof desc === 'string' && desc.trim()) return desc;
+  return '';
+};
+
+const safeSlug = (entry) => {
+  if (typeof entry?.slug === 'string' && entry.slug.trim()) return entry.slug;
+  if (typeof entry?.id === 'string' && entry.id.trim()) {
+    // Fallback: derive a usable path segment from the content entry id
+    return entry.id
+      .replace(/^\/+/, '')
+      .replace(/\.(md|mdx)$/i, '');
+  }
+  return '';
+};
+
+// Unified index across collections we currently have wired here
+// (If you add more collections later, extend this list.)
+const normalize = (entry, kind) => {
+  const title = entry?.data?.title ?? safeSlug(entry);
+  const date = new Date(entry?.data?.date ?? 0);
+  const tags = Array.isArray(entry?.data?.tags) ? entry.data.tags : [];
+  const featured = Boolean(entry?.data?.featured || entry?.data?.pinned || entry?.data?.pin);
+  const slug = safeSlug(entry);
+  const url = kind === 'blog' ? `/blog/${slug}` : `/projects/${slug}`;
+  return { kind, title, date, tags, featured, url, raw: entry };
+};
+
+const allEntries = [
+  ...allBlog.map((e) => normalize(e, 'blog')),
+  ...allProjects.map((e) => normalize(e, 'projects')),
+];
+
+const PILL_TAGS = ['Builds', 'Code', 'Life', 'Mind', 'Light'];
+
+const byPill = Object.fromEntries(
+  PILL_TAGS.map((pill) => {
+    const items = allEntries
+      .filter((e) => e.tags.includes(pill))
+      .sort((a, b) => {
+        // Featured first, then newest
+        if (a.featured !== b.featured) return a.featured ? -1 : 1;
+        return b.date.valueOf() - a.date.valueOf();
+      });
+    return [pill, items];
+  })
+);
+
+const spotlight = (pill) => byPill[pill].slice(0, 3);
+const rest = (pill) => byPill[pill].slice(3);
 ---
 
 <!doctype html>
@@ -14,72 +80,845 @@ const description = 'A living technical playground — projects, tools, document
   </head>
   <body>
     <Header />
-    <main style="max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;">
-      <section style="margin-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Chips’nCode</h1>
-        <p style="font-size: 1.2rem; color: #555; max-width: 700px;">
-          A living technical playground for electronics, radio, software, and systems thinking.
-        </p>
+
+    <main class="page" id="top">
+      <!-- HERO (banner-driven) -->
+      <section class="hero" aria-label="Site introduction">
+        <div class="hero__bg" aria-hidden="true"></div>
+        <div class="hero__inner">
+          <div class="hero__content">
+            <h1 class="hero__title">Chips’nCode</h1>
+            <p class="hero__subtitle">
+              Signals in silicon, code in carbon, light, life, and the planetary systems that tie these together — welcome to the ramblings of an easily distracted mind.
+            </p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/projects">Browse projects</a>
+              <a class="btn" href="/blog">Read the latest</a>
+            </div>
+
+            <nav class="hero__meta" aria-label="Explore by theme">
+              <a class="chip" href="#pill-builds">Builds</a>
+              <a class="chip" href="#pill-code">Code</a>
+              <a class="chip" href="#pill-life">Life</a>
+              <a class="chip" href="#pill-mind">Mind</a>
+              <a class="chip" href="#pill-light">Light</a>
+            </nav>
+          </div>
+        </div>
       </section>
 
-      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+      <!-- DASHBOARD STRIP (responsive 3 columns) -->
+      <section class="dash" aria-label="Homepage dashboard">
+        <div class="dash__grid">
+          <!-- Column 1: Writing -->
+          <section class="dash__col" aria-label="Latest writing">
+            <div class="dash__head">
+              <h2 class="dash__title">Latest writing</h2>
+              <a class="dash__more" href="/blog">All posts →</a>
+            </div>
 
-        <a href="/blog" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; transition: 0.2s ease;">
-            <h2 style="margin-top: 0;">Blog</h2>
-            <p style="color: #555;">
-              Technical essays, field notes, experiments, and reflections.
-            </p>
-          </div>
-        </a>
+            <ul class="dash__list">
+              {latestBlog.map((post) => (
+                <li>
+                  <a href={`/blog/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
+                  {toTagLine(post) ? <span class="dash__sub">{toTagLine(post)}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <a href="/projects" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
-            <h2 style="margin-top: 0;">Projects</h2>
-            <p style="color: #555;">
-              Builds, hardware experiments, antennas, firmware, and systems.
-            </p>
-          </div>
-        </a>
+          <!-- Column 2: Projects -->
+          <section class="dash__col" aria-label="Featured projects">
+            <div class="dash__head">
+              <h2 class="dash__title">Projects &amp; builds</h2>
+              <a class="dash__more" href="/projects">All projects →</a>
+            </div>
 
-        <a href="/docs" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
-            <h2 style="margin-top: 0;">Documentation</h2>
-            <p style="color: #555;">
-              Structured guides, technical documentation, and deep dives.
-            </p>
-          </div>
-        </a>
+            <ul class="dash__list">
+              {latestProjects.map((proj) => (
+                <li>
+                  <a href={`/projects/${safeSlug(proj)}`}>{proj.data?.title ?? safeSlug(proj)}</a>
+                  {toTagLine(proj) ? <span class="dash__sub">{toTagLine(proj)}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <a href="/education" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
-            <h2 style="margin-top: 0;">Education</h2>
-            <p style="color: #555;">
-              Teaching resources, lesson structures, and curriculum material.
-            </p>
-          </div>
-        </a>
+          <!-- Column 3: Education (distinct styling) -->
+          <section class="dash__col dash__col--edu" aria-label="Education">
+            <div class="dash__head">
+              <h2 class="dash__title">Education</h2>
+              <a class="dash__more" href="/education">Education hub →</a>
+            </div>
 
-        <a href="/tools" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
-            <h2 style="margin-top: 0;">Tools</h2>
-            <p style="color: #555;">
-              Interactive utilities, calculators, and experimental playgrounds.
-            </p>
-          </div>
-        </a>
+            <div class="edu__stack">
+              <div class="edu__block">
+                <div class="edu__label">For students</div>
+                <a class="edu__link" href="/tags/student-resources">Scaffolded lessons &amp; exemplars</a>
+                <div class="edu__note">Clear steps, checkpoints, and clean UI.</div>
+              </div>
 
-        <a href="/astrophotography" style="text-decoration: none; color: inherit;">
-          <div style="padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px;">
-            <h2 style="margin-top: 0;">Astrophotography</h2>
-            <p style="color: #555;">
-              Imaging sessions, gear notes, calibration details, and processing pipelines.
-            </p>
-          </div>
-        </a>
+              <div class="edu__block">
+                <div class="edu__label">For teachers</div>
+                <a class="edu__link" href="/tags/teaching-resources">Planning resources &amp; templates</a>
+                <div class="edu__note">Reusable structures, rubrics, and workflows.</div>
+              </div>
 
+              <div class="edu__block">
+                <div class="edu__label">Tools</div>
+                <a class="edu__link" href="/tags/interactive-utilities">Interactive utilities</a>
+                <div class="edu__note">Small helpers that save time and reduce friction.</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+
+      <!-- FEATURE ROW (not a card wall) -->
+      <section class="feature" aria-label="Featured sections">
+        <div class="feature__grid">
+          <a class="feature__tile" href="/projects" aria-label="Featured build">
+            <div class="feature__kicker">Featured</div>
+            <div class="feature__title">Builds worth bookmarking</div>
+            <div class="feature__text">Hardware experiments, antenna work, field kits, and practical write-ups.</div>
+            <div class="feature__cta">Explore projects →</div>
+          </a>
+
+          <a class="feature__tile feature__tile--astro" href="/astrophotography" aria-label="Featured astrophotography">
+            <div class="feature__kicker">Featured</div>
+            <div class="feature__title">Astrophotography logs</div>
+            <div class="feature__text">Sessions, calibration, processing pipelines, and gear notes.</div>
+            <div class="feature__cta">View astrophotography →</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- QUICK LINKS (lightweight, useful) -->
+      <section class="quick" aria-label="Quick links">
+        <div class="quick__grid">
+          <a class="quick__link" href="/docs">Documentation</a>
+          <a class="quick__link" href="/tools">Tools</a>
+          <a class="quick__link" href="/about">About</a>
+        </div>
+      </section>
+
+      <!-- PILL VIEWS (all posts by elemental tags) -->
+      <section class="pills" aria-label="Browse by elemental themes">
+        <div class="pills__head">
+          <h2 class="pills__title">Browse by theme</h2>
+          <p class="pills__desc">Showing everything tagged with this theme. Spotlight items are newest (and any pinned/featured posts).</p>
+        </div>
+
+        <div class="pills__grid">
+          {PILL_TAGS.map((pill) => (
+            <section
+              class="pill"
+              id={`pill-${pill.toLowerCase()}`}
+              aria-label={`${pill} posts`}
+            >
+              <div class="pill__top">
+                <h3 class="pill__title">{pill}</h3>
+                <div class="pill__right">
+                  <span class="pill__count">{byPill[pill].length} item{byPill[pill].length === 1 ? '' : 's'}</span>
+                  <a class="pill__close" href="#top" aria-label="Hide theme panel">Close</a>
+                </div>
+              </div>
+
+              {byPill[pill].length === 0 ? (
+                <div class="pill__empty">Nothing tagged <strong>{pill}</strong> yet — soon.</div>
+              ) : (
+                <>
+                  <div class="pill__spotlight" aria-label={`${pill} spotlight`}>
+                    {spotlight(pill).map((e) => (
+                      <a class="spot" href={e.url}>
+                        <div class="spot__row">
+                          <span class="spot__title">{e.title}</span>
+                          {e.featured ? <span class="spot__badge">Featured</span> : null}
+                        </div>
+                        <div class="spot__meta">
+                          <span class="spot__kind">{e.kind === 'blog' ? 'Post' : 'Project'}</span>
+                          <span class="spot__dot">•</span>
+                          <span class="spot__date">{Number.isFinite(e.date.valueOf()) ? e.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+
+                  {rest(pill).length ? (
+                    <details class="pill__more">
+                      <summary>Show all {pill.toLowerCase()} ({rest(pill).length} more)</summary>
+                      <ul class="pill__list">
+                        {rest(pill).map((e) => (
+                          <li>
+                            <a href={e.url}>{e.title}</a>
+                            <span class="pill__sub">{e.kind === 'blog' ? 'Post' : 'Project'}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
+                </>
+              )}
+            </section>
+          ))}
+        </div>
       </section>
     </main>
+
     <Footer />
+
+    <style>
+      /* PILL VIEWS */
+      .pills {
+        margin-top: 1.25rem;
+        /* Hidden until a pill is targeted */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px);
+        transition: opacity 160ms ease, transform 160ms ease;
+      }
+
+      /* Reveal the entire section when any pill panel is targeted */
+      .pills:has(.pill:target) {
+        max-height: 10000px;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .pills__head {
+        margin-bottom: 0.75rem;
+      }
+
+      .pills__title {
+        margin: 0 0 0.25rem;
+        font-size: 1.15rem;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+
+      .pills__desc {
+        margin: 0;
+        color: var(--muted);
+        max-width: 80ch;
+      }
+
+      .pills__grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+
+      @media (min-width: 900px) {
+        .pills__grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1200px) {
+        .pills__grid {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
+        box-shadow: var(--shadow-sm);
+        padding: 0.95rem;
+        scroll-margin-top: 92px;
+        display: none;
+      }
+
+      .pill:target {
+        display: block;
+      }
+
+      /* If someone jumps to the section without a target, keep it tidy */
+      .pills__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pill__top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .pill__right {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex: 0 0 auto;
+      }
+
+      .pill__close {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.22rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 78%, transparent 22%);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 650;
+        font-size: 0.88rem;
+      }
+
+      .pill__close:hover {
+        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+        color: var(--link-hover);
+      }
+
+      .pill__title {
+        margin: 0;
+        font-size: 1.02rem;
+        letter-spacing: -0.01em;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .pill__count {
+        color: var(--muted);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        flex: 0 0 auto;
+      }
+
+      .pill__empty {
+        color: var(--muted);
+        font-size: 0.95rem;
+        padding: 0.4rem 0;
+      }
+
+      .pill__spotlight {
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      .spot {
+        display: block;
+        padding: 0.7rem 0.75rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .spot:hover {
+        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+      }
+
+      .spot__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+
+      .spot__title {
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+
+      .spot__badge {
+        font-size: 0.75rem;
+        padding: 0.18rem 0.45rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--text-2);
+        background: color-mix(in srgb, var(--surface) 80%, transparent 20%);
+        white-space: nowrap;
+      }
+
+      .spot__meta {
+        margin-top: 0.28rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .spot__dot {
+        opacity: 0.75;
+      }
+
+      .pill__more {
+        margin-top: 0.7rem;
+        border-top: 1px dashed var(--border);
+        padding-top: 0.65rem;
+      }
+
+      .pill__more summary {
+        cursor: pointer;
+        color: var(--link);
+        font-weight: 700;
+        list-style: none;
+      }
+
+      .pill__more summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .pill__more summary:hover {
+        color: var(--link-hover);
+        text-decoration: underline;
+      }
+
+      .pill__list {
+        list-style: none;
+        margin: 0.6rem 0 0;
+        padding: 0;
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .pill__list li {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.6rem;
+      }
+
+      .pill__list a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 650;
+      }
+
+      .pill__list a:hover {
+        color: var(--link-hover);
+      }
+
+      .pill__sub {
+        color: var(--muted);
+        font-size: 0.88rem;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 900px) {
+        .pill {
+          scroll-margin-top: 120px;
+        }
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.25rem 1.25rem 3rem;
+      }
+
+      /* HERO */
+      .hero {
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+      }
+
+      .hero__bg {
+        position: absolute;
+        inset: 0;
+        /* NOTE: place Banner.png in /public/Banner.png */
+        background-image:
+          linear-gradient(
+            to left,
+            rgba(0, 0, 0, 0.00) 0%,
+            rgba(0, 0, 0, 0.10) 26%,
+            rgba(0, 0, 0, 0.34) 52%,
+            rgba(0, 0, 0, 0.62) 78%,
+            rgba(0, 0, 0, 0.78) 100%
+          ),
+          url('/Banner.png');
+        background-size: cover;
+        background-position: center;
+        filter: saturate(1.05);
+      }
+
+      :global(html[data-theme="light"]) .hero__bg {
+        background-image:
+          linear-gradient(
+            to left,
+            rgba(255, 255, 255, 0.82) 0%,
+            rgba(255, 255, 255, 0.66) 28%,
+            rgba(255, 255, 255, 0.34) 52%,
+            rgba(255, 255, 255, 0.12) 70%,
+            rgba(255, 255, 255, 0.00) 82%
+          ),
+          url('/Banner.png');
+      }
+
+      @media (prefers-color-scheme: light) {
+        :global(html:not([data-theme="dark"])) .hero__bg {
+          background-image:
+            linear-gradient(
+              to left,
+              rgba(255, 255, 255, 0.82) 0%,
+              rgba(255, 255, 255, 0.66) 28%,
+              rgba(255, 255, 255, 0.34) 52%,
+              rgba(255, 255, 255, 0.12) 70%,
+              rgba(255, 255, 255, 0.00) 82%
+            ),
+            url('/Banner.png');
+        }
+      }
+
+      .hero__inner {
+        position: relative;
+        padding: 2.25rem 1.75rem;
+        min-height: 280px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+      }
+
+      .hero__content {
+        max-width: 640px;
+        text-align: right;
+        /* Keep the hero clean by default; we only add a subtle panel in light mode */
+        padding: 0.25rem 0.25rem;
+        border-radius: 16px;
+      }
+
+      /* LIGHT MODE: add a gentle translucent panel so text stays readable over the banner */
+
+      /* (Removed light-mode translucent panel for hero__content) */
+
+      .hero__title {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2rem, 3vw, 3rem);
+        letter-spacing: -0.02em;
+        color: var(--text);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 22px rgba(0, 0, 0, 0.18);
+      }
+
+      .hero__subtitle {
+        margin: 0 0 1.25rem;
+        color: var(--text-2);
+        max-width: 60ch;
+        font-size: 1.05rem;
+        line-height: 1.55;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 18px rgba(0, 0, 0, 0.16);
+      }
+
+      /* LIGHT MODE: bump contrast a touch for the subtitle */
+      :global(html[data-theme="light"]) .hero__subtitle {
+        color: color-mix(in srgb, var(--text) 86%, black 14%);
+      }
+
+      @media (prefers-color-scheme: light) {
+        :global(html:not([data-theme="dark"])) .hero__subtitle {
+          color: color-mix(in srgb, var(--text) 86%, black 14%);
+        }
+      }
+
+      .hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        justify-content: flex-end;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.65rem 0.95rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-2);
+        background: color-mix(in srgb, var(--surface) 85%, transparent 15%);
+        color: var(--text);
+        text-decoration: none;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn:hover {
+        border-color: color-mix(in srgb, var(--accent) 22%, var(--border-2) 78%);
+      }
+
+      .btn--primary {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: color-mix(in srgb, var(--accent) 70%, black 30%);
+      }
+
+      .btn--primary:hover {
+        filter: brightness(1.03);
+      }
+
+      .hero__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.28rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 70%, transparent 30%);
+        color: var(--text-2);
+        font-size: 0.85rem;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .chip:hover {
+        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+        color: var(--text);
+      }
+
+      .chip:focus-visible {
+        outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent 50%);
+        outline-offset: 2px;
+      }
+
+      /* DASHBOARD */
+      .dash {
+        margin-top: 1.25rem;
+      }
+
+      .dash__grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+
+      @media (min-width: 900px) {
+        .dash__grid {
+          grid-template-columns: 1.15fr 1.05fr 0.9fr;
+          align-items: start;
+        }
+      }
+
+      .dash__col {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
+        box-shadow: var(--shadow-sm);
+        padding: 1rem;
+      }
+
+      .dash__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .dash__title {
+        margin: 0;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+
+      .dash__more {
+        color: var(--link);
+        text-decoration: none;
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .dash__more:hover {
+        text-decoration: underline;
+      }
+
+      .dash__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .dash__list li {
+        display: grid;
+        gap: 0.2rem;
+      }
+
+      .dash__list a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .dash__list a:hover {
+        color: var(--link-hover);
+      }
+
+      .dash__sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* Education column: calmer, more structured */
+      .dash__col--edu {
+        border-color: color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
+        background:
+          radial-gradient(700px 280px at 15% 0%, rgba(34, 197, 94, 0.12), transparent 55%),
+          color-mix(in srgb, var(--surface) 92%, transparent 8%);
+      }
+
+      .edu__stack {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .edu__block {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
+        padding: 0.85rem;
+      }
+
+      .edu__label {
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.35rem;
+      }
+
+      .edu__link {
+        display: inline-block;
+        font-weight: 700;
+        color: var(--text);
+        text-decoration: none;
+        margin-bottom: 0.25rem;
+      }
+
+      .edu__link:hover {
+        color: var(--link-hover);
+      }
+
+      .edu__note {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* FEATURE ROW */
+      .feature {
+        margin-top: 1.25rem;
+      }
+
+      .feature__grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+
+      @media (min-width: 900px) {
+        .feature__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .feature__tile {
+        display: block;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.15rem;
+        text-decoration: none;
+        color: var(--text);
+        background:
+          radial-gradient(700px 280px at 0% 0%, rgba(79, 70, 229, 0.14), transparent 55%),
+          color-mix(in srgb, var(--surface) 92%, transparent 8%);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .feature__tile--astro {
+        background:
+          radial-gradient(700px 280px at 0% 0%, rgba(147, 197, 253, 0.16), transparent 55%),
+          radial-gradient(700px 280px at 100% 10%, rgba(34, 197, 94, 0.10), transparent 55%),
+          color-mix(in srgb, var(--surface) 92%, transparent 8%);
+      }
+
+      .feature__tile:hover {
+        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+      }
+
+      .feature__kicker {
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .feature__title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.45rem;
+      }
+
+      .feature__text {
+        margin: 0 0 0.85rem;
+        color: var(--text-2);
+        max-width: 62ch;
+      }
+
+      .feature__cta {
+        font-weight: 700;
+        color: var(--link);
+      }
+
+      /* QUICK LINKS */
+      .quick {
+        margin-top: 1.25rem;
+      }
+
+      .quick__grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+      }
+
+      .quick__link {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
+        text-decoration: none;
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .quick__link:hover {
+        border-color: color-mix(in srgb, var(--accent) 20%, var(--border) 80%);
+        color: var(--link-hover);
+      }
+
+      /* Tighten on small screens */
+      @media (max-width: 480px) {
+        .hero__inner {
+          padding: 1.6rem 1.1rem;
+          min-height: 250px;
+        }
+
+        .page {
+          padding: 1rem 1rem 2.5rem;
+        }
+      }
+    </style>
   </body>
 </html>
