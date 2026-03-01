@@ -1,0 +1,285 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { toTagSlug } from '../../utils/tags';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('education', ({ data }) => !data.draft);
+
+  if (!entries || entries.length === 0) {
+    return [];
+  }
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing route parameter: slug');
+}
+
+const entry = await getEntry('education', slug);
+
+if (!entry) {
+  throw new Error(`Education entry not found: ${slug}`);
+}
+
+const { Content } = await render(entry);
+const hero = entry.data.image ?? null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={entry.data.title} description={entry.data.description} />
+  </head>
+  <body class="theme-edu">
+    <Header />
+    <main class="edu-page">
+      <article class="edu-entry">
+        <a href="/education" class="edu-back">
+          ← Back to Education
+        </a>
+
+        <header class="edu-hero panel">
+          <div class="edu-hero__copy">
+            <div class="edu-kickers">
+              <span class="pill">Education</span>
+              {entry.data.subject ? <span class="pill">{entry.data.subject}</span> : null}
+              {entry.data.level ? <span class="pill pill--coral">{entry.data.level}</span> : null}
+            </div>
+
+            <h1 class="edu-title">{entry.data.title}</h1>
+            <p class="edu-description">{entry.data.description}</p>
+
+            <div class="edu-meta">
+              {entry.data.pubDate ? (
+                <span class="edu-meta__item">
+                  Published <FormattedDate date={entry.data.pubDate} />
+                </span>
+              ) : null}
+              {entry.data.updatedDate ? (
+                <span class="edu-meta__item">
+                  Updated <FormattedDate date={entry.data.updatedDate} />
+                </span>
+              ) : null}
+              {entry.data.type ? <span class="edu-meta__item">Type {entry.data.type}</span> : null}
+            </div>
+          </div>
+
+          {hero ? (
+            <div class="edu-hero__media">
+              <img src={hero} alt="" loading="eager" decoding="async" />
+            </div>
+          ) : null}
+        </header>
+
+        <div class="edu-layout">
+          <aside class="edu-side panel">
+            <h2 class="edu-side__title">At A Glance</h2>
+            <dl class="edu-facts">
+              {entry.data.subject ? (
+                <>
+                  <dt>Subject</dt>
+                  <dd>{entry.data.subject}</dd>
+                </>
+              ) : null}
+              {entry.data.level ? (
+                <>
+                  <dt>Level</dt>
+                  <dd>{entry.data.level}</dd>
+                </>
+              ) : null}
+              {entry.data.type ? (
+                <>
+                  <dt>Format</dt>
+                  <dd>{entry.data.type}</dd>
+                </>
+              ) : null}
+            </dl>
+
+            {entry.data.tags?.length ? (
+              <div class="edu-tags">
+                {entry.data.tags.map((tag) => (
+                  <a class="pill" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                ))}
+              </div>
+            ) : null}
+          </aside>
+
+          <div class="edu-body panel panel--soft">
+            <div class="prose prose--edu">
+              <Content />
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .edu-page {
+    max-width: min(1180px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .edu-entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .edu-back {
+    width: fit-content;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .edu-back:hover {
+    color: var(--accent);
+  }
+
+  .edu-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: var(--space-5);
+    align-items: center;
+    background:
+      radial-gradient(760px 220px at top right, rgba(34, 197, 94, 0.08), transparent 72%),
+      radial-gradient(620px 220px at bottom left, rgba(37, 99, 235, 0.08), transparent 78%),
+      var(--surface-raised);
+  }
+
+  .edu-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .edu-kickers,
+  .edu-meta,
+  .edu-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .edu-title,
+  .edu-description {
+    margin: 0;
+  }
+
+  .edu-description {
+    max-width: 64ch;
+    font-size: 1.06rem;
+    color: var(--text-2);
+  }
+
+  .edu-meta__item {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .edu-hero__media {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .edu-hero__media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .edu-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .edu-side {
+    position: sticky;
+    top: 92px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-raised) 96%, transparent 4%),
+      color-mix(in srgb, var(--surface) 92%, var(--surface-raised) 8%)
+    );
+  }
+
+  .edu-side__title {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .edu-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    margin: 0;
+  }
+
+  .edu-facts dt {
+    margin: 0 0 0.2rem 0;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .edu-facts dd {
+    margin: 0;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .edu-body {
+    padding-top: calc(var(--space-5) + 2px);
+  }
+
+  .prose--edu :global(h2) {
+    margin-top: 2rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prose--edu :global(ul li::marker) {
+    color: var(--leaf);
+  }
+
+  .prose--edu :global(.embed) {
+    margin: 1.6rem 0 2rem;
+  }
+
+  @media (max-width: 960px) {
+    .edu-page {
+      max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .edu-hero,
+    .edu-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .edu-side {
+      position: static;
+    }
+  }
+</style>

@@ -1,0 +1,237 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { getDocSectionMeta } from '../../utils/docs';
+
+const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b) => {
+  const aSection = getDocSectionMeta(a.data.section);
+  const bSection = getDocSectionMeta(b.data.section);
+
+  if (aSection.rank !== bSection.rank) {
+    return aSection.rank - bSection.rank;
+  }
+
+  if (a.data.featured !== b.data.featured) {
+    return a.data.featured ? -1 : 1;
+  }
+
+  const orderCompare = (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER);
+  if (orderCompare !== 0) return orderCompare;
+
+  return a.data.title.localeCompare(b.data.title);
+});
+
+const docGroups = docs.reduce<
+  Array<{
+    section: string;
+    items: typeof docs;
+  }>
+>((groups, doc) => {
+  const section = getDocSectionMeta(doc.data.section).label;
+  const currentGroup = groups[groups.length - 1];
+
+  if (!currentGroup || currentGroup.section !== section) {
+    groups.push({ section, items: [doc] });
+    return groups;
+  }
+
+  currentGroup.items.push(doc);
+  return groups;
+}, []);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Documentation — Chips’nCode"
+      description="Structured guides, technical documentation, and deep dives."
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="docs-index">
+      <header class="page-header">
+        <p class="eyebrow">Documentation</p>
+        <h1 class="page-title">Documentation</h1>
+        <p class="page-lede">
+          Structured guides, reference notes, and longer-lived technical manuals. The layout is grouped by section so deeper project documentation, including future library docs like SPIMemory, has room to grow without turning this page into a dump.
+        </p>
+      </header>
+
+      {docs.length === 0 ? (
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Documentation coming soon.</p>
+          <p class="empty-sub">
+            Publish docs entries with a <code>section</code> and optional <code>order</code> field to keep this page structured as the collection grows.
+          </p>
+        </div>
+      ) : (
+        <div class="doc-groups">
+          {docGroups.map((group) => (
+            <section class="doc-group" aria-label={group.section}>
+              <div class="doc-group__header">
+                <div class="doc-group__intro">
+                  <h2 class="doc-group__title">{group.section}</h2>
+                  <p class="doc-group__desc">{getDocSectionMeta(group.section).description}</p>
+                </div>
+                <span class="pill">{group.items.length} item{group.items.length === 1 ? '' : 's'}</span>
+              </div>
+
+              <div class="doc-grid">
+                {group.items.map((doc) => (
+                  <a href={`/docs/${doc.id}`} class="doc-card" aria-label={`Open document: ${doc.data.title}`}>
+                    <div class="doc-card__meta">
+                      {doc.data.featured ? <span class="pill pill--coral">Featured</span> : <span class="pill">Doc</span>}
+                      {doc.data.tags?.slice(0, 2).map((tag) => <span class="pill">#{tag}</span>)}
+                    </div>
+                    <h3 class="doc-card__title">{doc.data.title}</h3>
+                    <p class="doc-card__desc">{doc.data.description}</p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .docs-index {
+    max-width: min(1100px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 75ch;
+    color: var(--text-2);
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title {
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 80ch;
+  }
+
+  .doc-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .doc-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .doc-group__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .doc-group__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .doc-group__title {
+    margin: 0;
+  }
+
+  .doc-group__desc {
+    margin: 0;
+    max-width: 72ch;
+    color: var(--text-2);
+  }
+
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  .doc-card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(460px 120px at top right, rgba(37, 99, 235, 0.08), transparent 72%),
+      radial-gradient(360px 110px at top left, rgba(45, 255, 178, 0.08), transparent 74%),
+      var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
+  }
+
+  .doc-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .doc-card__title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .doc-card__desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 760px) {
+    .doc-card {
+      grid-column: span 6;
+    }
+  }
+</style>

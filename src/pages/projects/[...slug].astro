@@ -1,0 +1,208 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { toTagSlug } from '../../utils/tags';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.params;
+if (!slug) throw new Error('Missing route parameter: slug');
+
+const entry = await getEntry('projects', slug);
+if (!entry) throw new Error(`Project not found: ${slug}`);
+
+const { Content } = await render(entry);
+const hero = entry.data.image ?? null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={entry.data.title} description={entry.data.description} />
+  </head>
+  <body>
+    <Header />
+    <main class="project-page">
+      <article class="project-entry">
+        <a href="/projects" class="project-back">← Back to Projects</a>
+
+        <header class="project-hero panel">
+          <div class="project-copy">
+            <div class="project-kickers">
+              <span class="pill">Project</span>
+              {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
+            </div>
+
+            <h1 class="project-title">{entry.data.title}</h1>
+            <p class="project-description">{entry.data.description}</p>
+
+            <div class="project-meta">
+              {entry.data.pubDate ? (
+                <span class="project-meta__item">
+                  Published <FormattedDate date={entry.data.pubDate} />
+                </span>
+              ) : null}
+              {entry.data.updatedDate ? (
+                <span class="project-meta__item">
+                  Updated <FormattedDate date={entry.data.updatedDate} />
+                </span>
+              ) : null}
+            </div>
+
+            {entry.data.tags?.length ? (
+              <div class="project-tags">
+                {entry.data.tags.map((tag) => (
+                  <a class="pill" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                ))}
+              </div>
+            ) : null}
+
+            {(entry.data.github || entry.data.demo) ? (
+              <div class="project-links">
+                {entry.data.github ? <a class="btn" href={entry.data.github}>Source</a> : null}
+                {entry.data.demo ? <a class="btn btn--primary" href={entry.data.demo}>Live demo</a> : null}
+              </div>
+            ) : null}
+          </div>
+
+          {hero ? (
+            <div class="project-hero__media">
+              <img src={hero} alt="" loading="eager" decoding="async" />
+            </div>
+          ) : null}
+        </header>
+
+        <div class="project-body panel panel--soft">
+          <div class="project-prose prose">
+            <Content />
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .project-page {
+    max-width: min(1180px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .project-entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .project-back {
+    width: fit-content;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .project-back:hover {
+    color: var(--accent);
+  }
+
+  .project-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    gap: var(--space-5);
+    align-items: stretch;
+    background:
+      radial-gradient(800px 240px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
+      radial-gradient(620px 220px at bottom left, rgba(45, 255, 178, 0.08), transparent 76%),
+      var(--surface-raised);
+  }
+
+  .project-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .project-kickers,
+  .project-meta,
+  .project-tags,
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .project-title,
+  .project-description {
+    margin: 0;
+  }
+
+  .project-description {
+    max-width: 62ch;
+    font-size: 1.08rem;
+    color: var(--text-2);
+  }
+
+  .project-meta__item {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .project-hero__media {
+    min-height: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-raised) 94%, transparent 6%),
+      color-mix(in srgb, var(--surface) 88%, var(--surface-raised) 12%)
+    );
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-hero__media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .project-body {
+    padding-top: calc(var(--space-5) + 2px);
+  }
+
+  .project-prose :global(h2) {
+    margin-top: 2.2rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .project-prose :global(.heroFigure:first-child) {
+    margin-top: 0;
+  }
+
+  .project-prose :global(.postStats),
+  .project-prose :global(.buildGrid),
+  .project-prose :global(.qsoKpis) {
+    margin: 1.5rem 0 1.9rem;
+  }
+
+  @media (max-width: 860px) {
+    .project-page {
+      max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .project-hero {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage, image, tags = [], featured } = Astro.props;
+const hero = heroImage ?? image ?? null;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <article class="post">
+        <div class="post-back">
+          <a href="/blog" class="post-back__link">← Back to Blog</a>
+        </div>
+
+        <header class="post-header panel">
+          <div class="post-kickers">
+            <span class="pill">Narrative</span>
+            {featured ? <span class="pill pill--coral">Featured</span> : null}
+            {tags.slice(0, 3).map((tag) => (
+              <a class="pill" href={`/tags/${tag.toLowerCase()}`}>#{tag}</a>
+            ))}
+          </div>
+
+          <div class="post-meta">
+            <span class="post-date">
+              <FormattedDate date={pubDate} />
+            </span>
+            {updatedDate && (
+              <span class="post-updated">
+                · Updated <FormattedDate date={updatedDate} />
+              </span>
+            )}
+          </div>
+
+          <h1 class="post-title">{title}</h1>
+
+          {description && (
+            <p class="post-description">{description}</p>
+          )}
+        </header>
+
+        {hero && (
+          <figure class="post-hero">
+            {typeof hero === 'string' ? (
+              <img src={hero} alt="" loading="eager" decoding="async" />
+            ) : (
+              <Image src={hero} alt="" widths={[800, 1200]} sizes="(max-width: 800px) 100vw, 760px" />
+            )}
+          </figure>
+        )}
+
+        <div class="prose">
+          <slot />
+        </div>
+      </article>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .post-back__link {
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .post-back__link:hover {
+    color: var(--accent);
+  }
+
+  .post-hero {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(640px 220px at 10% 10%, rgba(37, 99, 235, 0.09), transparent 65%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.95));
+    box-shadow: var(--shadow-md);
+    padding: 10px;
+  }
+
+  .post-hero :global(img) {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .post-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    background:
+      radial-gradient(700px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
+      radial-gradient(540px 180px at top left, rgba(251, 113, 133, 0.07), transparent 72%),
+      #fff;
+  }
+
+  .post-kickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .post-meta {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .post-title {
+    margin: 0;
+  }
+
+  .post-description {
+    margin: 0;
+    font-size: 1.08rem;
+    color: var(--text-2);
+    max-width: 60ch;
+  }
+
+  .prose {
+    margin-top: var(--space-2);
+    position: relative;
+  }
+
+  .prose::before {
+    content: "";
+    display: block;
+    width: 84px;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--coral) 70%, #fff 30%));
+    margin-bottom: var(--space-5);
+  }
+
+  .prose :global(h2) {
+    margin-top: 2.3rem;
+  }
+
+  .prose :global(figure) {
+    margin: 1.8rem 0;
+  }
+
+  .prose :global(blockquote) {
+    border-left-width: 5px;
+  }
+
+  @media (max-width: 720px) {
+    .post-hero {
+      padding: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+title: RGB565 Colour Reference
+description: "A quick reference for TFT-friendly colour values, plus the conversion math so you do not have to keep re-deriving it on a napkin."
+pubDate: 2021-03-21
+draft: false
+tags: [tft, arduino, colour, rgb565, reference]
+---
+
+If you have ever bounced between a nice normal RGB colour picker and a tiny TFT library demanding `0xF81F` like that is a perfectly ordinary thing to ask, welcome.
+
+This page started life as a quick note and now lives here properly.
+
+## The format
+
+RGB565 stores colour in 16 bits:
+
+- 5 bits red
+- 6 bits green
+- 5 bits blue
+
+Green gets the extra bit because human vision is annoyingly picky and hardware people noticed.
+
+## The conversion
+
+From 8-bit RGB values:
+
+```text
+rgb565 = ((red & 0xF8) << 8) | ((green & 0xFC) << 3) | (blue >> 3)
+```
+
+Or, if you prefer to think in ranges:
+
+- red: `0-255` becomes `0-31`
+- green: `0-255` becomes `0-63`
+- blue: `0-255` becomes `0-31`
+
+## A few useful values
+
+```text
+Black   0x0000
+White   0xFFFF
+Red     0xF800
+Green   0x07E0
+Blue    0x001F
+Yellow  0xFFE0
+Cyan    0x07FF
+Magenta 0xF81F
+```
+
+## When this page helps
+
+- hard-coding UI colours for TFT displays
+- checking whether a converted value looks sane
+- saving yourself from opening the same old forum thread for the fiftieth time
+
+If I turn this into a fully interactive converter later, this page can remain the quick-reference version for when speed matters more than bells and whistles.

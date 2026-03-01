@@ -1,0 +1,252 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { toTagSlug } from '../../utils/tags';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('docs', ({ data }) => !data.draft);
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing route parameter: slug');
+}
+
+const entry = await getEntry('docs', slug);
+
+if (!entry) {
+  throw new Error(`Doc entry not found: ${slug}`);
+}
+
+const { Content } = await render(entry);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={entry.data.title} description={entry.data.description} />
+  </head>
+  <body>
+    <Header />
+    <main class="docs-page">
+      <article class="docs-entry">
+        <a href="/docs" class="docs-back">
+          ← Back to Docs
+        </a>
+
+        <header class="docs-hero panel">
+          <div class="docs-hero__eyebrow">
+            {entry.data.section ? <span class="pill">{entry.data.section}</span> : null}
+            {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
+          </div>
+
+          <h1 class="docs-title">{entry.data.title}</h1>
+
+          {entry.data.description ? (
+            <p class="docs-description">{entry.data.description}</p>
+          ) : null}
+
+          <div class="docs-meta">
+            {entry.data.pubDate ? (
+              <span class="docs-meta__item">
+                Published <FormattedDate date={entry.data.pubDate} />
+              </span>
+            ) : null}
+            {entry.data.updatedDate ? (
+              <span class="docs-meta__item">
+                Updated <FormattedDate date={entry.data.updatedDate} />
+              </span>
+            ) : null}
+          </div>
+
+          {entry.data.tags?.length ? (
+            <div class="docs-tags" aria-label="Document tags">
+              {entry.data.tags.map((tag) => (
+                <a class="pill" href={`/tags/${toTagSlug(tag)}`}>{tag}</a>
+              ))}
+            </div>
+          ) : null}
+        </header>
+
+        <div class="docs-body panel panel--soft">
+          <div class="prose prose--docs">
+            <Content />
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .docs-page {
+    max-width: min(920px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .docs-entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .docs-back {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .docs-back:hover {
+    color: var(--accent);
+  }
+
+  .docs-hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    background:
+      radial-gradient(640px 180px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
+      radial-gradient(520px 160px at top left, rgba(45, 255, 178, 0.08), transparent 74%),
+      var(--surface-raised);
+  }
+
+  .docs-hero__eyebrow,
+  .docs-tags,
+  .docs-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .docs-title {
+    margin: 0;
+  }
+
+  .docs-description {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 1.05rem;
+    color: var(--text-2);
+  }
+
+  .docs-meta__item {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .docs-body {
+    padding-top: calc(var(--space-5) + 2px);
+  }
+
+  .prose--docs {
+    color: var(--text-2);
+  }
+
+  .prose--docs :global(h2) {
+    margin-top: 2.2rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .prose--docs :global(h2:first-of-type) {
+    margin-top: 0;
+  }
+
+  .prose--docs :global(h3) {
+    margin-top: 1.5rem;
+  }
+
+  .prose--docs :global(ul),
+  .prose--docs :global(ol) {
+    margin-bottom: 1.35rem;
+  }
+
+  .prose--docs :global(li + li) {
+    margin-top: 0.35rem;
+  }
+
+  .prose--docs :global(table) {
+    display: block;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+  }
+
+  .prose--docs :global(th) {
+    background: var(--surface-accent-soft);
+  }
+
+  .prose--docs :global(.callout) {
+    margin: 1.4rem 0;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .prose--docs :global(.callout > :last-child) {
+    margin-bottom: 0;
+  }
+
+  .prose--docs :global(.callout--note) {
+    background: var(--surface-accent-soft);
+    border-left: 4px solid var(--accent);
+  }
+
+  .prose--docs :global(.callout--warm) {
+    background: var(--surface-coral-soft);
+    border-left: 4px solid var(--coral);
+  }
+
+  .prose--docs :global(.doc-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.4rem 0;
+  }
+
+  .prose--docs :global(.doc-card) {
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .prose--docs :global(.doc-card h3),
+  .prose--docs :global(.doc-card h4),
+  .prose--docs :global(.doc-card p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .prose--docs :global(.compact-list) {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  @media (max-width: 720px) {
+    .docs-page {
+      max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .prose--docs :global(.doc-grid) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

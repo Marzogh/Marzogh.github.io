@@ -1,0 +1,69 @@
+---
+title: Add Date and Time to Files Written to an SD Card
+description: "A quick Arduino note on getting proper timestamps onto SD card files instead of leaving them stuck in the temporal void."
+pubDate: 2024-03-08
+draft: false
+section: Arduino Notes
+order: 10
+tags: [arduino, sd-card, rtc, fat, logging]
+type: docs
+featured: false
+---
+
+If you are logging data to an SD card from an Arduino and all your files look like they were created in some cursed timeless dimension, this is the missing piece.
+
+The short version is that FAT filesystems do not magically know the date and time. You have to provide a callback so the SD library can ask, "what time is it, then?"
+
+## What you need
+
+- an SD card library that supports `dateTimeCallback`
+- a real-time clock, or some other reliable source of date/time
+- a faint sense of annoyance at seeing every file show the wrong timestamp
+
+## The important bit
+
+The callback packs the current date and time into the FAT format expected by the library:
+
+```cpp
+void dateTime(uint16_t* date, uint16_t* time) {
+  *date = FAT_DATE(year, month, day);
+  *time = FAT_TIME(hour, minute, second);
+}
+```
+
+Then register it before writing files:
+
+```cpp
+SdFile::dateTimeCallback(dateTime);
+```
+
+That is the whole trick. No secret handshake. Just a callback.
+
+## Where the time comes from
+
+You still need to provide the values for:
+
+- `year`
+- `month`
+- `day`
+- `hour`
+- `minute`
+- `second`
+
+In practice, that usually means reading from an RTC module such as a DS3231. If you are trying to fake this from `millis()`, you can get away with it for short-lived experiments, but it is not what I would call a noble long-term plan.
+
+## Why it matters
+
+Correct timestamps make SD logging much easier to work with later:
+
+- log files sort properly
+- debugging becomes less archaeological
+- you can tell whether the sensor actually ran today or last month
+
+## Common mistakes
+
+- Registering the callback too late, after files are already being created.
+- Feeding local variables that are not actually updated from the RTC.
+- Forgetting that FAT timestamps have limited resolution, so "perfectly precise" is not on offer here.
+
+This page is the slightly more civilised version for Future Me, who absolutely will forget the callback name again.

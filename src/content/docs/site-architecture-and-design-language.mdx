@@ -1,0 +1,345 @@
+---
+title: Site Architecture and Design Language
+description: "A design document for the design document repository disguised as a website. Very normal behaviour."
+pubDate: 2026-03-01
+draft: false
+section: Site Meta
+order: 1
+tags: [website, design, architecture, astro, docs]
+type: docs
+featured: true
+---
+
+<div class="callout callout--note">
+  <strong>Short version:</strong> the site should share one visual grammar, but not one identical page shell. Cohesive, not cloned.
+</div>
+
+## What this site is
+
+Chips'nCode is not one thing pretending to be many things. It is a small constellation of related modes:
+
+- writing
+- projects
+- tools
+- documentation
+- education
+- astrophotography
+
+Those are all part of the same brain, but they are not the same *kind* of page. That matters.
+
+The site should therefore feel **cohesive**, but not **uniform**.
+
+That is the core rule.
+
+<div class="doc-grid">
+  <div class="doc-card">
+    <h3>What stays shared</h3>
+    <ul class="compact-list">
+      <li>typography</li>
+      <li>spacing rhythm</li>
+      <li>colour tokens</li>
+      <li>link and code styles</li>
+      <li>reusable UI pieces</li>
+    </ul>
+  </div>
+  <div class="doc-card">
+    <h3>What changes by section</h3>
+    <ul class="compact-list">
+      <li>page framing</li>
+      <li>information density</li>
+      <li>media treatment</li>
+      <li>reading flow</li>
+      <li>interaction priority</li>
+    </ul>
+  </div>
+</div>
+
+## Structural overview
+
+At the content level, the site is organised into collections:
+
+- `blog`: narrative posts, essays, field notes, technical rambles
+- `projects`: build logs, systems, experiments, activations, outcomes
+- `tools`: small utilities, references, converters, interactive helpers
+- `docs`: structured how-tos, technical notes, references, internal manuals
+- `education`: scaffolded resources, lesson-adjacent material, embedded teaching content
+- `astrophotography`: image-driven session logs and processing notes
+
+At the route level, that becomes:
+
+```text
+/
+/blog
+/projects
+/tools
+/docs
+/education
+/astrophotography
+/tags/[tag]
+```
+
+The homepage is the switchboard. The section pages are the shelves. The individual entries are where the real work happens.
+
+## The design problem
+
+If every page type uses the exact same "title, date, paragraph blob" wrapper, the site becomes visually honest but emotionally flat.
+
+That is fine for one post.
+
+It is not fine for page after page after page.
+
+At the same time, going too hard on visual novelty creates another problem: the site starts feeling like six unrelated microsites wearing the same domain name.
+
+So the answer is not "make everything fancy" and it is also not "leave everything plain forever".
+
+The answer is:
+
+- one visual grammar
+- several page archetypes
+
+| Problem | Bad fix | Better fix |
+| --- | --- | --- |
+| Everything feels flat | Add random visual noise everywhere | Keep body copy calm, improve page framing |
+| Sections feel unrelated | Make every page use the same shell | Share tokens and components, vary archetypes |
+| Long docs feel dense | Use more paragraphs | Use cards, callouts, tables, and clearer hierarchy |
+
+## Shared design language
+
+These things should stay consistent across the whole site:
+
+- typography
+- spacing rhythm
+- border radius
+- elevation and shadow rules
+- link behaviour
+- colour tokens
+- code block styling
+- metadata patterns
+- reusable UI pieces like pills, callouts, dividers, and image frames
+
+This is the connective tissue. It is what makes the site feel like one place.
+
+### Visual principles
+
+The shared language should aim for:
+
+- calm reading surfaces
+- slightly tactile panels rather than flat white voids
+- restrained accent colour
+- enough personality to feel human
+- enough discipline to still read like technical material
+
+In plain English: not sterile, not noisy.
+
+## Page archetypes
+
+This is where the variety comes from.
+
+<div class="doc-grid">
+  <div class="doc-card">
+    <h3>1. Narrative pages</h3>
+    <p><strong>Used for:</strong> blog posts and some longer project write-ups.</p>
+    <p><strong>Should feel like:</strong> essay-like, readable, and slightly atmospheric.</p>
+    <ul class="compact-list">
+      <li>stronger header block</li>
+      <li>clearer metadata</li>
+      <li>optional hero treatment</li>
+      <li>controlled reading width</li>
+    </ul>
+  </div>
+  <div class="doc-card">
+    <h3>2. Reference pages</h3>
+    <p><strong>Used for:</strong> docs and some education resources.</p>
+    <p><strong>Should feel like:</strong> cleaner and utility-first.</p>
+    <ul class="compact-list">
+      <li>strong hierarchy</li>
+      <li>obvious sectioning</li>
+      <li>callouts and warnings</li>
+      <li>optional table of contents</li>
+    </ul>
+  </div>
+  <div class="doc-card">
+    <h3>3. Showcase pages</h3>
+    <p><strong>Used for:</strong> projects and astrophotography.</p>
+    <p><strong>Should feel like:</strong> artifact-driven and more visual.</p>
+    <ul class="compact-list">
+      <li>media early on</li>
+      <li>structured metadata</li>
+      <li>gear or outcome panels</li>
+      <li>image-led pacing</li>
+    </ul>
+  </div>
+  <div class="doc-card">
+    <h3>4. Utility pages</h3>
+    <p><strong>Used for:</strong> tools.</p>
+    <p><strong>Should feel like:</strong> compact, quick, and interaction-first.</p>
+    <ul class="compact-list">
+      <li>controls above the fold</li>
+      <li>outputs before explanation</li>
+      <li>lighter prose footprint</li>
+      <li>fast scanning</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout--warm">
+  <strong>Important:</strong> a tool page that behaves like a blog post has its priorities upside down.
+</div>
+
+## Section-by-section intent
+
+### Blog
+
+Purpose:
+Longer-form thinking, technical posts, stories from experiments, and things that deserve a voice.
+
+Should feel like:
+A good notebook entry cleaned up just enough for public consumption.
+
+Needs:
+
+- stronger post headers
+- optional hero imagery or motif blocks
+- reading aids like pull-quotes, callouts, or side notes
+
+### Docs
+
+Purpose:
+Answers, references, procedures, and "how do I do this again?" material.
+
+Should feel like:
+A practical manual written by a person, not a support portal.
+
+Needs:
+
+- better section grouping
+- consistent note/warning styles
+- optional table of contents for long pages
+
+### Projects
+
+Purpose:
+Show what got built, why, how, and what happened when reality had opinions.
+
+Should feel like:
+A field log crossed with a lab notebook.
+
+Needs:
+
+- more visible artifacts
+- metadata blocks for gear, links, dates, status, and outcomes
+- richer page framing than plain prose
+
+### Education
+
+Purpose:
+Material that guides someone from "what is this?" to "I can use this."
+
+Should feel like:
+Structured, clear, encouraging, and step-aware.
+
+Needs:
+
+- strong hierarchy
+- scaffold blocks
+- explicit sequence markers
+- embedded resources that look intentional rather than bolted on
+
+### Astrophotography
+
+Purpose:
+Session logs, processing notes, image outcomes, and technical capture detail.
+
+Should feel like:
+Quiet, image-led, and slightly more atmospheric than the rest of the site.
+
+Needs:
+
+- careful image presentation
+- session metadata
+- processing summaries
+- enough restraint that the photos stay in charge
+
+### Tools
+
+Purpose:
+Save time, reduce friction, and stop repeated low-value re-derivation of things you have already worked out once.
+
+Should feel like:
+Compact and useful.
+
+Needs:
+
+- interaction first
+- prose second
+- less article chrome
+
+## Reuse rules
+
+<div class="doc-grid">
+  <div class="doc-card">
+    <h3>Reuse freely</h3>
+    <ul class="compact-list">
+      <li>metadata rows</li>
+      <li>tag pills</li>
+      <li>callout blocks</li>
+      <li>section dividers</li>
+      <li>image frames</li>
+      <li>code block wrappers</li>
+      <li>key facts panels</li>
+    </ul>
+  </div>
+  <div class="doc-card">
+    <h3>Do not reuse blindly</h3>
+    <ul class="compact-list">
+      <li>identical article headers</li>
+      <li>identical information density</li>
+      <li>identical media treatment</li>
+      <li>identical page pacing</li>
+      <li>identical shells across all collections</li>
+    </ul>
+  </div>
+</div>
+
+The design system should produce shared building blocks, not a single page mould. The same bricks can build very different rooms.
+
+## Current state
+
+Right now, the site already has:
+
+- shared global tokens and typography
+- a stronger homepage voice
+- a distinct astrophotography theme
+- content collections with sensible boundaries
+
+Right now, the site still needs:
+
+- clearer page archetypes for blog, docs, projects, and education
+- fewer inline page styles
+- more reusable section-specific layout components
+- better differentiation between prose-first and utility-first content
+
+## Implementation direction
+
+The safest path is:
+
+1. Define the shared primitives in the global design system.
+2. Build section-specific layouts on top of those primitives.
+3. Keep content calm and readable, but make the framing more intentional.
+4. Let the section type decide the shell.
+
+If this is done properly, the site should feel like one house with different rooms, not one room copied six times.
+
+## Short version
+
+| Share across the site | Do not force everywhere |
+| --- | --- |
+| visual grammar | identical page framing |
+| tokens | identical information density |
+| spacing | identical media treatment |
+| typography | identical article templates |
+| UI components | identical interaction patterns |
+
+That is the whole idea.
+
+Also yes, putting the design document inside the site it describes is extremely on-brand.

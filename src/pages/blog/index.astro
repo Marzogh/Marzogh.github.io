@@ -1,0 +1,233 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+function pickThumb(data: any) {
+  return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? null;
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="Blog — Chips’nCode" description="Technical essays, field notes, experiments, and reflections." />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <header class="page-header">
+        <h1 class="page-title">Blog</h1>
+        <p class="page-lede">
+          Technical essays, field notes, experiments, long-form write-ups, and the occasional deep dive into something that refused to behave.
+        </p>
+      </header>
+
+      {posts.length === 0 ? (
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Nothing published yet.</p>
+          <p class="empty-sub">
+            When you publish a post (and optionally give it a <code>thumbnail</code> or <code>heroImage</code>), it’ll appear here automatically.
+          </p>
+        </div>
+      ) : (
+        <section class="grid" aria-label="Blog posts">
+          {posts.map((post) => {
+            const thumb = pickThumb(post.data);
+
+            return (
+              <a href={`/blog/${post.id}`} class="card" aria-label={`Open post: ${post.data.title}`}>
+                <div class="thumb" aria-hidden="true">
+                  {thumb ? (
+                    typeof thumb === 'string' ? (
+                      <img src={thumb} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <Image
+                        src={thumb}
+                        alt=""
+                        widths={[480, 720, 960]}
+                        sizes="(max-width: 520px) 100vw, (max-width: 920px) 50vw, 33vw"
+                      />
+                    )
+                  ) : (
+                    <div class="thumb-placeholder">
+                      <div class="lines" />
+                      <div class="thumb-label">No thumbnail yet</div>
+                    </div>
+                  )}
+                </div>
+
+                <div class="card-body">
+                  <h2 class="card-title">{post.data.title}</h2>
+
+                  <div class="card-meta">
+                    <span class="pill">
+                      🗓 <FormattedDate date={post.data.pubDate} />
+                    </span>
+                  </div>
+
+                  {post.data.description ? <p class="card-desc">{post.data.description}</p> : null}
+                </div>
+              </a>
+            );
+          })}
+        </section>
+      )}
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 75ch;
+    color: var(--text-2);
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title {
+    margin: 0 0 0.4rem 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 80ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  .card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 25%, var(--border) 75%);
+  }
+
+  .thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+
+  .thumb-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-5);
+    background: linear-gradient(135deg, rgba(100,116,139,0.12), rgba(15,23,42,0.08));
+    color: var(--muted);
+  }
+
+  .lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(100,116,139,0.18) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.3;
+  }
+
+  .thumb-label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    background: var(--surface-glass);
+    padding: 10px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    color: var(--text);
+  }
+
+  .card-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.22;
+    color: var(--text);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 740px) {
+    .card {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 1040px) {
+    .card {
+      grid-column: span 4;
+    }
+  }
+</style>

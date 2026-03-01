@@ -1,0 +1,57 @@
+---
+title: ASCII DIP Pinout Cheatsheet
+description: "A gloriously low-tech way to sketch chip pinouts directly in a terminal, notes file, or commit message."
+pubDate: 2017-08-15
+draft: false
+section: Reference
+order: 20
+tags: [electronics, pinout, ascii, dip, reference]
+type: docs
+featured: false
+---
+
+Sometimes you do not need a polished schematic. Sometimes you just need to answer:
+
+"Which side is pin 1 on again?"
+
+This turned into a tiny reference because it is weirdly useful.
+
+## Why bother with ASCII?
+
+Because it works everywhere.
+
+- terminal
+- README
+- commit message
+- lab notes
+- text editor
+- serial console, if you are feeling committed to the bit
+
+No image export. No CAD file. No hunting through tabs. Just the shape of the package and the numbering in plain text.
+
+## A simple pattern
+
+For an 8-pin DIP, the mental model looks like this:
+
+```text
+      ___
+  1 -|   |- 8
+  2 -|   |- 7
+  3 -|   |- 6
+  4 -|___|- 5
+```
+
+That notch at the top matters. Pin numbering runs down the left side, then back up the right.
+
+## Where this is actually handy
+
+- writing quick repair notes
+- documenting breadboard layouts
+- posting help requests without drawing a full schematic
+- reminding yourself which leg is which before making things exciting with 12 volts
+
+## The limitation
+
+ASCII pinouts are great for orientation and quick reference. They are not a replacement for a proper schematic once the project stops being simple.
+
+If your "quick little wiring note" has expanded into three power rails, two buses, and a transistor stage of questionable intent, it is time to graduate to a real diagram.

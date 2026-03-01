@@ -1,0 +1,219 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+
+const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a, b) => {
+  if (a.data.pubDate && b.data.pubDate) {
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+  }
+
+  if (a.data.pubDate) return -1;
+  if (b.data.pubDate) return 1;
+
+  return a.data.title.localeCompare(b.data.title);
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Tools — Chips’nCode"
+      description="Interactive utilities, calculators, experiments, and technical playground tools."
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="tools-index">
+      <header class="page-header">
+        <p class="eyebrow">Tools</p>
+        <h1 class="page-title">Tools</h1>
+        <p class="page-lede">
+          Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread.
+        </p>
+      </header>
+
+      {tools.length === 0 ? (
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Tools coming soon.</p>
+          <p class="empty-sub">
+            Publish tools in the <code>tools</code> collection and they will appear here automatically.
+          </p>
+        </div>
+      ) : (
+        <section class="grid" aria-label="Tools">
+          {tools.map((tool) => (
+            <a href={`/tools/${tool.id}`} class="card" aria-label={`Open tool: ${tool.data.title}`}>
+              <div class="tool-face" aria-hidden="true">
+                <div class="tool-face__grid" />
+                <div class="tool-face__chip">{tool.data.tags?.[0] ? `#${tool.data.tags[0]}` : 'Tool'}</div>
+              </div>
+
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="pill">Tool</span>
+                  {tool.data.pubDate ? (
+                    <span class="pill">
+                      <FormattedDate date={tool.data.pubDate} />
+                    </span>
+                  ) : null}
+                </div>
+                <h2 class="card-title">{tool.data.title}</h2>
+                <p class="card-desc">{tool.data.description}</p>
+              </div>
+            </a>
+          ))}
+        </section>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .tools-index {
+    max-width: min(1100px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 72ch;
+    color: var(--text-2);
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title {
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 80ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  .card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
+  }
+
+  .tool-face {
+    position: relative;
+    min-height: 160px;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(440px 180px at top left, rgba(45, 255, 178, 0.18), transparent 70%),
+      radial-gradient(420px 180px at top right, rgba(37, 99, 235, 0.16), transparent 68%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.03), rgba(15, 23, 42, 0.08)),
+      var(--surface);
+    overflow: hidden;
+  }
+
+  .tool-face__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(100, 116, 139, 0.16) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(100, 116, 139, 0.16) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.45;
+  }
+
+  .tool-face__chip {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--surface-glass-border);
+    background: var(--surface-glass);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.22;
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 760px) {
+    .card {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .card {
+      grid-column: span 4;
+    }
+  }
+</style>

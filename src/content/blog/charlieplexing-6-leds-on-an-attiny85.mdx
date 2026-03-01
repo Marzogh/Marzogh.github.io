@@ -1,0 +1,95 @@
+---
+title: Charlieplexing 6 LEDs on an ATTiny85
+description: "How to bully six LEDs into behaving with just three pins, a timer interrupt, and a tiny bit of smugness."
+pubDate: 2015-08-20
+draft: false
+tags: [electronics, attiny85, charlieplexing, leds, avr]
+featured: false
+---
+
+At some point, every small microcontroller project runs into the same rude question:
+
+How many pins do you *actually* need?
+
+If the answer is "more than the chip has", charlieplexing starts looking very attractive. With an ATTiny85 and three GPIO pins, you can drive six LEDs without adding a shift register, a bigger microcontroller, or a dramatic sigh.
+
+## The trick
+
+Charlieplexing works because each GPIO pin can be in one of three states:
+
+- driving high
+- driving low
+- pretending it was never involved at all (`INPUT` / high impedance)
+
+Take any two pins, drive one high and one low, and current flows through exactly one LED in one direction. Flip the polarity, and the opposite LED lights instead.
+
+With `n` pins, the theoretical maximum is:
+
+```text
+n * (n - 1)
+```
+
+So with three pins, we get:
+
+```text
+3 * (3 - 1) = 6 LEDs
+```
+
+Tiny chip. Mildly unreasonable number of lights. Good result.
+
+## The wiring idea
+
+The six LEDs are connected between every ordered pair of the three pins. In plain English:
+
+- one LED from pin A to pin B
+- one LED from pin B to pin A
+- one LED from pin A to pin C
+- one LED from pin C to pin A
+- one LED from pin B to pin C
+- one LED from pin C to pin B
+
+That directional part matters. An LED is a one-way device, which is exactly why this trick works.
+
+## The software idea
+
+You do **not** leave all six LEDs on at once. You cycle through them quickly enough that your eyeballs politely average it out.
+
+The gist uses a timer interrupt to handle the refresh loop. That is the right move here because it keeps the multiplexing regular instead of depending on whatever chaos your main loop is up to that day.
+
+The important jobs are:
+
+- set all LED pins to high impedance first
+- pick the one LED you want for this cycle
+- set its source pin to `OUTPUT` and `HIGH`
+- set its sink pin to `OUTPUT` and `LOW`
+- move to the next LED on the next interrupt
+
+In other words: clear the stage, spotlight one performer, repeat fast.
+
+## Why I like this approach
+
+- It squeezes surprising mileage out of a tiny chip.
+- It teaches good habits about pin state management.
+- It is one of those tricks that feels like cheating, but in a respectable way.
+
+## The gotchas
+
+Charlieplexing is clever, but it is not magic.
+
+- You need current-limiting resistors. The LEDs are still LEDs, not wishes.
+- Brightness per LED is lower because each one is only on for part of the time.
+- Timing matters. If your refresh rate is too slow, you get flicker instead of glory.
+- If you forget to tri-state the inactive pins, the whole illusion turns into confusion very quickly.
+
+## Where this makes sense
+
+This is a great fit for:
+
+- status indicators
+- tiny wearables
+- small battery projects
+- any build where saving pins matters more than absolute brightness
+
+If you need lots of LEDs at full brightness with independent control, this is probably the point where a driver IC enters the chat.
+
+I have turned the original note into the "why this works" version here, because a little explanation goes a long way when the wiring starts looking like a dare.

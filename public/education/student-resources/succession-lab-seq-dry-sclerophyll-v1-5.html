@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Succession Lab – SEQ Dry Sclerophyll Forest (Post‑Agriculture)</title>
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #374151;
+      --line: #d1d5db;
+      --panel: #ffffff;
+      --soft: #f3f4f6;
+      --blue: #0b4f8a;
+      --green: #2f6b3f;
+      --accent: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 18px 16px 28px 16px;
+    }
+
+    /* Header */
+    .header {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(17,24,39,0.06);
+    }
+    .header-art {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .header-inner {
+      padding: 16px 18px 14px 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0.2px;
+      color: var(--blue);
+    }
+    .sub {
+      margin-top: 6px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(47,107,63,0.10);
+      color: var(--green);
+      border: 1px solid rgba(47,107,63,0.25);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* Layout blocks */
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 14px 14px 12px 14px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .card p {
+      margin: 0 0 10px 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .mini-table th, .mini-table td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .mini-table th {
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .legend-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .sym {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(11,79,138,0.06);
+      border: 1px solid rgba(11,79,138,0.18);
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .legend-item .name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+    .legend-item .desc {
+      margin: 2px 0 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* Quadrat cards */
+    .quadrat-section {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .quadrat-section h2 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    .quadrat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .quadrat-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px 10px 10px;
+      background: #fff;
+    }
+    .q-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 6px 0;
+    }
+    .q-sub {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .quadrat {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .tasks {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .formula {
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(245,158,11,0.35);
+      background: rgba(245,158,11,0.10);
+      color: #92400e;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .remember {
+      margin-top: 14px;
+      border: 1px solid rgba(47,107,63,0.35);
+      background: rgba(47,107,63,0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+    .remember h3 {
+      margin: 0 0 6px 0;
+      color: var(--green);
+      font-size: 16px;
+    }
+    .remember ul {
+      margin-top: 6px;
+    }
+
+    .footer {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0.5cm; }
+      .header { box-shadow: none; }
+      .quadrat-section { break-inside: avoid; }
+      .card, .quadrat-card { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="header">
+      <img class="header-art" src="/assets/media/succession-lab-seq-dry-sclerophyll-header.png" alt="South East Queensland dry sclerophyll forest header image" />
+<div class="header-inner">
+        <h1>Succession Lab – SEQ Dry Sclerophyll Forest (Post‑Agriculture)</h1>
+        <div class="sub">
+          A South East Queensland grazing paddock has been abandoned. Over time, plants recolonise the site and the ecosystem’s structure changes
+          (understory vs canopy). Your job is to use quadrat data to describe <strong>how community composition changes through secondary succession</strong>
+          and to explain <strong>why</strong> those changes happen.
+        </div>
+        <div class="tag">Ecosystem Dynamics • Year 12 Biology</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Scenario</h2>
+        <p>
+          The site was previously used for cattle grazing. The disturbance removed much of the understory and limited tree recruitment.
+          After abandonment, soil remains intact, and recolonisation occurs via seed bank, resprouting, and dispersal.
+        </p>
+        <ul>
+          <li><strong>Location:</strong> Western Brisbane region (SEQ)</li>
+          <li><strong>Ecosystem type:</strong> Dry sclerophyll eucalypt woodland</li>
+          <li><strong>Sampling:</strong> 10 m × 10 m quadrats (each grid square = 1 m²)</li>
+          <li><strong>Layers:</strong> Understory (0–2 m) and canopy (&gt;5 m)</li>
+          <li><strong>Time points:</strong> 5, 20, 50, and 100 years since abandonment</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Species Key</h2>
+        <div class="legend">
+          
+          <div class="legend-item">
+            <div class="sym">○</div>
+            <div>
+              <p class="name">Eucalyptus tereticornis</p>
+              <p class="desc">Forest red gum</p>
+            </div>
+          </div>
+          
+          <div class="legend-item">
+            <div class="sym">▲</div>
+            <div>
+              <p class="name">Acacia spp.</p>
+              <p class="desc">Wattles</p>
+            </div>
+          </div>
+          
+          <div class="legend-item">
+            <div class="sym">■</div>
+            <div>
+              <p class="name">Lophostemon confertus</p>
+              <p class="desc">Brush box</p>
+            </div>
+          </div>
+          
+          <div class="legend-item">
+            <div class="sym">●</div>
+            <div>
+              <p class="name">Native grasses</p>
+              <p class="desc">Themeda triandra</p>
+            </div>
+          </div>
+          
+          <div class="legend-item">
+            <div class="sym">□</div>
+            <div>
+              <p class="name">Banksia spp.</p>
+              <p class="desc"></p>
+            </div>
+          </div>
+          
+          <div class="legend-item">
+            <div class="sym">◇</div>
+            <div>
+              <p class="name">Casuarina spp.</p>
+              <p class="desc">She-oaks</p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="quadrat-section">
+      <h2>Quadrat Survey Data</h2>
+      <p style="margin:0 0 10px 0; color:#374151; font-size:14px; line-height:1.5;">
+        Each grid below shows where individuals were recorded within a single 10 m × 10 m quadrat at each time point.
+        Use the symbols to count each species and calculate percentage composition.
+      </p>
+
+      <h3 style="margin:10px 0 8px 0; font-size:16px; color:#0b4f8a;">Understory (0–2 m)</h3>
+      <div class="quadrat-grid">
+        <div class="quadrat-card"><div class="q-title">Understory – 5 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Understory – 5 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="37.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="109.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="109.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="37.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="55.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="73.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="109.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="127.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="181.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="127.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="73.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="73.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="55.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="181.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="73.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="181.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Understory – 20 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Understory – 20 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="37.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="55.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="163.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="181.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="19.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="19.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="73.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="127.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="145.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="73.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="145.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="163.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="73.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="145.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="73.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="127.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="145.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="163.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="109.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="127.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="181.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="37.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="55.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="73.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="91.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="181.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="37.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="109.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Understory – 50 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Understory – 50 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="73.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="91.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="109.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="19.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="37.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="73.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="109.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="127.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="37.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="145.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="73.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="109.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="127.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="163.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="145.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="181.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="127.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="163.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="181.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="127.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="163.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="73.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="109.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="145.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="181.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="109.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="163.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Understory – 100 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Understory – 100 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="109.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="163.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="73.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="91.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="109.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="145.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="109.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="145.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="55.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="73.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="91.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="109.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="127.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="19.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="73.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="91.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="145.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="19.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="37.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="73.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="91.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="127.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="163.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="181.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">●</text>
+<text x="91.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="109.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="163.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="91.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="37.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="145.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+
+      </div>
+
+      <h3 style="margin:14px 0 8px 0; font-size:16px; color:#2f6b3f;">Canopy (&gt;5 m)</h3>
+      <div class="quadrat-grid">
+        <div class="quadrat-card"><div class="q-title">Canopy – 5 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Canopy – 5 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="37.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="163.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="127.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="145.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Canopy – 20 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Canopy – 20 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="109.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="73.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="127.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="163.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="109.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="91.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="127.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="145.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="181.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="19.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="37.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="181.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="145.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="163.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="73.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="163.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Canopy – 50 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Canopy – 50 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="109.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="127.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="73.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="91.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="19.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="55.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="73.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="19.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="91.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="127.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="163.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="73.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="37.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="181.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="91.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="19.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="91.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="109.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="19.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="91.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="109.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+<div class="quadrat-card"><div class="q-title">Canopy – 100 years</div>
+<svg class="quadrat" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Canopy – 100 years quadrat">
+<rect x="0" y="0" width="200" height="230" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<rect x="0" y="0" width="200" height="34" rx="10" fill="#f3f4f6"/>
+<rect x="10" y="44" width="180" height="180" fill="#ffffff" stroke="#111827" stroke-width="1.25"/>
+<line x1="28" y1="44" x2="28" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="62" x2="190" y2="62" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="46" y1="44" x2="46" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="80" x2="190" y2="80" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="64" y1="44" x2="64" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="98" x2="190" y2="98" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="82" y1="44" x2="82" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="116" x2="190" y2="116" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="100" y1="44" x2="100" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="134" x2="190" y2="134" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="118" y1="44" x2="118" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="152" x2="190" y2="152" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="136" y1="44" x2="136" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="170" x2="190" y2="170" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="154" y1="44" x2="154" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="188" x2="190" y2="188" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="172" y1="44" x2="172" y2="224" stroke="#9ca3af" stroke-width="0.8"/>
+<line x1="10" y1="206" x2="190" y2="206" stroke="#9ca3af" stroke-width="0.8"/>
+<text x="163.0" y="53.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="91.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="109.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="145.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="163.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="181.0" y="71.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="145.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="163.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="145.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="107.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="55.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="73.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="127.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="163.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="181.0" y="125.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="37.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="145.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="163.0" y="143.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">◇</text>
+<text x="37.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="109.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="145.0" y="161.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">▲</text>
+<text x="19.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="37.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="91.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">□</text>
+<text x="109.0" y="179.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="37.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="55.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="73.0" y="197.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">■</text>
+<text x="55.0" y="215.0" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#111827">○</text>
+<text x="10" y="242" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#374151">Each square = 1 m² (10 m × 10 m quadrat)</text>
+</svg></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:14px;">
+      <div class="card">
+        <h2>Environmental Data</h2>
+        <table class="mini-table" aria-label="Environmental data table">
+          <thead>
+            <tr>
+              <th>Time since abandonment</th>
+              <th>Air temp (°C)</th>
+              <th>Soil temp (°C)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>5 years</td><td>31</td><td>34</td></tr><tr><td>20 years</td><td>29</td><td>28</td></tr><tr><td>50 years</td><td>26</td><td>24</td></tr><tr><td>100 years</td><td>24</td><td>22</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px; font-size:13px;">
+          <strong>Hint:</strong> As canopy cover increases, soil surface temperatures usually decrease due to shade and increased moisture retention.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Percentage formula</h2>
+        <div class="formula">
+          Percentage composition = (Number of individuals of a species ÷ Total individuals) × 100
+        </div>
+        <p style="margin-top:10px;">
+          You will create <strong>two</strong> data tables:
+          <br>• one for the <strong>understory</strong> (5 → 50 years)
+          <br>• one for the <strong>canopy</strong> (5 → 100 years)
+        </p>
+      </div>
+    </div>
+
+    <div class="tasks">
+      <div class="card">
+        <h2>Part A — Construct data tables</h2>
+        <ul>
+          <li>For each grid, <strong>count</strong> the number of each symbol.</li>
+          <li>Calculate <strong>percentage composition</strong> for each species at each time point.</li>
+          <li>Record totals clearly (show your working).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Part B — Construct graphs</h2>
+        <ul>
+          <li><strong>Graph 1:</strong> Understory species (% composition) from 5 → 50 years.</li>
+          <li><strong>Graph 2:</strong> Canopy species (% composition) from 5 → 100 years.</li>
+          <li>Axes, scale, title, and legend must be included.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Part C — Data interpretation</h2>
+        <ol style="margin:8px 0 0 18px; color:#374151; line-height:1.5; font-size:14px;">
+          <li>Which species dominate early succession in the understory? Explain why.</li>
+          <li>Which canopy species increase the most over time? What does this suggest about community structure?</li>
+          <li>Describe the relationship between soil temperature and time since abandonment.</li>
+          <li>Does species richness appear to increase, decrease, or stabilise? Support with evidence from your tables.</li>
+          <li>Is there evidence of competitive replacement? Use at least one example.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Part D — Mechanistic explanation</h2>
+        <p>Use correct ecological terms to explain <em>why</em> the community changes over time. Include:</p>
+        <ul>
+          <li><strong>Facilitation:</strong> early species modify the habitat (e.g., shade, litter, soil moisture) making it easier for later species.</li>
+          <li><strong>Competition:</strong> changing light, space, water, and nutrient availability affects survival and recruitment.</li>
+          <li><strong>Tolerance:</strong> later species can persist under lower light and altered soil conditions.</li>
+          <li><strong>Structural complexity:</strong> biomass and canopy cover increase over time.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="remember">
+      <h3>Remember…</h3>
+      <ul>
+        <li>This is <strong>secondary succession</strong> (soil remains after disturbance).</li>
+        <li>Succession does <strong>not</strong> move toward a “perfect final” state — ecosystems keep changing and are often disturbed again.</li>
+        <li>In many SEQ systems, frequent disturbance (fire, storms, floods, human activity) prevents a permanent “climax community”.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

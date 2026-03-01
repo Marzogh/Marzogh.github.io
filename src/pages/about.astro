@@ -1,0 +1,350 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+import personImage from '../assets/about/person.png';
+import potaImage from '../assets/about/pota.png';
+import fieldImage from '../assets/about/field.png';
+import deskImage from '../assets/about/desk.png';
+import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-the-moon.jpg';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="About — Chips’nCode"
+      description="Who is behind Chips’nCode, and why biology, teaching, radio, code, astrophotography, fieldwork, and miniature painting have all ended up under one roof."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main class="about-page">
+      <section class="about-hero panel">
+        <div class="about-hero__copy">
+          <p class="about-kicker">About</p>
+          <h1 class="about-title">A life stitched together from science, code, tinkering, poetry, paint and the cosmos.</h1>
+          <p class="about-lede">
+            I am a teacher, biologist, molecular biologist, ecologist, environmentalist, tinkerer, photographer, poet,
+            radio tragic, space enthusiast, computer geek, and painter of 3D printed miniatures. I was also born at
+            349.19 ppm of atmospheric CO₂, which matters to me because it places my life right on the edge of 350 ppm:
+            one of those numbers that marks the point where we should have stopped and absolutely did not.
+          </p>
+          <p class="about-lede about-lede--small">
+            Chips&rsquo;nCode is where all of that gets stacked into one place: code, fieldwork, lessons, radio, optics,
+            ecology, astronomy, and whatever useful nonsense happens when we stop pretending they are separate.
+          </p>
+        </div>
+
+        <div class="about-collage" aria-hidden="true">
+          <figure class="about-shot about-shot--portrait">
+            <Image src={personImage} alt="" widths={[520, 760]} sizes="(max-width: 900px) 80vw, 24vw" />
+          </figure>
+          <figure class="about-shot about-shot--radio">
+            <Image src={potaImage} alt="" widths={[640, 960]} sizes="(max-width: 900px) 90vw, 32vw" />
+          </figure>
+          <figure class="about-shot about-shot--field">
+            <Image src={fieldImage} alt="" widths={[640, 960]} sizes="(max-width: 900px) 86vw, 26vw" />
+          </figure>
+          <figure class="about-shot about-shot--moon">
+            <Image src={moonImage} alt="" widths={[360, 560]} sizes="(max-width: 900px) 45vw, 14vw" />
+          </figure>
+          <div class="about-scribble about-scribble--one">cells ↔ circuits ↔ classrooms ↔ galaxies</div>
+          <div class="about-scribble about-scribble--two">everything leaks into everything else</div>
+        </div>
+      </section>
+
+      <section class="about-spread">
+        <aside class="about-margin panel panel--soft">
+          <figure class="margin-photo">
+            <Image src={deskImage} alt="A crowded workbench with radio gear, notes, painting tools, a snake, and chickens outside." widths={[720, 1080]} sizes="(max-width: 980px) 100vw, 28vw" />
+          </figure>
+          <p class="margin-note">
+            The desk photo is not metaphorical. It really does look like that sometimes. Yes, there is a snake. Yes,
+            there are chickens. No, I will not pretend my life arrives in neat thematic categories. Yes it is AI
+            generated. No I will NOT show you my real desk.
+          </p>
+          <p class="margin-note">
+            On the code side, you can find me on <a href="https://github.com/Marzogh">GitHub</a>. On the radio side, I
+            answer to <strong>VK4MPB</strong>, <strong>VK7MPB</strong>, <strong>VK4ETA</strong>, and
+            <strong>VK4GOD</strong>, which still looks like a callsign that ought to summon lightning or require a
+            cooldown timer.
+          </p>
+        </aside>
+
+        <article class="about-story panel">
+          <p>
+            This site is mixed because I thrive in the sheer variety of the universe. Teaching leaks into ecology,
+            ecology leaks into electronics, electronics leak into radio, radio leaks into astrophotography, and all of
+            them eventually end up sharing bench space, notebook space, and brain space. Trying to sort all that into
+            neat, sealed compartments would be tidier, but it would also be false.
+          </p>
+          <p>
+            A good field survey, a good lesson, a good antenna deployment, and a good imaging session all rely on much
+            the same instincts. You look carefully, make a plan, discover the world has edited your plan without
+            consulting you, and then adapt with whatever dignity remains. After that, if you are sensible, you write
+            down what actually happened so Future You has some chance of being less foolish next time.
+          </p>
+          <p>
+            That is probably the real connective tissue here. I like systems. I like patterns. I like understanding how
+            one thing quietly explains another. Sometimes that means cells and ecosystems. Sometimes it means firmware,
+            instrumentation, or radio propagation. Sometimes it means painting tiny plastic goblins because patience,
+            light, colour, and absurdly fine detail are clearly transferable skills.
+          </p>
+          <p>
+            Everything in this universe is connected, and eventually all of it is heading for entropy soup. In the
+            meantime, we can make some temporary, useful, beautiful semblance of order out of the chaos, with full
+            knowledge that we are mostly rearranging the chaos while increasing it somewhere else. I do not find that
+            bleak. If anything, I find it oddly comforting. It feels like permission to pay attention.
+          </p>
+          <p>
+            So this place ends up being part field notebook, part lab bench, part observatory log, part classroom prep
+            book, and part workbench covered in cables, maps, lenses, paint, and whatever else the current problem has
+            demanded. If it feels a little unruly, good. The world is unruly. The fun part is trying to understand it
+            anyway, and occasionally leaving better notes behind.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .about-page {
+    max-width: min(1200px, calc(100% - 2 * var(--space-5)));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 1fr);
+    gap: var(--space-5);
+    align-items: center;
+    background:
+      radial-gradient(820px 260px at top right, rgba(37, 99, 235, 0.10), transparent 72%),
+      radial-gradient(620px 220px at bottom left, rgba(34, 197, 94, 0.08), transparent 78%),
+      radial-gradient(460px 160px at 60% 10%, rgba(251, 113, 133, 0.08), transparent 76%),
+      #fff;
+  }
+
+  .about-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .about-kicker {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .about-title,
+  .about-lede,
+  .margin-note,
+  .about-story p {
+    margin: 0;
+  }
+
+  .about-title {
+    max-width: 14ch;
+  }
+
+  .about-lede {
+    max-width: 62ch;
+    font-size: 1.08rem;
+    color: var(--text-2);
+  }
+
+  .about-lede--small {
+    font-size: 1rem;
+  }
+
+  .about-collage {
+    position: relative;
+    min-height: 520px;
+  }
+
+  .about-shot {
+    position: absolute;
+    margin: 0;
+    padding: 10px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+  }
+
+  .about-shot :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .about-shot--portrait {
+    top: 0;
+    left: 8px;
+    width: min(250px, 42%);
+    transform: rotate(-3deg);
+  }
+
+  .about-shot--radio {
+    top: 26px;
+    right: 0;
+    width: min(430px, 72%);
+    transform: rotate(3deg);
+  }
+
+  .about-shot--field {
+    left: 74px;
+    bottom: 0;
+    width: min(390px, 66%);
+    transform: rotate(-2deg);
+  }
+
+  .about-shot--moon {
+    right: 28px;
+    bottom: 50px;
+    width: min(170px, 26%);
+    transform: rotate(4deg);
+  }
+
+  .about-scribble {
+    position: absolute;
+    z-index: 3;
+    font-size: 0.84rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--text-2) 82%, white 18%);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .about-scribble--one {
+    top: 10px;
+    right: 54px;
+    transform: rotate(-2deg);
+  }
+
+  .about-scribble--two {
+    left: 20px;
+    bottom: 18px;
+    transform: rotate(2deg);
+  }
+
+  .about-spread {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .about-margin {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: 92px;
+  }
+
+  .margin-photo {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .margin-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .margin-note {
+    color: var(--text-2);
+  }
+
+  .about-story {
+    column-count: 2;
+    column-gap: var(--space-6);
+    background:
+      linear-gradient(135deg, rgba(11, 18, 32, 0.03), rgba(37, 99, 235, 0.05)),
+      #fff;
+  }
+
+  .about-story p {
+    break-inside: avoid;
+    margin-bottom: 1.2rem;
+    color: var(--text-2);
+  }
+
+  .about-story p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 1020px) {
+    .about-page {
+      max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .about-hero,
+    .about-spread {
+      grid-template-columns: 1fr;
+    }
+
+    .about-margin {
+      position: static;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .about-collage {
+      min-height: 740px;
+    }
+
+    .about-shot--portrait {
+      left: 0;
+      width: min(260px, 70%);
+    }
+
+    .about-shot--radio {
+      top: 170px;
+      right: 0;
+      width: min(420px, 88%);
+    }
+
+    .about-shot--field {
+      left: 8px;
+      bottom: 0;
+      width: min(390px, 82%);
+    }
+
+    .about-shot--moon {
+      right: 14px;
+      bottom: 214px;
+      width: min(170px, 34%);
+    }
+
+    .about-scribble--one {
+      top: 142px;
+      right: 16px;
+    }
+
+    .about-story {
+      column-count: 1;
+    }
+  }
+</style>

@@ -1,0 +1,477 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { getTagMeta, toTagSlug } from '../../utils/tags';
+
+const COLLECTION_CONFIG = [
+  { name: 'blog', label: 'Blog', basePath: '/blog' },
+  { name: 'projects', label: 'Projects', basePath: '/projects' },
+  { name: 'docs', label: 'Docs', basePath: '/docs' },
+  { name: 'education', label: 'Education', basePath: '/education' },
+  { name: 'tools', label: 'Tools', basePath: '/tools' },
+  { name: 'astrophotography', label: 'Astrophotography', basePath: '/astrophotography' },
+] as const;
+
+type CollectionName = (typeof COLLECTION_CONFIG)[number]['name'];
+
+function toDateValue(data: Record<string, unknown>) {
+  const candidate =
+    data.pubDate ??
+    data.updatedDate ??
+    data.sessionDate ??
+    null;
+  const date = candidate instanceof Date ? candidate : new Date(String(candidate ?? ''));
+  return Number.isNaN(date.valueOf()) ? 0 : date.valueOf();
+}
+
+function pickThumb(data: Record<string, unknown>) {
+  return (
+    data.thumbnail ??
+    data.thumb ??
+    data.cover ??
+    data.coverImage ??
+    data.heroImage ??
+    data.image ??
+    null
+  );
+}
+
+export async function getStaticPaths() {
+  const slugToLabel = new Map<string, string>();
+  const collectionConfig = [
+    { name: 'blog', label: 'Blog', basePath: '/blog' },
+    { name: 'projects', label: 'Projects', basePath: '/projects' },
+    { name: 'docs', label: 'Docs', basePath: '/docs' },
+    { name: 'education', label: 'Education', basePath: '/education' },
+    { name: 'tools', label: 'Tools', basePath: '/tools' },
+    { name: 'astrophotography', label: 'Astrophotography', basePath: '/astrophotography' },
+  ] as const;
+
+  for (const config of collectionConfig) {
+    const entries = await getCollection(config.name, ({ data }) => !data.draft);
+    for (const entry of entries) {
+      const tags = Array.isArray(entry.data.tags) ? entry.data.tags : [];
+      for (const tag of tags) {
+        const slug = toTagSlug(tag);
+        if (!slugToLabel.has(slug)) slugToLabel.set(slug, tag);
+      }
+    }
+  }
+
+  return [...slugToLabel.entries()].map(([tag, label]) => ({
+    params: { tag },
+    props: { label },
+  }));
+}
+
+const { tag } = Astro.params;
+const { label } = Astro.props;
+
+if (!tag) {
+  throw new Error('Missing route parameter: tag');
+}
+
+const allItems = [];
+
+for (const config of COLLECTION_CONFIG) {
+  const entries = await getCollection(config.name, ({ data }) => !data.draft);
+  for (const entry of entries) {
+    const tags = Array.isArray(entry.data.tags) ? entry.data.tags : [];
+    if (!tags.some((item) => toTagSlug(item) === tag)) continue;
+
+    allItems.push({
+      kind: config.label,
+      url: `${config.basePath}/${entry.id}`,
+      title: entry.data.title,
+      description: entry.data.description ?? '',
+      tags,
+      thumb: pickThumb(entry.data as Record<string, unknown>),
+      dateValue: toDateValue(entry.data as Record<string, unknown>),
+    });
+  }
+}
+
+allItems.sort((a, b) => b.dateValue - a.dateValue || a.title.localeCompare(b.title));
+
+const countByKind = allItems.reduce<Record<string, number>>((acc, item) => {
+  acc[item.kind] = (acc[item.kind] ?? 0) + 1;
+  return acc;
+}, {});
+
+const activeTag = getTagMeta(tag, label);
+const coTagCounts = new Map<string, { label: string; count: number }>();
+
+for (const item of allItems) {
+  for (const itemTag of item.tags) {
+    const itemSlug = toTagSlug(itemTag);
+    if (itemSlug === tag) continue;
+    const current = coTagCounts.get(itemSlug);
+    coTagCounts.set(itemSlug, {
+      label: itemTag,
+      count: (current?.count ?? 0) + 1,
+    });
+  }
+}
+
+const relatedTags = [...coTagCounts.entries()]
+  .sort((a, b) => {
+    const relatedBias = (activeTag.related.includes(b[0]) ? 1 : 0) - (activeTag.related.includes(a[0]) ? 1 : 0);
+    if (relatedBias !== 0) return relatedBias;
+    return b[1].count - a[1].count || a[1].label.localeCompare(b[1].label);
+  })
+  .slice(0, 8)
+  .map(([slug, info]) => ({
+    slug,
+    label: getTagMeta(slug, info.label).label,
+    count: info.count,
+  }));
+
+const pageTitle = `${activeTag.label} — Tagged Content`;
+const pageDescription = activeTag.description;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <header class:list={['page-header', activeTag.family === 'radio' && 'page-header--radio']}>
+        <p class="eyebrow">{activeTag.eyebrow}</p>
+        <h1 class="page-title">{activeTag.label}</h1>
+        <p class="page-lede">{pageDescription}</p>
+        <div class="summary">
+          <div class="summaryCard">
+            <div class="summaryCard__num">{allItems.length}</div>
+            <div class="summaryCard__lbl">Tagged item{allItems.length === 1 ? '' : 's'}</div>
+          </div>
+          <div class="summaryCard">
+            <div class="summaryCard__num">{Object.keys(countByKind).length}</div>
+            <div class="summaryCard__lbl">Collection{Object.keys(countByKind).length === 1 ? '' : 's'} represented</div>
+          </div>
+          <div class="summaryBreakdown">
+            {Object.entries(countByKind).map(([kind, count]) => (
+              <span class="summary__pill">{kind}: {count}</span>
+            ))}
+          </div>
+        </div>
+        {relatedTags.length ? (
+          <div class="related">
+            <p class="related__label">Related tags</p>
+            <div class="related__list">
+              {relatedTags.map((relatedTag) => (
+                <a class="pill" href={`/tags/${relatedTag.slug}`}>
+                  #{relatedTag.label} <span class="pill__count">{relatedTag.count}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </header>
+
+      {allItems.length === 0 ? (
+        <div class="panel panel--soft empty">
+          <p class="empty-title">Nothing tagged {activeTag.label} yet.</p>
+          <p class="empty-sub">Add this tag to published entries and they will appear here automatically.</p>
+        </div>
+      ) : (
+        <section class="grid" aria-label={`Items tagged ${activeTag.label}`}>
+          {allItems.map((item) => (
+            <a href={item.url} class="card" aria-label={`Open ${item.kind}: ${item.title}`}>
+              <div class="thumb" aria-hidden="true">
+                {item.thumb ? (
+                  <img src={typeof item.thumb === 'string' ? item.thumb : item.thumb.src ?? item.thumb} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <div class="thumb-placeholder">
+                    <div class="thumb-lines" />
+                    <div class="thumb-label">Tagged {activeTag.label}</div>
+                  </div>
+                )}
+              </div>
+
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="pill">{item.kind}</span>
+                  {item.tags
+                    .filter((itemTag) => toTagSlug(itemTag) !== tag)
+                    .slice(0, 2)
+                    .map((itemTag) => <span class="pill pill--muted">#{getTagMeta(itemTag).label}</span>)}
+                </div>
+                <h2 class="card-title">{item.title}</h2>
+                {item.description ? <p class="card-desc">{item.description}</p> : null}
+              </div>
+            </a>
+          ))}
+        </section>
+      )}
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background:
+      radial-gradient(620px 180px at top right, rgba(37, 99, 235, 0.08), transparent 72%),
+      radial-gradient(460px 160px at bottom left, rgba(45, 255, 178, 0.08), transparent 74%),
+      var(--surface-raised);
+  }
+
+  .page-header--radio {
+    background:
+      radial-gradient(620px 180px at top right, rgba(37, 99, 235, 0.14), transparent 72%),
+      radial-gradient(560px 200px at bottom left, rgba(16, 185, 129, 0.12), transparent 72%),
+      var(--surface-raised);
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .page-title {
+    margin: 0;
+  }
+
+  .page-lede {
+    margin: 0;
+    max-width: 70ch;
+    color: var(--text-2);
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .summaryCard,
+  .summaryBreakdown,
+  .summary__pill,
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .summaryCard,
+  .summaryBreakdown {
+    border: 1px solid var(--border);
+    background: var(--surface-glass);
+    border-radius: 18px;
+    padding: 0.9rem 1rem;
+  }
+
+  .summaryCard {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .summaryCard__num {
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .summaryCard__lbl {
+    margin-top: 6px;
+    font-size: 0.92rem;
+    color: var(--text-2);
+  }
+
+  .summaryBreakdown {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+
+  .summary__pill,
+  .pill {
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-glass);
+    color: var(--text-2);
+    font-size: 0.92rem;
+  }
+
+  .pill--muted {
+    opacity: 0.82;
+  }
+
+  .pill__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-raised) 78%, var(--surface) 22%);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .related {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .related__label {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .related__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .empty {
+    padding: var(--space-6);
+  }
+
+  .empty-title,
+  .empty-sub {
+    margin: 0;
+  }
+
+  .empty-sub {
+    margin-top: 0.4rem;
+    color: var(--text-2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+  }
+
+  .card {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
+
+  .thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .thumb-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, rgba(47,107,63,0.10), rgba(11,79,138,0.08));
+  }
+
+  .thumb-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(100,116,139,0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(100,116,139,0.18) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.25;
+  }
+
+  .thumb-label {
+    position: relative;
+    z-index: 1;
+    padding: 0.7rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-glass);
+    color: var(--text);
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  @media (min-width: 740px) {
+    .card {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .card {
+      grid-column: span 4;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .page-header {
+      padding: var(--space-4);
+    }
+  }
+</style>
