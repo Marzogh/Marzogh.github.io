@@ -1,0 +1,694 @@
+---
+title: ADIF Log Analyser
+description: "Drop in one or more ADIF logs and get a proper look at what happened: totals, bands, modes, timing, the full QSO table, and perhaps an export to POTA or SOTA format without having to squint at raw tags."
+pubDate: 2026-03-01
+draft: false
+tags: [radio, adif, logging, amateur-radio, analysis]
+---
+
+If ADIF has ever made you think, "yes, brilliant, a plain text format that looks like a lizard coughed up XML," this page is for you.
+
+Drop in one or more `.adi` or `.adif` files and it will pull out the useful bits, stack the logs together, and show you what actually happened on air.
+
+<section className="adifWorkbench" data-adif-tool>
+  <div className="adifPanel adifPanel--intro">
+    <div className="adifIntro">
+      <div>
+        <p className="adifEyebrow">ADIF in, clarity out</p>
+        <h2>Feed it logs. It does the tedious part.</h2>
+        <p className="adifLead">
+          This one is deliberately local and nosy. Your files stay in your browser, the page does the parsing on your machine, and nobody else gets a peek at your glorious pile of contacts.
+        </p>
+      </div>
+
+      <label className="adifDropzone" for="adif-file-input" data-adif-dropzone>
+        <input id="adif-file-input" type="file" accept=".adi,.adif,text/plain" multiple data-adif-input />
+        <strong>Drop ADIF logs here</strong>
+        <span>or click and rummage around for them the old-fashioned way</span>
+      </label>
+    </div>
+
+    <div className="adifStatus" data-adif-status>
+      No logs loaded yet. The dashboard below is waiting patiently and trying not to look smug about it.
+    </div>
+
+    <div className="adifFileList" data-adif-files hidden />
+  </div>
+
+  <div className="adifEmpty adifPanel" data-adif-empty>
+    <p>
+      Once you load a log, this page will show totals, active span, band and mode breakdowns, a rate chart, and the full QSO table with search and filters.
+    </p>
+  </div>
+
+  <section className="adifPanel adifPanel--full adifManual">
+    <div className="adifPanel__header">
+      <h3>Or just type the log in by hand</h3>
+      <p>If the log export is not handy, add QSOs manually and build the ADIF in-browser one contact at a time.</p>
+    </div>
+
+    <form className="adifManualGrid" data-adif-manual-form>
+      <label>
+        <span>Callsign</span>
+        <input type="text" placeholder="VK4ABC" data-manual-call required />
+      </label>
+
+      <label>
+        <span>Date (UTC)</span>
+        <input type="date" data-manual-date required />
+      </label>
+
+      <label>
+        <span>Time (UTC)</span>
+        <input type="time" step="1" data-manual-time required />
+      </label>
+
+      <label>
+        <span>Band</span>
+        <input type="text" placeholder="40m" data-manual-band />
+      </label>
+
+      <label>
+        <span>Mode</span>
+        <input type="text" placeholder="SSB" data-manual-mode />
+      </label>
+
+      <label>
+        <span>Grid square</span>
+        <input type="text" placeholder="QG62" data-manual-grid />
+      </label>
+
+      <label>
+        <span>RST sent</span>
+        <input type="text" placeholder="59" data-manual-rst-sent />
+      </label>
+
+      <label>
+        <span>RST received</span>
+        <input type="text" placeholder="57" data-manual-rst-received />
+      </label>
+
+      <label className="adifManualWide">
+        <span>Reference</span>
+        <input type="text" placeholder="POTA, SOTA, WWFF, or whatever other useful alphabet soup applies" data-manual-ref />
+      </label>
+
+      <label className="adifManualWide">
+        <span>Station callsign (optional)</span>
+        <input type="text" placeholder="VK4MPB" data-manual-station />
+      </label>
+
+      <div className="adifManualActions adifManualWide">
+        <button type="submit" className="buttonLike">Add to log</button>
+        <p className="adifExportStatus" data-adif-manual-status />
+      </div>
+    </form>
+  </section>
+
+  <div className="adifResults" data-adif-results hidden>
+    <section className="adifStats" aria-label="ADIF summary">
+      <article className="adifStat">
+        <span className="adifStat__label">Total QSOs</span>
+        <strong className="adifStat__value" data-kpi="total">0</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Files</span>
+        <strong className="adifStat__value" data-kpi="files">0</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Active span</span>
+        <strong className="adifStat__value" data-kpi="duration">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">First QSO</span>
+        <strong className="adifStat__value" data-kpi="first">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Last QSO</span>
+        <strong className="adifStat__value" data-kpi="last">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Bands heard</span>
+        <strong className="adifStat__value" data-kpi="bands">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Modes</span>
+        <strong className="adifStat__value" data-kpi="modes">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Unique calls</span>
+        <strong className="adifStat__value" data-kpi="calls">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Possible duplicates</span>
+        <strong className="adifStat__value" data-kpi="duplicates">—</strong>
+      </article>
+      <article className="adifStat">
+        <span className="adifStat__label">Validation warnings</span>
+        <strong className="adifStat__value" data-kpi="warnings">—</strong>
+      </article>
+    </section>
+
+    <section className="adifPanel adifPanel--full adifWarnings" data-adif-warnings-panel hidden>
+      <div className="adifPanel__header">
+        <h3>Things worth a raised eyebrow</h3>
+        <p>Nothing here is an instant disaster, but this is where the page points out malformed timestamps, band/frequency disagreements, missing callsigns, and any suspicious copy-paste enthusiasm. Duplicate checks here use a fuzzy 90-second window.</p>
+      </div>
+
+      <div className="adifWarningSummary" data-adif-warning-summary />
+      <ul className="adifWarningList" data-adif-warning-list />
+    </section>
+
+    <div className="adifAnalysis">
+      <section className="adifPanel adifPanel--chart">
+        <div className="adifPanel__header">
+          <h3>QSO rate</h3>
+          <p data-adif-rate-meta>Load some logs and it will draw the story of your activation, contest, or midnight radio detour.</p>
+        </div>
+        <canvas className="adifChart" width="900" height="280" data-adif-chart />
+      </section>
+
+      <section className="adifPanel">
+        <div className="adifPanel__header">
+          <h3>Band breakdown</h3>
+          <p>The usual suspects, sorted by how busy they were.</p>
+        </div>
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Band</th>
+                <th>QSOs</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody data-adif-band-table />
+          </table>
+        </div>
+      </section>
+
+      <section className="adifPanel">
+        <div className="adifPanel__header">
+          <h3>Mode breakdown</h3>
+          <p>Because sometimes the log is basically "SSB and consequences".</p>
+        </div>
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>QSOs</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody data-adif-mode-table />
+          </table>
+        </div>
+      </section>
+
+      <section className="adifPanel adifPanel--full">
+        <div className="adifPanel__header">
+          <h3>QSO table</h3>
+          <p>Search by callsign, band, mode, grid square, or reference and it will stop pretending the raw log is a sensible interface.</p>
+        </div>
+
+        <div className="adifFilters">
+          <label>
+            <span>Search</span>
+            <input type="search" placeholder="VK4..., 40m, SSB, QG62..." data-adif-filter />
+          </label>
+
+          <label>
+            <span>Band</span>
+            <select data-adif-band>
+              <option value="">All bands</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Mode</span>
+            <select data-adif-mode>
+              <option value="">All modes</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>UTC</th>
+                <th>Call</th>
+                <th>Band</th>
+                <th>Mode</th>
+                <th>RST S</th>
+                <th>RST R</th>
+                <th>Grid</th>
+                <th>Ref</th>
+              </tr>
+            </thead>
+            <tbody data-adif-qso-table />
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section className="adifPanel adifPanel--full adifExport" data-adif-export hidden>
+    <div className="adifPanel__header">
+      <h3>Export a cleaned-up ADIF</h3>
+      <p>Turn the parsed records back into a fresh ADI export, stamp them for POTA or SOTA, or kick them out as CSV or JSON when another tool wants the data in plainer clothes.</p>
+    </div>
+
+    <div className="adifExportGrid">
+      <label>
+        <span>Preset</span>
+        <select data-adif-export-preset>
+          <option value="generic">Generic ADIF export</option>
+          <option value="pota-activator">POTA activator</option>
+          <option value="pota-hunter">POTA hunter</option>
+          <option value="sota-activator">SOTA activator</option>
+          <option value="sota-chaser">SOTA chaser</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Output filename</span>
+        <input type="text" value="adif-export" data-adif-export-filename />
+      </label>
+
+      <label>
+        <span>Station callsign</span>
+        <input type="text" placeholder="VK4..." data-adif-export-station />
+      </label>
+
+      <label>
+        <span>Operator</span>
+        <input type="text" placeholder="Optional" data-adif-export-operator />
+      </label>
+
+      <label>
+        <span>Your park or summit ref</span>
+        <input type="text" placeholder="VK-1234 or VK/XX-000" data-adif-export-my-ref />
+      </label>
+
+      <label>
+        <span>Contact park or summit ref</span>
+        <input type="text" placeholder="Optional for summit-to-summit" data-adif-export-contact-ref />
+      </label>
+
+      <label>
+        <span>Duplicate handling on export</span>
+        <select data-adif-dedupe-mode>
+          <option value="keep-all">Keep everything</option>
+          <option value="keep-first-exact">Drop exact duplicates after the first one</option>
+          <option value="keep-first-fuzzy">Drop fuzzy duplicates within 90 seconds</option>
+        </select>
+      </label>
+    </div>
+
+    <label className="adifCheckbox">
+      <input type="checkbox" data-adif-export-overwrite />
+      <span>Overwrite existing award/reference fields instead of only filling blanks.</span>
+    </label>
+
+    <div className="adifExportActions">
+      <button type="button" className="buttonLike" data-adif-export-download data-export-format="adi">Download ADI</button>
+      <button type="button" className="buttonLike buttonLike--ghost" data-adif-export-download data-export-format="csv">Download CSV</button>
+      <button type="button" className="buttonLike buttonLike--ghost" data-adif-export-download data-export-format="json">Download JSON</button>
+      <p className="adifExportStatus" data-adif-export-status />
+    </div>
+  </section>
+</section>
+
+This parser is practical rather than ceremonial. It is happy with normal exported logs and far less interested in winning awards for handling every exotic ADIF edge case ever invented by humanity. So, my apologies if your particular contest format turns out to be unreadable here. Shoot me an email and I might get around to teaching it some new tricks soon.
+
+<style>{String.raw`
+  .adifWorkbench{
+    display: grid;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .adifPanel{
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background:
+      radial-gradient(420px 180px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 92%, white 8%), var(--surface-raised));
+    box-shadow: var(--shadow-sm);
+    padding: 1.25rem;
+  }
+
+  .adifPanel--intro{
+    padding: 1.5rem;
+  }
+
+  .adifIntro{
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .adifEyebrow{
+    margin: 0 0 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    color: var(--text-2);
+  }
+
+  .adifLead{
+    margin: 0;
+    max-width: 58ch;
+    color: var(--text-2);
+  }
+
+  .adifDropzone{
+    display: grid;
+    place-items: center;
+    gap: 0.45rem;
+    min-height: 180px;
+    border: 2px dashed color-mix(in srgb, var(--accent) 35%, var(--border) 65%);
+    border-radius: 20px;
+    padding: 1.25rem;
+    background:
+      radial-gradient(260px 100px at top left, rgba(45, 255, 178, 0.12), transparent 70%),
+      color-mix(in srgb, var(--surface) 88%, var(--surface-raised) 12%);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+  }
+
+  .adifDropzone:hover,
+  .adifDropzone.is-dragover{
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 52%, var(--border) 48%);
+    background:
+      radial-gradient(260px 120px at top left, rgba(45, 255, 178, 0.18), transparent 72%),
+      color-mix(in srgb, var(--surface) 80%, var(--surface-raised) 20%);
+  }
+
+  .adifDropzone input{
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .adifDropzone strong{
+    font-size: 1.1rem;
+  }
+
+  .adifDropzone span{
+    color: var(--text-2);
+  }
+
+  .adifStatus{
+    margin-top: 1rem;
+    color: var(--text-2);
+  }
+
+  .adifStatus[data-state='error']{
+    color: #b42318;
+  }
+
+  .adifFileList{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+
+  .adifFilePill{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 84%, white 16%);
+    font-size: 0.92rem;
+  }
+
+  .adifEmpty{
+    color: var(--text-2);
+  }
+
+  .adifResults{
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .adifStats{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .adifStat{
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface) 85%, white 15%);
+    min-height: 118px;
+  }
+
+  .adifStat__label{
+    color: var(--text-2);
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .adifStat__value{
+    font-size: clamp(1.05rem, 2vw, 1.6rem);
+    line-height: 1.15;
+  }
+
+  .adifAnalysis{
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .adifPanel__header{
+    display: grid;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .adifPanel__header h3,
+  .adifPanel__header p{
+    margin: 0;
+  }
+
+  .adifPanel__header p{
+    color: var(--text-2);
+  }
+
+  .adifPanel--chart{
+    overflow: hidden;
+  }
+
+  .adifChart{
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--surface) 90%, white 10%);
+    border: 1px solid var(--border);
+  }
+
+  .adifFilters{
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .adifFilters label{
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .adifFilters input,
+  .adifFilters select,
+  .adifExport input,
+  .adifExport select{
+    min-height: 46px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 88%, white 12%);
+    color: var(--text);
+    padding: 0.7rem 0.85rem;
+    font: inherit;
+  }
+
+  .adifExportGrid{
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .adifManualGrid{
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .adifWarnings{
+    display: grid;
+    gap: 1rem;
+  }
+
+  .adifWarningSummary{
+    color: var(--text-2);
+  }
+
+  .adifWarningList{
+    display: grid;
+    gap: 0.75rem;
+    padding-left: 1.15rem;
+    margin: 0;
+  }
+
+  .adifWarningList li{
+    color: var(--text-2);
+  }
+
+  .adifExportGrid label{
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .adifManualGrid label{
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .adifCheckbox{
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    color: var(--text-2);
+  }
+
+  .adifCheckbox input{
+    inline-size: 18px;
+    block-size: 18px;
+  }
+
+  .adifExportActions{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.15rem;
+  }
+
+  .buttonLike{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.85rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border) 45%);
+    background: var(--accent);
+    color: white;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .buttonLike:hover{
+    transform: translateY(-1px);
+    filter: saturate(1.05);
+    box-shadow: var(--shadow-md);
+  }
+
+  .buttonLike--ghost{
+    background: color-mix(in srgb, var(--surface) 82%, white 18%);
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  .adifExportStatus{
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  .adifManualActions{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .tableWrap{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tableWrap table{
+    min-width: 100%;
+  }
+
+  .adifPanel--full .tableWrap table{
+    min-width: 760px;
+  }
+
+  .adifPanel :is(table, th, td){
+    font-size: 0.96rem;
+  }
+
+  .adifPanel :is(th, td){
+    white-space: nowrap;
+  }
+
+  @media (min-width: 800px){
+    .adifIntro{
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      align-items: stretch;
+    }
+
+    .adifStats{
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .adifAnalysis{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .adifPanel--chart,
+    .adifPanel--full{
+      grid-column: 1 / -1;
+    }
+
+    .adifFilters{
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+
+    .adifExportGrid{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .adifManualGrid{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .adifManualWide{
+      grid-column: span 3;
+    }
+  }
+`}</style>
+
+<script type="module" src="/scripts/adif-log-analyser.js"></script>

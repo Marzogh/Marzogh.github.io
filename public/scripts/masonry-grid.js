@@ -28,7 +28,7 @@
       const gap = parseFloat(styles.getPropertyValue('gap'));
       if (!row) return;
       item.style.gridRowEnd = 'auto';
-      const height = item.getBoundingClientRect().height;
+      const height = item.scrollHeight || item.getBoundingClientRect().height;
       const span = Math.ceil((height + gap) / (row + gap));
       item.style.gridRowEnd = `span ${span}`;
     };
@@ -39,6 +39,7 @@
     getItems(grid).forEach((item) => observer.observe(item));
     window.addEventListener('load', refresh, { once: true });
     window.addEventListener('resize', refresh);
+    grid.dataset.masonryReady = 'true';
     refresh();
   };
 

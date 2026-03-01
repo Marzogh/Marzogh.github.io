@@ -128,7 +128,7 @@ const enableMasonry = tools.length > 1;
     gap: var(--space-5);
   }
 
-  .grid--masonry {
+  .grid--masonry[data-masonry-ready='true'] {
     grid-auto-flow: dense;
     grid-auto-rows: 12px;
   }

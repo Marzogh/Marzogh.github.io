@@ -70,7 +70,7 @@ const { Content } = await render(entry);
           {entry.data.tags?.length ? (
             <div class="docs-tags" aria-label="Document tags">
               {entry.data.tags.map((tag) => (
-                <a class="pill" href={`/tags/${toTagSlug(tag)}`}>{tag}</a>
+                <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
               ))}
             </div>
           ) : null}
@@ -146,6 +146,17 @@ const { Content } = await render(entry);
   .docs-meta__item {
     color: var(--muted);
     font-size: 0.95rem;
+  }
+
+  .tagLink {
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+
+  .tagLink:hover {
+    color: var(--accent);
   }
 
   .docs-body {
