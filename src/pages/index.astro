@@ -21,6 +21,11 @@ const latestProjects = [...allProjects]
   .sort((a, b) => entryDateValue(b) - entryDateValue(a))
   .slice(0, 5);
 
+const allTools = await getCollection('tools', ({ data }) => !data.draft);
+const latestTools = [...allTools]
+  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
+  .slice(0, 5);
+
 const toTagLine = (entry) => {
   const tags = entry?.data?.tags;
   if (Array.isArray(tags) && tags.length) return tags.slice(0, 4).join(' · ');
@@ -171,13 +176,20 @@ const rest = (pill) => byPill[pill].slice(3);
           </div>
         </section>
 
-        <section class="home-card feature-band__intro home-card--elsewhere" aria-label="Quick links">
-          <p class="feature-band__kicker">Elsewhere on the site</p>
-          <div class="quick__grid">
-            <a class="quick__link" href="/docs">Documentation</a>
-            <a class="quick__link" href="/tools">Tools</a>
-            <a class="quick__link" href="/about">About</a>
+        <section class="home-card dash__col home-card--tools" aria-label="Latest tools">
+          <div class="dash__head">
+            <h2 class="dash__title">Latest tools</h2>
+            <a class="dash__more" href="/tools">All tools →</a>
           </div>
+
+          <ul class="dash__list">
+            {latestTools.map((tool) => (
+              <li>
+                <a href={`/tools/${safeSlug(tool)}`}>{tool.data?.title ?? safeSlug(tool)}</a>
+                {toTagLine(tool) ? <span class="dash__sub">{toTagLine(tool)}</span> : null}
+              </li>
+            ))}
+          </ul>
         </section>
 
         <a class="home-card feature__tile feature__tile--wide home-card--feature" href="/projects" aria-label="Featured build">

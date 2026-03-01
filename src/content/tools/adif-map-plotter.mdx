@@ -1,0 +1,378 @@
+---
+title: ADIF Map Plotter
+description: "Drop in ADIF logs and turn them into a footprint map, using grid squares when you have them and sensible fallbacks when you do not. Browse it live, go fullscreen, or export KML."
+pubDate: 2026-03-02
+draft: false
+tags: [radio, adif, mapping, kml, leaflet]
+---
+
+Sometimes the log has a lovely tidy grid square. Sometimes it has a POTA reference, a callsign, and a vague sense of optimism. This tool takes what it can get.
+
+Upload one or more ADIF files and it will try to place each contact on a map using the best location clue available, then tell you how trustworthy that guess was before you export the result as `KML` or just fling the map fullscreen and take a screenshot.
+
+<section className="mapTool" data-adif-map-tool>
+  <section className="mapPanel mapPanel--intro">
+    <div className="mapIntro">
+      <div>
+        <p className="mapEyebrow">ADIF to map</p>
+        <h2>Feed it logs. It will work out where the contacts probably were.</h2>
+        <p className="mapLead">
+          Resolution order is simple enough: exact coordinates if they exist, then grid squares, then references, then callsign or region hints if that is all the log has to offer. It is a map, not a hallucination engine, so uncertain points stay visibly uncertain.
+        </p>
+      </div>
+
+      <label className="mapDropzone" for="adif-map-input" data-adif-map-dropzone>
+        <input id="adif-map-input" type="file" accept=".adi,.adif,text/plain" multiple data-adif-map-input />
+        <strong>Drop ADIF logs here</strong>
+        <span>or click and rummage for them like a civilised radio goblin</span>
+      </label>
+    </div>
+
+    <div className="mapStatus" data-adif-map-status>
+      No logs loaded yet. The world remains politely unplotted.
+    </div>
+
+    <div className="mapFileList" data-adif-map-files hidden />
+  </section>
+
+  <section className="mapPanel mapPanel--empty" data-adif-map-empty>
+    <p>Once you load a log, this page will plot the resolved contacts on a proper map, separate the confident points from the hand-wavy ones, and let you export the result as KML or go fullscreen for screenshots.</p>
+  </section>
+
+  <div className="mapResults" data-adif-map-results hidden>
+    <section className="mapStats" aria-label="Mapping summary">
+      <article className="mapStat">
+        <span className="mapStat__label">QSOs read</span>
+        <strong className="mapStat__value" data-map-kpi="total">0</strong>
+      </article>
+      <article className="mapStat">
+        <span className="mapStat__label">Mapped points</span>
+        <strong className="mapStat__value" data-map-kpi="resolved">0</strong>
+      </article>
+      <article className="mapStat">
+        <span className="mapStat__label">Unresolved</span>
+        <strong className="mapStat__value" data-map-kpi="unresolved">0</strong>
+      </article>
+      <article className="mapStat">
+        <span className="mapStat__label">Grid-derived</span>
+        <strong className="mapStat__value" data-map-kpi="grid">0</strong>
+      </article>
+      <article className="mapStat">
+        <span className="mapStat__label">Reference-derived</span>
+        <strong className="mapStat__value" data-map-kpi="reference">0</strong>
+      </article>
+      <article className="mapStat">
+        <span className="mapStat__label">Callsign / region-derived</span>
+        <strong className="mapStat__value" data-map-kpi="callsign">0</strong>
+      </article>
+    </section>
+
+    <section className="mapCanvasPanel mapPanel" data-adif-map-frame>
+      <div className="mapPanel__header">
+        <h3>Contact footprint</h3>
+        <p data-adif-map-meta>The map uses greener origin markers, stronger fills for better evidence, and curved paths back to where the log says you were.</p>
+      </div>
+
+      <div className="mapCanvas" data-adif-map-host></div>
+
+      <div className="mapActions">
+        <button type="button" className="buttonLike" data-map-export="kml">Download KML</button>
+        <button type="button" className="buttonLike buttonLike--ghost" data-map-fullscreen>Go fullscreen</button>
+        <p className="mapExportStatus" data-adif-map-export-status />
+      </div>
+    </section>
+
+    <div className="mapGrid">
+      <section className="mapPanel">
+        <div className="mapPanel__header">
+          <h3>Resolved points</h3>
+          <p>The first chunk of the log that ended up somewhere mappable, with the reason why.</p>
+        </div>
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Call</th>
+                <th>Band</th>
+                <th>Source</th>
+                <th>Confidence</th>
+                <th>Locator</th>
+                <th>Coords</th>
+              </tr>
+            </thead>
+            <tbody data-adif-map-table />
+          </table>
+        </div>
+      </section>
+
+      <section className="mapPanel">
+        <div className="mapPanel__header">
+          <h3>Still unresolved</h3>
+          <p>These are the contacts the page could not place without making things up.</p>
+        </div>
+        <ul className="unresolvedList" data-adif-map-unresolved />
+      </section>
+    </div>
+  </div>
+</section>
+
+The resolver is intentionally honest. A proper grid square is better than a POTA prefix, and a POTA prefix is better than squinting at a callsign and making a very broad regional guess. The page keeps those distinctions visible so you know when you are looking at a footprint and when you are looking at an informed shrug.
+
+<style>{String.raw`
+  .mapTool{
+    display:grid;
+    gap:1.5rem;
+    margin:2rem 0;
+  }
+
+  .mapPanel{
+    border:1px solid var(--border);
+    border-radius:22px;
+    background:
+      radial-gradient(420px 180px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 92%, white 8%), var(--surface-raised));
+    box-shadow: var(--shadow-sm);
+    padding:1.25rem;
+  }
+
+  .mapPanel--intro{
+    padding:1.5rem;
+  }
+
+  .mapIntro{
+    display:grid;
+    gap:1.25rem;
+  }
+
+  .mapEyebrow{
+    margin:0 0 0.55rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-size:0.78rem;
+    color:var(--text-2);
+  }
+
+  .mapLead{
+    margin:0;
+    max-width:60ch;
+    color:var(--text-2);
+  }
+
+  .mapDropzone{
+    display:grid;
+    place-items:center;
+    gap:0.45rem;
+    min-height:180px;
+    border:2px dashed color-mix(in srgb, var(--accent) 35%, var(--border) 65%);
+    border-radius:20px;
+    padding:1.25rem;
+    background:
+      radial-gradient(260px 100px at top left, rgba(45, 255, 178, 0.12), transparent 70%),
+      color-mix(in srgb, var(--surface) 88%, var(--surface-raised) 12%);
+    text-align:center;
+    cursor:pointer;
+    transition:border-color 160ms ease, transform 160ms ease, background 160ms ease;
+  }
+
+  .mapDropzone:hover,
+  .mapDropzone.is-dragover{
+    transform:translateY(-2px);
+    border-color:color-mix(in srgb, var(--accent) 52%, var(--border) 48%);
+  }
+
+  .mapDropzone input{
+    position:absolute;
+    inline-size:1px;
+    block-size:1px;
+    overflow:hidden;
+    clip-path: inset(50%);
+  }
+
+  .mapStatus,
+  .mapExportStatus{
+    color:var(--text-2);
+  }
+
+  .mapFileList{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.65rem;
+    margin-top:1rem;
+  }
+
+  .mapFilePill{
+    display:inline-flex;
+    align-items:center;
+    gap:0.45rem;
+    padding:0.55rem 0.8rem;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 84%, white 16%);
+    font-size:0.92rem;
+  }
+
+  .mapResults{
+    display:grid;
+    gap:1.5rem;
+  }
+
+  .mapStats{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:0.9rem;
+  }
+
+  .mapStat{
+    display:grid;
+    gap:0.35rem;
+    padding:1rem;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background: color-mix(in srgb, var(--surface) 85%, white 15%);
+  }
+
+  .mapStat__label{
+    color:var(--text-2);
+    font-size:0.84rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+
+  .mapStat__value{
+    font-size:clamp(1.05rem, 2vw, 1.6rem);
+    line-height:1.15;
+  }
+
+  .mapCanvasPanel{
+    display:grid;
+    gap:1rem;
+  }
+
+  .mapPanel__header{
+    display:grid;
+    gap:0.35rem;
+  }
+
+  .mapPanel__header h3,
+  .mapPanel__header p{
+    margin:0;
+  }
+
+  .mapPanel__header p{
+    color:var(--text-2);
+  }
+
+  .mapCanvas{
+    inline-size:100%;
+    min-block-size:420px;
+    block-size:clamp(420px, 58vh, 720px);
+    border-radius:18px;
+    border:1px solid var(--border);
+    overflow:hidden;
+    background:#dce8ee;
+  }
+
+  .mapCanvas :global(.leaflet-container){
+    inline-size:100%;
+    block-size:100%;
+    font:inherit;
+    background:#dce8ee;
+  }
+
+  .mapCanvas :global(.leaflet-control-attribution){
+    font-size:0.78rem;
+  }
+
+  [data-adif-map-frame]:fullscreen{
+    margin:0;
+    inline-size:100%;
+    block-size:100%;
+    max-inline-size:none;
+    border-radius:0;
+    padding:1.25rem;
+    background:var(--surface-raised);
+  }
+
+  [data-adif-map-frame]:fullscreen .mapCanvas{
+    block-size:calc(100vh - 12rem);
+    min-block-size:calc(100vh - 12rem);
+  }
+
+  .mapActions{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1rem;
+  }
+
+  .buttonLike{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:48px;
+    padding:0.85rem 1.25rem;
+    border-radius:999px;
+    border:1px solid color-mix(in srgb, var(--accent) 55%, var(--border) 45%);
+    background:var(--accent);
+    color:white;
+    font:inherit;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+    box-shadow:var(--shadow-sm);
+  }
+
+  .buttonLike:hover{
+    transform:translateY(-1px);
+    filter:saturate(1.05);
+    box-shadow:var(--shadow-md);
+  }
+
+  .buttonLike--ghost{
+    background: color-mix(in srgb, var(--surface) 82%, white 18%);
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  .mapGrid{
+    display:grid;
+    gap:1.25rem;
+  }
+
+  .tableWrap{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .tableWrap table{
+    min-width:820px;
+  }
+
+  .unresolvedList{
+    display:grid;
+    gap:0.6rem;
+    margin:0;
+    padding-left:1.2rem;
+    color:var(--text-2);
+  }
+
+  @media (min-width:800px){
+    .mapIntro{
+      grid-template-columns:minmax(0,1.15fr) minmax(280px,0.85fr);
+      align-items:stretch;
+    }
+
+    .mapStats{
+      grid-template-columns:repeat(3, minmax(0,1fr));
+    }
+  }
+
+  @media (min-width:1120px){
+    .mapGrid{
+      grid-template-columns:minmax(0, 1.45fr) minmax(280px, 0.75fr);
+      align-items:start;
+    }
+  }
+`}</style>
+
+<script type="module" src="/scripts/adif-map-tool.js"></script>
