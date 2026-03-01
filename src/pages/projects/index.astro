@@ -16,6 +16,7 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0] ?? null;
 const remainingProjects = featuredProject ? projects.filter((project) => project.id !== featuredProject.id) : [];
+const enableArchiveMasonry = remainingProjects.length > 1;
 
 function pickThumb(data: any) {
   return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? data.image ?? null;
@@ -180,7 +181,7 @@ const radioTags = uniqueTags
             <p>Everything else currently on the bench, in the field, or already written up.</p>
           </div>
 
-          <div class="grid">
+          <div class:list={['grid', enableArchiveMasonry && 'grid--masonry']} data-masonry-grid={enableArchiveMasonry ? true : undefined} data-randomize={enableArchiveMasonry ? 'true' : undefined}>
             {remainingProjects.map((project) => {
               const thumb = pickThumb(project.data);
 
@@ -241,6 +242,8 @@ const radioTags = uniqueTags
     </main>
 
     <Footer />
+
+    <script src="/scripts/masonry-grid.js" defer></script>
   </body>
 </html>
 
@@ -612,6 +615,11 @@ const radioTags = uniqueTags
     display:grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--space-5);
+  }
+
+  .grid--masonry{
+    grid-auto-flow: dense;
+    grid-auto-rows: 12px;
   }
 
   .card{

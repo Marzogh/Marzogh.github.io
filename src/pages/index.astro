@@ -111,100 +111,88 @@ const rest = (pill) => byPill[pill].slice(3);
         </div>
       </section>
 
-      <!-- DASHBOARD STRIP (responsive 3 columns) -->
-      <section class="dash" aria-label="Homepage dashboard">
-        <div class="dash__grid">
-          <!-- Column 1: Writing -->
-          <section class="dash__col" aria-label="Latest writing">
-            <div class="dash__head">
-              <h2 class="dash__title">Latest writing</h2>
-              <a class="dash__more" href="/blog">All posts →</a>
+      <section class="home-masonry" aria-label="Homepage highlights" data-masonry data-randomize="true">
+        <section class="home-card dash__col home-card--writing" aria-label="Latest writing">
+          <div class="dash__head">
+            <h2 class="dash__title">Latest writing</h2>
+            <a class="dash__more" href="/blog">All posts →</a>
+          </div>
+
+          <ul class="dash__list">
+            {latestBlog.map((post) => (
+              <li>
+                <a href={`/blog/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
+                {toTagLine(post) ? <span class="dash__sub">{toTagLine(post)}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="home-card dash__col home-card--projects" aria-label="Featured projects">
+          <div class="dash__head">
+            <h2 class="dash__title">Projects &amp; builds</h2>
+            <a class="dash__more" href="/projects">All projects →</a>
+          </div>
+
+          <ul class="dash__list">
+            {latestProjects.map((proj) => (
+              <li>
+                <a href={`/projects/${safeSlug(proj)}`}>{proj.data?.title ?? safeSlug(proj)}</a>
+                {toTagLine(proj) ? <span class="dash__sub">{toTagLine(proj)}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="home-card dash__col dash__col--edu home-card--education" aria-label="Education">
+          <div class="dash__head">
+            <h2 class="dash__title">Education</h2>
+            <a class="dash__more" href="/education">Education hub →</a>
+          </div>
+
+          <div class="edu__stack">
+            <div class="edu__block">
+              <div class="edu__label">For students</div>
+              <a class="edu__link" href="/tags/student-resources">Scaffolded lessons &amp; exemplars</a>
+              <div class="edu__note">Clear steps, checkpoints, and clean UI.</div>
             </div>
 
-            <ul class="dash__list">
-              {latestBlog.map((post) => (
-                <li>
-                  <a href={`/blog/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
-                  {toTagLine(post) ? <span class="dash__sub">{toTagLine(post)}</span> : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <!-- Column 2: Projects -->
-          <section class="dash__col" aria-label="Featured projects">
-            <div class="dash__head">
-              <h2 class="dash__title">Projects &amp; builds</h2>
-              <a class="dash__more" href="/projects">All projects →</a>
+            <div class="edu__block">
+              <div class="edu__label">For teachers</div>
+              <a class="edu__link" href="/tags/teaching-resources">Planning resources &amp; templates</a>
+              <div class="edu__note">Reusable structures, rubrics, and workflows.</div>
             </div>
 
-            <ul class="dash__list">
-              {latestProjects.map((proj) => (
-                <li>
-                  <a href={`/projects/${safeSlug(proj)}`}>{proj.data?.title ?? safeSlug(proj)}</a>
-                  {toTagLine(proj) ? <span class="dash__sub">{toTagLine(proj)}</span> : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <!-- Column 3: Education (distinct styling) -->
-          <section class="dash__col dash__col--edu" aria-label="Education">
-            <div class="dash__head">
-              <h2 class="dash__title">Education</h2>
-              <a class="dash__more" href="/education">Education hub →</a>
+            <div class="edu__block">
+              <div class="edu__label">Tools</div>
+              <a class="edu__link" href="/tags/interactive-utilities">Interactive utilities</a>
+              <div class="edu__note">Small helpers that save time and reduce friction.</div>
             </div>
+          </div>
+        </section>
 
-            <div class="edu__stack">
-              <div class="edu__block">
-                <div class="edu__label">For students</div>
-                <a class="edu__link" href="/tags/student-resources">Scaffolded lessons &amp; exemplars</a>
-                <div class="edu__note">Clear steps, checkpoints, and clean UI.</div>
-              </div>
+        <section class="home-card feature-band__intro home-card--elsewhere" aria-label="Quick links">
+          <p class="feature-band__kicker">Elsewhere on the site</p>
+          <div class="quick__grid">
+            <a class="quick__link" href="/docs">Documentation</a>
+            <a class="quick__link" href="/tools">Tools</a>
+            <a class="quick__link" href="/about">About</a>
+          </div>
+        </section>
 
-              <div class="edu__block">
-                <div class="edu__label">For teachers</div>
-                <a class="edu__link" href="/tags/teaching-resources">Planning resources &amp; templates</a>
-                <div class="edu__note">Reusable structures, rubrics, and workflows.</div>
-              </div>
+        <a class="home-card feature__tile feature__tile--wide home-card--feature" href="/projects" aria-label="Featured build">
+          <div class="feature__kicker">Featured</div>
+          <div class="feature__title">Builds worth bookmarking</div>
+          <div class="feature__text">Hardware experiments, antenna work, field kits, and practical write-ups.</div>
+          <div class="feature__cta">Explore projects →</div>
+        </a>
 
-              <div class="edu__block">
-                <div class="edu__label">Tools</div>
-                <a class="edu__link" href="/tags/interactive-utilities">Interactive utilities</a>
-                <div class="edu__note">Small helpers that save time and reduce friction.</div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </section>
-
-
-      <!-- FEATURE ROW (not a card wall) -->
-      <section class="feature" aria-label="Featured sections">
-        <div class="feature__grid">
-          <a class="feature__tile" href="/projects" aria-label="Featured build">
-            <div class="feature__kicker">Featured</div>
-            <div class="feature__title">Builds worth bookmarking</div>
-            <div class="feature__text">Hardware experiments, antenna work, field kits, and practical write-ups.</div>
-            <div class="feature__cta">Explore projects →</div>
-          </a>
-
-          <a class="feature__tile feature__tile--astro" href="/astrophotography" aria-label="Featured astrophotography">
-            <div class="feature__kicker">Featured</div>
-            <div class="feature__title">Astrophotography logs</div>
-            <div class="feature__text">Sessions, calibration, processing pipelines, and gear notes.</div>
-            <div class="feature__cta">View astrophotography →</div>
-          </a>
-        </div>
-      </section>
-
-      <!-- QUICK LINKS (lightweight, useful) -->
-      <section class="quick" aria-label="Quick links">
-        <div class="quick__grid">
-          <a class="quick__link" href="/docs">Documentation</a>
-          <a class="quick__link" href="/tools">Tools</a>
-          <a class="quick__link" href="/about">About</a>
-        </div>
+        <a class="home-card feature__tile feature__tile--astro home-card--astro" href="/astrophotography" aria-label="Featured astrophotography">
+          <div class="feature__kicker">Featured</div>
+          <div class="feature__title">Astrophotography logs</div>
+          <div class="feature__text">Sessions, calibration, processing pipelines, and gear notes.</div>
+          <div class="feature__cta">View astrophotography →</div>
+        </a>
       </section>
 
       <!-- PILL VIEWS (all posts by elemental tags) -->
@@ -271,6 +259,8 @@ const rest = (pill) => byPill[pill].slice(3);
     </main>
 
     <Footer />
+
+    <script src="/scripts/masonry-grid.js" defer></script>
 
     <style>
       /* PILL VIEWS */
@@ -515,14 +505,16 @@ const rest = (pill) => byPill[pill].slice(3);
         }
       }
       .page {
-        max-width: 1100px;
+        max-width: 1280px;
         margin: 0 auto;
-        padding: 1.25rem 1.25rem 3rem;
+        padding: 1.25rem 1rem 3.5rem;
       }
 
       /* HERO */
       .hero {
         position: relative;
+        width: min(100%, 1220px);
+        margin-inline: auto;
         border: 1px solid var(--border);
         border-radius: 18px;
         overflow: hidden;
@@ -578,8 +570,8 @@ const rest = (pill) => byPill[pill].slice(3);
 
       .hero__inner {
         position: relative;
-        padding: 2.25rem 1.75rem;
-        min-height: 280px;
+        padding: 2.5rem 2rem;
+        min-height: 310px;
         display: flex;
         align-items: flex-end;
         justify-content: flex-end;
@@ -588,9 +580,9 @@ const rest = (pill) => byPill[pill].slice(3);
       .hero__content {
         max-width: 640px;
         text-align: right;
-        /* Keep the hero clean by default; we only add a subtle panel in light mode */
-        padding: 0.25rem 0.25rem;
+        padding: 0.55rem 0.65rem;
         border-radius: 16px;
+        backdrop-filter: blur(6px);
       }
 
       /* LIGHT MODE: add a gentle translucent panel so text stays readable over the banner */
@@ -690,21 +682,47 @@ const rest = (pill) => byPill[pill].slice(3);
         outline-offset: 2px;
       }
 
-      /* DASHBOARD */
-      .dash {
-        margin-top: 1.25rem;
-      }
-
-      .dash__grid {
+      .home-masonry {
+        width: min(100%, 1180px);
+        margin: 1.25rem auto 0;
         display: grid;
         gap: 1rem;
         grid-template-columns: 1fr;
       }
 
-      @media (min-width: 900px) {
-        .dash__grid {
-          grid-template-columns: 1.15fr 1.05fr 0.9fr;
+      .home-card {
+        min-width: 0;
+      }
+
+      @media (min-width: 720px) {
+        .home-masonry {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .home-card--education,
+        .home-card--feature {
+          grid-column: span 2;
+        }
+      }
+
+      @media (min-width: 980px) {
+        .home-masonry {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          grid-auto-flow: dense;
+          grid-auto-rows: 12px;
           align-items: start;
+        }
+
+        .home-card--writing,
+        .home-card--projects,
+        .home-card--education,
+        .home-card--elsewhere,
+        .home-card--astro {
+          grid-column: span 2;
+        }
+
+        .home-card--feature {
+          grid-column: span 3;
         }
       }
 
@@ -714,6 +732,8 @@ const rest = (pill) => byPill[pill].slice(3);
         background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
         box-shadow: var(--shadow-sm);
         padding: 1rem;
+        position: relative;
+        overflow: hidden;
       }
 
       .dash__head {
@@ -816,21 +836,33 @@ const rest = (pill) => byPill[pill].slice(3);
         font-size: 0.95rem;
       }
 
-      /* FEATURE ROW */
-      .feature {
-        margin-top: 1.25rem;
+      .feature-band__intro {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 1.2rem 1.15rem;
+        background:
+          radial-gradient(720px 260px at 0% 0%, rgba(37, 99, 235, 0.09), transparent 58%),
+          radial-gradient(620px 240px at 100% 100%, rgba(34, 197, 94, 0.08), transparent 55%),
+          color-mix(in srgb, var(--surface) 94%, transparent 6%);
+        box-shadow: var(--shadow-sm);
       }
 
-      .feature__grid {
+      .feature-band__kicker {
+        margin: 0;
+      }
+
+      .feature-band__kicker {
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 1rem;
+      }
+
+      .feature-band__tiles {
         display: grid;
         gap: 1rem;
         grid-template-columns: 1fr;
-      }
-
-      @media (min-width: 900px) {
-        .feature__grid {
-          grid-template-columns: 1fr 1fr;
-        }
       }
 
       .feature__tile {
@@ -844,6 +876,7 @@ const rest = (pill) => byPill[pill].slice(3);
           radial-gradient(700px 280px at 0% 0%, rgba(79, 70, 229, 0.14), transparent 55%),
           color-mix(in srgb, var(--surface) 92%, transparent 8%);
         box-shadow: var(--shadow-sm);
+        min-height: 100%;
       }
 
       .feature__tile--astro {
@@ -883,15 +916,24 @@ const rest = (pill) => byPill[pill].slice(3);
         color: var(--link);
       }
 
-      /* QUICK LINKS */
-      .quick {
-        margin-top: 1.25rem;
-      }
-
       .quick__grid {
         display: flex;
         flex-wrap: wrap;
         gap: 0.65rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .pills {
+        width: min(100%, 980px);
+        margin-inline: auto;
+      }
+
+      @media (min-width: 1100px) {
+        .hero {
+          margin-left: 20px;
+          margin-right: auto;
+        }
       }
 
       .quick__link {

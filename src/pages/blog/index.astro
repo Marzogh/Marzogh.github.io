@@ -9,6 +9,7 @@ import Header from '../../components/Header.astro';
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const enableMasonry = posts.length > 1;
 
 function pickThumb(data: any) {
   return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? null;
@@ -39,7 +40,7 @@ function pickThumb(data: any) {
           </p>
         </div>
       ) : (
-        <section class="grid" aria-label="Blog posts">
+        <section class:list={['grid', enableMasonry && 'grid--masonry']} aria-label="Blog posts" data-masonry-grid={enableMasonry ? true : undefined} data-randomize={enableMasonry ? 'true' : undefined}>
           {posts.map((post) => {
             const thumb = pickThumb(post.data);
 
@@ -84,6 +85,8 @@ function pickThumb(data: any) {
     </main>
 
     <Footer />
+
+    <script src="/scripts/masonry-grid.js" defer></script>
   </body>
 </html>
 
@@ -125,6 +128,11 @@ function pickThumb(data: any) {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--space-5);
+  }
+
+  .grid--masonry {
+    grid-auto-flow: dense;
+    grid-auto-rows: 12px;
   }
 
   .card {

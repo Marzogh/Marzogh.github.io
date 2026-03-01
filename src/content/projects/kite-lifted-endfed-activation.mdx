@@ -167,7 +167,7 @@ VK3PF appears in the log at 06:36:11z, also 59 both ways, and that was the QSO d
     src="https://www.youtube.com/embed/Fu6_WNSBXKg"
     title="Kite-Lifted 40m EFHW Activation Video"
     frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    loading="lazy"
     allowFullScreen
   />
 </div>
@@ -359,6 +359,13 @@ VK4MPB / VK7MPB
   overflow-x:auto;
   margin-top:10px;
 }
+.qsoPanel .tableWrap{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.qsoPanel .tableWrap table{
+  min-width: 360px;
+}
 table{
   width:100%;
   border-collapse:collapse;
@@ -534,6 +541,13 @@ figure img{
 .qsoDetails summary{
   cursor: pointer;
   font-weight: 600;
+}
+.qsoDetails .tableWrap{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.qsoDetails .tableWrap table{
+  min-width: 760px;
 }
 .qsoControls{
   display: flex;
@@ -761,7 +775,7 @@ figure img{
     }
     ctx.globalAlpha = 1;
 
-    ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+    ctx.font = '12px system-ui, -apple-system, Roboto, Arial, sans-serif';
     ctx.globalAlpha = 0.8;
     ctx.fillText('QSOs/min', pad, 16);
 
