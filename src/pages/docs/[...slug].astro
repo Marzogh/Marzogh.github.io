@@ -27,6 +27,7 @@ if (!entry) {
 }
 
 const { Content } = await render(entry);
+const headerStyle = entry.data.headerStyle ?? 'plain';
 ---
 
 <!doctype html>
@@ -42,7 +43,7 @@ const { Content } = await render(entry);
           ← Back to Docs
         </a>
 
-        <header class="docs-hero panel">
+        <header class:list={['docs-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'docs-hero--plain']}>
           <div class="docs-hero__eyebrow">
             {entry.data.section ? <span class="pill">{entry.data.section}</span> : null}
             {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
@@ -76,7 +77,7 @@ const { Content } = await render(entry);
           ) : null}
         </header>
 
-        <div class="docs-body panel panel--soft">
+        <div class="docs-body">
           <div class="prose prose--docs">
             <Content />
           </div>
@@ -112,15 +113,32 @@ const { Content } = await render(entry);
   }
 
   .docs-hero {
-    position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+    min-width: 0;
     background:
-      radial-gradient(640px 180px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
-      radial-gradient(520px 160px at top left, rgba(45, 255, 178, 0.08), transparent 74%),
-      var(--surface-raised);
+      radial-gradient(700px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
+      radial-gradient(540px 180px at top left, rgba(251, 113, 133, 0.07), transparent 72%),
+      #fff;
+  }
+
+  .docs-hero--plain {
+    position: relative;
+    padding: 0 0 var(--space-3);
+    margin: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .docs-hero--plain::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent 76%), color-mix(in srgb, var(--border) 72%, transparent 28%));
   }
 
   .docs-hero__eyebrow,
@@ -132,26 +150,44 @@ const { Content } = await render(entry);
     align-items: center;
   }
 
+  .docs-hero__eyebrow {
+    gap: 8px;
+  }
+
   .docs-title {
     margin: 0;
   }
 
+  .docs-hero--plain .docs-title {
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
   .docs-description {
     margin: 0;
-    max-width: 62ch;
-    font-size: 1.05rem;
+    max-width: 68ch;
     color: var(--text-2);
+  }
+
+  .docs-hero--plain .docs-description {
+    font-size: clamp(1rem, 1.2vw, 1.14rem);
+  }
+
+  .docs-meta {
+    gap: 0.85rem;
   }
 
   .docs-meta__item {
     color: var(--muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .tagLink {
     color: var(--text-2);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     letter-spacing: 0.01em;
   }
 
@@ -160,11 +196,21 @@ const { Content } = await render(entry);
   }
 
   .docs-body {
-    padding-top: calc(var(--space-5) + 2px);
+    padding-top: var(--space-2);
   }
 
   .prose--docs {
     color: var(--text-2);
+  }
+
+  .prose--docs::before {
+    content: "";
+    display: block;
+    width: 84px;
+    height: 4px;
+    margin-bottom: var(--space-5);
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--coral) 70%, #fff 30%));
   }
 
   .prose--docs :global(h2) {
@@ -254,6 +300,10 @@ const { Content } = await render(entry);
   @media (max-width: 720px) {
     .docs-page {
       max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .docs-title {
+      font-size: clamp(2rem, 10vw, 3rem);
     }
 
     .prose--docs :global(.doc-grid) {

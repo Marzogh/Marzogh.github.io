@@ -6,7 +6,7 @@ import Header from '../../components/Header.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
 
 const COLLECTION_CONFIG = [
-  { name: 'blog', label: 'Blog', basePath: '/blog' },
+  { name: 'blog', label: 'Notebook', basePath: '/notebook' },
   { name: 'projects', label: 'Projects', basePath: '/projects' },
   { name: 'docs', label: 'Docs', basePath: '/docs' },
   { name: 'education', label: 'Education', basePath: '/education' },
@@ -41,7 +41,7 @@ function pickThumb(data: Record<string, unknown>) {
 export async function getStaticPaths() {
   const slugToLabel = new Map<string, string>();
   const collectionConfig = [
-    { name: 'blog', label: 'Blog', basePath: '/blog' },
+    { name: 'blog', label: 'Notebook', basePath: '/notebook' },
     { name: 'projects', label: 'Projects', basePath: '/projects' },
     { name: 'docs', label: 'Docs', basePath: '/docs' },
     { name: 'education', label: 'Education', basePath: '/education' },

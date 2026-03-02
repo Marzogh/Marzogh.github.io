@@ -1,0 +1,21 @@
+---
+const { compact = false } = Astro.props;
+---
+
+<p class:list={['poetry-rights', compact && 'poetry-rights--compact']}>
+  Copyright &copy; Manoj Prajwal Bhattaram. All rights reserved. Except for brief quotations used with clear
+  attribution, these poems may not be copied, redistributed, adapted, or used to create derivative works without
+  prior written permission.
+</p>
+
+<style>
+  .poetry-rights {
+    margin: 0;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+
+  .poetry-rights--compact {
+    font-size: 0.92rem;
+  }
+</style>

@@ -17,7 +17,7 @@ const {
   image,
   tags = [],
   featured,
-  headerStyle = 'panel',
+  headerStyle = 'plain',
 } = Astro.props;
 const hero = heroImage ?? image ?? null;
 ---
@@ -33,7 +33,7 @@ const hero = heroImage ?? image ?? null;
     <main>
       <article class="post">
         <div class="post-back">
-          <a href="/blog" class="post-back__link">← Back to Blog</a>
+          <a href="/notebook" class="post-back__link">← Back to Notebook</a>
         </div>
 
         <header class:list={['post-header', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'post-header--plain']}>

@@ -42,6 +42,7 @@ const projects = defineCollection({
       github: z.string().url().optional(),
       demo: z.string().url().optional(),
       image: z.string().optional(),
+      headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
 });
 
@@ -59,6 +60,7 @@ const tools = defineCollection({
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),
       tags: z.array(z.string()).default([]),
+      headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
 });
 
@@ -81,6 +83,7 @@ const docs = defineCollection({
       type: z.string().optional(),
       featured: z.boolean().default(false),
       image: z.string().optional(),
+      headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
 });
 
@@ -104,6 +107,7 @@ const education = defineCollection({
       type: z.string().optional(),
       featured: z.boolean().default(false),
       image: z.string().optional(),
+      headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
 });
 
@@ -133,6 +137,7 @@ const astrophotography = defineCollection({
       filters: z.array(z.string()).default([]),
       totalIntegrationMinutes: z.number().optional(),
       processing: z.array(z.string()).default([]),
+      headerStyle: z.enum(['panel', 'plain']).optional(),
 
       image: image().optional(),
       gallery: z.array(image()).optional(),

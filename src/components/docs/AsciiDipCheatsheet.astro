@@ -1,0 +1,296 @@
+---
+const pinouts = [
+  {
+    title: 'ASCII Pinout_ATmega8.txt',
+    chip: 'ATmega8',
+    ascii: `                       +---\\/---+
+         (RESET)  PC6  |1     28|  PC5  (ADC5 / SCL)
+           (RXD)  PD0  |2     27|  PC4  (ADC4 / SDA)
+           (TXD)  PD1  |3     26|  PC3  (ADC3)
+          (INT0)  PD2  |4     25|  PC2  (ADC2)
+          (INT1)  PD3  |5     24|  PC1  (ADC1)
+      (XCK / T0)  PD4  |6     23|  PC0  (ADC0)
+                  VCC  |7     22|  GND
+                  GND  |8     21|  AREF
+ (XTAL1 / TOSC1)  PB6  |9     20|  AVCC
+ (XTAL2 / TOSC2)  PB7  |10    19|  PB5  (SCK)
+            (T1)  PD5  |11    18|  PB4  (MISO)
+          (AIN0)  PD6  |12    17|  PB3  (MOSI / OC2)
+          (AIN1)  PD7  |13    16|  PB2  (SS / OC1B)
+          (ICP1)  PB0  |14    15|  PB1  (OC1A)
+                       +--------+`,
+  },
+  {
+    title: 'ASCII Pinout_ATTiny13.txt',
+    chip: 'ATTiny13',
+    ascii: `                      +---\\/---+
+                 PB5  |1*     8|  VCC
+                 PB3  |2      7|  PB2
+                 PB4  |3      6|  PB1
+                 GND  |4      5|  PB0
+                      +--------+`,
+  },
+];
+
+function withLineNumbers(text: string) {
+  return text.split('\n').map((line, index) => ({
+    number: index + 1,
+    line,
+  }));
+}
+---
+
+<section class="ascii-library" aria-label="ASCII DIP pinout library">
+  <div class="ascii-library__intro">
+    <p class="ascii-library__eyebrow">Reference sheet</p>
+    <h2>Ascii art pinouts for various DIP chips</h2>
+    <p>
+      Terminal-friendly pinouts for the moments where a plain-text diagram is faster than opening a datasheet.
+      These are quick reference blocks, not substitutes for the original pin tables.
+    </p>
+  </div>
+
+  <div class="ascii-library__stack">
+    {pinouts.map((pinout) => (
+      <article class="ascii-panel">
+        <header class="ascii-panel__head">
+          <div class="ascii-panel__titleWrap">
+            <span class="ascii-panel__icon" aria-hidden="true">&lt;&gt;</span>
+            <div class="ascii-panel__titleBlock">
+              <h3>{pinout.title}</h3>
+              <p>{pinout.chip}</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="ascii-panel__raw"
+            data-ascii-raw
+            data-raw={pinout.ascii}
+            aria-label={`Copy raw ASCII for ${pinout.chip}`}
+          >
+            Raw
+          </button>
+        </header>
+
+        <div class="ascii-panel__body">
+          <div class="ascii-panel__gutter" aria-hidden="true">
+            {withLineNumbers(pinout.ascii).map((row) => <span>{row.number}</span>)}
+          </div>
+
+          <div class="ascii-panel__frame">
+            <pre class="ascii-panel__code">{pinout.ascii}</pre>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  const buttons = document.querySelectorAll('[data-ascii-raw]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const raw = button.getAttribute('data-raw') ?? '';
+      const original = button.textContent;
+
+      try {
+        await navigator.clipboard.writeText(raw);
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Select';
+      }
+
+      window.setTimeout(() => {
+        button.textContent = original;
+      }, 1600);
+    });
+  });
+</script>
+
+<style>
+  .ascii-library {
+    display: grid;
+    gap: 1.4rem;
+    margin: 1.6rem 0;
+  }
+
+  .ascii-library__intro {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .ascii-library__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ascii-library__intro h2,
+  .ascii-library__intro p {
+    margin: 0;
+  }
+
+  .ascii-library__intro p:last-child {
+    max-width: 64ch;
+    color: var(--text-2);
+  }
+
+  .ascii-library__stack {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ascii-panel {
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(100, 116, 139, 0.38);
+    background:
+      linear-gradient(180deg, rgba(8, 16, 28, 0.98), rgba(4, 10, 18, 1)),
+      #020817;
+    box-shadow: 0 18px 32px rgba(2, 6, 23, 0.16);
+  }
+
+  .ascii-panel__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.3);
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(7, 10, 18, 0.66));
+  }
+
+  .ascii-panel__titleWrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .ascii-panel__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.42);
+    color: #94a3b8;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  .ascii-panel__titleBlock {
+    min-width: 0;
+  }
+
+  .ascii-panel__titleBlock h3,
+  .ascii-panel__titleBlock p {
+    margin: 0;
+  }
+
+  .ascii-panel__titleBlock h3 {
+    color: #60a5fa;
+    font-family: var(--font-mono);
+    font-size: 0.98rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ascii-panel__titleBlock p {
+    color: #94a3b8;
+    font-size: 0.84rem;
+  }
+
+  .ascii-panel__raw {
+    flex: 0 0 auto;
+    padding: 0.55rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(30, 41, 59, 0.72);
+    color: #e2e8f0;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .ascii-panel__raw:hover {
+    background: rgba(51, 65, 85, 0.86);
+  }
+
+  .ascii-panel__body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+    padding: 0.8rem 1rem 1rem;
+    min-width: 0;
+  }
+
+  .ascii-panel__gutter {
+    display: grid;
+    gap: 0;
+    padding-top: 0.12rem;
+    color: #9ca3af;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    text-align: right;
+    user-select: none;
+  }
+
+  .ascii-panel__frame {
+    min-width: 0;
+    overflow-x: auto;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(100, 116, 139, 0.26);
+    background:
+      linear-gradient(180deg, rgba(2, 6, 23, 0.78), rgba(1, 4, 18, 0.92)),
+      #020817;
+  }
+
+  .ascii-panel__code {
+    all: unset;
+    display: block;
+    margin: 0;
+    color: #e5e7eb;
+    font-family: var(--font-mono);
+    font-size: 0.94rem;
+    line-height: 1.5;
+    white-space: pre;
+    min-width: max-content;
+  }
+
+  @media (max-width: 720px) {
+    .ascii-panel__head {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .ascii-panel__raw {
+      align-self: flex-end;
+    }
+
+    .ascii-panel__body {
+      gap: 0.75rem;
+    }
+
+    .ascii-panel__gutter {
+      font-size: 0.8rem;
+    }
+
+    .ascii-panel__code {
+      font-size: 0.86rem;
+    }
+  }
+</style>

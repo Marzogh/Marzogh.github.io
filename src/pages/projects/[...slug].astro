@@ -21,6 +21,7 @@ if (!entry) throw new Error(`Project not found: ${slug}`);
 
 const { Content } = await render(entry);
 const hero = entry.data.image ?? null;
+const headerStyle = entry.data.headerStyle ?? 'panel';
 ---
 
 <!doctype html>
@@ -34,7 +35,7 @@ const hero = entry.data.image ?? null;
       <article class="project-entry">
         <a href="/projects" class="project-back">← Back to Projects</a>
 
-        <header class="project-hero panel">
+        <header class:list={['project-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'project-hero--plain']}>
           <div class="project-copy">
             <div class="project-kickers">
               <span class="pill">Project</span>
@@ -73,12 +74,18 @@ const hero = entry.data.image ?? null;
             ) : null}
           </div>
 
-          {hero ? (
+          {headerStyle === 'panel' && hero ? (
             <div class="project-hero__media">
               <img src={hero} alt="" loading="eager" decoding="async" />
             </div>
           ) : null}
         </header>
+
+        {headerStyle === 'plain' && hero ? (
+          <figure class="project-hero-media">
+            <img src={hero} alt="" loading="eager" decoding="async" />
+          </figure>
+        ) : null}
 
         <div class="project-body panel panel--soft">
           <div class="project-prose prose">
@@ -114,6 +121,10 @@ const hero = entry.data.image ?? null;
   }
 
   .project-hero {
+    min-width: 0;
+  }
+
+  .project-hero.panel {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
     gap: var(--space-5);
@@ -122,6 +133,30 @@ const hero = entry.data.image ?? null;
       radial-gradient(800px 240px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
       radial-gradient(620px 220px at bottom left, rgba(45, 255, 178, 0.08), transparent 76%),
       var(--surface-raised);
+  }
+
+  .project-hero--plain {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: 0 0 var(--space-3);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .project-hero--plain::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 24%, transparent 76%),
+      color-mix(in srgb, var(--border) 72%, transparent 28%)
+    );
   }
 
   .project-copy {
@@ -145,10 +180,21 @@ const hero = entry.data.image ?? null;
     margin: 0;
   }
 
+  .project-hero--plain .project-title {
+    font-size: clamp(2.3rem, 4vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
   .project-description {
     max-width: 62ch;
     font-size: 1.08rem;
     color: var(--text-2);
+  }
+
+  .project-hero--plain .project-description {
+    font-size: clamp(1rem, 1.2vw, 1.12rem);
   }
 
   .project-meta__item {
@@ -174,10 +220,30 @@ const hero = entry.data.image ?? null;
     overflow: hidden;
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--surface-raised) 94%, transparent 6%),
-      color-mix(in srgb, var(--surface) 88%, var(--surface-raised) 12%)
+      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
+      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
     );
     box-shadow: var(--shadow-sm);
+  }
+
+  .project-hero-media {
+    margin: 0;
+    max-width: min(760px, 100%);
+    margin-left: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
+      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
+    );
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-hero-media img {
+    width: 100%;
+    display: block;
   }
 
   .project-hero__media img {
@@ -212,7 +278,7 @@ const hero = entry.data.image ?? null;
       max-width: calc(100% - 2 * var(--space-4));
     }
 
-    .project-hero {
+    .project-hero.panel {
       grid-template-columns: 1fr;
     }
   }

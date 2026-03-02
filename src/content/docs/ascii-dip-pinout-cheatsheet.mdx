@@ -1,6 +1,6 @@
 ---
 title: ASCII DIP Pinout Cheatsheet
-description: "A gloriously low-tech way to sketch chip pinouts directly in a terminal, notes file, or commit message."
+description: "Terminal-friendly ASCII pinout blocks for common DIP chips, with raw copyable layouts for quick notes and bench work."
 pubDate: 2017-08-15
 draft: false
 section: Reference
@@ -10,48 +10,48 @@ type: docs
 featured: false
 ---
 
-Sometimes you do not need a polished schematic. Sometimes you just need to answer:
+import AsciiDipCheatsheet from '../../components/docs/AsciiDipCheatsheet.astro';
 
-"Which side is pin 1 on again?"
+<div class="callout callout--note">
+  <strong>TL:DR;</strong> this page is for the moments when a plain-text pinout is faster than opening a datasheet PDF.
+</div>
 
-This turned into a tiny reference because it is weirdly useful.
+Sometimes you do not need a polished schematic. Sometimes you just need a plain-text pinout you can drop into a terminal, notes file, README, or repair log without breaking stride.
 
-## Why bother with ASCII?
+<AsciiDipCheatsheet />
 
-Because it works everywhere.
+<div class="doc-grid">
+  <div class="doc-card">
+    <h3>Where this works well</h3>
+    <p>
+      Terminal windows, README files, commit messages, quick bench notes, and those moments where you only need
+      orientation and signal names, not a whole drawing package.
+    </p>
+  </div>
 
-- terminal
-- README
-- commit message
-- lab notes
-- text editor
-- serial console, if you are feeling committed to the bit
+  <div class="doc-card">
+    <h3>What makes it useful</h3>
+    <p>
+      The notch is visible, the numbering stays obvious, and the text survives copy-paste almost anywhere. That
+      makes it good for quick reference in places where an image would be clumsy.
+    </p>
+  </div>
+</div>
 
-No image export. No CAD file. No hunting through tabs. Just the shape of the package and the numbering in plain text.
+## Bench use
 
-## A simple pattern
+The plain-text format is most helpful when you are moving quickly:
 
-For an 8-pin DIP, the mental model looks like this:
-
-```text
-      ___
-  1 -|   |- 8
-  2 -|   |- 7
-  3 -|   |- 6
-  4 -|___|- 5
-```
-
-That notch at the top matters. Pin numbering runs down the left side, then back up the right.
-
-## Where this is actually handy
-
-- writing quick repair notes
-- documenting breadboard layouts
+- confirming pin 1 orientation before wiring
+- annotating breadboard or perfboard notes
 - posting help requests without drawing a full schematic
-- reminding yourself which leg is which before making things exciting with 12 volts
+- documenting MCU pins in a repo or repair log
+- checking signal names before applying power to something fragile
 
 ## The limitation
 
-ASCII pinouts are great for orientation and quick reference. They are not a replacement for a proper schematic once the project stops being simple.
+ASCII pinouts are great for orientation and quick reference. They are not a replacement for a proper schematic once a project stops being simple.
 
-If your "quick little wiring note" has expanded into three power rails, two buses, and a transistor stage of questionable intent, it is time to graduate to a real diagram.
+<div class="callout callout--warm">
+  <strong>Good rule:</strong> if the “quick note” now needs multiple rails, buses, pull-ups, or anything more complicated than basic orientation, it is time to graduate to a real diagram.
+</div>

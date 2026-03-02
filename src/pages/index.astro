@@ -53,7 +53,7 @@ const normalize = (entry, kind) => {
   const tags = Array.isArray(entry?.data?.tags) ? entry.data.tags : [];
   const featured = Boolean(entry?.data?.featured || entry?.data?.pinned || entry?.data?.pin);
   const slug = safeSlug(entry);
-  const url = kind === 'blog' ? `/blog/${slug}` : `/projects/${slug}`;
+  const url = kind === 'blog' ? `/notebook/${slug}` : `/projects/${slug}`;
   return { kind, title, date, tags, featured, url, raw: entry };
 };
 
@@ -102,7 +102,7 @@ const rest = (pill) => byPill[pill].slice(3);
 
             <div class="hero__actions">
               <a class="btn btn--primary" href="/projects">Browse projects</a>
-              <a class="btn" href="/blog">Read the latest</a>
+              <a class="btn" href="/notebook">Read the latest</a>
             </div>
 
             <nav class="hero__meta" aria-label="Explore by theme">
@@ -120,13 +120,13 @@ const rest = (pill) => byPill[pill].slice(3);
         <section class="home-card dash__col home-card--writing" aria-label="Latest writing">
           <div class="dash__head">
             <h2 class="dash__title">Latest writing</h2>
-            <a class="dash__more" href="/blog">All posts →</a>
+            <a class="dash__more" href="/notebook">All posts →</a>
           </div>
 
           <ul class="dash__list">
             {latestBlog.map((post) => (
               <li>
-                <a href={`/blog/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
+                <a href={`/notebook/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
                 {toTagLine(post) ? <span class="dash__sub">{toTagLine(post)}</span> : null}
               </li>
             ))}

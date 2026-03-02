@@ -1,0 +1,478 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
+import { poetry } from '../../data/poetry';
+
+const latest = poetry[0] ?? null;
+const earliest = poetry[poetry.length - 1] ?? null;
+const poemsByYear = poetry.reduce((acc, entry) => {
+  const year = entry.pubDateValue.getUTCFullYear();
+  const bucket = acc.get(year) ?? [];
+  bucket.push(entry);
+  acc.set(year, bucket);
+  return acc;
+}, new Map<number, typeof poetry>());
+const years = [...poemsByYear.keys()].sort((a, b) => b - a);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Poetry — Chips’nCode"
+      description="Poems of wind, sea, starlight, wild country, grief, climate dread, reverence for life, and the search for peace without looking away."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main class="poetry-index">
+      <section class="poetry-hero" aria-label="Poetry introduction">
+        <p class="poetry-hero__eyebrow">Verse</p>
+        <h1 class="poetry-hero__title">Poetry</h1>
+
+        <article class="poetry-curator">
+          <aside class="poetry-ledger panel" aria-label="Collection note">
+            <p class="poetry-ledger__eyebrow">Collection</p>
+            <dl class="poetry-ledger__grid">
+              <div class="poetry-ledger__row">
+                <dt>Poems</dt>
+                <dd>{poetry.length}</dd>
+              </div>
+              <div class="poetry-ledger__row">
+                <dt>Span</dt>
+                <dd>{earliest ? earliest.pubDate : 'n/a'} to {latest ? latest.pubDate : 'n/a'}</dd>
+              </div>
+              <div class="poetry-ledger__row">
+                <dt>Structure</dt>
+                <dd>Chronological archive</dd>
+              </div>
+              <div class="poetry-ledger__row">
+                <dt>Source</dt>
+                <dd>Original pages and text files</dd>
+              </div>
+            </dl>
+            <p class="poetry-ledger__note">
+              This is laid out as an archive rather than a gallery. Read straight through if you want to watch the same
+              concerns return in different light: weather, stars, wilderness, myth, solitude, joy, grief, damage, and
+              the long attempt to work out what it means to live well without looking away.
+            </p>
+          </aside>
+
+          <p class="poetry-curator__paragraph">
+            I wrote these poems in childhood and youth, but I do not place them in a glass case and call them evidence
+            of a vanished self. The person writing them is recognisably the same person writing this note: the same
+            hunger for peace, the same wholehearted love of the natural world, the same instinct to look the horror in
+            the face and name it without flinching, and the same refusal to make cynicism sound like wisdom. These
+            poems were written before I had much armour, which is part of why they say things so directly. They want
+            beauty, escape, stillness, and transcendence. They want a way of living rightly in a wounded world.
+          </p>
+
+          <p class="poetry-curator__paragraph">
+            Junior college in India did not help. It was pressure to perform, learning without the joy I found in it,
+            rage at a life being spent in pursuit of a fraction of a fraction of a percent while the world was already
+            beginning to fray at the seams. That pressure is in the poems written from classroom windows and from the
+            edges of institutions that felt smaller than the world outside them. When <em>The Butterfly</em> watches a
+            butterfly head into the sunset, or <em>A Wish</em> longs to leave a life of strife behind, or <em>The Doom
+            of Man</em> names judgement without euphemism, the natural world is not serving as decorative contrast. It
+            is the real world against which so much human busyness, ambition, vanity, and institutional nonsense shows
+            itself to be trivial.
+          </p>
+
+          <p class="poetry-curator__paragraph">
+            I was not, even then, "just" a nature poet. Systems are everywhere in these poems, because systems are
+            everywhere in life. The weather is a system. A forest is a system. A classroom is a system. A city is a
+            system. An economy is a system. The carbon age is a system. So is denial. So is the smooth little social
+            machinery by which people repaint catastrophe in polite colours and congratulate themselves for having done
+            so. If the poems keep turning from private feeling to atmosphere, from individual sorrow to wider damage,
+            from one life to the habits of a species, that is not me wandering off topic. That is me following the
+            pattern where it actually leads. A poem about rain, sea, leaves, or hills is also a poem about scale,
+            dependence, consequence, and what sort of creature a human being has decided to be.
+          </p>
+
+          <p class="poetry-curator__paragraph">
+            Nature is everywhere in these poems, but it is never scenery. It is refuge, witness, teacher, measure, and
+            beloved. <em>The Lord of the Eagles</em>, for all its obvious Tolkien paraphrasing, is probably the earliest
+            poem in this archive that is fully me: the eagle already standing for witness, nobility, and moral compass;
+            the non-human world already treated as presence rather than backdrop; the scale already larger than the
+            little human dramas around it. <em>A Rainy Day</em>, <em>Wandering Streams</em>, <em>A Mountain’s
+            Advice</em>, <em>The Song of the Sea</em>, <em>Dawn’s Breeze</em>, and <em>Of Enchanted Woods and Singing
+            Streams</em> all do something similar in different registers. They kneel before weather, water, birds,
+            mountains, and starlight, not because I confuse reverence for life with religion, but because the living
+            world is worthy of reverence. If one listens properly to wind and water long enough, the world will tell
+            you what is wrong with it and what is right with it. These poems are full of that listening.
+          </p>
+
+          <p class="poetry-curator__paragraph">
+            That is also why solitude matters so much here. Solitude is not loneliness. People are too quick to flatten
+            the two into one another. <em>Bliss</em>, <em>Hidden Paths</em>, <em>Lingering Dreams</em>, <em>My Own
+            Little Corner</em>, <em>Here Lies a Good Man</em>, <em>Musings on Life</em>, <em>The Whisper of the
+            Night</em>, and <em>Of Enchanted Woods and Singing Streams</em> are not asking to be rescued from
+            aloneness. They are making room for contemplation, for joy, for self-possession, for standing still in the
+            company of the world without needing noise or audience. Even <em>To a Little Wave</em>, which some readers
+            might try to sentimentalise into a plea for comfort, is really an offering of awe in return for knowledge:
+            joy at being out in nature, joy at meeting something larger than the self without wanting to dissolve into
+            it or flee from one's own mind.
+          </p>
+
+          <p class="poetry-curator__paragraph poetry-curator__paragraph--continue">
+            <a href="/poetry/curators-note">Continue to read the full curator’s note</a>
+          </p>
+
+          <div class="poetry-curator__rights panel panel--soft">
+            <PoetryRightsNotice compact={true} />
+          </div>
+        </article>
+      </section>
+
+      <section class="poetry-archive" aria-label="Poetry archive">
+        <div class="poetry-archive__head">
+          <p class="poetry-archive__eyebrow">Archive</p>
+          <h2 class="poetry-archive__title">Chronology</h2>
+        </div>
+
+        {years.map((year) => (
+          <section class="poetry-year" aria-labelledby={`poetry-year-${year}`}>
+            <div class="poetry-year__head">
+              <h3 id={`poetry-year-${year}`}>{year}</h3>
+              <p>{poemsByYear.get(year)?.length ?? 0} poem{(poemsByYear.get(year)?.length ?? 0) === 1 ? '' : 's'}</p>
+            </div>
+
+            <div class="poetry-list">
+              {poemsByYear.get(year)?.map((entry) => (
+                <article class="poetry-row">
+                  <div class="poetry-row__meta">
+                    <span class="poetry-row__date">
+                      <FormattedDate date={entry.pubDateValue} />
+                    </span>
+                    <span class="poetry-row__artifact">{entry.headerImage ? 'Original title graphic preserved' : 'Text archive entry'}</span>
+                  </div>
+
+                  <div class="poetry-row__body">
+                    <h4 class="poetry-row__title">
+                      <a href={`/poetry/${entry.slug}`}>{entry.title}</a>
+                    </h4>
+                    <p class="poetry-row__excerpt">{entry.excerpt}</p>
+                  </div>
+
+                  {entry.headerImage ? (
+                    <a class="poetry-row__graphic" href={`/poetry/${entry.slug}`} aria-label={`Open poem: ${entry.title}`}>
+                      <img src={entry.headerImage} alt="" loading="lazy" decoding="async" />
+                    </a>
+                  ) : (
+                    <div class="poetry-row__graphic poetry-row__graphic--textOnly" aria-hidden="true">
+                      <span>Text</span>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .poetry-index {
+    max-width: min(1320px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .poetry-hero {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .poetry-hero__eyebrow,
+  .poetry-hero__title {
+    margin: 0;
+  }
+
+  .poetry-hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .poetry-hero__title {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .poetry-curator {
+    display: flow-root;
+  }
+
+  .poetry-ledger {
+    float: right;
+    width: min(100%, 430px);
+    margin: 0 0 1.5rem 2rem;
+    border-radius: 22px;
+    background:
+      radial-gradient(760px 220px at top left, rgba(180, 83, 9, 0.09), transparent 70%),
+      radial-gradient(420px 180px at bottom right, rgba(30, 64, 175, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(255, 252, 244, 0.97), rgba(249, 246, 237, 0.99));
+  }
+
+  .poetry-ledger__eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .poetry-ledger__grid {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0;
+  }
+
+  .poetry-ledger__row {
+    display: grid;
+    gap: 0.3rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  }
+
+  .poetry-ledger__row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .poetry-ledger__row dt,
+  .poetry-ledger__row dd,
+  .poetry-ledger__note {
+    margin: 0;
+  }
+
+  .poetry-ledger__row dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .poetry-ledger__row dd {
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .poetry-ledger__note {
+    margin-top: 1rem;
+    color: var(--text-2);
+    line-height: 1.7;
+    font-size: 0.98rem;
+  }
+
+  .poetry-curator__paragraph {
+    margin: 0;
+    max-width: 72ch;
+    color: var(--text-2);
+    font-size: clamp(1.02rem, 1.06vw, 1.1rem);
+    line-height: 1.82;
+  }
+
+  .poetry-curator__paragraph + .poetry-curator__paragraph {
+    margin-top: 1.2rem;
+  }
+
+  .poetry-curator__paragraph--continue {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+  }
+
+  .poetry-curator__paragraph--continue a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .poetry-curator__paragraph--continue a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .poetry-curator__rights {
+    clear: both;
+    margin-top: 1.5rem;
+    padding: 1rem 1.1rem;
+    max-width: 72ch;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(249, 250, 251, 0.98));
+  }
+
+  .poetry-archive {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .poetry-archive__head {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .poetry-archive__eyebrow,
+  .poetry-archive__title {
+    margin: 0;
+  }
+
+  .poetry-archive__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .poetry-year {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .poetry-year__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .poetry-year__head h3,
+  .poetry-year__head p {
+    margin: 0;
+  }
+
+  .poetry-year__head p {
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .poetry-list {
+    display: grid;
+  }
+
+  .poetry-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 160px) minmax(0, 1fr) 160px;
+    gap: var(--space-4);
+    align-items: start;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  }
+
+  .poetry-row:last-child {
+    border-bottom: 0;
+  }
+
+  .poetry-row__meta {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .poetry-row__date {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .poetry-row__artifact {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .poetry-row__body {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .poetry-row__title,
+  .poetry-row__excerpt {
+    margin: 0;
+  }
+
+  .poetry-row__title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .poetry-row__title a:hover {
+    color: var(--accent);
+  }
+
+  .poetry-row__excerpt {
+    color: var(--text-2);
+    line-height: 1.7;
+    max-width: 58ch;
+  }
+
+  .poetry-row__graphic {
+    display: grid;
+    place-items: center;
+    min-height: 86px;
+    padding: 0.8rem;
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background:
+      radial-gradient(320px 110px at top left, rgba(217, 119, 6, 0.12), transparent 72%),
+      linear-gradient(180deg, rgba(255, 252, 244, 0.96), rgba(245, 238, 224, 0.98));
+    text-decoration: none;
+  }
+
+  .poetry-row__graphic img {
+    max-width: 100%;
+    max-height: 70px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 18px rgba(15, 23, 42, 0.14));
+  }
+
+  .poetry-row__graphic--textOnly {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 920px) {
+    .poetry-ledger {
+      float: none;
+      width: 100%;
+      margin: 0 0 1.25rem;
+    }
+
+    .poetry-curator__paragraph,
+    .poetry-ledger__note,
+    .poetry-row__excerpt {
+      max-width: none;
+    }
+
+    .poetry-row {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+
+    .poetry-row__graphic {
+      width: min(220px, 100%);
+    }
+  }
+ </style>

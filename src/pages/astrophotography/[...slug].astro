@@ -31,6 +31,7 @@ const hero = entry.data.image ?? entry.data.gallery?.[0] ?? null;
 const gallery = entry.data.gallery ?? [];
 const hasGallery = gallery.length > 1;
 const isTransitSession = slug === 'iss-over-the-moon';
+const headerStyle = entry.data.headerStyle ?? 'panel';
 ---
 
 <!doctype html>
@@ -49,20 +50,22 @@ const isTransitSession = slug === 'iss-over-the-moon';
           </a>
         </div>
 
-        <header class="astro-hero panel">
-          <div class="astro-hero__visual">
-            {hero ? (
-              <Image
-                class="astro-hero__image"
-                src={hero}
-                alt={entry.data.title}
-                widths={[720, 1080, 1440]}
-                sizes="(max-width: 960px) 100vw, 58vw"
-              />
-            ) : (
-              <div class="astro-hero__placeholder">No lead image yet</div>
-            )}
-          </div>
+        <header class:list={['astro-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'astro-hero--plain']}>
+          {headerStyle === 'panel' ? (
+            <div class="astro-hero__visual">
+              {hero ? (
+                <Image
+                  class="astro-hero__image"
+                  src={hero}
+                  alt={entry.data.title}
+                  widths={[720, 1080, 1440]}
+                  sizes="(max-width: 960px) 100vw, 58vw"
+                />
+              ) : (
+                <div class="astro-hero__placeholder">No lead image yet</div>
+              )}
+            </div>
+          ) : null}
 
           <div class="astro-hero__meta">
             <div class="astro-kickers">
@@ -113,6 +116,18 @@ const isTransitSession = slug === 'iss-over-the-moon';
             </div>
           </div>
         </header>
+
+        {headerStyle === 'plain' && hero ? (
+          <figure class="astro-hero-media">
+            <Image
+              class="astro-hero__image"
+              src={hero}
+              alt={entry.data.title}
+              widths={[720, 1080, 1440]}
+              sizes="(max-width: 960px) 100vw, 72vw"
+            />
+          </figure>
+        ) : null}
 
         {hasGallery ? (
           <section class="astro-gallery panel panel--soft" aria-label="Session gallery">
@@ -225,6 +240,10 @@ const isTransitSession = slug === 'iss-over-the-moon';
   }
 
   .astro-hero {
+    min-width: 0;
+  }
+
+  .astro-hero.panel {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.9fr);
     gap: var(--space-5);
@@ -233,6 +252,31 @@ const isTransitSession = slug === 'iss-over-the-moon';
       radial-gradient(900px 260px at 15% 0%, rgba(45, 255, 178, 0.08), transparent 70%),
       radial-gradient(700px 240px at 85% 10%, rgba(96, 165, 250, 0.10), transparent 72%),
       linear-gradient(180deg, rgba(10, 14, 26, 0.92), rgba(7, 10, 18, 0.96));
+  }
+
+  .astro-hero--plain {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: 0 0 var(--space-4);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .astro-hero--plain::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--leaf) 26%, transparent 74%),
+      color-mix(in srgb, var(--accent) 24%, transparent 76%),
+      color-mix(in srgb, var(--border) 72%, transparent 28%)
+    );
   }
 
   .astro-hero__visual {
@@ -249,6 +293,17 @@ const isTransitSession = slug === 'iss-over-the-moon';
     height: 100%;
     display: block;
     object-fit: cover;
+  }
+
+  .astro-hero-media {
+    margin: 0;
+    max-width: min(980px, 100%);
+    margin-left: auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid rgba(229, 231, 235, 0.18);
+    background: #050814;
+    box-shadow: var(--shadow-md);
   }
 
   .astro-hero__placeholder {
@@ -277,10 +332,22 @@ const isTransitSession = slug === 'iss-over-the-moon';
     margin: 0;
   }
 
+  .astro-title {
+    font-size: clamp(2.4rem, 4vw, 4.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
   .astro-description {
     max-width: 32ch;
     font-size: 1.05rem;
     color: var(--text-2);
+  }
+
+  .astro-hero--plain .astro-description {
+    max-width: 42ch;
+    font-size: clamp(1rem, 1.15vw, 1.1rem);
   }
 
   .astro-meta-grid {
@@ -459,7 +526,7 @@ const isTransitSession = slug === 'iss-over-the-moon';
       max-width: calc(100% - 2 * var(--space-4));
     }
 
-    .astro-hero,
+    .astro-hero.panel,
     .astro-content,
     .astro-gallery__grid,
     .astro-prose :global(.astro-split) {

@@ -31,6 +31,7 @@ if (!entry) {
 }
 
 const { Content } = await render(entry);
+const headerStyle = entry.data.headerStyle ?? 'plain';
 ---
 
 <!doctype html>
@@ -46,7 +47,7 @@ const { Content } = await render(entry);
           ← Back to Tools
         </a>
 
-        <header class="tools-hero panel">
+        <header class:list={['tools-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'tools-hero--plain']}>
           <div class="tools-hero__eyebrow">
             <span class="pill">Tool</span>
             {entry.data.tags?.[0] ? <span class="pill pill--coral">#{entry.data.tags[0]}</span> : null}
@@ -118,11 +119,33 @@ const { Content } = await render(entry);
     flex-direction: column;
     gap: var(--space-4);
     overflow: hidden;
+    min-width: 0;
     background:
       radial-gradient(620px 180px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
       radial-gradient(520px 160px at top left, rgba(45, 255, 178, 0.08), transparent 72%),
       linear-gradient(180deg, rgba(15, 23, 42, 0.02), rgba(15, 23, 42, 0)),
       var(--surface-raised);
+  }
+
+  .tools-hero--plain {
+    position: relative;
+    padding: 0 0 var(--space-3);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .tools-hero--plain::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 24%, transparent 76%),
+      color-mix(in srgb, var(--border) 72%, transparent 28%)
+    );
   }
 
   .tools-hero__eyebrow,
@@ -136,6 +159,13 @@ const { Content } = await render(entry);
 
   .tools-title {
     margin: 0;
+  }
+
+  .tools-hero--plain .tools-title {
+    font-size: clamp(2.25rem, 4vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
   }
 
   .tools-description {

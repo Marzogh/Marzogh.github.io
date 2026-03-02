@@ -10,7 +10,8 @@ import HeaderLink from './HeaderLink.astro';
 
     <nav class="main-nav" aria-label="Primary">
       <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Blog</HeaderLink>
+      <HeaderLink href="/notebook">Notebook</HeaderLink>
+      <HeaderLink href="/poetry">Poetry</HeaderLink>
       <HeaderLink href="/projects">Projects</HeaderLink>
       <HeaderLink href="/docs">Documentation</HeaderLink>
       <HeaderLink href="/education">Education</HeaderLink>
@@ -45,9 +46,32 @@ import HeaderLink from './HeaderLink.astro';
     const root = document.documentElement;
     const key = 'theme';
     const btn = document.querySelector('.theme-toggle');
+    const nav = document.querySelector('.main-nav');
 
     function prefersDark() {
       return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function positionNav() {
+      if (!nav) return;
+      const activeLink = nav.querySelector('a.active');
+      const fallbackLink = nav.querySelector('a[href="/notebook"]');
+      const target =
+        activeLink?.getAttribute('href') === '/'
+          ? fallbackLink || activeLink
+          : activeLink || fallbackLink;
+
+      if (!target) return;
+
+      const navRect = nav.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const desired =
+        targetRect.left - navRect.left + nav.scrollLeft - (nav.clientWidth - target.clientWidth) / 2;
+
+      nav.scrollTo({
+        left: Math.max(0, desired),
+        behavior: 'auto',
+      });
     }
 
     function setPressed() {
@@ -94,6 +118,9 @@ import HeaderLink from './HeaderLink.astro';
         if (!root.dataset.theme) setPressed();
       });
     }
+
+    positionNav();
+    window.addEventListener('resize', positionNav, { passive: true });
   })();
 </script>
 
@@ -109,12 +136,20 @@ import HeaderLink from './HeaderLink.astro';
 
   .header-inner {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand . utilities"
+      "nav nav nav";
     align-items: center;
-    gap: var(--space-4);
+    row-gap: 0.2rem;
+    column-gap: var(--space-4);
     min-height: 64px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .brand {
+    grid-area: brand;
   }
 
   .brand-link {
@@ -132,13 +167,24 @@ import HeaderLink from './HeaderLink.astro';
 
   /* Nav can wrap on desktop and scroll on mobile */
   .main-nav {
+    grid-area: nav;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    row-gap: 6px;
+    gap: clamp(0.8rem, 1.55vw, 1.85rem);
+    flex-wrap: nowrap;
     min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    scroll-padding-inline: 1.5rem;
+    padding-top: 0;
+    margin-top: -0.1rem;
+  }
+
+  .main-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .main-nav a {
@@ -146,7 +192,7 @@ import HeaderLink from './HeaderLink.astro';
     text-decoration: none;
     color: var(--text-2);
     border-bottom: 2px solid transparent;
-    font-size: 0.95rem;
+    font-size: clamp(0.9rem, 0.82rem + 0.24vw, 0.95rem);
     white-space: nowrap;
   }
 
@@ -160,6 +206,7 @@ import HeaderLink from './HeaderLink.astro';
   }
 
   .social-links {
+    grid-area: utilities;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -245,22 +292,18 @@ import HeaderLink from './HeaderLink.astro';
   @media (max-width: 980px) {
     .header-inner {
       grid-template-columns: 1fr;
+      grid-template-areas:
+        "brand"
+        "nav";
       justify-items: start;
+      row-gap: 0.45rem;
     }
 
     .main-nav {
       justify-content: flex-start;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
       gap: var(--space-4);
       padding-bottom: 2px;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .main-nav::-webkit-scrollbar {
-      display: none;
     }
 
     .social-links {

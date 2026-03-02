@@ -32,6 +32,7 @@ if (!entry) {
 
 const { Content } = await render(entry);
 const hero = entry.data.image ?? null;
+const headerStyle = entry.data.headerStyle ?? 'panel';
 ---
 
 <!doctype html>
@@ -47,7 +48,7 @@ const hero = entry.data.image ?? null;
           ← Back to Education
         </a>
 
-        <header class="edu-hero panel">
+        <header class:list={['edu-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'edu-hero--plain']}>
           <div class="edu-hero__copy">
             <div class="edu-kickers">
               <span class="pill">Education</span>
@@ -73,12 +74,18 @@ const hero = entry.data.image ?? null;
             </div>
           </div>
 
-          {hero ? (
+          {headerStyle === 'panel' && hero ? (
             <div class="edu-hero__media">
               <img src={hero} alt="" loading="eager" decoding="async" />
             </div>
           ) : null}
         </header>
+
+        {headerStyle === 'plain' && hero ? (
+          <figure class="edu-hero-media">
+            <img src={hero} alt="" loading="eager" decoding="async" />
+          </figure>
+        ) : null}
 
         <div class="edu-layout">
           <aside class="edu-side panel">
@@ -148,6 +155,10 @@ const hero = entry.data.image ?? null;
   }
 
   .edu-hero {
+    min-width: 0;
+  }
+
+  .edu-hero.panel {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
     gap: var(--space-5);
@@ -156,6 +167,30 @@ const hero = entry.data.image ?? null;
       radial-gradient(760px 220px at top right, rgba(34, 197, 94, 0.08), transparent 72%),
       radial-gradient(620px 220px at bottom left, rgba(37, 99, 235, 0.08), transparent 78%),
       var(--surface-raised);
+  }
+
+  .edu-hero--plain {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: 0 0 var(--space-3);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .edu-hero--plain::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--leaf) 26%, transparent 74%),
+      color-mix(in srgb, var(--border) 72%, transparent 28%)
+    );
   }
 
   .edu-hero__copy {
@@ -178,10 +213,21 @@ const hero = entry.data.image ?? null;
     margin: 0;
   }
 
+  .edu-hero--plain .edu-title {
+    font-size: clamp(2.3rem, 4vw, 4.3rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
   .edu-description {
     max-width: 64ch;
     font-size: 1.06rem;
     color: var(--text-2);
+  }
+
+  .edu-hero--plain .edu-description {
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
   }
 
   .edu-meta__item {
@@ -204,8 +250,32 @@ const hero = entry.data.image ?? null;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background: var(--surface-raised);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
+      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
+    );
     box-shadow: var(--shadow-sm);
+  }
+
+  .edu-hero-media {
+    margin: 0;
+    max-width: min(760px, 100%);
+    margin-left: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
+      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
+    );
+    box-shadow: var(--shadow-sm);
+  }
+
+  .edu-hero-media img {
+    width: 100%;
+    display: block;
   }
 
   .edu-hero__media img {
@@ -284,7 +354,7 @@ const hero = entry.data.image ?? null;
       max-width: calc(100% - 2 * var(--space-4));
     }
 
-    .edu-hero,
+    .edu-hero.panel,
     .edu-layout {
       grid-template-columns: 1fr;
     }

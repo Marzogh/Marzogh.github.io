@@ -1,345 +1,1072 @@
 ---
 title: Site Architecture and Design Language
-description: "A design document for the design document repository disguised as a website. Very normal behaviour."
+description: "A working design-language note for a site that now has enough moving parts to deserve one."
 pubDate: 2026-03-01
+updatedDate: 2026-03-02
 draft: false
 section: Site Meta
 order: 1
 tags: [website, design, architecture, astro, docs]
 type: docs
 featured: true
+headerStyle: plain
 ---
 
-<div class="callout callout--note">
-  <strong>Short version:</strong> the site should share one visual grammar, but not one identical page shell. Cohesive, not cloned.
+<section class="design-manifesto" id="system">
+  <div class="design-manifesto__copy">
+    <p class="design-kicker">Working System</p>
+    <h2 class="design-manifesto__line">
+      One site, several modes, one visual grammar.
+    </h2>
+    <p class="design-manifesto__summary">
+      Chips'nCode should feel coherent across writing, utilities, documentation, education, projects, and
+      astrophotography without forcing them into one generic shell. The design language needs to hold the whole site
+      together while still letting each section behave like the thing it actually is.
+    </p>
+  </div>
+
+  <div class="design-state" aria-label="System snapshot">
+    <p class="design-state__title">design://site-state</p>
+    <dl>
+      <div><dt>sections</dt><dd>6</dd></div>
+      <div><dt>header modes</dt><dd>2</dd></div>
+      <div><dt>index model</dt><dd>editorial</dd></div>
+      <div><dt>rule</dt><dd>cohesive, not cloned</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="design-tldr">
+  <span class="design-tldr__label">TL:DR;</span>
+  <p>
+    one visual language, several page archetypes, and no obligation to force writing, utilities, and image-led work
+    into the same shell.
+  </p>
 </div>
 
-## What this site is
+<nav class="design-index" aria-label="Design document navigation">
+  <span class="design-index__label">Index</span>
+  <a href="#system">system</a>
+  <span>/</span>
+  <a href="#structure">structure</a>
+  <span>/</span>
+  <a href="#headers">headers</a>
+  <span>/</span>
+  <a href="#archetypes">archetypes</a>
+  <span>/</span>
+  <a href="#patterns">patterns</a>
+  <span>/</span>
+  <a href="#rules">rules</a>
+  <span>/</span>
+  <a href="#history">history</a>
+</nav>
 
-Chips'nCode is not one thing pretending to be many things. It is a small constellation of related modes:
+<section class="design-split">
+  <article>
+    <p class="design-kicker">Shared</p>
+    <h2>What should stay consistent</h2>
+    <ul class="design-list">
+      <li>type scale and spacing rhythm</li>
+      <li>surface, border, and shadow tokens</li>
+      <li>metadata, link, and code styling</li>
+      <li>the general mood of calm technical material</li>
+    </ul>
+  </article>
+  <article>
+    <p class="design-kicker">Variable</p>
+    <h2>What is allowed to change</h2>
+    <ul class="design-list">
+      <li>header treatment</li>
+      <li>archive structure</li>
+      <li>media priority</li>
+      <li>interaction model and information density</li>
+    </ul>
+  </article>
+</section>
 
-- writing
-- projects
-- tools
-- documentation
-- education
-- astrophotography
+<section class="design-rulestrip">
+  <article>
+    <p class="design-kicker">Bad rule</p>
+    <p>Every page should use the same shell.</p>
+  </article>
+  <article>
+    <p class="design-kicker">Better rule</p>
+    <p>Every page should feel like it belongs to the same site.</p>
+  </article>
+  <article>
+    <p class="design-kicker">Actual rule</p>
+    <p>Keep one visual grammar, then let each section earn its own pacing.</p>
+  </article>
+</section>
 
-Those are all part of the same brain, but they are not the same *kind* of page. That matters.
+<section id="structure">
 
-The site should therefore feel **cohesive**, but not **uniform**.
+## Current structure
 
-That is the core rule.
+<div class="design-map" aria-label="Site structure map">
+  <div class="design-map__row">
+    <span class="design-map__step">01</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/</span>
+    </div>
+    <span class="design-map__label">switchboard</span>
+  </div>
+  <div class="design-map__row">
+    <span class="design-map__step">02</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/blog</span>
+      <span class="design-map__route">/projects</span>
+      <span class="design-map__route">/tools</span>
+      <span class="design-map__route">/docs</span>
+      <span class="design-map__route">/education</span>
+      <span class="design-map__route">/astrophotography</span>
+    </div>
+    <span class="design-map__label">shelves</span>
+  </div>
+  <div class="design-map__row">
+    <span class="design-map__step">03</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/notebook/[slug]</span>
+      <span class="design-map__route">/docs/[slug]</span>
+      <span class="design-map__route">/tools/[slug]</span>
+      <span class="design-map__route">/projects/[slug]</span>
+      <span class="design-map__route">/education/[slug]</span>
+      <span class="design-map__route">/astrophotography/[slug]</span>
+    </div>
+    <span class="design-map__label">actual work</span>
+  </div>
+</div>
 
-<div class="doc-grid">
-  <div class="doc-card">
-    <h3>What stays shared</h3>
-    <ul class="compact-list">
-      <li>typography</li>
-      <li>spacing rhythm</li>
-      <li>colour tokens</li>
-      <li>link and code styles</li>
-      <li>reusable UI pieces</li>
+<p class="design-note">
+  The homepage is the switchboard. The section indexes are the shelves. The individual entries are where the real
+  work happens. The site gets clearer once those layers stop pretending to have the same job.
+</p>
+
+</section>
+
+<section id="headers">
+
+## Header modes
+
+<div class="design-headerModes">
+  <div class="design-headerModes__spec">
+    <span class="design-headerModes__mode">headerStyle: plain</span>
+    <div class="design-headerModes__wire design-headerModes__wire--plain"></div>
+    <p>Use when the page wants title-first reading, less chrome, and a quieter technical tone.</p>
+  </div>
+  <div class="design-headerModes__spec">
+    <span class="design-headerModes__mode">headerStyle: panel</span>
+    <div class="design-headerModes__wire design-headerModes__wire--panel"></div>
+    <p>Use when the page benefits from framed metadata, early media, or a stronger artifact-led opening.</p>
+  </div>
+</div>
+
+<p class="design-note">
+  Plain is not automatically better. It is simply better for some kinds of content. Showcase-style material can still
+  need a stronger frame.
+</p>
+
+</section>
+
+<section id="archetypes">
+
+## Section archetypes
+
+<div class="design-rows">
+  <article class="design-row">
+    <span class="design-row__name">blog</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Notebook-like and editorial.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--blog">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--lead"></span>
+              <span class="design-mini__bar design-mini__bar--rail"></span>
+              <span class="design-mini__bar design-mini__bar--archive"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>wide lead story</li>
+              <li>support rail</li>
+              <li>denser archive below</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Lead story, support rail, denser archive below, plain headers by default.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">projects</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Field log crossed with a lab notebook.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--projects">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--hero"></span>
+              <span class="design-mini__bar design-mini__bar--artifact"></span>
+              <span class="design-mini__bar design-mini__bar--notes"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>framed hero</li>
+              <li>artifact-first body</li>
+              <li>field log pacing</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Artifact-friendly entries, stronger hero framing, and a more material-first index tone.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">tools</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Utility-first and compact.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--tools">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--utility"></span>
+              <span class="design-mini__bar design-mini__bar--meta"></span>
+              <span class="design-mini__bar design-mini__bar--list"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>small utility marker</li>
+              <li>light metadata</li>
+              <li>text-first card deck</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Text-first when images do not exist, with reduced metadata clutter and faster scanning.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">docs</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Reference-friendly and structured.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--docs">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--plain"></span>
+              <span class="design-mini__bar design-mini__bar--callout"></span>
+              <span class="design-mini__bar design-mini__bar--reference"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>plain engraved header</li>
+              <li>reference callout</li>
+              <li>dense technical body</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Plain headers by default, heavier use of callouts and denser technical pacing when needed.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">education</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Structured and step-aware.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--education">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--schoolHero"></span>
+              <span class="design-mini__bar design-mini__bar--facts"></span>
+              <span class="design-mini__bar design-mini__bar--guide"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>context-setting hero</li>
+              <li>supporting fact panel</li>
+              <li>guided task flow</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Still benefits from a stronger hero and supporting fact panels because the teaching context needs them.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">astrophotography</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Atmospheric, image-led, and separate on purpose.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--astro">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--photo"></span>
+              <span class="design-mini__bar design-mini__bar--caption"></span>
+              <span class="design-mini__bar design-mini__bar--atmosphere"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>large image field</li>
+              <li>caption and session notes</li>
+              <li>kept separate on purpose</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Should be changed carefully and in isolation. It has earned its own stronger treatment.</p>
+    </div>
+  </article>
+</div>
+
+</section>
+
+<section id="patterns">
+
+## Patterns in use
+
+<div class="design-patternList">
+  <a href="/notebook" class="design-patternList__item">
+    <span>editorial archive</span>
+    <p>Lead story, support rail, then a denser archive below.</p>
+  </a>
+  <a href="/docs/ascii-dip-pinout-cheatsheet" class="design-patternList__item">
+    <span>terminal reference module</span>
+    <p>Use terminal framing where the content is plain-text by nature and copyable.</p>
+  </a>
+  <a href="/notebook/wia-band-plan-2026" class="design-patternList__item">
+    <span>inspector layout</span>
+    <p>Use selector-driven inspection when dense technical comparisons would be worse as a stack.</p>
+  </a>
+  <a href="/tools" class="design-patternList__item">
+    <span>text-first utility index</span>
+    <p>Do not fake image cards when the content has no images. Let utility pages stay useful.</p>
+  </a>
+</div>
+
+</section>
+
+<section id="rules">
+
+## Current rules
+
+<div class="design-ledger">
+  <div>
+    <p class="design-kicker">Do</p>
+    <ul class="design-list">
+      <li>let layouts react to the content, not just the viewport</li>
+      <li>use text-first variants when entries have no media</li>
+      <li>treat indexes as editorial surfaces rather than uniform grids</li>
+      <li>choose <code>headerStyle</code> on editorial grounds</li>
+      <li>keep image-led sections image-led</li>
     </ul>
   </div>
-  <div class="doc-card">
-    <h3>What changes by section</h3>
-    <ul class="compact-list">
-      <li>page framing</li>
-      <li>information density</li>
-      <li>media treatment</li>
-      <li>reading flow</li>
-      <li>interaction priority</li>
+  <div>
+    <p class="design-kicker">Do not</p>
+    <ul class="design-list">
+      <li>force every section into the same post shell</li>
+      <li>replace one repetitive card system with another repetitive card system</li>
+      <li>add terminal styling where it serves no purpose</li>
+      <li>assume plain headers are universally better</li>
+      <li>change astrophotography casually because another section changed well</li>
     </ul>
   </div>
 </div>
 
-## Structural overview
+</section>
 
-At the content level, the site is organised into collections:
+## Practical authoring note
 
-- `blog`: narrative posts, essays, field notes, technical rambles
-- `projects`: build logs, systems, experiments, activations, outcomes
-- `tools`: small utilities, references, converters, interactive helpers
-- `docs`: structured how-tos, technical notes, references, internal manuals
-- `education`: scaffolded resources, lesson-adjacent material, embedded teaching content
-- `astrophotography`: image-driven session logs and processing notes
+If a new entry is mostly writing, reference, or explanation, start with:
 
-At the route level, that becomes:
-
-```text
-/
-/blog
-/projects
-/tools
-/docs
-/education
-/astrophotography
-/tags/[tag]
+```yaml
+headerStyle: plain
 ```
 
-The homepage is the switchboard. The section pages are the shelves. The individual entries are where the real work happens.
+If it is mostly artifact, media, or structured showcase material, start with:
 
-## The design problem
+```yaml
+headerStyle: panel
+```
 
-If every page type uses the exact same "title, date, paragraph blob" wrapper, the site becomes visually honest but emotionally flat.
+Then let the page argue its case.
 
-That is fine for one post.
+<section id="history">
 
-It is not fine for page after page after page.
+## Design history
 
-At the same time, going too hard on visual novelty creates another problem: the site starts feeling like six unrelated microsites wearing the same domain name.
-
-So the answer is not "make everything fancy" and it is also not "leave everything plain forever".
-
-The answer is:
-
-- one visual grammar
-- several page archetypes
-
-| Problem | Bad fix | Better fix |
-| --- | --- | --- |
-| Everything feels flat | Add random visual noise everywhere | Keep body copy calm, improve page framing |
-| Sections feel unrelated | Make every page use the same shell | Share tokens and components, vary archetypes |
-| Long docs feel dense | Use more paragraphs | Use cards, callouts, tables, and clearer hierarchy |
-
-## Shared design language
-
-These things should stay consistent across the whole site:
-
-- typography
-- spacing rhythm
-- border radius
-- elevation and shadow rules
-- link behaviour
-- colour tokens
-- code block styling
-- metadata patterns
-- reusable UI pieces like pills, callouts, dividers, and image frames
-
-This is the connective tissue. It is what makes the site feel like one place.
-
-### Visual principles
-
-The shared language should aim for:
-
-- calm reading surfaces
-- slightly tactile panels rather than flat white voids
-- restrained accent colour
-- enough personality to feel human
-- enough discipline to still read like technical material
-
-In plain English: not sterile, not noisy.
-
-## Page archetypes
-
-This is where the variety comes from.
-
-<div class="doc-grid">
-  <div class="doc-card">
-    <h3>1. Narrative pages</h3>
-    <p><strong>Used for:</strong> blog posts and some longer project write-ups.</p>
-    <p><strong>Should feel like:</strong> essay-like, readable, and slightly atmospheric.</p>
-    <ul class="compact-list">
-      <li>stronger header block</li>
-      <li>clearer metadata</li>
-      <li>optional hero treatment</li>
-      <li>controlled reading width</li>
-    </ul>
+<div class="design-timeline">
+  <div class="design-timeline__item">
+    <time>2026-03-01</time>
+    <div>
+      <strong>Initial design-language pass</strong>
+      <p>The first version focused on section archetypes, shared tokens, and the idea that the site should feel cohesive rather than cloned.</p>
+    </div>
   </div>
-  <div class="doc-card">
-    <h3>2. Reference pages</h3>
-    <p><strong>Used for:</strong> docs and some education resources.</p>
-    <p><strong>Should feel like:</strong> cleaner and utility-first.</p>
-    <ul class="compact-list">
-      <li>strong hierarchy</li>
-      <li>obvious sectioning</li>
-      <li>callouts and warnings</li>
-      <li>optional table of contents</li>
-    </ul>
+  <div class="design-timeline__item">
+    <time>2026-03-02</time>
+    <div>
+      <strong>System update</strong>
+      <p>The live system now includes editorial indexes, terminal status headers, text-first utility/archive handling, the WIA band inspector, and the <code>headerStyle</code> option.</p>
+    </div>
   </div>
-  <div class="doc-card">
-    <h3>3. Showcase pages</h3>
-    <p><strong>Used for:</strong> projects and astrophotography.</p>
-    <p><strong>Should feel like:</strong> artifact-driven and more visual.</p>
-    <ul class="compact-list">
-      <li>media early on</li>
-      <li>structured metadata</li>
-      <li>gear or outcome panels</li>
-      <li>image-led pacing</li>
-    </ul>
-  </div>
-  <div class="doc-card">
-    <h3>4. Utility pages</h3>
-    <p><strong>Used for:</strong> tools.</p>
-    <p><strong>Should feel like:</strong> compact, quick, and interaction-first.</p>
-    <ul class="compact-list">
-      <li>controls above the fold</li>
-      <li>outputs before explanation</li>
-      <li>lighter prose footprint</li>
-      <li>fast scanning</li>
-    </ul>
+  <div class="design-timeline__item">
+    <time>Archive</time>
+    <div>
+      <strong>Earlier version preserved</strong>
+      <p><a href="/docs/site-architecture-and-design-language-archive-2026-03-01">Open the archived first-pass version</a>.</p>
+    </div>
   </div>
 </div>
 
-<div class="callout callout--warm">
-  <strong>Important:</strong> a tool page that behaves like a blog post has its priorities upside down.
-</div>
+</section>
 
-## Section-by-section intent
+<style>{`
+  .design-manifesto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+    gap: 1.2rem 1.6rem;
+    align-items: start;
+    margin: 0.35rem 0 0.9rem;
+    padding: 0.65rem 0 0.4rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
 
-### Blog
+  .design-kicker {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
 
-Purpose:
-Longer-form thinking, technical posts, stories from experiments, and things that deserve a voice.
+  .design-manifesto__line,
+  .design-manifesto__summary,
+  .design-state__title,
+  .design-ruleband p,
+  .design-note,
+  .design-row__body p,
+  .design-patternList__item p,
+  .design-timeline__item p {
+    margin: 0;
+  }
 
-Should feel like:
-A good notebook entry cleaned up just enough for public consumption.
+  .design-manifesto__copy {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+    min-width: 0;
+  }
 
-Needs:
+  .design-manifesto__line {
+    font-size: clamp(1.95rem, 3.9vw, 3.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    text-wrap: balance;
+  }
 
-- stronger post headers
-- optional hero imagery or motif blocks
-- reading aids like pull-quotes, callouts, or side notes
+  .design-manifesto__summary {
+    max-width: none;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
 
-### Docs
+  .design-state {
+    align-self: stretch;
+    padding: 0.1rem 0 0.1rem 1.1rem;
+    border-left: 1px solid color-mix(in srgb, var(--accent) 26%, var(--border) 74%);
+  }
 
-Purpose:
-Answers, references, procedures, and "how do I do this again?" material.
+  .design-state__title {
+    margin-bottom: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
 
-Should feel like:
-A practical manual written by a person, not a support portal.
+  .design-state dl {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
 
-Needs:
+  .design-state dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
 
-- better section grouping
-- consistent note/warning styles
-- optional table of contents for long pages
+  .design-state dt,
+  .design-state dd {
+    margin: 0;
+  }
 
-### Projects
+  .design-state dt {
+    color: var(--muted);
+  }
 
-Purpose:
-Show what got built, why, how, and what happened when reality had opinions.
+  .design-state dd {
+    color: var(--text);
+  }
 
-Should feel like:
-A field log crossed with a lab notebook.
+  .design-tldr {
+    display: block;
+    margin: 0.45rem 0 0.7rem;
+    padding: 0.1rem 0 0.15rem;
+  }
 
-Needs:
+  .design-tldr__label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.4rem;
+  }
 
-- more visible artifacts
-- metadata blocks for gear, links, dates, status, and outcomes
-- richer page framing than plain prose
+  .design-tldr p {
+    margin: 0;
+    max-width: none;
+    width: 100%;
+    font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+    line-height: 1.35;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
 
-### Education
+  .design-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    align-items: center;
+    margin: 0.2rem 0 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.81rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+  }
 
-Purpose:
-Material that guides someone from "what is this?" to "I can use this."
+  .design-index__label {
+    margin-right: 0.5rem;
+    color: var(--accent) !important;
+  }
 
-Should feel like:
-Structured, clear, encouraging, and step-aware.
+  section[id] {
+    margin: 1.35rem 0 0;
+    scroll-margin-top: 6rem;
+  }
 
-Needs:
+  section[id] > h2 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+  }
 
-- strong hierarchy
-- scaffold blocks
-- explicit sequence markers
-- embedded resources that look intentional rather than bolted on
+  .design-index a,
+  .design-index span {
+    color: var(--muted);
+    text-decoration: none;
+  }
 
-### Astrophotography
+  .design-index a:hover {
+    color: var(--accent);
+  }
 
-Purpose:
-Session logs, processing notes, image outcomes, and technical capture detail.
+  .design-split,
+  .design-ledger {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1.2rem;
+    margin: 0.8rem 0 1rem;
+  }
 
-Should feel like:
-Quiet, image-led, and slightly more atmospheric than the rest of the site.
+  .design-split > article,
+  .design-ledger > div {
+    padding: 0.2rem 0 0 1rem;
+    border-left: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
 
-Needs:
+  .design-split h2,
+  .design-ledger h2,
+  .design-ledger h3 {
+    margin: 0 0 0.7rem;
+  }
 
-- careful image presentation
-- session metadata
-- processing summaries
-- enough restraint that the photos stay in charge
+  .design-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-### Tools
+  .design-list li {
+    margin: 0;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 76%, transparent 24%);
+  }
 
-Purpose:
-Save time, reduce friction, and stop repeated low-value re-derivation of things you have already worked out once.
+  .design-list li::before {
+    content: "—";
+    margin-right: 0.55rem;
+    color: var(--accent);
+  }
 
-Should feel like:
-Compact and useful.
+  .design-list li:last-child {
+    border-bottom: 0;
+  }
 
-Needs:
+  .design-rulestrip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem 1rem;
+    margin: 0.8rem 0 1.1rem;
+  }
 
-- interaction first
-- prose second
-- less article chrome
+  .design-rulestrip article {
+    padding: 0.7rem 1rem 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+    position: relative;
+  }
 
-## Reuse rules
+  .design-rulestrip article:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0.7rem;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background: color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
 
-<div class="doc-grid">
-  <div class="doc-card">
-    <h3>Reuse freely</h3>
-    <ul class="compact-list">
-      <li>metadata rows</li>
-      <li>tag pills</li>
-      <li>callout blocks</li>
-      <li>section dividers</li>
-      <li>image frames</li>
-      <li>code block wrappers</li>
-      <li>key facts panels</li>
-    </ul>
-  </div>
-  <div class="doc-card">
-    <h3>Do not reuse blindly</h3>
-    <ul class="compact-list">
-      <li>identical article headers</li>
-      <li>identical information density</li>
-      <li>identical media treatment</li>
-      <li>identical page pacing</li>
-      <li>identical shells across all collections</li>
-    </ul>
-  </div>
-</div>
+  .design-map {
+    display: grid;
+    gap: 0;
+    margin: 0.75rem 0 0.75rem;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 48%, transparent 52%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 42%, transparent 58%) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    background-position: center;
+  }
 
-The design system should produce shared building blocks, not a single page mould. The same bricks can build very different rooms.
+  .design-map__row {
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent 28%);
+  }
 
-## Current state
+  .design-map__row:last-child {
+    border-bottom: 0;
+  }
 
-Right now, the site already has:
+  .design-map__routes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    min-width: 0;
+    align-items: center;
+  }
 
-- shared global tokens and typography
-- a stronger homepage voice
-- a distinct astrophotography theme
-- content collections with sensible boundaries
+  .design-map__step {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
 
-Right now, the site still needs:
+  .design-map__route {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    color: var(--text);
+  }
 
-- clearer page archetypes for blog, docs, projects, and education
-- fewer inline page styles
-- more reusable section-specific layout components
-- better differentiation between prose-first and utility-first content
+  .design-map__label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
 
-## Implementation direction
+  .design-note {
+    color: var(--text-2);
+    max-width: 62ch;
+  }
 
-The safest path is:
+  .design-headerModes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+    margin: 0.75rem 0;
+  }
 
-1. Define the shared primitives in the global design system.
-2. Build section-specific layouts on top of those primitives.
-3. Keep content calm and readable, but make the framing more intentional.
-4. Let the section type decide the shell.
+  .design-headerModes__spec {
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+    padding-top: 0.35rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
+  }
 
-If this is done properly, the site should feel like one house with different rooms, not one room copied six times.
+  .design-headerModes__mode {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text);
+  }
 
-## Short version
+  .design-headerModes__wire {
+    min-height: 92px;
+    position: relative;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
+  }
 
-| Share across the site | Do not force everywhere |
-| --- | --- |
-| visual grammar | identical page framing |
-| tokens | identical information density |
-| spacing | identical media treatment |
-| typography | identical article templates |
-| UI components | identical interaction patterns |
+  .design-headerModes__wire::before,
+  .design-headerModes__wire::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 20%;
+  }
 
-That is the whole idea.
+  .design-headerModes__wire::before {
+    top: 1rem;
+    height: 0.75rem;
+    background: color-mix(in srgb, var(--text) 8%, transparent 92%);
+  }
 
-Also yes, putting the design document inside the site it describes is extremely on-brand.
+  .design-headerModes__wire::after {
+    top: 2.35rem;
+    height: 2.1rem;
+    background: color-mix(in srgb, var(--text) 5%, transparent 95%);
+  }
+
+  .design-headerModes__wire--panel::after {
+    right: 0;
+    height: 3rem;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--text) 5%, transparent 95%) 0 58%, transparent 58% 100%);
+  }
+
+  .design-rows {
+    display: grid;
+    margin: 0.75rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .design-row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 0.8rem 1.2rem;
+    align-items: start;
+    padding: 0.72rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .design-row__name {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-transform: lowercase;
+    padding-top: 1.05rem;
+  }
+
+  .design-row__body {
+    display: grid;
+    gap: 0.22rem;
+    min-width: 0;
+  }
+
+  .design-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .design-row__body strong {
+    display: block;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .design-row__inspect {
+    min-width: 0;
+  }
+
+  .design-row__inspect summary {
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--accent);
+  }
+
+  .design-row__inspect summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .design-row__inspect summary::before {
+    content: "+ ";
+  }
+
+  .design-row__inspect[open] summary::before {
+    content: "− ";
+  }
+
+  .design-mini {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: 0.8rem 1rem;
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
+
+  .design-mini__canvas {
+    position: relative;
+    height: 5.6rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border) 84%);
+    background:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 44%, transparent 56%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 44%, transparent 56%) 1px, transparent 1px);
+    background-size: 1.05rem 1.05rem;
+  }
+
+  .design-mini__bar {
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    background: color-mix(in srgb, var(--text) 9%, transparent 91%);
+  }
+
+  .design-mini__bar--lead,
+  .design-mini__bar--hero,
+  .design-mini__bar--plain,
+  .design-mini__bar--utility,
+  .design-mini__bar--schoolHero,
+  .design-mini__bar--photo {
+    top: 0.45rem;
+    height: 0.45rem;
+  }
+
+  .design-mini__bar--rail,
+  .design-mini__bar--artifact,
+  .design-mini__bar--callout,
+  .design-mini__bar--meta,
+  .design-mini__bar--facts,
+  .design-mini__bar--caption {
+    top: 1.35rem;
+    height: 1.5rem;
+  }
+
+  .design-mini__bar--archive,
+  .design-mini__bar--notes,
+  .design-mini__bar--reference,
+  .design-mini__bar--list,
+  .design-mini__bar--guide,
+  .design-mini__bar--atmosphere {
+    top: 3.3rem;
+    height: 1.55rem;
+  }
+
+  .design-mini--blog .design-mini__bar--rail {
+    right: 7rem;
+  }
+
+  .design-mini--projects .design-mini__bar--artifact,
+  .design-mini--education .design-mini__bar--facts,
+  .design-mini--astro .design-mini__bar--caption {
+    right: 4.8rem;
+  }
+
+  .design-mini--projects .design-mini__bar--notes,
+  .design-mini--education .design-mini__bar--guide,
+  .design-mini--astro .design-mini__bar--atmosphere {
+    left: 7.4rem;
+    background: color-mix(in srgb, var(--accent) 12%, transparent 88%);
+  }
+
+  .design-mini__notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .design-mini__notes li {
+    margin: 0;
+    padding: 0.18rem 0;
+    color: var(--text-2);
+  }
+
+  .design-mini__notes li::before {
+    content: "→";
+    margin-right: 0.45rem;
+    color: var(--accent);
+  }
+
+  .design-patternList {
+    display: grid;
+    margin: 0.75rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .design-patternList__item {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    align-items: start;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .design-patternList__item::after {
+    content: "→";
+    color: var(--muted);
+  }
+
+  .design-patternList__item span {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-transform: lowercase;
+  }
+
+  .design-patternList__item:hover span {
+    text-decoration: underline;
+  }
+
+  .design-timeline {
+    display: grid;
+    gap: 1rem;
+    margin: 0.8rem 0 0;
+    position: relative;
+  }
+
+  .design-timeline::before {
+    content: "";
+    position: absolute;
+    left: 5.6rem;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
+
+  .design-timeline__item {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: start;
+  }
+
+  .design-timeline__item time {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.2rem;
+  }
+
+  .design-timeline__item > div {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.1rem 0 0.9rem;
+  }
+
+  .design-timeline__item > div::before {
+    content: "";
+    position: absolute;
+    left: -0.86rem;
+    top: 0.3rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent 86%);
+  }
+
+  @media (max-width: 980px) {
+    .design-manifesto,
+    .design-split,
+    .design-headerModes,
+    .design-ledger,
+    .design-rulestrip {
+      grid-template-columns: 1fr;
+    }
+
+    .design-state {
+      border-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--accent) 26%, var(--border) 74%);
+      padding: 0.8rem 0 0 0;
+    }
+
+    .design-patternList__item,
+    .design-row {
+      grid-template-columns: 1fr;
+    }
+
+    .design-row__name {
+      padding-top: 0;
+    }
+
+    .design-mini {
+      grid-template-columns: 1fr;
+    }
+
+    .design-patternList__item::after {
+      display: none;
+    }
+
+    .design-map__label {
+      width: auto;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .design-index__label {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .design-map__row {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .design-timeline::before {
+      display: none;
+    }
+
+    .design-timeline__item {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .design-timeline__item > div::before {
+      display: none;
+    }
+  }
+`}</style>
