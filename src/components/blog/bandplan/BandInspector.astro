@@ -1,0 +1,254 @@
+---
+import BandChart from './BandChart.astro';
+import type { BandChart as BandChartType, BandPanel } from '../../../data/bandplans/types';
+
+interface Props {
+  panels: BandPanel[];
+  charts: BandChartType[];
+}
+
+const { panels, charts } = Astro.props;
+
+const chartMap = new Map(charts.map((chart) => [chart.id, chart]));
+
+const selectorMeta: Record<string, { weight: number; group: 'hf' | 'vhf' | 'shf' }> = {
+  '630m': { weight: 1.1, group: 'hf' },
+  '160m': { weight: 1.15, group: 'hf' },
+  '80m': { weight: 1.4, group: 'hf' },
+  '40m': { weight: 1.45, group: 'hf' },
+  '30m': { weight: 1.05, group: 'hf' },
+  '20m': { weight: 1.2, group: 'hf' },
+  '12m': { weight: 1.05, group: 'hf' },
+  '6m': { weight: 1.3, group: 'vhf' },
+  '2m': { weight: 1.2, group: 'vhf' },
+  '70cm': { weight: 1.25, group: 'vhf' },
+  '23cm': { weight: 1.05, group: 'shf' },
+  '13cm': { weight: 1.05, group: 'shf' },
+  '9cm': { weight: 1.05, group: 'shf' },
+  '6cm': { weight: 1.05, group: 'shf' },
+  '3cm': { weight: 1.05, group: 'shf' },
+};
+
+const inspectorPanels = panels.map((panel) => {
+  const meta = selectorMeta[panel.id] ?? { weight: 1, group: 'hf' as const };
+  return {
+    ...panel,
+    chart: panel.chartId ? chartMap.get(panel.chartId) : undefined,
+    selectorWeight: meta.weight,
+    selectorGroup: meta.group,
+  };
+});
+
+const groupWeights = inspectorPanels.reduce(
+  (acc, panel) => {
+    acc[panel.selectorGroup] += panel.selectorWeight;
+    return acc;
+  },
+  { hf: 0, vhf: 0, shf: 0 },
+);
+
+function proseBlocks(lines: string[]) {
+  if (lines.length <= 1) return lines;
+  if (lines.length === 2) return [lines.join(' ')];
+  return [lines.slice(0, 2).join(' '), lines.slice(2).join(' ')];
+}
+---
+
+<section class="bandplan-inspector panel" aria-labelledby="band-inspector-title">
+  <div class="bandplan-inspector__intro">
+    <div>
+      <p class="bandplan-inspector__eyebrow">Band Inspector</p>
+      <h2 id="band-inspector-title">Select a band</h2>
+    </div>
+    <p class="bandplan-inspector__lede">
+      Pick a band from the spectrum selector. The terminal below updates with the specific frequencies,
+      segment changes, and tradeoffs for that band.
+    </p>
+  </div>
+
+  <div class="bandplan-spectrumWrap">
+    <div class="bandplan-spectrumScroll">
+      <div class="bandplan-spectrumScale" aria-hidden="true">
+        <span style={`--group-weight:${groupWeights.hf};`}>LF / HF</span>
+        <span style={`--group-weight:${groupWeights.vhf};`}>VHF / UHF</span>
+        <span style={`--group-weight:${groupWeights.shf};`}>SHF</span>
+      </div>
+
+      <div class="bandplan-spectrum" role="tablist" aria-label="Band selector">
+        {inspectorPanels.map((panel, index) => (
+          <button
+            type="button"
+            class={`bandplan-spectrum__band bandplan-spectrum__band--${panel.selectorGroup}`}
+            style={`--band-weight:${panel.selectorWeight};`}
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            aria-controls={`band-panel-${panel.id}`}
+            id={`band-tab-${panel.id}`}
+            tabindex={index === 0 ? '0' : '-1'}
+            data-band-target={panel.id}
+          >
+            <span class="bandplan-spectrum__label">{panel.title}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="bandplan-inspector__legend" aria-label="Chart legend">
+    <p class="bandplan-inspector__legendTitle">Chart key</p>
+    <div class="bandplan-inspector__legendItems">
+      <span class="bandplan-legendChip bandplan-legendChip--cw">CW</span>
+      <span class="bandplan-legendChip bandplan-legendChip--data">DATA</span>
+      <span class="bandplan-legendChip bandplan-legendChip--voice">VOICE</span>
+      <span class="bandplan-legendChip bandplan-legendChip--repeater">REPEATER</span>
+      <span class="bandplan-legendChip bandplan-legendChip--beacon">BEACON</span>
+      <span class="bandplan-legendChip bandplan-legendChip--all_modes">ALL MODES</span>
+      <span class="bandplan-legendChip bandplan-legendChip--atv">ATV</span>
+      <span class="bandplan-legendChip bandplan-legendChip--satellite">SATELLITE</span>
+    </div>
+  </div>
+
+  <div class="bandplan-terminal" data-band-terminal>
+    <div class="bandplan-terminal__chrome">
+      <button
+        type="button"
+        class="bandplan-terminal__beacon"
+        aria-expanded="true"
+        aria-controls="band-terminal-viewport"
+        aria-label="Collapse band inspector"
+        title="Collapse band inspector"
+        data-band-terminal-toggle
+      >
+        <span class="sr-only">Collapse band inspector</span>
+      </button>
+      <span class="bandplan-terminal__title">radio://wia-band-inspector</span>
+    </div>
+
+    <div
+      id="band-terminal-viewport"
+      class="bandplan-terminal__viewport"
+      data-band-terminal-viewport
+    >
+      {inspectorPanels.map((panel, index) => (
+      <section
+        id={`band-panel-${panel.id}`}
+        class="bandplan-terminal__panel"
+        role="tabpanel"
+        aria-labelledby={`band-tab-${panel.id}`}
+        data-band-panel={panel.id}
+        hidden={index !== 0}
+        tabindex="0"
+      >
+        <div class="bandplan-terminal__header">
+          <p class="bandplan-terminal__prompt">
+            <span>&gt;</span> inspect --band {panel.title}
+          </p>
+          <h3>{panel.summary}</h3>
+        </div>
+
+        <div class="bandplan-terminal__body">
+          {panel.chart ? (
+            <div class="bandplan-terminal__chart">
+              <BandChart chart={panel.chart} />
+            </div>
+          ) : null}
+
+          <div class="bandplan-terminal__copy">
+            <section class="bandplan-terminal__section">
+              <h4>What changed</h4>
+              {proseBlocks(panel.sections.changed).map((item) => (
+                <p>{item}</p>
+              ))}
+            </section>
+
+            <section class="bandplan-terminal__section">
+              <h4>Why this was changed</h4>
+              {proseBlocks(panel.sections.why).map((item) => (
+                <p>{item}</p>
+              ))}
+            </section>
+
+            <section class="bandplan-terminal__section">
+              <h4>What to watch for</h4>
+              {proseBlocks(panel.sections.downsides).map((item) => (
+                <p>{item}</p>
+              ))}
+            </section>
+          </div>
+        </div>
+      </section>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.currentScript?.previousElementSibling;
+    if (!(root instanceof HTMLElement)) return;
+
+    const tabs = Array.from(root.querySelectorAll('[data-band-target]'));
+    const panels = Array.from(root.querySelectorAll('[data-band-panel]'));
+    const toggle = root.querySelector('[data-band-terminal-toggle]');
+    const viewport = root.querySelector('[data-band-terminal-viewport]');
+
+    const activate = (targetId) => {
+      tabs.forEach((tab) => {
+        const active = tab.getAttribute('data-band-target') === targetId;
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        tab.setAttribute('tabindex', active ? '0' : '-1');
+        tab.classList.toggle('is-active', active);
+      });
+
+      panels.forEach((panel) => {
+        const active = panel.getAttribute('data-band-panel') === targetId;
+        panel.hidden = !active;
+      });
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activate(tab.getAttribute('data-band-target')));
+      tab.addEventListener('keydown', (event) => {
+        if (!(event instanceof KeyboardEvent)) return;
+        const current = tabs.indexOf(tab);
+        let next = current;
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (current + 1) % tabs.length;
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (current - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = tabs.length - 1;
+
+        if (next !== current) {
+          event.preventDefault();
+          const nextTab = tabs[next];
+          nextTab.focus();
+          activate(nextTab.getAttribute('data-band-target'));
+        }
+      });
+
+      if (index === 0) {
+        tab.classList.add('is-active');
+      }
+    });
+
+    if (toggle instanceof HTMLButtonElement && viewport instanceof HTMLElement) {
+      const toggleLabel = () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        const label = expanded ? 'Collapse band inspector' : 'Expand band inspector';
+        toggle.setAttribute('aria-label', label);
+        toggle.setAttribute('title', label);
+        const hiddenText = toggle.querySelector('.sr-only');
+        if (hiddenText) hiddenText.textContent = label;
+      };
+
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        viewport.hidden = expanded;
+        toggleLabel();
+      });
+
+      toggleLabel();
+    }
+  })();
+</script>

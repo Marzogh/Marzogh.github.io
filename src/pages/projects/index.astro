@@ -5,6 +5,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import IndexHeader from '../../components/IndexHeader.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
@@ -16,8 +17,6 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0] ?? null;
 const remainingProjects = featuredProject ? projects.filter((project) => project.id !== featuredProject.id) : [];
-const enableArchiveMasonry = remainingProjects.length > 1;
-
 function pickThumb(data: any) {
   return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? data.image ?? null;
 }
@@ -49,39 +48,17 @@ const radioTags = uniqueTags
     <main class="projects-index">
       <section class="projects-shell">
         <div class="projects-main">
-          <header class="page-header panel panel--soft">
-            <div class="page-copy">
-              <span class="eyebrow">Workshop</span>
-              <h1 class="page-title">Projects</h1>
-              <p class="page-lede">
-                Real builds, field tests, antenna experiments, firmware detours, and the occasional bit of engineering that behaved
-                properly first time.
-              </p>
-            </div>
-
-            <section class="overview-console" aria-label="Projects overview">
-              <div class="overview-console__head">
-                <span class="overview-console__dot"></span>
-                <span class="overview-console__dot"></span>
-                <span class="overview-console__dot"></span>
-                <span class="overview-console__title">overview.log</span>
-              </div>
-              <dl class="overview-console__grid">
-                <div class="overview-row">
-                  <dt>published_projects</dt>
-                  <dd>{projects.length}</dd>
-                </div>
-                <div class="overview-row">
-                  <dt>tags_in_use</dt>
-                  <dd>{uniqueTags.length}</dd>
-                </div>
-                <div class="overview-row">
-                  <dt>radio_builds</dt>
-                  <dd>{projects.filter((project) => project.data.type === 'radio' || project.data.tags?.includes('amateur-radio')).length}</dd>
-                </div>
-              </dl>
-            </section>
-          </header>
+          <IndexHeader
+            eyebrow="Workshop"
+            title="Projects"
+            lede="Real builds, field tests, antenna experiments, firmware detours, and the occasional bit of engineering that behaved properly first time."
+            terminalTitle="projects.index"
+            statusLines={[
+              { label: 'published_projects', value: projects.length },
+              { label: 'tags_in_use', value: uniqueTags.length },
+              { label: 'radio_builds', value: projects.filter((project) => project.data.type === 'radio' || project.data.tags?.includes('amateur-radio')).length },
+            ]}
+          />
 
           {radioTags.length ? (
             <details class="radio-drawer panel panel--soft">
@@ -107,7 +84,7 @@ const radioTags = uniqueTags
           ) : null}
 
           {featuredProject ? (
-            <section class="featured panel" aria-labelledby="featured-project-heading">
+            <section class:list={['featured panel', !pickThumb(featuredProject.data) && 'featured--textOnly']} aria-labelledby="featured-project-heading">
               <div class="featured-copy">
                 <div class="featured-kickers">
                   <span class="pill">Latest Project</span>
@@ -145,14 +122,11 @@ const radioTags = uniqueTags
                   </div>
                 ) : null}
 
-                <div class="featured-actions">
-                  <a class="btn btn--primary" href={`/projects/${featuredProject.id}`}>Read project</a>
-                </div>
               </div>
 
-              <a class="featured-media" href={`/projects/${featuredProject.id}`} aria-label={`Open project: ${featuredProject.data.title}`}>
-                {pickThumb(featuredProject.data) ? (
-                  typeof pickThumb(featuredProject.data) === 'string' ? (
+              {pickThumb(featuredProject.data) ? (
+                <a class="featured-media" href={`/projects/${featuredProject.id}`} aria-label={`Open project: ${featuredProject.data.title}`}>
+                  {typeof pickThumb(featuredProject.data) === 'string' ? (
                     <img src={pickThumb(featuredProject.data)} alt="" loading="eager" decoding="async" />
                   ) : (
                     <Image
@@ -161,14 +135,9 @@ const radioTags = uniqueTags
                       widths={[720, 1080, 1440]}
                       sizes="(max-width: 920px) 100vw, (max-width: 1320px) 60vw, 720px"
                     />
-                  )
-                ) : (
-                  <div class="thumb-placeholder">
-                    <div class="gridlines" />
-                    <div class="thumb-label">Project image coming soon</div>
-                  </div>
-                )}
-              </a>
+                  )}
+                </a>
+              ) : null}
             </section>
           ) : null}
         </div>
@@ -181,15 +150,15 @@ const radioTags = uniqueTags
             <p>Everything else currently on the bench, in the field, or already written up.</p>
           </div>
 
-          <div class:list={['grid', enableArchiveMasonry && 'grid--masonry']} data-masonry-grid={enableArchiveMasonry ? true : undefined} data-randomize={enableArchiveMasonry ? 'true' : undefined}>
+          <div class="grid">
             {remainingProjects.map((project) => {
               const thumb = pickThumb(project.data);
 
               return (
-                <a href={`/projects/${project.id}`} class="card" aria-label={`Open project: ${project.data.title}`}>
-                  <div class="thumb" aria-hidden="true">
-                    {thumb ? (
-                      typeof thumb === 'string' ? (
+                <a href={`/projects/${project.id}`} class:list={['card', !thumb && 'card--textOnly']} aria-label={`Open project: ${project.data.title}`}>
+                  {thumb ? (
+                    <div class="thumb" aria-hidden="true">
+                      {typeof thumb === 'string' ? (
                         <img src={thumb} alt="" loading="lazy" decoding="async" />
                       ) : (
                         <Image
@@ -198,14 +167,9 @@ const radioTags = uniqueTags
                           widths={[480, 720, 960]}
                           sizes="(max-width: 520px) 100vw, (max-width: 920px) 50vw, 33vw"
                         />
-                      )
-                    ) : (
-                      <div class="thumb-placeholder">
-                        <div class="gridlines" />
-                        <div class="thumb-label">No thumbnail yet</div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  ) : null}
 
                   <div class="card-body">
                     <div class="card-meta">
@@ -243,7 +207,6 @@ const radioTags = uniqueTags
 
     <Footer />
 
-    <script src="/scripts/masonry-grid.js" defer></script>
   </body>
 </html>
 
@@ -482,6 +445,15 @@ const radioTags = uniqueTags
       linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 96%, transparent 4%), color-mix(in srgb, var(--surface) 90%, var(--surface-raised) 10%));
   }
 
+  .featured--textOnly{
+    grid-template-columns: 1fr;
+    width: min(100%, 860px);
+    background:
+      radial-gradient(720px 220px at top left, rgba(37, 99, 235, 0.08), transparent 70%),
+      radial-gradient(640px 220px at bottom right, rgba(45, 255, 178, 0.08), transparent 76%),
+      var(--surface-raised);
+  }
+
   .featured-copy{
     display:flex;
     flex-direction:column;
@@ -492,7 +464,6 @@ const radioTags = uniqueTags
   .featured-kickers,
   .featured-meta,
   .featured-tags,
-  .featured-actions,
   .card-meta,
   .card-tags{
     display:flex;
@@ -510,6 +481,7 @@ const radioTags = uniqueTags
     font-size: clamp(2rem, 2.5vw, 3.2rem);
     line-height: 1.02;
     letter-spacing: -0.03em;
+    text-wrap: balance;
   }
 
   .featured-title a{
@@ -613,19 +585,15 @@ const radioTags = uniqueTags
 
   .grid{
     display:grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
     gap: var(--space-5);
-  }
-
-  .grid--masonry[data-masonry-ready='true']{
-    grid-auto-flow: dense;
-    grid-auto-rows: 12px;
+    align-items: start;
   }
 
   .card{
-    grid-column: span 12;
     display:flex;
     flex-direction:column;
+    align-self: start;
     text-decoration:none;
     color:inherit;
     border:1px solid var(--border);
@@ -636,44 +604,16 @@ const radioTags = uniqueTags
     transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
   }
 
+  .card--textOnly{
+    background:
+      radial-gradient(520px 180px at top left, rgba(37, 99, 235, 0.06), transparent 72%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.96));
+  }
+
   .card:hover{
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     border-color: color-mix(in srgb, var(--accent) 25%, var(--border) 75%);
-  }
-
-  .thumb-placeholder{
-    position:absolute;
-    inset:0;
-    display:grid;
-    place-items:center;
-    padding: var(--space-5);
-    background: radial-gradient(900px 260px at 25% 25%, rgba(37, 99, 235, 0.14), transparent 55%),
-      radial-gradient(700px 240px at 75% 55%, rgba(15, 23, 42, 0.12), transparent 55%),
-      var(--surface);
-    color: var(--muted);
-  }
-
-  .gridlines{
-    position:absolute;
-    inset:0;
-    background-image:
-      linear-gradient(to right, rgba(100,116,139,0.18) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(100,116,139,0.18) 1px, transparent 1px);
-    background-size: 34px 34px;
-    opacity: 0.35;
-  }
-
-  .thumb-label{
-    position:relative;
-    z-index:1;
-    font-size:0.95rem;
-    border:1px solid var(--border);
-    background:var(--surface-glass);
-    padding:10px 12px;
-    border-radius:999px;
-    backdrop-filter: blur(10px);
-    color:var(--text);
   }
 
   .card-body{
@@ -681,6 +621,7 @@ const radioTags = uniqueTags
     flex-direction:column;
     gap: var(--space-3);
     padding: var(--space-5);
+    min-width: 0;
   }
 
   .card-title,
@@ -692,6 +633,7 @@ const radioTags = uniqueTags
     font-size:clamp(1.18rem, 1.15vw, 1.45rem);
     line-height:1.16;
     color:var(--text);
+    text-wrap: balance;
   }
 
   .card-desc{
@@ -721,9 +663,6 @@ const radioTags = uniqueTags
       align-items: end;
     }
 
-    .card{
-      grid-column: span 6;
-    }
   }
 
   @media (max-width: 920px){

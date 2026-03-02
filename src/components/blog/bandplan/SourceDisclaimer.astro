@@ -1,0 +1,15 @@
+---
+interface Props {
+  attribution?: string;
+}
+
+const { attribution = 'WIA Technical Advisory Committee' } = Astro.props;
+---
+
+<aside class="bandplan-disclaimer panel panel--soft">
+  <p>
+    The comparison charts in this article are original explanatory graphics created for this website. They are
+    provided as a guide only. For the official and authoritative band plan information, refer to the source
+    documents published by the {attribution} on the WIA website.
+  </p>
+</aside>

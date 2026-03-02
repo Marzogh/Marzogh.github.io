@@ -1,0 +1,126 @@
+---
+import type { BandChart as BandChartType, BandMarker, BandSegment } from '../../../data/bandplans/types';
+
+interface Props {
+  chart: BandChartType;
+}
+
+const { chart } = Astro.props;
+
+function clampPercent(value: number, min = 0, max = 100) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function toPercent(value: number) {
+  const span = chart.range.end - chart.range.start;
+  if (span <= 0) return 0;
+  return ((value - chart.range.start) / span) * 100;
+}
+
+function segmentStyle(segment: BandSegment) {
+  const left = clampPercent(toPercent(segment.start));
+  const right = clampPercent(toPercent(segment.end));
+  const width = Math.max(right - left, 2.5);
+  return `left:${left}%;width:${width}%;`;
+}
+
+function markerStyle(marker: BandMarker) {
+  const left = clampPercent(toPercent(marker.freq));
+  return `left:${left}%;`;
+}
+
+function segmentWidth(segment: BandSegment) {
+  const left = clampPercent(toPercent(segment.start));
+  const right = clampPercent(toPercent(segment.end));
+  return Math.max(right - left, 2.5);
+}
+
+const plansWithSegments = chart.plans.map((plan) => {
+  const segmentMeta = plan.segments.map((segment) => {
+    const width = segmentWidth(segment);
+    const showInline = width >= 9;
+
+    return {
+      segment,
+      width,
+      showInline,
+    };
+  });
+
+  return {
+    ...plan,
+    segmentMeta,
+    externalLabels: segmentMeta.filter((item) => !item.showInline && item.segment.label),
+  };
+});
+---
+
+<figure class="bandplan-chart">
+  <div class="bandplan-chart__header">
+    <h4>{chart.label}</h4>
+    <span class="bandplan-chart__label">
+      {chart.range.start} {chart.unit} to {chart.range.end} {chart.unit}
+    </span>
+  </div>
+
+  <div class="bandplan-chart__plans">
+    {plansWithSegments.map((plan) => (
+      <div class="bandplan-chart__plan">
+        <div class="bandplan-chart__planHeader">
+          <h5>{plan.label}</h5>
+          <span>{plan.sourceLabel}</span>
+        </div>
+
+        <div class="bandplan-chart__barWrap">
+          <div class="bandplan-chart__bar">
+            {plan.segmentMeta.map(({ segment, showInline }) => (
+              <div
+                class={`bandplan-chart__segment bandplan-chart__segment--${segment.mode}`}
+                style={segmentStyle(segment)}
+                title={segment.notes ?? segment.label ?? `${segment.start} to ${segment.end} ${chart.unit}`}
+              >
+                {segment.label && showInline && <span class="bandplan-chart__segmentLabel">{segment.label}</span>}
+              </div>
+            ))}
+
+            {plan.markers?.map((marker) => (
+              <div
+                class={`bandplan-chart__marker bandplan-chart__marker--${marker.kind}`}
+                style={markerStyle(marker)}
+                title={marker.notes ?? `${marker.label} at ${marker.freq} ${chart.unit}`}
+              >
+                <span class="bandplan-chart__markerLabel">{marker.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="bandplan-chart__ticks" aria-hidden="true">
+            <span>{chart.range.start}</span>
+            <span>{((chart.range.start + chart.range.end) / 2).toFixed(chart.unit === 'MHz' ? 3 : 0)}</span>
+            <span>{chart.range.end}</span>
+          </div>
+        </div>
+
+        {plan.externalLabels.length > 0 && (
+          <ul class="bandplan-chart__miniLegend" aria-label={`${plan.label} small segment labels`}>
+            {plan.externalLabels.map(({ segment }) => (
+              <li class="bandplan-chart__miniLegendItem">
+                <span class={`bandplan-chart__miniSwatch bandplan-chart__segment--${segment.mode}`}></span>
+                <span class="bandplan-chart__miniLabel">{segment.label}</span>
+                <span class="bandplan-chart__miniRange">
+                  {segment.start}-{segment.end} {chart.unit}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    ))}
+  </div>
+
+  {chart.notes && chart.notes.length > 0 && (
+    <div class="bandplan-chart__notes" aria-label="Chart notes">
+      {chart.notes.map((note) => <p>{note}</p>)}
+    </div>
+  )}
+</figure>

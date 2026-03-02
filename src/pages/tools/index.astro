@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import IndexHeader from '../../components/IndexHeader.astro';
 
 const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a, b) => {
   if (a.data.pubDate && b.data.pubDate) {
@@ -15,7 +16,32 @@ const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a,
 
   return a.data.title.localeCompare(b.data.title);
 });
-const enableMasonry = tools.length > 1;
+
+const toolTags = [...new Set(tools.flatMap((tool) => tool.data.tags ?? []))];
+const leadTool = tools[0] ?? null;
+const deckTools = leadTool ? tools.slice(1) : [];
+
+function getToolIdentity(tool: (typeof tools)[number]) {
+  const tags = tool.data.tags ?? [];
+
+  if (tags.some((tag) => ['mapping', 'kml', 'leaflet'].includes(tag))) {
+    return { symbol: '⌖', label: 'Mapping utility' };
+  }
+
+  if (tags.some((tag) => ['adif', 'logging', 'analysis'].includes(tag))) {
+    return { symbol: '▤', label: 'Log utility' };
+  }
+
+  if (tags.some((tag) => ['colour', 'rgb565', 'tft'].includes(tag))) {
+    return { symbol: '◈', label: 'Colour utility' };
+  }
+
+  if (tags.includes('reference')) {
+    return { symbol: '≡', label: 'Reference utility' };
+  }
+
+  return { symbol: '◦', label: 'Utility' };
+}
 ---
 
 <!doctype html>
@@ -29,13 +55,17 @@ const enableMasonry = tools.length > 1;
   <body>
     <Header />
     <main class="tools-index">
-      <header class="page-header">
-        <p class="eyebrow">Tools</p>
-        <h1 class="page-title">Tools</h1>
-        <p class="page-lede">
-          Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread.
-        </p>
-      </header>
+      <IndexHeader
+        eyebrow="Tools"
+        title="Tools"
+        lede="Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread."
+        terminalTitle="tools.index"
+        statusLines={[
+          { label: 'published_tools', value: tools.length },
+          { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
+          { label: 'tags_in_use', value: toolTags.length },
+        ]}
+      />
 
       {tools.length === 0 ? (
         <div class="panel panel--soft empty">
@@ -45,65 +75,89 @@ const enableMasonry = tools.length > 1;
           </p>
         </div>
       ) : (
-        <section class:list={['grid', enableMasonry && 'grid--masonry']} aria-label="Tools" data-masonry-grid={enableMasonry ? true : undefined} data-randomize={enableMasonry ? 'true' : undefined}>
-          {tools.map((tool) => (
-            <a href={`/tools/${tool.id}`} class="card" aria-label={`Open tool: ${tool.data.title}`}>
-              <div class="tool-face" aria-hidden="true">
-                <div class="tool-face__grid" />
-                <div class="tool-face__chip">{tool.data.tags?.[0] ? `#${tool.data.tags[0]}` : 'Tool'}</div>
+        <>
+          {leadTool ? (
+            <section class="tool-featureBand" aria-labelledby="tools-featured-heading">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow eyebrow--accent">Instrument Rack</p>
+                  <h2 id="tools-featured-heading">Lead utility</h2>
+                </div>
               </div>
 
-              <div class="card-body">
-                <div class="card-meta">
-                  <span class="pill">Tool</span>
-                  {tool.data.pubDate ? (
-                    <span class="pill">
-                      <FormattedDate date={tool.data.pubDate} />
-                    </span>
-                  ) : null}
-                </div>
-                <h2 class="card-title">{tool.data.title}</h2>
-                <p class="card-desc">{tool.data.description}</p>
+              <div class="tool-featureBand__grid">
+                <article class="tool-lead panel">
+                  <div class="tool-identity" aria-hidden="true">
+                    <span class="tool-identity__icon">{getToolIdentity(leadTool).symbol}</span>
+                    <div class="tool-identity__copy">
+                      <span class="tool-identity__label">{getToolIdentity(leadTool).label}</span>
+                      {leadTool.data.tags?.[0] ? <span class="tool-identity__tag">#{leadTool.data.tags[0]}</span> : null}
+                    </div>
+                  </div>
+
+                  <div class="tool-lead__copy">
+                    <div class="tool-lead__meta">
+                      {leadTool.data.pubDate ? (
+                        <span class="tool-lead__date">
+                          <FormattedDate date={leadTool.data.pubDate} />
+                        </span>
+                      ) : null}
+                      <span class="pill pill--compact">Lead utility</span>
+                    </div>
+
+                    <h3 class="tool-lead__title">
+                      <a href={`/tools/${leadTool.id}`}>{leadTool.data.title}</a>
+                    </h3>
+
+                    <p class="tool-lead__desc">{leadTool.data.description}</p>
+
+                    {leadTool.data.tags?.length ? (
+                      <div class="tool-tagRow">
+                        {leadTool.data.tags.slice(0, 4).map((tag) => <span class="tagChip">#{tag}</span>)}
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+
+                {deckTools.length ? (
+                  <div class="tool-deck">
+                    {deckTools.map((tool) => (
+                      <a href={`/tools/${tool.id}`} class="tool-card panel panel--soft" aria-label={`Open tool: ${tool.data.title}`}>
+                        <div class="tool-card__body">
+                          <div class="tool-card__identity" aria-hidden="true">
+                            <span class="tool-identity__icon tool-identity__icon--small">{getToolIdentity(tool).symbol}</span>
+                            <span class="tool-card__label">{getToolIdentity(tool).label}</span>
+                          </div>
+
+                          <div class="tool-card__meta">
+                            {tool.data.pubDate ? (
+                              <span class="tool-card__date">
+                                <FormattedDate date={tool.data.pubDate} />
+                              </span>
+                            ) : null}
+                            <span class="pill pill--compact">Tool</span>
+                          </div>
+
+                          <h3 class="tool-card__title">{tool.data.title}</h3>
+                          <p class="tool-card__desc">{tool.data.description}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
               </div>
-            </a>
-          ))}
-        </section>
+            </section>
+          ) : null}
+        </>
       )}
     </main>
     <Footer />
-
-    <script src="/scripts/masonry-grid.js" defer></script>
   </body>
 </html>
 
 <style>
   .tools-index {
-    max-width: min(1100px, calc(100% - 2 * var(--space-5)));
-  }
-
-  .page-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    margin-bottom: var(--space-6);
-  }
-
-  .eyebrow {
-    margin: 0;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-2);
-  }
-
-  .page-title {
-    margin: 0;
-  }
-
-  .page-lede {
-    margin: 0;
-    max-width: 72ch;
-    color: var(--text-2);
+    max-width: min(1320px, calc(100% - 2 * var(--space-5)));
   }
 
   .empty {
@@ -122,106 +176,242 @@ const enableMasonry = tools.length > 1;
     max-width: 80ch;
   }
 
-  .grid {
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .section-head h2 {
+    margin: 0;
+  }
+
+  .eyebrow--accent {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--accent) 52%, var(--text) 48%);
+  }
+
+  .tool-featureBand {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
     gap: var(--space-5);
   }
 
-  .grid--masonry[data-masonry-ready='true'] {
-    grid-auto-flow: dense;
-    grid-auto-rows: 12px;
+  .tool-featureBand__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    gap: var(--space-5);
+    align-items: start;
   }
 
-  .card {
-    grid-column: span 12;
-    display: flex;
-    flex-direction: column;
+  .tool-lead,
+  .tool-card {
     text-decoration: none;
     color: inherit;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--surface-raised);
-    box-shadow: var(--shadow-sm);
-    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
   }
 
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
-  }
-
-  .tool-face {
-    position: relative;
-    min-height: 160px;
-    border-bottom: 1px solid var(--border);
+  .tool-lead {
+    display: grid;
+    gap: var(--space-4);
     background:
-      radial-gradient(440px 180px at top left, rgba(45, 255, 178, 0.18), transparent 70%),
-      radial-gradient(420px 180px at top right, rgba(37, 99, 235, 0.16), transparent 68%),
-      linear-gradient(180deg, rgba(15, 23, 42, 0.03), rgba(15, 23, 42, 0.08)),
-      var(--surface);
-    overflow: hidden;
+      radial-gradient(540px 220px at top left, rgba(45, 255, 178, 0.1), transparent 70%),
+      radial-gradient(520px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
+      var(--surface-raised);
   }
 
-  .tool-face__grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(to right, rgba(100, 116, 139, 0.16) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(100, 116, 139, 0.16) 1px, transparent 1px);
-    background-size: 28px 28px;
-    opacity: 0.45;
+  .tool-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--surface) 96%, transparent 4%), color-mix(in srgb, var(--surface-raised) 92%, var(--surface) 8%));
+    box-shadow: var(--shadow-sm);
   }
 
-  .tool-face__chip {
-    position: absolute;
-    right: var(--space-4);
-    bottom: var(--space-4);
-    padding: 0.55rem 0.85rem;
-    border-radius: 999px;
+  .tool-identity__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 14px;
     border: 1px solid var(--surface-glass-border);
-    background: var(--surface-glass);
-    backdrop-filter: blur(10px);
+    background:
+      radial-gradient(120% 120% at top left, color-mix(in srgb, var(--accent) 18%, transparent 82%), transparent 55%),
+      var(--surface-glass);
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 1.15rem;
     font-weight: 700;
+    flex: 0 0 auto;
   }
 
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-5);
+  .tool-identity__icon--small {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
   }
 
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  .tool-identity__copy {
+    display: grid;
+    gap: 0.12rem;
+    min-width: 0;
   }
 
-  .card-title {
-    margin: 0;
-    font-size: 1.25rem;
-    line-height: 1.22;
+  .tool-identity__label,
+  .tool-identity__tag,
+  .tool-card__label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
   }
 
-  .card-desc {
-    margin: 0;
+  .tool-identity__label,
+  .tool-card__label {
+    color: var(--muted);
+    text-transform: lowercase;
+  }
+
+  .tool-identity__tag {
     color: var(--text-2);
   }
 
-  @media (min-width: 760px) {
-    .card {
-      grid-column: span 6;
+  .tool-lead__copy,
+  .tool-card__body {
+    min-width: 0;
+  }
+
+  .tool-lead__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .tool-lead__meta,
+  .tool-card__meta,
+  .tool-tagRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .tool-lead__meta,
+  .tool-card__meta {
+    justify-content: flex-end;
+  }
+
+  .tool-lead__date,
+  .tool-card__date {
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .pill--compact {
+    padding: 0.24rem 0.56rem;
+    font-size: 0.74rem;
+    line-height: 1;
+  }
+
+  .tool-lead__title,
+  .tool-lead__desc,
+  .tool-card__title,
+  .tool-card__desc {
+    margin: 0;
+  }
+
+  .tool-lead__title {
+    font-size: clamp(2rem, 2.8vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .tool-lead__title a,
+  .tool-card__title {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .tool-lead__title a:hover,
+  .tool-card:hover .tool-card__title {
+    color: var(--accent);
+  }
+
+  .tool-lead__desc {
+    max-width: 42ch;
+    color: var(--text-2);
+    font-size: clamp(1rem, 1.1vw, 1.15rem);
+  }
+
+  .tagChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.34rem 0.62rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-glass);
+    color: var(--text-2);
+    font-size: 0.82rem;
+    line-height: 1;
+  }
+
+  .tool-deck {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .tool-card {
+    display: grid;
+    gap: var(--space-3);
+    align-self: start;
+  }
+
+  .tool-card__body {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tool-card__identity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .tool-card__title {
+    font-size: clamp(1.18rem, 1.35vw, 1.45rem);
+    line-height: 1.14;
+    text-wrap: balance;
+  }
+
+  .tool-card__desc {
+    color: var(--text-2);
+  }
+
+  @media (max-width: 980px) {
+    .tool-featureBand__grid {
+      grid-template-columns: 1fr;
     }
   }
 
-  @media (min-width: 1080px) {
-    .card {
-      grid-column: span 4;
+  @media (max-width: 780px) {
+    .tools-index {
+      max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .tool-lead__meta,
+    .tool-card__meta {
+      justify-content: flex-start;
     }
   }
 </style>

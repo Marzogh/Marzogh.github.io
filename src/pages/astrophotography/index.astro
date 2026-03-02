@@ -4,10 +4,12 @@ import { Image } from 'astro:assets';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import IndexHeader from '../../components/IndexHeader.astro';
 
 const sessions = (await getCollection('astrophotography', ({ data }) => !data.draft)).sort(
   (a, b) => (b.data.sessionDate?.valueOf() ?? 0) - (a.data.sessionDate?.valueOf() ?? 0)
 );
+const astrophotographyTargets = [...new Set(sessions.map((session) => session.data.target).filter(Boolean))];
 
 function pickThumb(data: any) {
   // Prefer a dedicated thumbnail if your collection schema provides one.
@@ -35,13 +37,17 @@ function formatSessionDate(d: any) {
     <Header />
 
     <main>
-      <header class="page-header">
-        <h1 class="page-title">Astrophotography</h1>
-        <p class="page-lede">
-          Sessions, targets, gear configurations, calibration details, and processing pipelines — written so future-me can
-          reproduce the results.
-        </p>
-      </header>
+      <IndexHeader
+        eyebrow="Astrophotography"
+        title="Astrophotography"
+        lede="Sessions, targets, gear configurations, calibration details, and processing pipelines — written so future-me can reproduce the results."
+        terminalTitle="astro.index"
+        statusLines={[
+          { label: 'sessions', value: sessions.length },
+          { label: 'targets_logged', value: astrophotographyTargets.length },
+          { label: 'featured_sessions', value: sessions.filter((session) => session.data.featured).length },
+        ]}
+      />
 
       {sessions.length === 0 ? (
         <div class="panel panel--soft empty">
@@ -58,10 +64,10 @@ function formatSessionDate(d: any) {
             const dateLabel = formatSessionDate(session.data.sessionDate);
 
             return (
-              <a href={`/astrophotography/${session.id}`} class="card" aria-label={`Open session: ${session.data.title}`}>
-                <div class="thumb" aria-hidden="true">
-                  {thumb ? (
-                    typeof thumb === 'string' ? (
+              <a href={`/astrophotography/${session.id}`} class:list={['card', !thumb && 'card--textOnly']} aria-label={`Open session: ${session.data.title}`}>
+                {thumb ? (
+                  <div class="thumb" aria-hidden="true">
+                    {typeof thumb === 'string' ? (
                       <img src={thumb} alt="" loading="lazy" decoding="async" />
                     ) : (
                       <Image
@@ -70,14 +76,9 @@ function formatSessionDate(d: any) {
                         widths={[480, 720, 960]}
                         sizes="(max-width: 520px) 100vw, (max-width: 920px) 50vw, 33vw"
                       />
-                    )
-                  ) : (
-                    <div class="thumb-placeholder">
-                      <div class="stars" />
-                      <div class="thumb-label">No thumbnail yet</div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                ) : null}
 
                 <div class="card-body">
                   <h2 class="card-title">{session.data.title}</h2>
@@ -140,15 +141,16 @@ function formatSessionDate(d: any) {
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
     gap: var(--space-5);
+    align-items: start;
   }
 
   /* Responsive card span: 12 → 6 → 4 columns */
   .card {
-    grid-column: span 12;
     display: flex;
     flex-direction: column;
+    align-self: start;
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--border);
@@ -158,6 +160,13 @@ function formatSessionDate(d: any) {
       linear-gradient(180deg, rgba(11, 16, 32, 0.92), rgba(7, 10, 18, 0.98));
     box-shadow: var(--shadow-sm);
     transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  }
+
+  .card--textOnly {
+    background:
+      radial-gradient(760px 220px at top left, rgba(79, 70, 229, 0.14), transparent 68%),
+      radial-gradient(620px 220px at bottom right, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(11, 16, 32, 0.92), rgba(7, 10, 18, 0.98));
   }
 
   .card:hover {
@@ -182,46 +191,12 @@ function formatSessionDate(d: any) {
     border-radius: 0;
   }
 
-  .thumb-placeholder {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    padding: var(--space-5);
-    background: radial-gradient(900px 260px at 25% 25%, rgba(79, 70, 229, 0.18), transparent 55%),
-      radial-gradient(700px 240px at 75% 55%, rgba(34, 197, 94, 0.10), transparent 55%),
-      #0b1020;
-    color: rgba(229, 231, 235, 0.92);
-  }
-
-  .stars {
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.55) 1px, transparent 2px),
-      radial-gradient(circle at 75% 35%, rgba(255,255,255,0.45) 1px, transparent 2px),
-      radial-gradient(circle at 55% 70%, rgba(255,255,255,0.35) 1px, transparent 2px),
-      radial-gradient(circle at 35% 80%, rgba(255,255,255,0.35) 1px, transparent 2px);
-    background-size: 240px 160px;
-    opacity: 0.55;
-  }
-
-  .thumb-label {
-    position: relative;
-    z-index: 1;
-    font-size: 0.95rem;
-    border: 1px solid rgba(229, 231, 235, 0.22);
-    background: rgba(11, 16, 32, 0.35);
-    padding: 10px 12px;
-    border-radius: 999px;
-    backdrop-filter: blur(10px);
-  }
-
   .card-body {
     padding: var(--space-5);
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    min-width: 0;
   }
 
   .card-title {
@@ -229,6 +204,7 @@ function formatSessionDate(d: any) {
     font-size: 1.25rem;
     line-height: 1.22;
     color: var(--text);
+    text-wrap: balance;
   }
 
   .card-meta {
@@ -242,15 +218,4 @@ function formatSessionDate(d: any) {
     color: var(--text-2);
   }
 
-  @media (min-width: 740px) {
-    .card {
-      grid-column: span 6;
-    }
-  }
-
-  @media (min-width: 1040px) {
-    .card {
-      grid-column: span 4;
-    }
-  }
 </style>

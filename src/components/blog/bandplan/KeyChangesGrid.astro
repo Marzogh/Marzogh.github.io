@@ -1,0 +1,25 @@
+---
+import type { KeyChange } from '../../../data/bandplans/types';
+
+interface Props {
+  items: KeyChange[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="bandplan-grid" aria-label="Key changes">
+  {items.map((item) => (
+    <article class="bandplan-grid__item panel">
+      <div class="bandplan-grid__title">
+        <h3>{item.band}</h3>
+      </div>
+      <p class="bandplan-grid__summary">{item.summary}</p>
+      {item.details.length > 0 && (
+        <ul class="bandplan-grid__details">
+          {item.details.map((detail) => <li>{detail}</li>)}
+        </ul>
+      )}
+    </article>
+  ))}
+</section>

@@ -1,0 +1,52 @@
+---
+import BandChart from './BandChart.astro';
+import type { BandChart as BandChartType, BandPanel } from '../../../data/bandplans/types';
+
+interface Props {
+  panel: BandPanel;
+  chart?: BandChartType;
+  open?: boolean;
+}
+
+const { panel, chart, open = false } = Astro.props;
+---
+
+<details class="bandplan-item panel" open={open}>
+  <summary class="bandplan-item__summaryBar">
+    <div class="bandplan-item__summaryTop">
+      <h3 class="bandplan-item__title">{panel.title}</h3>
+      <span class="bandplan-item__chevron" aria-hidden="true">⌄</span>
+    </div>
+    <p class="bandplan-item__summary">{panel.summary}</p>
+    <div class="bandplan-item__badges">
+      {panel.badges.map((badge) => <span class="pill">{badge}</span>)}
+    </div>
+  </summary>
+
+  <div class="bandplan-item__content">
+    <div>
+      <section class="bandplan-item__section">
+        <h4>What changed</h4>
+        <ul class="bandplan-item__list">
+          {panel.sections.changed.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="bandplan-item__section">
+        <h4>Why it matters</h4>
+        <ul class="bandplan-item__list">
+          {panel.sections.why.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="bandplan-item__section">
+        <h4>Possible downsides</h4>
+        <ul class="bandplan-item__list">
+          {panel.sections.downsides.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+    </div>
+
+    {chart ? <BandChart chart={chart} /> : <div class="bandplan-item__section panel panel--soft"><p class="bandplan-item__summary">This part of the update is better explained in prose than as a single comparison strip.</p></div>}
+  </div>
+</details>

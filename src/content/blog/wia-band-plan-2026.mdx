@@ -1,0 +1,135 @@
+---
+title: What Changed in the 2026 WIA Band Plan
+description: "A practical look at the 2026 WIA band plan revision, including the main HF changes, the tradeoffs behind them, and original comparison charts that point back to the official WIA documents."
+pubDate: 2026-03-02
+draft: false
+tags: [ham-radio, amateur-radio, bandplan, australia, wia, hf, vhf, uhf]
+featured: true
+headerStyle: plain
+---
+
+import BandPlanStyles from '../../components/blog/bandplan/BandPlanStyles.astro';
+import BandInspector from '../../components/blog/bandplan/BandInspector.astro';
+import KeyChangesGrid from '../../components/blog/bandplan/KeyChangesGrid.astro';
+import SourceDisclaimer from '../../components/blog/bandplan/SourceDisclaimer.astro';
+import SourceLinks from '../../components/blog/bandplan/SourceLinks.astro';
+import { bandCharts, bandPanels, keyChanges, sourceLinks } from '../../data/bandplans/wia-2026';
+
+<BandPlanStyles />
+
+The Wireless Institute of Australia has published its revised 2026 Australian Amateur Radio Band Plan after the 2025 consultation process. Band plans are voluntary, but they still shape how amateurs find each other, avoid interference, and build shared expectations about where different kinds of activity belong.
+
+This revision is not just a visual refresh. Some HF frequencies that many Australian amateurs will recognise have moved, several digital-heavy areas are now shown more clearly in the published plan, and parts of the VHF, UHF, and microwave sections have been reorganised to match current operating patterns more closely.
+
+<details class="bandplan-glance panel panel--soft" open>
+  <summary class="bandplan-glance__summary">Show headline changes</summary>
+  <p class="bandplan-glance__intro">
+    This is a shortlist of the changes most likely to affect day-to-day operating. If you want the full
+    set of bands, use the band chart and inspector below.
+  </p>
+  <KeyChangesGrid items={keyChanges} />
+</details>
+
+<div class="bandplan-columns">
+  <section class="bandplan-columns__item panel panel--soft">
+    <h2>Why the plan changed</h2>
+
+    <p>The consultation outcomes point to a few recurring problems.</p>
+
+    <p>
+      One was friction between voice activity and parts of the bands that now carry heavy digital use. That
+      shows up on `80m`, `40m`, and `30m`. Another was that some informal operating habits had drifted away
+      from what the published plan still showed. The 2026 revision updates the published plan to match that
+      reality more closely.
+    </p>
+
+    <p>
+      That has advantages, but it also has a cost. A more realistic band plan is useful only if people
+      actually adjust to it, and that means some operators will need to give up habits that have been around
+      for years. Even where the new plan makes technical sense, not everyone will agree that the new
+      boundaries are the right ones.
+    </p>
+
+    <p>
+      There is also a difference between bands where the changes affect everyday operating and bands where the
+      changes mostly affect coordinators, repeater groups, ATV users, or microwave experimenters. Some parts
+      of the revision will feel immediately relevant. Other parts will seem remote unless you already work in
+      those areas.
+    </p>
+  </section>
+
+  <section class="bandplan-columns__item panel panel--soft">
+    <h2>What this means in practice</h2>
+
+    <p>For ordinary operating, the main message is simple: a few familiar frequencies should no longer be treated as the obvious default.</p>
+
+    <p>
+      If you operate HF voice, especially on `80m`, `40m`, `30m`, or `20m`, it is worth checking the new
+      plan rather than relying on memory. Several of the updates move voice or emergency activity away from
+      digital-heavy areas, and several AM centres of activity are now listed by frequency in the plan.
+    </p>
+
+    <p>
+      That should reduce avoidable clashes over time. In the short term, though, it may do the opposite.
+      During any transition, some operators will still be listening on the old frequencies, others will move
+      to the new ones straight away, and some will not even realise anything has changed.
+    </p>
+
+    <p>
+      For POTA and SOTA activators, the main effect is better frequency choice on HF, especially around the
+      revised voice, data, and emergency communications segments.
+    </p>
+  </section>
+</div>
+
+## Band-by-band changes
+
+<BandInspector panels={bandPanels} charts={bandCharts} />
+
+<div class="bandplan-columns bandplan-columns--closing">
+  <section class="bandplan-columns__item panel panel--soft">
+    <h2>What the consultation outcomes suggest</h2>
+
+    <p>Reading the consultation outcomes alongside the final plan gives a better sense of the tradeoffs.</p>
+
+    <p>
+      Some of the changes are clearly overdue. A few older arrangements had become awkward enough that leaving
+      them alone would have been harder to justify than changing them. That is particularly true where voice
+      and data were sitting on top of each other in ways that no longer reflected actual operating.
+    </p>
+
+    <p>
+      At the same time, not every change will feel neutral. Some operators will read the revision as sensible
+      housekeeping. Others will read parts of it as the WIA publishing changes that confirm older operating
+      habits no longer fit the band as well as they once did. Both views can be true at once.
+    </p>
+
+    <p>
+      The strongest point in the new plan is that it is generally more in touch with current practice. The
+      weakest point is that current practice is not always universally welcomed. A band plan can reflect
+      reality, but it cannot make everyone happy about the reality it reflects.
+    </p>
+  </section>
+
+  <section class="bandplan-columns__item panel panel--soft">
+    <h2>Final thoughts</h2>
+
+    <p>The 2026 WIA Australian Amateur Radio Band Plan is worth reading even if you normally ignore band-planning documents.</p>
+
+    <p>
+      Several of the changes affect frequencies that many Australian amateurs use regularly, especially on
+      `80m`, `40m`, `30m`, and `20m`. Others are more relevant to repeater groups, ATV users, and microwave
+      experimenters, but still show where the WIA thinks structure is needed.
+    </p>
+
+    <p>
+      The update should reduce some longstanding friction. It may also create a short-term adjustment period,
+      especially where familiar frequencies have moved or long-established habits are being pushed aside. That
+      is probably unavoidable.
+    </p>
+  </section>
+</div>
+
+<SourceDisclaimer />
+
+<SourceLinks links={sourceLinks} />

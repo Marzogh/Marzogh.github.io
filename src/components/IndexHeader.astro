@@ -1,0 +1,160 @@
+---
+interface StatusLine {
+  label: string;
+  value: string | number;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede: string;
+  terminalTitle?: string;
+  statusLines?: StatusLine[];
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  terminalTitle = 'status.log',
+  statusLines = [],
+} = Astro.props;
+---
+
+<header class="index-hero">
+  <div class="index-hero__copy">
+    {eyebrow ? <p class="index-hero__eyebrow">{eyebrow}</p> : null}
+    <h1 class="index-hero__title">{title}</h1>
+    <p class="index-hero__lede">{lede}</p>
+  </div>
+
+  {statusLines.length ? (
+    <aside class="index-hero__terminal" aria-label={`${title} status`}>
+      <div class="index-hero__terminalHead">
+        <span class="index-hero__terminalDot" aria-hidden="true"></span>
+        <span class="index-hero__terminalTitle">{terminalTitle}</span>
+      </div>
+
+      <dl class="index-hero__terminalGrid">
+        {statusLines.map((line) => (
+          <div class="index-hero__terminalRow">
+            <dt>{line.label}</dt>
+            <dd>{line.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
+  ) : null}
+</header>
+
+<style>
+  .index-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+    gap: var(--space-5);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+
+  .index-hero__copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .index-hero__eyebrow,
+  .index-hero__title,
+  .index-hero__lede {
+    margin: 0;
+  }
+
+  .index-hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .index-hero__lede {
+    max-width: 50ch;
+    color: var(--text-2);
+    font-size: clamp(1.04rem, 1.15vw, 1.18rem);
+  }
+
+  .index-hero__terminal {
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(34, 197, 94, 0.22);
+    background:
+      radial-gradient(560px 160px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .index-hero__terminalHead {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
+    background: rgba(3, 9, 6, 0.44);
+  }
+
+  .index-hero__terminalDot {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 999px;
+    background: #34d399;
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+    flex: 0 0 auto;
+  }
+
+  .index-hero__terminalTitle {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(187, 247, 208, 0.76);
+  }
+
+  .index-hero__terminalGrid {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.9rem;
+  }
+
+  .index-hero__terminalRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .index-hero__terminalRow dt,
+  .index-hero__terminalRow dd {
+    margin: 0;
+  }
+
+  .index-hero__terminalRow dt {
+    color: rgba(134, 239, 172, 0.78);
+    text-transform: lowercase;
+  }
+
+  .index-hero__terminalRow dd {
+    color: #dcfce7;
+    text-align: right;
+  }
+
+  @media (max-width: 920px) {
+    .index-hero {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .index-hero__lede {
+      max-width: none;
+    }
+  }
+ </style>

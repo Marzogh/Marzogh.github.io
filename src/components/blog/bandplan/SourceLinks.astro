@@ -1,0 +1,22 @@
+---
+import type { SourceLink } from '../../../data/bandplans/types';
+
+interface Props {
+  links: SourceLink[];
+}
+
+const { links } = Astro.props;
+---
+
+<section class="bandplan-sources" aria-labelledby="bandplan-sources-title">
+  <p id="bandplan-sources-title" class="bandplan-sources__line">
+    <span class="bandplan-sources__label">Sources:</span>
+    {' '}
+    {links.map((link, index) => (
+      <>
+        <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+        {index < links.length - 2 ? ', ' : index === links.length - 2 ? ', and ' : ''}
+      </>
+    ))}
+  </p>
+</section>
