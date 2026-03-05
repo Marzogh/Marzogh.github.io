@@ -172,6 +172,7 @@ const statusLines = [
 
     <main>
       <header class:list={['page-header', activeTag.family === 'radio' && 'page-header--radio']}>
+        <p class="topics-kicker">Topics</p>
         <IndexHeader
           eyebrow={activeTag.eyebrow}
           title={activeTag.label}
@@ -204,8 +205,18 @@ const statusLines = [
           <p class="empty-sub">Add this tag to published entries and they will appear here automatically.</p>
         </div>
       ) : (
-        <section class="archive-list" aria-label={`Items tagged ${activeTag.label}`}>
-          {allItems.map((item) => (
+        <>
+          <section class="sortbar" aria-label="Sort tagged entries">
+            <div class="sortbar__group" role="group" aria-label="Sort order">
+              <button class="sortbar__button is-active" type="button" data-sort="newest">Newest</button>
+              <button class="sortbar__button" type="button" data-sort="alpha">A-Z</button>
+              <button class="sortbar__button" type="button" data-sort="collection">Collection</button>
+            </div>
+            <p class="sortbar__count">{allItems.length} archive item{allItems.length === 1 ? '' : 's'}</p>
+          </section>
+
+          <section class="archive-list" aria-label={`Items tagged ${activeTag.label}`}>
+            {allItems.map((item) => (
             <article class="archive-item">
               <a href={item.url} class="archive-item__title" aria-label={`Open ${item.kind}: ${item.title}`}>
                 {item.title}
@@ -225,15 +236,70 @@ const statusLines = [
                     </a>
                   ))}
               </div>
+              <span
+                class="archive-item__sortdata"
+                data-title={item.title.toLowerCase()}
+                data-kind={item.kind.toLowerCase()}
+                data-date={item.dateValue}
+                aria-hidden="true"
+              ></span>
             </article>
           ))}
-        </section>
+          </section>
+        </>
       )}
     </main>
 
     <Footer />
   </body>
 </html>
+
+<script is:inline>
+  (() => {
+    const buttons = Array.from(document.querySelectorAll('.sortbar__button'));
+    const list = document.querySelector('.archive-list');
+    if (!buttons.length || !list) return;
+
+    const items = Array.from(list.querySelectorAll('.archive-item'));
+
+    const getSortData = (item) => {
+      const node = item.querySelector('.archive-item__sortdata');
+      return {
+        title: node?.getAttribute('data-title') ?? '',
+        kind: node?.getAttribute('data-kind') ?? '',
+        date: Number(node?.getAttribute('data-date') ?? 0),
+      };
+    };
+
+    const applySort = (mode) => {
+      const sorted = [...items].sort((a, b) => {
+        const aData = getSortData(a);
+        const bData = getSortData(b);
+
+        if (mode === 'alpha') {
+          return aData.title.localeCompare(bData.title);
+        }
+
+        if (mode === 'collection') {
+          return aData.kind.localeCompare(bData.kind) || bData.date - aData.date || aData.title.localeCompare(bData.title);
+        }
+
+        return bData.date - aData.date || aData.title.localeCompare(bData.title);
+      });
+
+      sorted.forEach((item) => list.appendChild(item));
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const mode = button.getAttribute('data-sort') || 'newest';
+        buttons.forEach((other) => other.classList.remove('is-active'));
+        button.classList.add('is-active');
+        applySort(mode);
+      });
+    });
+  })();
+</script>
 
 <style>
   main {
@@ -255,6 +321,15 @@ const statusLines = [
     box-shadow: var(--shadow-sm);
   }
 
+  .topics-kicker {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
   .page-header--radio {
     background:
       radial-gradient(620px 180px at top right, rgba(37, 99, 235, 0.14), transparent 72%),
@@ -264,11 +339,11 @@ const statusLines = [
 
   .page-header :global(.index-hero) {
     margin: 0;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .page-header :global(.index-hero__copy) {
-    gap: var(--space-2);
+    gap: 0.45rem;
   }
 
   .page-header :global(.index-hero__lede) {
@@ -277,9 +352,35 @@ const statusLines = [
 
   .page-header :global(.index-hero__title) {
     margin: 0;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    line-height: 1.02;
+    font-size: clamp(1.85rem, 3vw, 2.5rem);
+    line-height: 1.08;
     text-wrap: balance;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .page-header :global(.index-hero__title)::before {
+    content: '#';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent 86%);
+    border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent 74%);
+  }
+
+  .page-header :global(.index-hero__eyebrow) {
+    display: none;
+  }
+
+  .page-header :global(.index-hero__terminal) {
+    border-radius: 12px;
   }
 
   .meta-strip {
@@ -288,7 +389,7 @@ const statusLines = [
     align-items: center;
     gap: 0.65rem;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 0.55rem 0.75rem;
     background: var(--surface-glass);
     font-family: var(--font-mono);
@@ -314,7 +415,7 @@ const statusLines = [
     margin: 0;
     color: var(--text-2);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
@@ -329,14 +430,14 @@ const statusLines = [
     display: inline-flex;
     align-items: center;
     gap: 0.38rem;
-    padding: 0.3rem 0.55rem;
-    border-radius: 8px;
+    padding: 0.26rem 0.52rem;
+    border-radius: 999px;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--surface-raised) 84%, var(--surface) 16%);
     text-decoration: none;
     color: var(--text);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     line-height: 1.2;
     transition: border-color 120ms ease, background 120ms ease;
   }
@@ -368,33 +469,74 @@ const statusLines = [
     color: var(--text-2);
   }
 
+  .sortbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .sortbar__group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem;
+    background: var(--surface-glass);
+  }
+
+  .sortbar__button {
+    border: 0;
+    background: transparent;
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    color: var(--text-2);
+    cursor: pointer;
+  }
+
+  .sortbar__button:hover {
+    background: color-mix(in srgb, var(--surface-raised) 88%, var(--accent) 12%);
+    color: var(--text);
+  }
+
+  .sortbar__button.is-active {
+    background: color-mix(in srgb, var(--surface-raised) 78%, var(--accent) 22%);
+    color: var(--text);
+  }
+
+  .sortbar__count {
+    margin: 0;
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
   .archive-list {
     display: grid;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: var(--surface-raised);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 0.9rem;
   }
 
   .archive-item {
-    padding: var(--space-4) var(--space-5);
-    border-top: 1px solid var(--border);
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-raised);
     display: grid;
-    gap: 0.6rem;
-  }
-
-  .archive-item:first-child {
-    border-top: 0;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-sm);
   }
 
   .archive-item__title {
     margin: 0;
     color: var(--text);
     text-decoration: none;
-    font-size: clamp(1.2rem, 1.7vw, 1.55rem);
-    font-weight: 700;
+    font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+    font-weight: 650;
     line-height: 1.2;
   }
 
@@ -407,16 +549,17 @@ const statusLines = [
     color: var(--muted);
     display: flex;
     flex-wrap: wrap;
-    gap: 0.9rem;
-    font-size: 0.92rem;
+    gap: 0.7rem;
+    font-size: 0.73rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
   }
 
   .archive-item__desc {
     margin: 0;
     color: var(--text-2);
-    max-width: 90ch;
+    font-size: 0.9rem;
+    line-height: 1.45;
   }
 
   .archive-item__tags {
@@ -429,12 +572,12 @@ const statusLines = [
     display: inline-flex;
     align-items: center;
     padding: 0.3rem 0.55rem;
-    border-radius: 8px;
+    border-radius: 999px;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--surface-raised) 84%, var(--surface) 16%);
     color: var(--text-2);
     font-family: var(--font-mono);
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     line-height: 1.2;
   }
 
@@ -446,6 +589,10 @@ const statusLines = [
     text-decoration: none;
   }
 
+  .archive-item__sortdata {
+    display: none;
+  }
+
   @media (max-width: 720px) {
     main {
       max-width: calc(100% - 2 * var(--space-4));
@@ -454,7 +601,7 @@ const statusLines = [
     }
 
     .archive-item {
-      padding: var(--space-4);
+      padding: 0.85rem 0.9rem;
     }
 
     .page-header {
@@ -463,6 +610,12 @@ const statusLines = [
 
     .meta-strip {
       font-size: 0.75rem;
+    }
+
+    .sortbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.45rem;
     }
   }
 </style>

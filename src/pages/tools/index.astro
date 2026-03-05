@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import { toTagSlug } from '../../utils/tags';
 
 const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a, b) => {
   if (a.data.pubDate && b.data.pubDate) {
@@ -91,7 +92,11 @@ function getToolIdentity(tool: (typeof tools)[number]) {
                     <span class="tool-identity__icon">{getToolIdentity(leadTool).symbol}</span>
                     <div class="tool-identity__copy">
                       <span class="tool-identity__label">{getToolIdentity(leadTool).label}</span>
-                      {leadTool.data.tags?.[0] ? <span class="tool-identity__tag">#{leadTool.data.tags[0]}</span> : null}
+                      {leadTool.data.tags?.[0] ? (
+                        <a class="tool-identity__tag" href={`/tags/${toTagSlug(leadTool.data.tags[0])}`}>
+                          #{leadTool.data.tags[0]}
+                        </a>
+                      ) : null}
                     </div>
                   </div>
 
@@ -113,7 +118,9 @@ function getToolIdentity(tool: (typeof tools)[number]) {
 
                     {leadTool.data.tags?.length ? (
                       <div class="tool-tagRow">
-                        {leadTool.data.tags.slice(0, 4).map((tag) => <span class="tagChip">#{tag}</span>)}
+                        {leadTool.data.tags.slice(0, 4).map((tag) => (
+                          <a class="tagChip" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                        ))}
                       </div>
                     ) : null}
                   </div>
@@ -282,6 +289,11 @@ function getToolIdentity(tool: (typeof tools)[number]) {
 
   .tool-identity__tag {
     color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .tool-identity__tag:hover {
+    color: var(--text);
   }
 
   .tool-lead__copy,
@@ -363,6 +375,15 @@ function getToolIdentity(tool: (typeof tools)[number]) {
     color: var(--text-2);
     font-size: 0.82rem;
     line-height: 1;
+    text-decoration: none;
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .tagChip:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
+    color: var(--text);
   }
 
   .tool-deck {

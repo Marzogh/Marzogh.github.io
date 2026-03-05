@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import { toTagSlug } from '../../utils/tags';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => {
   const aTime = a.data.pubDate ? a.data.pubDate.getTime() : 0;
@@ -110,7 +111,9 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
 
                     {leadPost.data.tags?.length ? (
                       <div class="tag-row">
-                        {leadPost.data.tags.slice(0, 4).map((tag) => <span class="tagChip">#{tag}</span>)}
+                        {leadPost.data.tags.slice(0, 4).map((tag) => (
+                          <a class="tagChip" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                        ))}
                       </div>
                     ) : null}
 
@@ -402,6 +405,15 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
     color: var(--text-2);
     font-size: 0.82rem;
     line-height: 1;
+    text-decoration: none;
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .tagChip:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
+    color: var(--text);
   }
 
   .supportRail {

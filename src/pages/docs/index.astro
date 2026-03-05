@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
 import { getDocSectionMeta } from '../../utils/docs';
+import { toTagSlug } from '../../utils/tags';
 
 const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b) => {
   const aSection = getDocSectionMeta(a.data.section);
@@ -92,7 +93,9 @@ const docGroups = shelfDocs.reduce<
                   <div class="doc-lead__meta">
                     <span class="pill">{leadDoc.data.featured ? 'Featured guide' : 'Guide'}</span>
                     <span class="pill pill--soft">{getDocSectionMeta(leadDoc.data.section).label}</span>
-                    {leadDoc.data.tags?.slice(0, 2).map((tag) => <span class="pill">#{tag}</span>)}
+                    {leadDoc.data.tags?.slice(0, 2).map((tag) => (
+                      <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                    ))}
                   </div>
 
                   <h3 class="doc-lead__title">
@@ -131,7 +134,9 @@ const docGroups = shelfDocs.reduce<
                     >
                       <div class="doc-card__meta">
                         {doc.data.featured ? <span class="pill pill--coral">Featured</span> : <span class="pill">Doc</span>}
-                        {doc.data.tags?.slice(0, 2).map((tag) => <span class="pill">#{tag}</span>)}
+                        {doc.data.tags?.slice(0, 2).map((tag) => (
+                          <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                        ))}
                       </div>
                       <h3 class="doc-card__title">{doc.data.title}</h3>
                       <p class="doc-card__desc">{doc.data.description}</p>
@@ -225,6 +230,17 @@ const docGroups = shelfDocs.reduce<
 
   .pill--soft {
     background: var(--surface-glass);
+  }
+
+  .pill--link {
+    text-decoration: none;
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .pill--link:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
   }
 
   .doc-lead__title,

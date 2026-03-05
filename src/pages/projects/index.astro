@@ -186,7 +186,9 @@ const radioTags = uniqueTags
 
                     {project.data.tags?.length ? (
                       <div class="card-tags">
-                        {project.data.tags.slice(0, 3).map((tag) => <span class="tagChip">#{tag}</span>)}
+                        {project.data.tags.slice(0, 3).map((tag) => (
+                          <a class="tagChip" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                        ))}
                       </div>
                     ) : null}
                   </div>
@@ -514,8 +516,10 @@ const radioTags = uniqueTags
   }
 
   .tagChip:hover{
+    transform: translateY(-1px);
     color: var(--text);
-    border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
   }
 
   .featured-meta__item,
