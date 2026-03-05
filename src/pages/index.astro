@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { getCollection } from 'astro:content';
+import { poetry } from '../data/poetry';
 
 const title = 'Chips’nCode';
 const description = 'A living technical playground — projects, tools, documentation, and education.';
@@ -25,6 +26,9 @@ const allTools = await getCollection('tools', ({ data }) => !data.draft);
 const latestTools = [...allTools]
   .sort((a, b) => entryDateValue(b) - entryDateValue(a))
   .slice(0, 5);
+
+const allDocs = await getCollection('docs', ({ data }) => !data.draft);
+const allAstrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
 
 const allEducation = await getCollection('education', ({ data }) => !data.draft);
 const EDUCATION_HOME_GROUPS = [
@@ -78,32 +82,125 @@ const safeSlug = (entry) => {
 const normalize = (entry, kind) => {
   const title = entry?.data?.title ?? safeSlug(entry);
   const date = new Date(entry?.data?.pubDate ?? entry?.data?.updatedDate ?? 0);
-  const tags = Array.isArray(entry?.data?.tags) ? entry.data.tags : [];
+  const tags = Array.isArray(entry?.data?.tags)
+    ? entry.data.tags.map((tag) => String(tag).toLowerCase())
+    : [];
   const featured = Boolean(entry?.data?.featured || entry?.data?.pinned || entry?.data?.pin);
   const slug = safeSlug(entry);
-  const url = kind === 'blog' ? `/notebook/${slug}` : `/projects/${slug}`;
+  const url =
+    kind === 'blog' ? `/notebook/${slug}` :
+    kind === 'projects' ? `/projects/${slug}` :
+    kind === 'tools' ? `/tools/${slug}` :
+    kind === 'docs' ? `/docs/${slug}` :
+    kind === 'education' ? `/education/${slug}` :
+    kind === 'poetry' ? `/poetry/${slug}` :
+    kind === 'astrophotography' ? `/astrophotography/${slug}` :
+    `/${slug}`;
   return { kind, title, date, tags, featured, url, raw: entry };
 };
 
 const allEntries = [
   ...allBlog.map((e) => normalize(e, 'blog')),
   ...allProjects.map((e) => normalize(e, 'projects')),
+  ...allTools.map((e) => normalize(e, 'tools')),
+  ...allDocs.map((e) => normalize(e, 'docs')),
+  ...allEducation.map((e) => normalize(e, 'education')),
+  ...poetry.map((entry) => ({
+    kind: 'poetry',
+    title: entry.title,
+    date: entry.pubDateValue,
+    tags: ['poetry', 'life'],
+    featured: false,
+    url: `/poetry/${entry.slug}`,
+    raw: entry,
+  })),
+  ...allAstrophotography.map((e) => normalize(e, 'astrophotography')),
 ];
 
-const PILL_TAGS = ['Builds', 'Code', 'Life', 'Mind', 'Light'];
+const PILL_RULES = [
+  {
+    name: 'Builds',
+    kinds: ['projects', 'tools'],
+    tags: [
+      'ham-radio',
+      'amateur-radio',
+      'electronics',
+      'arduino',
+      'pota',
+      'portable',
+      'activation-reports',
+      'field-ops',
+      'build',
+    ],
+  },
+  {
+    name: 'Code',
+    kinds: ['docs', 'tools', 'education'],
+    tags: [
+      'python',
+      'tutorial',
+      'refactoring',
+      'functions',
+      'programming-foundations',
+      'code',
+      'astro',
+      'github-pages',
+      'dns',
+      'custom-domain',
+      'https',
+      'website',
+    ],
+  },
+  {
+    name: 'Life',
+    kinds: ['poetry'],
+    tags: ['life', 'reflection', 'essay', 'journal', 'personal'],
+  },
+  {
+    name: 'Mind',
+    kinds: ['education', 'docs'],
+    tags: ['teaching-resources', 'student-resources', 'curriculum', 'design', 'architecture', 'analysis'],
+  },
+  {
+    name: 'Light',
+    kinds: ['astrophotography'],
+    tags: ['astrophotography', 'stars', 'moon', 'light'],
+  },
+];
+
+const PILL_TAGS = PILL_RULES.map((rule) => rule.name);
 
 const byPill = Object.fromEntries(
-  PILL_TAGS.map((pill) => {
+  PILL_RULES.map((rule) => {
     const items = allEntries
-      .filter((e) => e.tags.includes(pill))
+      .filter((entry) => {
+        const byKind = rule.kinds.includes(entry.kind);
+        const byTag = entry.tags.some((tag) => rule.tags.includes(tag));
+        return byKind || byTag;
+      })
       .sort((a, b) => {
-        // Featured first, then newest
         if (a.featured !== b.featured) return a.featured ? -1 : 1;
         return b.date.valueOf() - a.date.valueOf();
       });
-    return [pill, items];
+    return [rule.name, items];
   })
 );
+
+const latestEntry = [...allEntries]
+  .filter((entry) => Number.isFinite(entry.date.valueOf()))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())[0] ?? null;
+const latestEntryUrl = latestEntry?.url ?? '/notebook';
+const latestEntryTitle = latestEntry?.title ?? 'latest entry';
+
+const kindLabel = (kind) =>
+  kind === 'blog' ? 'Post' :
+  kind === 'projects' ? 'Project' :
+  kind === 'tools' ? 'Tool' :
+  kind === 'docs' ? 'Doc' :
+  kind === 'education' ? 'Education' :
+  kind === 'poetry' ? 'Poem' :
+  kind === 'astrophotography' ? 'Astro' :
+  'Entry';
 
 const spotlight = (pill) => byPill[pill].slice(0, 3);
 const rest = (pill) => byPill[pill].slice(3);
@@ -130,7 +227,7 @@ const rest = (pill) => byPill[pill].slice(3);
 
             <div class="hero__actions">
               <a class="btn btn--primary" href="/projects">Browse projects</a>
-              <a class="btn" href="/notebook">Read the latest</a>
+              <a class="btn" href={latestEntryUrl} aria-label={`Read the latest: ${latestEntryTitle}`}>Read the latest</a>
             </div>
 
             <nav class="hero__meta" aria-label="Explore by theme">
@@ -267,7 +364,7 @@ const rest = (pill) => byPill[pill].slice(3);
                           {e.featured ? <span class="spot__badge">Featured</span> : null}
                         </div>
                         <div class="spot__meta">
-                          <span class="spot__kind">{e.kind === 'blog' ? 'Post' : 'Project'}</span>
+                          <span class="spot__kind">{kindLabel(e.kind)}</span>
                           <span class="spot__dot">•</span>
                           <span class="spot__date">{Number.isFinite(e.date.valueOf()) ? e.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
                         </div>
@@ -282,7 +379,7 @@ const rest = (pill) => byPill[pill].slice(3);
                         {rest(pill).map((e) => (
                           <li>
                             <a href={e.url}>{e.title}</a>
-                            <span class="pill__sub">{e.kind === 'blog' ? 'Post' : 'Project'}</span>
+                            <span class="pill__sub">{kindLabel(e.kind)}</span>
                           </li>
                         ))}
                       </ul>
