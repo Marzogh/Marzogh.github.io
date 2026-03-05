@@ -15,7 +15,11 @@ export default defineConfig({
 
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/education/digital-technologies-yr9-2026/') &&
+        !page.includes('/education/student-resources/digital-technologies-yr9-2026/'),
+    }),
     react(),
   ],
 });

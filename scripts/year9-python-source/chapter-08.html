@@ -1,0 +1,133 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Chapter 08</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial,Helvetica,sans-serif; line-height: 1.65; color: #1f2937;">
+<div style="background: linear-gradient(135deg,#06b6d4,#22d3ee); border: 1px solid #e5e7eb; border-radius: 18px;  padding: 22px; margin-bottom: 18px; color: #ffffff;">
+<div style="font-size: 26px;  margin-bottom: 6px;">Chapter 8 — Remembering more than one report</div>
+<div style="font-size: 15px; ">EXPLORER · v8 · giving the console memory</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 8px;">Something is still missing</div>
+<div style="font-size: 15px; color: #374151;">Your console can now keep running, which makes it feel much more realistic. You can log one report, then another, and the program responds each time. However, if you look closely, you will notice something slightly disappointing. Every time you enter a new report, the previous one is gone. The console reacts in the moment, but it does not remember what happened before. <br><br>That is not how real tools behave. If you were recording observations during a field trip, you would not erase yesterday’s entry every time you wrote a new one. You would build a record over time.</div>
+</div>
+
+<div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 16px; padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #713f12;">We need somewhere to store multiple values</div>
+<div style="font-size: 15px; color: #713f12;">Up to this point, every variable you have created has stored a single value. A location variable stores one location. A temperature variable stores one temperature. That works perfectly when you only care about the most recent entry. <br><br>A <strong>list</strong> is different. A list allows a single variable to hold many values at once. Instead of replacing old information, you can add new information to the collection. Over time, the list grows.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">What a list looks like in Python</div>
+<div style="font-size: 15px; color: #374151;">Lists are written using square brackets. An empty list looks like this: <br><br>
+<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; font-family: Consolas,Monaco,monospace; font-size: 14px;">reports = []</div>
+<br>This line creates a variable called <code>reports</code> and gives it an empty list to start with. As the program runs, we can add new items to that list using the <code>.append()</code> method. Each time we append something, it is placed at the end of the list.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">EXPLORER v8 (run this)</div>
+<div style="font-size: 15px; color: #374151; margin-bottom: 14px;">In this version, the structure of the program remains almost the same. The key difference is that each report is stored instead of forgotten. Pay attention to where the list is created and where new reports are added.</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 16px; border-radius: 12px; overflow: auto; font-size: 14px; line-height: 1.55; margin: 0;"><code>"""
+EXPLORER v8 — Chapter 8
+
+This version stores multiple mission reports
+using a list.
+"""
+
+# Create an empty list to store reports
+reports = []
+
+keep_running = True
+
+while keep_running:
+
+    print("=" * 44)
+    print("              EXPLORER CONSOLE              ")
+    print("=" * 44)
+
+    mission_location = input("Enter mission location: ")
+    mission_day = int(input("Enter mission day (whole number): "))
+    temperature_c = float(input("Enter temperature (°C): "))
+
+    # Build a short summary of this report
+    report_summary = (
+        "Location: " + mission_location +
+        " | Day: " + str(mission_day) +
+        " | Temp: " + str(temperature_c) + " °C"
+    )
+
+    # Add the summary to the list
+    reports.append(report_summary)
+
+    print()
+    print("Report logged.")
+    print()
+
+    user_choice = input("Log another report? (yes/no): ")
+
+    if user_choice.lower() != "yes":
+        keep_running = False
+
+print()
+print("All logged reports:")
+print("-" * 44)
+
+# Loop through the list and display each stored report
+for report in reports:
+    print(report)
+
+print("-" * 44)
+print("Console shutting down.")
+</code></pre>
+</div>
+
+<div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 16px; padding: 22px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #14532d;">What has changed</div>
+<div style="font-size: 15px; color: #14532d;">The console still collects information in the same way, and it still repeats using a loop. The difference is that it now keeps a record of everything entered during the session. Instead of replacing old values, it adds new ones to a growing list. At the end, it loops through that list and displays every report that was stored. <br><br>Your program has moved from reacting in the moment to building a history. That small shift makes it feel far more capable.</div>
+</div>
+</div>
+          </body>
+        </html>

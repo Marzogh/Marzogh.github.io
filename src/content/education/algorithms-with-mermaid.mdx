@@ -1,0 +1,47 @@
+---
+title: "Algorithm Flowcharts with Mermaid"
+description: "A practical guide to mapping program logic with Mermaid before translating it into code."
+pubDate: 2026-02-13
+updatedDate: 2026-02-13
+draft: false
+level: "year-9"
+subject: "digital-technologies"
+order: 22
+type: "guide"
+showInIndex: true
+featured: false
+headerStyle: "plain"
+tags: ["python", "year-9", "algorithms", "mermaid"]
+---
+
+import ImportedHtml from "../../components/education/ImportedHtml.astro";
+
+Use Mermaid to sketch decision logic before coding. A clear flowchart reduces guessing and makes Python conditions easier to implement.
+
+## Quick Workflow
+
+1. define the program goal in one sentence
+2. list inputs and expected outputs
+3. map decision points (`if/elif/else`) as branches
+4. check every decision has a path for invalid input
+5. translate each branch into Python code
+
+## Mermaid Starter Template
+
+```text
+flowchart TD
+  A[Start] --> B[Collect Input]
+  B --> C{Valid?}
+  C -->|Yes| D[Process]
+  C -->|No| E[Show Error]
+  E --> B
+  D --> F[Output Result]
+  F --> G[End]
+```
+
+## Related Pages
+
+- [Pet Services Project Hub](/education/pet-services-project)
+- [Plan the Program: Audience and Decision Tree](/education/pet-services-project/planning-and-decision-tree)
+
+<ImportedHtml source="mermaid-live-building-an-algorithm-flow-chart.html" />

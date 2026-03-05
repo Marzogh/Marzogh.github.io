@@ -5,6 +5,11 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { toTagSlug } from '../../utils/tags';
+import {
+  EDUCATION_LEGACY_PAGE_ROUTE_MAP,
+  EDUCATION_LEGACY_PREFIXES,
+  EDUCATION_LEGACY_REDIRECTS,
+} from '../../utils/educationLegacy';
 
 export async function getStaticPaths() {
   const entries = await getCollection('education', ({ data }) => !data.draft);
@@ -13,9 +18,17 @@ export async function getStaticPaths() {
     return [];
   }
 
-  return entries.map((entry) => ({
+  const entryPaths = entries.map((entry) => ({
     params: { slug: entry.id },
   }));
+
+  const legacyPaths = EDUCATION_LEGACY_PREFIXES.flatMap((prefix) =>
+    Object.keys(EDUCATION_LEGACY_PAGE_ROUTE_MAP).map((legacy) => `${prefix}/${legacy}`)
+  ).map((legacySlug) => ({
+    params: { slug: legacySlug },
+  }));
+
+  return [...entryPaths, ...legacyPaths];
 }
 
 const { slug } = Astro.params;
@@ -24,111 +37,140 @@ if (!slug) {
   throw new Error('Missing route parameter: slug');
 }
 
-const entry = await getEntry('education', slug);
+const legacyTarget = EDUCATION_LEGACY_REDIRECTS[slug];
+const legacyRedirectScript = legacyTarget ? `window.location.replace(${JSON.stringify(legacyTarget)});` : '';
 
-if (!entry) {
-  throw new Error(`Education entry not found: ${slug}`);
+let entry = null;
+let Content = null;
+let hero = null;
+let headerStyle: 'panel' | 'plain' = 'panel';
+
+if (!legacyTarget) {
+  entry = await getEntry('education', slug);
+
+  if (!entry) {
+    throw new Error(`Education entry not found: ${slug}`);
+  }
+
+  const rendered = await render(entry);
+  Content = rendered.Content;
+  hero = entry.data.image ?? null;
+  headerStyle = entry.data.headerStyle ?? 'panel';
 }
-
-const { Content } = await render(entry);
-const hero = entry.data.image ?? null;
-const headerStyle = entry.data.headerStyle ?? 'panel';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={entry.data.title} description={entry.data.description} />
+    {legacyTarget ? (
+      <>
+        <meta charset="utf-8" />
+        <meta http-equiv="refresh" content={`0;url=${legacyTarget}`} />
+        <link rel="canonical" href={legacyTarget} />
+        <title>Redirecting…</title>
+      </>
+    ) : (
+      <BaseHead title={entry!.data.title} description={entry!.data.description} />
+    )}
   </head>
   <body class="theme-edu">
-    <Header />
-    <main class="edu-page">
-      <article class="edu-entry">
-        <a href="/education" class="edu-back">
-          ← Back to Education
-        </a>
+    {legacyTarget ? (
+      <main class="edu-page">
+        <p>Redirecting to <a href={legacyTarget}>{legacyTarget}</a>.</p>
+        <script is:inline set:html={legacyRedirectScript} />
+      </main>
+    ) : (
+      <>
+        <Header />
+        <main class="edu-page">
+          <article class="edu-entry">
+            <a href="/education" class="edu-back">
+              ← Back to Education
+            </a>
 
-        <header class:list={['edu-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'edu-hero--plain']}>
-          <div class="edu-hero__copy">
-            <div class="edu-kickers">
-              <span class="pill">Education</span>
-              {entry.data.subject ? <span class="pill">{entry.data.subject}</span> : null}
-              {entry.data.level ? <span class="pill pill--coral">{entry.data.level}</span> : null}
-            </div>
+            <header class:list={['edu-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'edu-hero--plain']}>
+              <div class="edu-hero__copy">
+                <div class="edu-kickers">
+                  <span class="pill">Education</span>
+                  {entry!.data.subject ? <span class="pill">{entry!.data.subject}</span> : null}
+                  {entry!.data.level ? <span class="pill pill--coral">{entry!.data.level}</span> : null}
+                </div>
 
-            <h1 class="edu-title">{entry.data.title}</h1>
-            <p class="edu-description">{entry.data.description}</p>
+                <h1 class="edu-title">{entry!.data.title}</h1>
+                <p class="edu-description">{entry!.data.description}</p>
 
-            <div class="edu-meta">
-              {entry.data.pubDate ? (
-                <span class="edu-meta__item">
-                  Published <FormattedDate date={entry.data.pubDate} />
-                </span>
-              ) : null}
-              {entry.data.updatedDate ? (
-                <span class="edu-meta__item">
-                  Updated <FormattedDate date={entry.data.updatedDate} />
-                </span>
-              ) : null}
-              {entry.data.type ? <span class="edu-meta__item">Type {entry.data.type}</span> : null}
-            </div>
-          </div>
-
-          {headerStyle === 'panel' && hero ? (
-            <div class="edu-hero__media">
-              <img src={hero} alt="" loading="eager" decoding="async" />
-            </div>
-          ) : null}
-        </header>
-
-        {headerStyle === 'plain' && hero ? (
-          <figure class="edu-hero-media">
-            <img src={hero} alt="" loading="eager" decoding="async" />
-          </figure>
-        ) : null}
-
-        <div class="edu-layout">
-          <aside class="edu-side panel">
-            <h2 class="edu-side__title">At A Glance</h2>
-            <dl class="edu-facts">
-              {entry.data.subject ? (
-                <>
-                  <dt>Subject</dt>
-                  <dd>{entry.data.subject}</dd>
-                </>
-              ) : null}
-              {entry.data.level ? (
-                <>
-                  <dt>Level</dt>
-                  <dd>{entry.data.level}</dd>
-                </>
-              ) : null}
-              {entry.data.type ? (
-                <>
-                  <dt>Format</dt>
-                  <dd>{entry.data.type}</dd>
-                </>
-              ) : null}
-            </dl>
-
-            {entry.data.tags?.length ? (
-              <div class="edu-tags">
-                {entry.data.tags.map((tag) => (
-                  <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                ))}
+                <div class="edu-meta">
+                  {entry!.data.pubDate ? (
+                    <span class="edu-meta__item">
+                      Published <FormattedDate date={entry!.data.pubDate} />
+                    </span>
+                  ) : null}
+                  {entry!.data.updatedDate ? (
+                    <span class="edu-meta__item">
+                      Updated <FormattedDate date={entry!.data.updatedDate} />
+                    </span>
+                  ) : null}
+                  {entry!.data.type ? <span class="edu-meta__item">Type {entry!.data.type}</span> : null}
+                </div>
               </div>
-            ) : null}
-          </aside>
 
-          <div class="edu-body panel panel--soft">
-            <div class="prose prose--edu">
-              <Content />
+              {headerStyle === 'panel' && hero ? (
+                <div class="edu-hero__media">
+                  <img src={hero} alt="" loading="eager" decoding="async" />
+                </div>
+              ) : null}
+            </header>
+
+            {headerStyle === 'plain' && hero ? (
+              <figure class="edu-hero-media">
+                <img src={hero} alt="" loading="eager" decoding="async" />
+              </figure>
+            ) : null}
+
+            <div class="edu-layout">
+              <aside class="edu-side panel">
+                <h2 class="edu-side__title">At A Glance</h2>
+                <dl class="edu-facts">
+                  {entry!.data.subject ? (
+                    <>
+                      <dt>Subject</dt>
+                      <dd>{entry!.data.subject}</dd>
+                    </>
+                  ) : null}
+                  {entry!.data.level ? (
+                    <>
+                      <dt>Level</dt>
+                      <dd>{entry!.data.level}</dd>
+                    </>
+                  ) : null}
+                  {entry!.data.type ? (
+                    <>
+                      <dt>Format</dt>
+                      <dd>{entry!.data.type}</dd>
+                    </>
+                  ) : null}
+                </dl>
+
+                {entry!.data.tags?.length ? (
+                  <div class="edu-tags">
+                    {entry!.data.tags.map((tag) => (
+                      <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                    ))}
+                  </div>
+                ) : null}
+              </aside>
+
+              <div class="edu-body panel panel--soft">
+                <div class="prose prose--edu">
+                  {Content ? <Content /> : null}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </article>
-    </main>
-    <Footer />
+          </article>
+        </main>
+        <Footer />
+      </>
+    )}
   </body>
 </html>
 

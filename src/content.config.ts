@@ -106,6 +106,7 @@ const education = defineCollection({
       tags: z.array(z.string()).default([]),
       type: z.string().optional(),
       featured: z.boolean().default(false),
+      showInIndex: z.boolean().default(true),
       image: z.string().optional(),
       headerStyle: z.enum(['panel', 'plain']).optional(),
     }),

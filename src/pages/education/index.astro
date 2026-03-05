@@ -5,8 +5,10 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
 
-const education = (await getCollection('education', ({ data }) => !data.draft)).sort(
-  (a, b) => (b.data.pubDate?.valueOf() ?? 0) - (a.data.pubDate?.valueOf() ?? 0)
+const education = (await getCollection('education', ({ data }) => !data.draft && data.showInIndex !== false)).sort(
+  (a, b) =>
+    (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER) ||
+    (b.data.pubDate?.valueOf() ?? 0) - (a.data.pubDate?.valueOf() ?? 0)
 );
 const educationSubjects = [...new Set(education.map((item) => item.data.subject).filter(Boolean))];
 
@@ -301,8 +303,16 @@ function pickThumb(data: any) {
     align-items: center;
   }
 
+  .education-index .pill {
+    background: color-mix(in srgb, var(--surface-raised) 72%, var(--text) 28%);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--border) 58%, var(--text) 42%);
+  }
+
   .pill--soft {
-    background: var(--surface-glass);
+    background: color-mix(in srgb, var(--surface) 86%, var(--accent) 14%);
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
   }
 
   .edu-lead__title,

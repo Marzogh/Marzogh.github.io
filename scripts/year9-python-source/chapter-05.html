@@ -1,0 +1,148 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Chapter 05</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial,Helvetica,sans-serif; line-height: 1.65; color: #1f2937;">
+<div style="background: linear-gradient(135deg,#0ea5e9,#38bdf8); border: 1px solid #e5e7eb; border-radius: 18px;  padding: 22px; margin-bottom: 18px; color: #ffffff;">
+<div style="font-size: 26px;  margin-bottom: 6px;">Chapter 5 — Letting the user speak</div>
+<div style="font-size: 15px; ">EXPLORER · v4 · turning typed input into usable data</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 8px;">Where we are now</div>
+<div style="font-size: 15px; color: #374151;">So far, the console has only known information because you typed it into the program. <br><br>That works while you are building it, but it is not very flexible. <br><br>If someone else runs your program, they should be able to enter their own mission details. <br><br>This chapter is about making that happen properly.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">Asking the user for information</div>
+<div style="font-size: 15px; color: #374151;">In Python, a program asks the user for information using the <code>input()</code> function. <br><br>When Python reaches an <code>input()</code> line, it pauses, waits for the user to type something, and then continues running. <br><br>Whatever the user types is stored in a variable.</div>
+</div>
+
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 16px; padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #7c2d12;">An important behaviour to understand</div>
+<div style="font-size: 15px; color: #7c2d12;">Everything that comes from <code>input()</code> is a <strong>string</strong>. <br><br>This is always true. <br><br>Even if the user types a number. <br><br>Python treats input as text because it cannot safely guess what the user meant.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">Turning strings into numbers</div>
+<div style="font-size: 15px; color: #374151;">If you want to do maths with a value from <code>input()</code>, you must convert it. <br><br>Converting means telling Python what type the value should become. <br><br>To convert a string into a whole number, use <code>int()</code>. <br><br>To convert a string into a decimal number, use <code>float()</code>. <br><br>If the text cannot be turned into a number, Python will stop and show an error. <br><br>That is not a failure. It is Python protecting your program from bad data.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">EXPLORER v4 (run this)</div>
+<div style="font-size: 15px; color: #374151; margin-bottom: 14px;">This version of the console collects information from the user. <br><br>Notice how values are collected first as strings, then converted before being used. <br><br>Read the comments carefully. They explain each step.</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 16px; border-radius: 12px; overflow: auto; font-size: 14px; line-height: 1.55; margin: 0;"><code>"""
+EXPLORER v4 — Chapter 5
+
+This version collects mission details from the user.
+Input arrives as strings and is converted into the correct data types.
+"""
+
+# =========================
+# COLLECT MISSION DETAILS
+# =========================
+
+# This value is text, so leaving it as a string makes sense
+mission_location = input("Enter mission location: ")
+
+# This arrives as a string, even if the user types a number
+mission_day_text = input("Enter mission day (whole number): ")
+
+# Convert the string into an int so Python can treat it as a number
+mission_day = int(mission_day_text)
+
+# This also arrives as a string
+temperature_text = input("Enter temperature (°C): ")
+
+# Convert the string into a float for decimal values
+temperature_c = float(temperature_text)
+
+# =========================
+# SYSTEM STATE
+# =========================
+
+system_online = True
+
+# =========================
+# CONSOLE OUTPUT
+# =========================
+
+print("=" * 44)
+print("              EXPLORER CONSOLE              ")
+print("=" * 44)
+
+print("Location: " + mission_location)
+print("Day: " + str(mission_day))
+print("Temperature: " + str(temperature_c) + " °C")
+print()
+
+print("System status:")
+print("Online: " + str(system_online))
+
+print("=" * 44)
+</code></pre>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">Try this carefully</div>
+<div style="font-size: 15px; color: #374151;">Run the program and enter valid numbers first. <br><br>Then run it again and type a word where a number is expected. <br><br>Read the error message Python shows. <br><br>Errors are not punishments. They are clues.</div>
+</div>
+
+<div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 16px; padding: 22px; margin-bottom: 18px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #0c4a6e;">Side note: a cleaner way to print values</div>
+<div style="font-size: 15px; color: #0c4a6e;">Earlier chapters quietly used a Python feature called an <strong>f-string</strong>. <br><br>An f-string is a formatted string. It lets you place values directly inside text. <br><br>Long version: <br><br>
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; font-family: Consolas,Monaco,monospace; font-size: 14px;">print("Day: " + str(mission_day))</div>
+<br>Using an f-string: <br><br>
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; font-family: Consolas,Monaco,monospace; font-size: 14px;">print(f"Day: {mission_day}")</div>
+<br>Both are correct. The f-string just makes mixed output easier to read once you understand types.</div>
+</div>
+
+<div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 16px; padding: 22px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #713f12;">Next time</div>
+<div style="font-size: 15px; color: #713f12;">Right now, the console collects information but treats all missions the same. <br><br>In the next chapter, we will teach it to make decisions using <code>if</code> statements.</div>
+</div>
+</div>
+          </body>
+        </html>

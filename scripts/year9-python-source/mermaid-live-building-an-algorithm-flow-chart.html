@@ -1,0 +1,116 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Mermaid.live - Building an Algorithm Flow Chart</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 16px; font-family: Arial, sans-serif; line-height: 1.55; color: #1f2937;">
+<div style="border: 1px solid #e6eef5; border-radius: 16px; padding: 22px; margin-bottom: 18px; background: #f4f8fc; ">
+<h2 style="margin: 0 0 8px 0;">🧠 Mermaid.live – Building an Algorithm flow chart</h2>
+<p style="margin: 0;">Mermaid turns diagram code into a flowchart. You write the structure. Mermaid builds the shapes.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-bottom: 18px;">
+<div style="border: 1px solid #e8f3ec; border-radius: 16px; padding: 18px; background: #f3faf6; ">
+<h3 style="margin: 0 0 8px 0;">🚀 Step 1: Open Mermaid.live</h3>
+<p style="margin: 0 0 10px 0;"><a style="color: #2563eb; text-decoration: underline;" href="https://mermaid.live" target="_blank">https://mermaid.live</a></p>
+<div style="border-left: 4px solid #10b981; padding: 10px 12px; background: #ecfdf5; border-radius: 10px;">
+<p style="margin: 0;"><strong>Left</strong> = code editor<br><strong>Right</strong> = diagram preview</p>
+</div>
+</div>
+<div style="border: 1px solid #e9f2fb; border-radius: 16px; padding: 18px; background: #f4f9ff; ">
+<h3 style="margin: 0 0 8px 0;">🎯 What this example models</h3>
+<p style="margin: 0 0 10px 0;">This example shows how a <strong>while loop</strong> works:</p>
+<ol style="padding-left: 18px; margin: 0;">
+<li>Start</li>
+<li>Ask for a number</li>
+<li>Check if number is &lt; 5</li>
+<li>If yes → add 1 and repeat</li>
+<li>If no → end</li>
+</ol>
+<p style="margin: 10px 0 0 0; color: #4b5563;">The arrow that goes back to the decision creates repetition.</p>
+</div>
+</div>
+
+<div style="border: 1px solid #f3e9dd; border-radius: 16px; padding: 18px; margin-bottom: 18px; background: #fff8f1; ">
+<h3 style="margin: 0 0 10px 0;">🔷 Shape Guide</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+<div style="background: #ffffff; border-radius: 12px; padding: 10px; border: 1px solid #f1dfc8;"><strong>([ ])</strong> → Start / End</div>
+<div style="background: #ffffff; border-radius: 12px; padding: 10px; border: 1px solid #f1dfc8;"><strong>[ ]</strong> → Process</div>
+<div style="background: #ffffff; border-radius: 12px; padding: 10px; border: 1px solid #f1dfc8;"><strong>{ }</strong> → Decision</div>
+<div style="background: #ffffff; border-radius: 12px; padding: 10px; border: 1px solid #f1dfc8;"><strong>[/ /]</strong> → Input / Output</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-bottom: 18px;">
+<div style="border: 1px solid #ece9f7; border-radius: 16px; padding: 18px; background: #f7f5fd; ">
+<h3 style="margin: 0 0 10px 0;">🖼 Example Flow chart</h3>
+<div style="border: 2px dashed #cfc7f2; border-radius: 14px; padding: 14px; text-align: center; background: #ffffff;"><img style="max-width: 100%; height: auto; border-radius: 10px;" src="assets/Uploaded%20Media%202/Mermaid%20Live%20Example-1.png" alt="Mermaid Live Example Diagram" loading="lazy"></div>
+<p style="margin: 10px 0 0 0; color: #4b5563;">Notice how the decision has two labelled paths and one returns back to repeat.</p>
+</div>
+<div style="border: 1px solid #eaeef3; border-radius: 16px; padding: 18px; background: #f9fafb; ">
+<h3 style="margin: 0 0 10px 0;">⌨ Step 2: Paste This Code</h3>
+<details style="border: 1px solid #dfe3e8; border-radius: 12px; padding: 12px 14px; background: #ffffff;">
+<summary style="cursor: pointer; ">Show/Hide Mermaid Code</summary>
+<div style="margin-top: 14px; border-radius: 12px; overflow: hidden; border: 1px solid #111827;">
+<pre style="margin: 0; padding: 16px; background: #111827; color: #ffffff; font-size: 13px; overflow-x: auto;"><code>flowchart TD
+    A([Start]) --&gt; B[/Enter a number/]
+    B --&gt; C{Is number &lt; 5?}
+    C -- Yes --&gt; D[Add 1 to number]
+    D --&gt; C
+    C -- No --&gt; E([End])</code></pre>
+</div>
+</details>
+<div style="margin-top: 12px; border-left: 4px solid #2563eb; padding: 10px 12px; background: #eff6ff; border-radius: 10px;"><strong>Checkpoint:</strong> Your diagram should show a loop returning to the decision box.</div>
+</div>
+</div>
+
+<div style="border: 1px solid #e7f5f3; border-radius: 16px; padding: 20px; background: #f2fbf9; ">
+<h3 style="margin: 0 0 10px 0;">🛠 Assessment Practice Challenge – Booking Validation</h3>
+<p style="margin: 0 0 12px 0;">Now design your own algorithm flow chart.&nbsp;</p>
+<div style="border-left: 4px solid #10b981; padding: 14px 16px; background: #ecfdf5; border-radius: 10px;">Create a flowchart for a booking system that: <br><br>• Asks for the user’s name<br>• Asks what type of pet they have (cat or dog)<br>• Repeats the question if the input is invalid<br>• Assigns a price based on the pet type<br>• Displays a confirmation message<br>• Ends</div>
+<div style="margin-top: 16px; border: 1px solid #bfe7df; background: #ffffff; border-radius: 14px; padding: 14px;">Think carefully: <br>Where is the loop?<br>What controls it?<br>Where is the price set?<br>Are all decision paths labelled?</div>
+</div>
+</div>
+          </body>
+        </html>

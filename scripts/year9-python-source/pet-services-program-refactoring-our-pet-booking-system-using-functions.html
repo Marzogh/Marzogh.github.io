@@ -1,0 +1,567 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Pet Services Program: Refactoring our Pet booking system using functions</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 18px 14px; font-family: Arial,Helvetica,sans-serif; line-height: 1.55; color: #1f2937;">
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; background: #ffffff; margin-bottom: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 280px; flex: 1;">
+<div style="display: inline-block; padding: 4px 10px; border-radius: 999px; background: #111827; color: #ffffff; font-size: 12px;">LESSON • FUNCTIONS (REFRACTORING)</div>
+<div style="font-size: 24px; margin: 10px 0 6px 0;">🐾 Refactoring the Pet Service Booking Program using functions</div>
+<div style="font-size: 14px; color: #4b5563;">Today you will take the same working program and reorganise it into functions. The program should behave the <strong>exact same way</strong>. The only thing that changes is the structure.</div>
+</div>
+<div style="min-width: 280px; flex: 1; border: 1px solid #dbeafe; background: #eff6ff; border-radius: 14px; padding: 12px;">
+<div style="margin-bottom: 6px;">✅ Today you will learn to…</div>
+<div style="font-size: 13px; color: #374151;">• Identify “chunks” of code that belong in a function<br>• Write functions that <strong>return</strong> values to the main program<br>• Keep logic in one place (so rule changes are easy)<br>• Build a clean main program that reads like a plan</div>
+</div>
+</div>
+<div style="margin-top: 12px; border-top: 1px dashed #d1d5db; padding-top: 12px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 260px; border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 14px; padding: 10px 12px;">
+<div style="margin-bottom: 4px;">🎯 Success criteria</div>
+<div style="font-size: 13px; color: #374151;">Your program uses functions for validation, pricing, and age rules, and the main program becomes short and readable.</div>
+</div>
+<div style="flex: 1; min-width: 260px; border: 1px solid #fed7aa; background: #fff7ed; border-radius: 14px; padding: 10px 12px;">
+<div style="margin-bottom: 4px;">⚠️ One rule</div>
+<div style="font-size: 13px; color: #374151;">No new features. No extra services. No extra fees. Same program behaviour — cleaner structure.</div>
+</div>
+</div>
+</div>
+</div>
+<details style="border: 1px solid #c7d2fe; border-radius: 16px; padding: 16px; background: #eef2ff; margin-bottom: 14px;">
+<summary style="cursor: pointer; font-size: 18px;">📌 Reminder: feature creep</summary>
+<div style="margin-top: 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 8px;"><strong>Feature creep</strong> is when you keep adding extra features that were not part of the original plan.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 260px;">
+<div style="margin-bottom: 6px;">Why it’s bad during planning</div>
+<div style="font-size: 14px; color: #374151;">Your rules keep growing, so you can’t finish your decision tree properly. You end up guessing.</div>
+</div>
+<div style="flex: 1; min-width: 260px;">
+<div style="margin-bottom: 6px;">Why it’s bad during coding</div>
+<div style="font-size: 14px; color: #374151;">You change rules mid-build and patch random fixes. The code becomes messy and hard to debug.</div>
+</div>
+</div>
+<div style="margin-top: 10px; border-left: 4px solid #6366f1; background: #eef2ff; padding: 10px 12px; border-radius: 10px;"><strong>Today’s goal:</strong> same behaviour, cleaner structure.</div>
+</div>
+</details>
+<div style="border: 1px solid #bae6fd; border-radius: 16px; padding: 16px; background: #ecfeff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">1️⃣ What we are starting with (the original worked example)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">This is the original “all-in-one” program. You are not changing what it does — you are reorganising it. You will use this as your reference for the rest of the lesson.</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Original worked example code</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;"># ------------------------------------------
+# Pet Service Booking System
+# ------------------------------------------
+# This program collects dog information,
+# calculates grooming cost based on size and service,
+# applies age-based modifiers,
+# and prints a clear booking summary.
+# ------------------------------------------
+
+# ---- Chunk A: Welcome and Instructions ----
+
+print("Welcome to the Dog Grooming Booking System.")
+print("This program is for DOGS only.")
+print("Size categories: small (0–10kg), medium (10–25kg), large (25kg+).")
+print("Services available: bath, haircut, full.")
+print("--------------------------------------------")
+
+
+# ---- Chunk B: Collect Basic Inputs ----
+
+dog_name = input("Enter your dog's name: ")
+dog_breed = input("Enter your dog's breed: ")
+
+
+# ---- Chunk C: Validate Age Input Using a While Loop ----
+# We keep asking until the user gives a sensible number.
+
+while True:
+    dog_age_input = input("Enter your dog's age in years: ")
+
+    # Check if the input is a number
+    if dog_age_input.isdigit():
+        dog_age = int(dog_age_input)
+
+        # Age cannot be negative
+        if dog_age &gt;= 0:
+            break
+        else:
+            print("Age cannot be negative. Try again.")
+    else:
+        print("Please enter a valid whole number for age.")
+
+
+# ---- Validate Dog Size ----
+# This while loop ensures size is one of the allowed options.
+
+valid_sizes = ["small", "medium", "large"]
+
+while True:
+    dog_size = input("Enter dog size (small / medium / large): ").lower()
+
+    if dog_size in valid_sizes:
+        break
+    else:
+        print("Invalid size. Please type small, medium, or large.")
+
+
+# ---- Display Services Using a For Loop ----
+# Instead of writing 3 separate print statements,
+# we loop through a list.
+
+services = ["bath", "haircut", "full"]
+
+print("\nAvailable services:")
+for service_option in services:
+    print("-", service_option)
+
+
+# ---- Validate Service Choice ----
+
+while True:
+    service = input("Choose a service: ").lower()
+
+    if service in services:
+        break
+    else:
+        print("Invalid service. Please choose from the list above.")
+
+
+# ---- Chunk D: Calculate Base Cost ----
+# Base cost depends on BOTH service and size.
+
+if service == "bath":
+    if dog_size == "small":
+        base_cost = 20
+    elif dog_size == "medium":
+        base_cost = 25
+    else:
+        base_cost = 30
+
+elif service == "haircut":
+    if dog_size == "small":
+        base_cost = 30
+    elif dog_size == "medium":
+        base_cost = 35
+    else:
+        base_cost = 40
+
+else:  # full grooming
+    if dog_size == "small":
+        base_cost = 45
+    elif dog_size == "medium":
+        base_cost = 50
+    else:
+        base_cost = 60
+
+
+# ---- Chunk E: Apply Age Modifiers ----
+
+total_cost = base_cost  # Start with base cost
+
+# Puppy discount
+if dog_age &lt; 1:
+    total_cost = total_cost * 0.9  # Reduce by 10%
+
+# Senior dog fee
+if dog_age &gt;= 10:
+    total_cost = total_cost + 5
+
+
+# ---- Chunk F: Output Booking Summary ----
+# We store summary lines in a list and print them using a for loop.
+
+summary_lines = [
+    "\n----- Booking Summary -----",
+    f"Dog name: {dog_name}",
+    f"Breed: {dog_breed}",
+    f"Age: {dog_age} years",
+    f"Size category: {dog_size}",
+    f"Service selected: {service}",
+    f"Base cost: ${base_cost:.2f}",
+    f"Final total cost: ${total_cost:.2f}"
+]
+
+for line in summary_lines:
+    print(line)
+
+print("----------------------------")</pre>
+</div>
+</details></div>
+<div style="border: 1px solid #bbf7d0; border-radius: 16px; padding: 16px; background: #f0fdf4; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">2️⃣ What we are building today (same program, cleaner structure)</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">The idea</div>
+<div style="font-size: 14px; color: #374151;">Take repeated or “chunk” logic and move it into functions, so your main program becomes short and easy to read.</div>
+<div style="margin-top: 10px; border-left: 4px solid #22c55e; background: #f0fdf4; padding: 10px 12px; border-radius: 10px;">You are not changing the code, just how the code is organised.</div>
+</div>
+<div style="flex: 1; min-width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">Target functions</div>
+<div style="font-size: 14px; color: #374151;">• <code>get_valid_age()</code><br>• <code>get_valid_size(valid_sizes)</code><br>• <code>get_valid_service(services)</code><br>• <code>calculate_base_cost(service, dog_size)</code><br>• <code>apply_age_based_fee(base_cost, dog_age)</code><br>• <code>print_booking_summary(...)</code></div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e9d5ff; border-radius: 16px; padding: 16px; background: #faf5ff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">3️⃣ Refactor steps (do these in order)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">This is the safe way to refactor: move one chunk at a time, test it, then move the next chunk. If you try to do everything at once, you won’t know what broke.</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step A — Worked example: <code>apply_age_based_fee(base_cost, dog_age)</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">This one is fully worked. Read it, then use it as your model for the next steps. <br>This function keeps all age rules in one place, which means if the rules change later, you change <strong>one function</strong> instead of changing code all over your program.</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def apply_age_based_fee(base_cost, dog_age):
+    total = base_cost
+
+    if dog_age &lt; 1:
+        total = total * 0.9
+
+    if dog_age &gt;= 10:
+        total = total + 5
+
+    return total</pre>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Checkpoint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">You should be able to point to:
+<div style="margin-top: 8px;">• the parameters (<code>base_cost</code>, <code>dog_age</code>)<br>• the variable that changes (<code>total</code>)<br>• the returned value (<code>return total</code>)</div>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step B — Your turn: <code>get_valid_age()</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Look at the original program and find the age validation chunk. Your job is to move that chunk into a function that returns an integer. <br><br><strong>What your function must do:</strong> keep asking until the user enters a whole number that is 0 or more, then return it.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Starter template (you fill it in)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_age():
+    # TODO: copy the age validation loop from the original code
+    # TODO: change the break into a return
+    # TODO: return the final integer age</pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Test it (prove it works)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Run these lines after your function:</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">age = get_valid_age()
+print("Age captured:", age)</pre>
+</div>
+<div style="font-size: 13px; color: #6b7280; margin-top: 8px;">If it never prints, your function is probably never returning.</div>
+</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Hint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">In the original code, the loop uses <code>break</code> to escape the loop. <br>In a function, you can finish the loop by using <code>return dog_age</code> once you have a valid age.</div>
+</details><details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show worked solution (check after you try)</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_age():
+    while True:
+        dog_age_input = input("Enter your dog's age in years: ")
+
+        if dog_age_input.isdigit():
+            dog_age = int(dog_age_input)
+
+            if dog_age &gt;= 0:
+                return dog_age
+            else:
+                print("Age cannot be negative. Try again.")
+        else:
+            print("Please enter a valid whole number for age.")</pre>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step C — Your turn: <code>get_valid_size(valid_sizes)</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Find the size validation loop in the original program and turn it into a function. <br><br><strong>What your function must do:</strong> keep asking until the user types a value inside <code>valid_sizes</code>, then return it.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Starter template (you fill it in)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_size(valid_sizes):
+    # TODO: copy the size validation loop from the original code
+    # TODO: return the final valid size (as lowercase text)</pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Test it (prove it works)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">valid_sizes = ["small", "medium", "large"]
+size = get_valid_size(valid_sizes)
+print("Size captured:", size)</pre>
+</div>
+</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Hint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Use <code>dog_size = input(...).lower()</code> so the program accepts SMALL, Small, small, etc. <br>Then check: <code>if dog_size in valid_sizes</code></div>
+</details><details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show worked solution (check after you try)</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_size(valid_sizes):
+    while True:
+        dog_size = input("Enter dog size (small / medium / large): ").lower()
+
+        if dog_size in valid_sizes:
+            return dog_size
+        else:
+            print("Invalid size. Please type small, medium, or large.")</pre>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step D — Your turn: <code>get_valid_service(services)</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">This function has two jobs that belong together:
+<div style="margin-top: 8px;">• print the service menu using a for loop<br>• validate the user’s choice until it is inside <code>services</code></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Starter template (you fill it in)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_service(services):
+    # TODO: print the menu (for loop)
+    # TODO: validate the input (while loop)
+    # TODO: return the chosen service (lowercase)</pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Test it (prove it works)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">services = ["bath", "haircut", "full"]
+choice = get_valid_service(services)
+print("Service captured:", choice)</pre>
+</div>
+</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Hint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">In the original program, the for loop prints the menu first, then the while loop validates the input. Keep that same order inside your function.</div>
+</details><details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show worked solution (check after you try)</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def get_valid_service(services):
+    print("\nAvailable services:")
+    for service_option in services:
+        print("-", service_option)
+
+    while True:
+        service = input("Choose a service: ").lower()
+
+        if service in services:
+            return service
+        else:
+            print("Invalid service. Please choose from the list above.")</pre>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 6px;">Step E — Your turn: <code>calculate_base_cost(service, dog_size)</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Copy the pricing chunk from the original program into a function. Your function must return the correct base cost for every service + size combo. <br><br><strong>Rule reminder:</strong> base cost depends on <strong>service + size</strong>.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Starter template (you fill it in)</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def calculate_base_cost(service, dog_size):
+    # TODO: copy the pricing if/elif/else from the original code
+    # TODO: return the correct base cost (number)</pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px;">
+<div style="margin-bottom: 6px;">Test it (prove it works)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">These are quick spot-checks:</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">print(calculate_base_cost("bath", "small"))     # expect 20
+print(calculate_base_cost("haircut", "large"))  # expect 40
+print(calculate_base_cost("full", "medium"))    # expect 50</pre>
+</div>
+</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Hint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">You can keep the exact same if/elif/else shape from the original program. The only difference is you should return numbers instead of assigning <code>base_cost</code> in the main program.</div>
+</details><details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show worked solution (check after you try)</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def calculate_base_cost(service, dog_size):
+    if service == "bath":
+        if dog_size == "small":
+            return 20
+        elif dog_size == "medium":
+            return 25
+        else:
+            return 30
+
+    elif service == "haircut":
+        if dog_size == "small":
+            return 30
+        elif dog_size == "medium":
+            return 35
+        else:
+            return 40
+
+    else:  # full grooming
+        if dog_size == "small":
+            return 45
+        elif dog_size == "medium":
+            return 50
+        else:
+            return 60</pre>
+</div>
+</details>
+<div style="margin-top: 10px; border-left: 4px solid #f59e0b; background: #fff7ed; padding: 10px 12px; border-radius: 10px;"><strong>Notice:</strong> The base cost depends on <strong>service + size</strong>. That’s why we collect size in the first place.</div>
+</div>
+</div>
+<div style="border: 1px solid #fed7aa; border-radius: 16px; padding: 16px; background: #fff7ed; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">4️⃣ Build the new main program (this is the payoff)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">After you create the functions, your main program becomes short and readable. It should feel like a plan written in Python.</div>
+<div style="border-left: 4px solid #f59e0b; background: #fff7ed; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px;"><strong>Important:</strong> This main program will NOT work until you have written the functions above it. That is normal.</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;"># ---- Main Program (clean + readable) ----
+
+print("Welcome to the Dog Grooming Booking System.")
+print("This program is for DOGS only.")
+print("Size categories: small (0–10kg), medium (10–25kg), large (25kg+).")
+print("Services available: bath, haircut, full.")
+print("--------------------------------------------")
+
+dog_name = input("Enter your dog's name: ")
+dog_breed = input("Enter your dog's breed: ")
+
+dog_age = get_valid_age()
+
+valid_sizes = ["small", "medium", "large"]
+dog_size = get_valid_size(valid_sizes)
+
+services = ["bath", "haircut", "full"]
+service = get_valid_service(services)
+
+base_cost = calculate_base_cost(service, dog_size)
+total_cost = apply_age_based_fee(base_cost, dog_age)
+
+# Booking summary (we keep the same output format as the original)
+summary_lines = [
+    "\n----- Booking Summary -----",
+    f"Dog name: {dog_name}",
+    f"Breed: {dog_breed}",
+    f"Age: {dog_age} years",
+    f"Size category: {dog_size}",
+    f"Service selected: {service}",
+    f"Base cost: ${base_cost:.2f}",
+    f"Final total cost: ${total_cost:.2f}"
+]
+
+for line in summary_lines:
+    print(line)
+
+print("----------------------------")</pre>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Checkpoint: What changed and what did NOT change?</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;"><strong>Did NOT change:</strong> the rules, the questions asked, the prices, the summary output.<br><strong>Did change:</strong> the structure. Chunks of logic are now stored in functions and reused.</div>
+</details></div>
+<div style="border: 1px solid #dbeafe; border-radius: 16px; padding: 16px; background: #eff6ff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">5️⃣ Optional challenge: <code>print_booking_summary(...)</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">This is optional (do it if you finish early). Right now, the main program builds <code>summary_lines</code> and prints them. Your challenge is to move that into a function. <br><br><strong>What your function must do:</strong> take the booking variables as parameters, build the list, then print it using a for loop.</div>
+<div style="background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def print_booking_summary(dog_name, dog_breed, dog_age, dog_size, service, base_cost, total_cost):
+    # TODO: build the list of summary lines (same as the original)
+    # TODO: print each line using a for loop</pre>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show worked solution (check after you try)</summary>
+<div style="margin-top: 10px; background: #000000; border-radius: 12px; padding: 12px; overflow-x: auto;">
+<pre style="margin: 0; color: #ffffff; background: #000000; font-family: Consolas,'Courier New',monospace; font-size: 13px; line-height: 1.45; white-space: pre;">def print_booking_summary(dog_name, dog_breed, dog_age, dog_size, service, base_cost, total_cost):
+    summary_lines = [
+        "\n----- Booking Summary -----",
+        f"Dog name: {dog_name}",
+        f"Breed: {dog_breed}",
+        f"Age: {dog_age} years",
+        f"Size category: {dog_size}",
+        f"Service selected: {service}",
+        f"Base cost: ${base_cost:.2f}",
+        f"Final total cost: ${total_cost:.2f}"
+    ]
+
+    for line in summary_lines:
+        print(line)
+
+    print("----------------------------")</pre>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; background: #ffffff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">🛠 Troubleshooting (read this if you get stuck)</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; margin-bottom: 10px;">
+<summary style="cursor: pointer;">My program runs but the total cost is wrong</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Check these in order:
+<div style="margin-top: 8px;">• Did <code>calculate_base_cost()</code> return the correct number for your service + size?<br>• Did you call <code>apply_age_based_fee(base_cost, dog_age)</code> with the right variables?<br>• Are you using <code>total_cost</code> in the summary, not <code>base_cost</code>?</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; margin-bottom: 10px;">
+<summary style="cursor: pointer;">I get a NameError (function not defined)</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">That means Python cannot see your function. Fix this by checking:
+<div style="margin-top: 8px;">• Your function is written <strong>above</strong> the main program<br>• Your spelling matches exactly (capital letters matter)<br>• You didn’t rename it in one place but not the other</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa;">
+<summary style="cursor: pointer;">My program asks questions forever (loop won’t stop)</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">This usually happens when your validation function never returns. Look inside your <code>while True</code> loop and find the line where it should return the valid answer.</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; background: #ffffff;">
+<div style="font-size: 18px; margin-bottom: 8px;">✅ Exit check (before you pack up)</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px; border: 1px solid #fed7aa; background: #fff7ed; border-radius: 12px; padding: 12px;">
+<div style="margin-bottom: 6px;">Answer these clearly</div>
+<div style="font-size: 14px; color: #374151;">1) What does “refactor” mean?<br>2) Why is <code>apply_age_based_fee()</code> a good function name?<br>3) If the age rules changed, where would you edit the code?</div>
+</div>
+<div style="flex: 1; min-width: 300px; border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 12px; padding: 12px;">
+<div style="margin-bottom: 6px;">Quick self-check</div>
+<div style="font-size: 14px; color: #374151;">You can point to your program and show:
+<div style="margin-top: 8px;">• where each function starts (<code>def</code>)<br>• what each function returns (<code>return</code>)<br>• that your main program is shorter and clearer than the original</div>
+</div>
+</div>
+</div>
+<div style="margin-top: 12px; border-left: 4px solid #6366f1; background: #eef2ff; padding: 10px 12px; border-radius: 10px;">Clean plan → clean code. Clean functions → easy debugging.</div>
+</div>
+</div>
+          </body>
+        </html>

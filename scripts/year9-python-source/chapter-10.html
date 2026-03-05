@@ -1,0 +1,268 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Chapter 10</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial,Helvetica,sans-serif; line-height: 1.7; color: #1f2937;">
+<div style="background: linear-gradient(135deg,#ef4444,#f97316); border: 1px solid #e5e7eb; border-radius: 18px;  padding: 22px; margin-bottom: 22px; color: #ffffff;">
+<div style="font-size: 26px;  margin-bottom: 6px;">Chapter 10 — Final Build and Debugging</div>
+<div style="font-size: 15px; ">EXPLORER · v10 · understanding how programs break and how to fix them</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 22px;">
+<div style="font-size: 18px;  margin-bottom: 10px;">You have built a complete program</div>
+<div style="font-size: 15px; color: #374151;">Your console now collects input, converts data types correctly, makes decisions using conditional statements, repeats using a loop, stores multiple reports in a list, and organises behaviour using functions. That is a structured, multi-part program. <br><br>The final skill to develop is not adding new features. It is learning how to stay calm when something breaks and work through the problem logically.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 22px;">
+<div style="font-size: 18px;  margin-bottom: 12px;">EXPLORER v10 — Final Version</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 18px; border-radius: 12px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 0;"><code>"""
+EXPLORER v10 — Final Build
+"""
+
+def print_banner():
+    print("=" * 44)
+    print("              EXPLORER CONSOLE              ")
+    print("=" * 44)
+
+def create_report():
+    mission_location = input("Enter mission location: ")
+    mission_day = int(input("Enter mission day (whole number): "))
+    temperature_c = float(input("Enter temperature (°C): "))
+
+    if temperature_c &gt; 35:
+        condition = "Unsafe"
+    elif temperature_c &gt; 25:
+        condition = "Warm"
+    else:
+        condition = "Normal"
+
+    report_summary = (
+        "Location: " + mission_location +
+        " | Day: " + str(mission_day) +
+        " | Temp: " + str(temperature_c) + " °C" +
+        " | Condition: " + condition
+    )
+
+    return report_summary
+
+reports = []
+keep_running = True
+
+while keep_running:
+
+    print_banner()
+
+    report = create_report()
+    reports.append(report)
+
+    print()
+    print("Report logged.")
+    print()
+
+    user_choice = input("Log another report? (yes/no): ")
+
+    if user_choice.lower() != "yes":
+        keep_running = False
+
+print()
+print("All logged reports:")
+print("-" * 44)
+
+for report in reports:
+    print(report)
+
+print("-" * 44)
+print("Console shutting down.")
+</code></pre>
+</div>
+
+<div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 16px; padding: 22px; margin-bottom: 22px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #713f12;">Reading tracebacks properly</div>
+<div style="font-size: 15px; color: #713f12;">When Python encounters a problem, it prints a traceback. Many students read only the top line and become overwhelmed. Instead, train yourself to read from the bottom upward. <br><br>The final line tells you the type of error. The lines above it tell you where it happened. The file name and line number point directly to the location in your code.</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin-top: 14px;"><code>
+Traceback (most recent call last):
+  File "explorer.py", line 18, in &lt;module&gt;
+    mission_day = int(input("Enter mission day: "))
+ValueError: invalid literal for int() with base 10: 'two'
+</code></pre>
+<div style="font-size: 15px; color: #713f12; margin-top: 14px;">Start at the bottom. The error is <strong>ValueError</strong>. That tells you the issue involves a value that cannot be converted. The message explains that the word "two" cannot be turned into an integer. <br><br>Next, look at the line number. Go to that exact line in your file. Do not rewrite the entire program. Inspect that single line first.</div>
+</div>
+
+<div style="background: #ecfeff; border: 1px solid #a5f3fc; border-radius: 16px; padding: 22px; margin-bottom: 22px;">
+<div style="font-size: 18px;  margin-bottom: 10px; color: #0c4a6e;">Indentation defines structure</div>
+<div style="font-size: 15px; color: #0c4a6e;">In Python, indentation is not decoration. It defines which lines belong together. Lines indented under a <code>while</code>, <code>if</code>, or <code>def</code> statement are part of that block. <br><br>Moving a line left or right changes whether it runs inside or outside the block.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px; margin-bottom: 22px;">
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6;"><code>
+while keep_running:
+    print("Inside loop")
+    keep_running = False
+</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 14px;">Here, both lines are inside the loop. The variable changes inside the loop, so the loop runs once and stops.</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin-top: 16px;"><code>
+while keep_running:
+    print("Inside loop")
+keep_running = False
+</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 14px;">In this version, the second line is outside the loop. The loop never changes the condition and runs forever. The indentation changed the logic of the program. <br><br>This is why careful spacing matters.</div>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;  padding: 22px;">
+<div style="font-size: 18px;  margin-bottom: 12px;">Common beginner errors with real examples</div>
+<div style="font-size: 15px; color: #374151; margin-bottom: 18px;">The fastest way to get good at debugging is to recognise patterns. Most beginner errors are the same few types, just in different outfits. In each example below, notice two things: where Python points (the line number) and what the error name is (the last line). Those two clues usually get you 80% of the way to the fix.</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">IndentationError</div>
+<div style="font-size: 15px; color: #374151;">This one is about structure. Python uses indentation to decide what belongs inside a loop, inside an if statement, or inside a function. If the indentation is inconsistent, Python can’t safely guess what you meant.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>if True:
+    print("This line is indented")
+  print("This line is not")</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>IndentationError: unindent does not match any outer indentation level</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Fixed version</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>if True:
+    print("This line is indented")
+    print("This line is also indented")</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">The fix is almost always the same: make sure every line in the same block has the same indentation. If you’re using spaces, stick with spaces. If you press Tab sometimes and spaces other times, Python will eventually punish you for it.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">SyntaxError</div>
+<div style="font-size: 15px; color: #374151;">Syntax means “grammar.” A SyntaxError means Python can’t even read the code as a valid sentence. The most common causes are missing colons, missing brackets, or quotes that never close.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example (missing colon)</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>if temperature_c &gt; 35
+    print("Unsafe")</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>SyntaxError: expected ':'</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Fixed version</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>if temperature_c &gt; 35:
+    print("Unsafe")</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">If you see SyntaxError, slow down and look for a missing piece of punctuation. Python is extremely literal. One missing colon or quote can break the whole program.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">NameError</div>
+<div style="font-size: 15px; color: #374151;">NameError means Python does not recognise a variable name you used. Usually it’s because the variable was never created, or because the spelling doesn’t match exactly.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example (spelling mismatch)</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>mission_location = "Crater Ridge"
+print(mission_loction)</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>NameError: name 'mission_loction' is not defined</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Fixed version</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>mission_location = "Crater Ridge"
+print(mission_location)</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">Python is case-sensitive too, which means <code>mission_day</code> and <code>Mission_Day</code> are different names. If you see NameError, check spelling first, then check whether the variable is created before you use it.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">TypeError</div>
+<div style="font-size: 15px; color: #374151;">TypeError is what happens when Python understands your instructions, but the data types you used don’t match what the instruction requires. The classic beginner version is mixing strings and numbers.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example (string + int)</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>mission_day = 3
+print("Day: " + mission_day)</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>TypeError: can only concatenate str (not "int") to str</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Fixed version (convert to string)</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>mission_day = 3
+print("Day: " + str(mission_day))</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">This is the “types matter” lesson. If Python says a string and an int can’t be combined, believe it. Convert the type explicitly.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">ValueError</div>
+<div style="font-size: 15px; color: #374151;">ValueError often appears when you try to convert input using <code>int()</code> or <code>float()</code>, but the user typed something that can’t become a number.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example (bad input for int)</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>mission_day = int(input("Enter mission day: "))</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">If the user types <code>two</code> instead of <code>2</code>, Python will crash because <code>int("two")</code> is not possible.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>ValueError: invalid literal for int() with base 10: 'two'</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">This is a great moment to remember: errors don’t always mean your code is “wrong.” Sometimes it means the input is not what your code expects.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc; margin-bottom: 16px;">
+<div style="font-size: 16px;  margin-bottom: 8px;">IndexError (lists)</div>
+<div style="font-size: 15px; color: #374151;">Once you start using lists, this one appears. IndexError means you tried to access a position that does not exist in the list.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>reports = []
+print(reports[0])</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>IndexError: list index out of range</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">An empty list has no item at position 0. The fix is not “try harder.” The fix is “check whether the list has anything in it before you access it,” or only access items you know exist.</div>
+</div>
+
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #f8fafc;">
+<div style="font-size: 16px;  margin-bottom: 8px;">ZeroDivisionError</div>
+<div style="font-size: 15px; color: #374151;">This one is simple, but it surprises beginners because it feels like “math should handle this.” Python refuses because division by zero is undefined.</div>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">Broken example</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 14px; line-height: 1.6; margin: 10px 0 0 0;"><code>total = 10
+count = 0
+average = total / count
+print(average)</code></pre>
+<div style="font-size: 14px;  margin-top: 12px; color: #111827;">What you might see</div>
+<pre style="background: #0b1220; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow: auto; font-size: 13px; line-height: 1.55; margin: 10px 0 0 0;"><code>ZeroDivisionError: division by zero</code></pre>
+<div style="font-size: 15px; color: #374151; margin-top: 10px;">The fix is to protect the calculation with an <code>if</code> statement so it only runs when the number you divide by is not zero.</div>
+</div>
+</div>
+
+<div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 16px; padding: 22px; margin-top: 20px; ">
+<div style="font-size: 18px;  margin-bottom: 12px; color: #14532d;">My debugging routine (feel free to use this for yourself)</div>
+<div style="font-size: 15px; color: #14532d; line-height: 1.7; margin-bottom: 14px;">When your code crashes, don’t start deleting random lines. Debugging works best when you follow the same routine every single time, like a checklist for your brain.</div>
+<ol style="margin: 0; padding-left: 20px; color: #14532d; font-size: 15px; line-height: 1.7;">
+<li style="margin-bottom: 10px;"><strong>Start at the bottom of the error message.</strong> The last line tells you the <strong>error type</strong> (SyntaxError, NameError, TypeError, ValueError, etc.). That name is your first clue about what kind of mistake it is.</li>
+<li style="margin-bottom: 10px;"><strong>Find the line number.</strong> The traceback shows a file name and a line number. Go straight to that line in your code. Don’t guess. Don’t rewrite the whole program.</li>
+<li style="margin-bottom: 10px;"><strong>Explain that line in plain English to yourself.</strong> What is it trying to do? Convert input? Print a value? Use a variable? Access a list item? Most bugs become obvious when you calmly describe what the line is meant to achieve.</li>
+<li style="margin-bottom: 10px;"><strong>Check the “usual suspects” for that error type.</strong>
+<div style="margin-top: 6px;">If it’s a <strong>SyntaxError</strong>, look for missing colons, brackets, or quotes that never close. <br>If it’s a <strong>NameError</strong>, check spelling and capital letters (Python is case-sensitive). <br>If it’s a <strong>TypeError</strong>, check whether you’re mixing types (string vs int/float) without converting. <br>If it’s a <strong>ValueError</strong>, check whether the input can actually be converted into the type you asked for. <br>If it’s an <strong>IndentationError</strong>, zoom out and check whether that line is meant to be inside or outside a loop/if/function.</div>
+</li>
+<li style="margin-bottom: 10px;"><strong>If indentation is involved, check the structure, not just the line.</strong> Ask: “What block is this line meant to belong to?” Moving a line left or right can change whether it runs once, runs repeatedly, or never runs at all.</li>
+<li style="margin-bottom: 10px;"><strong>Make ONE small change.</strong> Fix one thing, then run the code again. If you change five things at once, you’ll never know what actually fixed it.</li>
+<li style="margin-bottom: 0;"><strong>Run it again and re-check the message.</strong> If there’s still an error, repeat the routine. Debugging is just looping with a purpose.</li>
+</ol>
+<div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed #86efac; color: #14532d; font-size: 15px; line-height: 1.7;"><span>Now go break your code, fix it, and pretend it was all part of your plan! 😄</span><br><strong>Mr Bhattaram</strong></div>
+</div>
+</div>
+          </body>
+        </html>

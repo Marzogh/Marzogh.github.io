@@ -1,0 +1,66 @@
+---
+title: "Build the Booking System"
+description: "The main build lesson for turning the Pet Services plan into a working Python booking system."
+pubDate: 2026-02-12
+updatedDate: 2026-02-12
+draft: false
+level: "year-9"
+subject: "digital-technologies"
+order: 16
+type: "activity"
+showInIndex: false
+featured: false
+headerStyle: "plain"
+tags: ["python", "year-9", "project", "generation"]
+---
+
+import ImportedHtml from "../../../components/education/ImportedHtml.astro";
+
+This page turns the project plan into code. It moves from structured input and decisions toward a usable booking summary.
+
+## Project Navigation
+
+- [Back to Pet Services Project Hub](/education/pet-services-project)
+- [Previous: Planning and Decision Tree](/education/pet-services-project/planning-and-decision-tree)
+- [Next: Worked Solution: Booking System](/education/pet-services-project/worked-solution)
+
+## Build Sequence
+
+1. collect all required input values
+2. validate service type and key fields
+3. calculate total cost with conditional logic
+4. print a clean booking summary
+
+## Minimal Working Pattern
+
+```python
+pet_name = input("Pet name: ")
+pet_size = input("Size (small/medium/large): ").lower()
+service_type = input("Service (bath/haircut/full): ").lower()
+
+if service_type == "bath":
+    base_cost = 25
+elif service_type == "haircut":
+    base_cost = 35
+elif service_type == "full":
+    base_cost = 50
+else:
+    base_cost = None
+
+if base_cost is None:
+    print("Invalid service type. Please run again.")
+else:
+    print("=== Booking Summary ===")
+    print("Pet:", pet_name)
+    print("Size:", pet_size)
+    print("Service:", service_type)
+    print("Total cost: $", base_cost)
+```
+
+## Quality Checks
+
+- invalid service types are handled safely
+- all required details appear in output
+- cost logic is easy to trace back to your planning map
+
+<ImportedHtml source="pet-services-program-generating.html" />

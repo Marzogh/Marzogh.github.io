@@ -1,0 +1,210 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Pet Services Program - (Target Audience &amp; Decision Tree)</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.5;">
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3 style="margin-top: 0;">🧾 Assessment Criteria that you are learning to meet</h3>
+<p style="margin-top: 0; color: #444;">While this project is <strong>not assessed</strong>, it is building your skills in <strong>user-centred design</strong> and <strong>algorithmic thinking</strong>. The criteria below are the key things your work should demonstrate in Lesson 1.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px;">
+<div style="flex: 1; min-width: 280px; border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fafafa;">
+<div style="margin-bottom: 6px;">1) User needs + purpose</div>
+<div style="color: #555; font-size: 14px; margin-bottom: 10px;">You show you understand <strong>who</strong> the program is for and <strong>why</strong> they would use it.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Target audience is clear and realistic</li>
+<li>Needs/interests are specific (not vague)</li>
+<li>Features are justified using user needs</li>
+</ul>
+<div style="margin-top: 10px; padding: 10px; border-left: 4px solid #cfe8ff; background: #f5fbff; border-radius: 10px;">Activity 1 + your proto personas</div>
+</div>
+<div style="flex: 1; min-width: 280px; border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fafafa;">
+<div style="margin-bottom: 6px;">2) Design thinking + justification</div>
+<div style="color: #555; font-size: 14px; margin-bottom: 10px;">You make purposeful design choices (not random ones) and can explain them.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Extra feature improves user experience</li>
+<li>Choices are explained with a “because…”</li>
+<li>Design matches the audience (age, goals, preferences)</li>
+</ul>
+<div style="margin-top: 10px; padding: 10px; border-left: 4px solid #ffd24d; background: #fff8e1; border-radius: 10px;">“Can you defend this choice out loud?”</div>
+</div>
+<div style="flex: 1; min-width: 280px; border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fafafa;">
+<div style="margin-bottom: 6px;">3) Algorithm / logic planning</div>
+<div style="color: #555; font-size: 14px; margin-bottom: 10px;">You can plan program logic clearly before coding.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Decision tree shows a clear program flow</li>
+<li>Branches are labelled (valid vs invalid inputs)</li>
+<li>Steps connect to project requirements (inputs → decisions → output)</li>
+</ul>
+<div style="margin-top: 10px; padding: 10px; border-left: 4px solid #d8efe3; background: #f1f8f5; border-radius: 10px;">Activity 3 decision tree</div>
+</div>
+<div style="flex: 1; min-width: 280px; border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fafafa;">
+<div style="margin-bottom: 6px;">4) Communication + clarity</div>
+<div style="color: #555; font-size: 14px; margin-bottom: 10px;">Your planning is written clearly enough that someone else could follow it.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Proto personas have enough detail to feel “real”</li>
+<li>Decision tree conventions are followed correctly</li>
+<li>Your explanation is understandable (not just bullet fragments)</li>
+</ul>
+<div style="margin-top: 10px; padding: 10px; border-left: 4px solid #e1dcff; background: #f3f0ff; border-radius: 10px;"><strong>Tip:</strong> If it’s confusing now, coding will be painful later.</div>
+</div>
+</div>
+<div style="margin-top: 14px; padding: 12px; border-left: 5px solid #eee; background: #fbfbfb; border-radius: 10px;"><strong>In plain English:</strong> This project works best when you plan for a real user and make your decision tree show the logic your program will use.</div>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h2 style="margin-top: 0;">🐾 Mini Project: Pet Service Booking System</h2>
+<p>Over the next week, you will design and build a <strong>Python program</strong> that simulates a <strong>pet grooming or pet service booking system</strong>.</p>
+<p>Your program will collect information from a user, make decisions based on that information, and then display a clear booking summary at the end.</p>
+<p><strong>Lesson 1 focus:</strong> Understanding the <em>user</em> and planning your program logic before writing code.</p>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>📋 Project Requirements</h3>
+<h4>User Input</h4>
+<ul>
+<li>Pet name</li>
+<li>Pet breed</li>
+<li>Pet’s age (in human years)</li>
+<li>Another characteristic of the pet (for example: size)</li>
+<li>Type of service requested (bath, haircut, full grooming)</li>
+</ul>
+<h4>Conditional Statements</h4>
+<ul>
+<li>Use <strong>if / elif / else</strong> statements to calculate the total cost of the service based on characteristics of the pet and the selected service.</li>
+</ul>
+<h4>Program Output</h4>
+<ul>
+<li>Display a clear booking summary that includes <strong>all information entered by the user</strong> at the start of the program.</li>
+</ul>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>🎯 Learning Intentions</h3>
+<ul>
+<li>I can clearly explain my program and how it meets the user’s needs.</li>
+<li>I understand my target audience through the use of proto personas.</li>
+<li>I can design a decision tree that shows the logic of my program.</li>
+</ul>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>✅ Lesson 1 Student Checklist</h3>
+<p style="margin-top: 0;">Use this checklist to keep yourself on track. Before the end of the lesson, you should be able to tick off every item.</p>
+<div style="border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fafafa;">
+<p>☐ I can explain who the <strong>target audience</strong> is for my pet booking program.</p>
+<p>☐ I have listed what my target audience might care about (needs, interests, what makes the program easy to use).</p>
+<p>☐ I have suggested at least one <strong>extra feature</strong> that would improve the user experience.</p>
+<p>☐ I have created <strong>two proto personas</strong> with enough detail to show why they would use this program.</p>
+<p>☐ My proto personas include realistic details (age, goals, preferences, what they want from the program).</p>
+<p>☐ I have started (or completed) a <strong>decision tree</strong> that shows the program flow.</p>
+<p>☐ My decision tree uses the correct conventions:</p>
+<ul style="margin: 0; padding-left: 20px;">
+<li style="list-style-type: none;">
+<ul style="margin-top: 8px;">
+<li>☐ Diamonds for user input</li>
+<li>☐ Rectangles for computer output</li>
+<li>☐ Colours for valid vs invalid inputs</li>
+<li>☐ Directional arrows labelled with user inputs and/or stored variables</li>
+<li>☐ I have replied to this discussion with my <strong>two proto personas</strong>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div style="margin-top: 14px; padding: 12px; border-left: 5px solid #ffd24d; background: #fff8e1; border-radius: 10px;"><strong>Quick self-check:</strong> If you can’t explain your decision tree out loud, your code will be messy later. Fix the plan now, and coding becomes way easier.</div>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>🧠 Activity 1: Target Audience Brainstorm (<span style="text-decoration: underline;">Group Activity</span>)</h3>
+<p>Before writing any code, we need to think about <strong>who this program is for</strong>. Work in small groups of <strong>no more than 4 students</strong>.</p>
+<p><strong>Group Brainstorm</strong></p>
+<ul>
+<li>Who is the target audience for this program?</li>
+<li>What might they care about or find important?</li>
+<li>What functionality would they expect from a pet service booking system?</li>
+<li>What extra features might make the program easier or nicer to use?</li>
+</ul>
+<p style="margin-top: 12px;"><strong>Assessment focus:</strong> Purposeful evaluation of user experience that justifies program features based on the target audience.</p>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>👤 Activity 2: Proto Personas (<span style="text-decoration: underline;">Individual activity</span>)</h3>
+<p>A <strong>proto persona</strong> is a fictional user that represents a real type of person who might use your program.</p>
+<p><strong>Example:</strong></p>
+<p style="background: #f7f7f7; padding: 12px; border-radius: 10px;">Student Persona A is a 13-year-old student who enjoys problem-solving games. They own a medium-sized dog and want a simple text-based program that lets them quickly book grooming services without confusion.</p>
+<p><strong>Why do we create proto personas?</strong></p>
+<ul>
+<li>To understand user needs before coding</li>
+<li>To guide design and feature decisions</li>
+<li>To avoid building programs that only make sense to the programmer</li>
+</ul>
+<p><strong>Your task:</strong></p>
+<ul>
+<li>Create <strong>two proto personas</strong> for your pet booking service</li>
+<li>Include enough detail to explain why each person would use the program</li>
+</ul>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>🌳 Activity 3: Decision Tree Design (<span style="text-decoration: underline;">Individual activity</span>)</h3>
+<p>A <strong>decision tree</strong> shows how your program will behave based on different user inputs. This helps you plan your logic before writing Python code.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="assets/Uploaded%20Media%202/Decision%20Tree%20example.png" alt="Example decision tree" width="601" height="601" loading="lazy"></p>
+<p>Decision trees use specific conventions:</p>
+<ul>
+<li><strong>Diamonds</strong> for questions requiring user input</li>
+<li><strong>Rectangles</strong> for computer output (no input required)</li>
+<li><strong>Colours</strong> to separate valid and invalid inputs</li>
+<li><strong>Directional arrows</strong> with labels showing user input or stored variables</li>
+</ul>
+<p><strong>Your task:</strong></p>
+<ul>
+<li>Create a decision tree for your Pet Service Booking System</li>
+<li>Show how different user choices change the program’s behaviour</li>
+<li>Follow all decision tree conventions accurately</li>
+</ul>
+<p style="margin-top: 12px;"><strong>Assessment focus:</strong> Purposeful design of algorithms. The decision tree should clearly show the program flow.</p>
+</div>
+<div style="border: 1px solid #ddd; border-radius: 14px; padding: 20px; margin-bottom: 24px; background: #ffffff;">
+<h3>💬 Discussion Submission</h3>
+<p>Reply to this discussion with:</p>
+<ul>
+<li>Your <strong>two proto personas</strong></li>
+</ul>
+</div>
+</div>
+          </body>
+        </html>

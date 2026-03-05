@@ -1,0 +1,187 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Chapter 03</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width:1040px;margin:0 auto;padding:20px 16px;font-family:Arial,Helvetica,sans-serif;line-height:1.65;color:#1f2937;">
+
+
+  <div style="background:linear-gradient(135deg,#16a34a,#4ade80);border:1px solid #e5e7eb;border-radius:18px;padding:22px;margin-bottom:18px;color:#ffffff;">
+    <div style="font-size:26px;margin-bottom:6px;">Chapter 3 — Remembering what matters</div>
+    <div style="font-size:15px;">
+      EXPLORER · v2 · stopping the copy-paste problem
+    </div>
+  </div>
+
+
+  <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;margin-bottom:18px;">
+    <div style="font-size:18px;margin-bottom:8px;">Where things start to get annoying</div>
+    <div style="font-size:15px;color:#374151;">
+      Your console can now speak clearly. That’s good.
+      <br><br>
+      But there’s a problem hiding in plain sight.
+      <br><br>
+      Right now, all the important details about the mission are baked directly into the <code>print()</code> lines.
+      <br><br>
+      If you wanted to change the mission location, or the system status, you’d have to hunt through the program and edit multiple lines.
+      <br><br>
+      That works for a tiny program. It stops working very quickly.
+    </div>
+  </div>
+
+
+  <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;margin-bottom:18px;">
+    <div style="font-size:18px;margin-bottom:10px;">A simple fix</div>
+
+    <div style="font-size:15px;color:#374151;">
+      Instead of repeating the same information all over the program, we’re going to put it in one place.
+      <br><br>
+      We’ll give each important detail a name, store it once, and then use that name wherever we need the information.
+      <br><br>
+      That way:
+      <br><br>
+      when something changes, you change it once — and the whole console updates.
+    </div>
+  </div>
+
+
+  <div style="background:#ecfeff;border:1px solid #a5f3fc;border-radius:16px;padding:22px;margin-bottom:18px;">
+    <div style="font-size:18px;margin-bottom:10px;color:#0c4a6e;">This is called using variables</div>
+
+    <div style="font-size:15px;color:#0c4a6e;">
+      A variable is just a labelled place where Python stores information for you.
+      <br><br>
+      Once something has a label, you can reuse it anywhere in the program without rewriting it.
+      <br><br>
+      You don’t need to memorise anything fancy here. You’ll understand variables by using them.
+    </div>
+  </div>
+
+
+  <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;margin-bottom:18px;">
+    <div style="font-size:18px;margin-bottom:10px;">EXPLORER v2 (run this)</div>
+
+    <div style="font-size:15px;color:#374151;margin-bottom:14px;">
+      This version of the console now knows details about the mission and the system.
+      <br><br>
+      All the important information lives at the top. The rest of the program just uses it.
+      <br><br>
+      Read the comments as you go — they explain why each section exists.
+    </div>
+
+    <pre style="background:#0b1220;color:#e5e7eb;padding:16px;border-radius:12px;overflow:auto;font-size:14px;line-height:1.55;margin:0;"><code>"""
+EXPLORER v2 — Chapter 3
+
+This version stores important mission and system details once,
+then uses them throughout the console output.
+"""
+
+# =========================
+# MISSION DETAILS
+# =========================
+# These describe what the mission is and where it is happening.
+
+mission_location = "Scrubby Creek"
+mission_day = 1
+lead_researcher = "Student Researcher"
+
+# =========================
+# SYSTEM STATE
+# =========================
+# These describe the current state of the console.
+
+system_status = "Online"
+readiness_message = "Ready to receive mission data"
+
+# =========================
+# CONSOLE OUTPUT
+# =========================
+# The console uses the stored information to build its output.
+
+print("=" * 44)
+print("              EXPLORER CONSOLE              ")
+print("=" * 44)
+
+print(f"Location: {mission_location}")
+print(f"Day: {mission_day}")
+print(f"Lead researcher: {lead_researcher}")
+print()
+
+print("System status:")
+print(f"- {system_status}")
+print(f"- {readiness_message}")
+
+print("=" * 44)
+</code></pre>
+  </div>
+
+
+  <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;margin-bottom:18px;">
+    <div style="font-size:18px;margin-bottom:10px;">Try changing just one thing</div>
+
+    <div style="font-size:15px;color:#374151;">
+      Change the mission location, the day number, or the researcher’s name at the top of the program.
+      <br><br>
+      Run the program again.
+      <br><br>
+      Notice how the output updates everywhere without touching the <code>print()</code> lines.
+      <br><br>
+      That’s the moment variables earn their keep.
+    </div>
+  </div>
+
+
+  <div style="background:#fefce8;border:1px solid #fde68a;border-radius:16px;padding:22px;">
+    <div style="font-size:18px;margin-bottom:10px;color:#713f12;">Next time</div>
+
+    <div style="font-size:15px;color:#713f12;">
+      Right now, everything you store is text or a whole number.
+      <br><br>
+      In the next chapter, we’ll slow down and look at different kinds of information — and why Python cares about the difference.
+    </div>
+  </div>
+
+</div>
+          </body>
+        </html>

@@ -1,0 +1,54 @@
+---
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { EDUCATION_LEGACY_PAGE_ROUTE_MAP } from '../../utils/educationLegacy';
+
+interface Props {
+  source: string;
+}
+
+const { source } = Astro.props;
+
+const SOURCE_DIR = resolve(process.cwd(), 'scripts/year9-python-source');
+const ASSET_PREFIX = '/education/student-resources/digital-technologies-yr9-2026/assets/';
+
+const sourceToRoute: Record<string, string> = Object.fromEntries(
+  Object.entries(EDUCATION_LEGACY_PAGE_ROUTE_MAP).map(([legacy, target]) => [`${legacy}.html`, target])
+);
+
+function extractBody(text: string) {
+  const match = text.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  return match ? match[1].trim() : text.trim();
+}
+
+function rewriteBody(body: string) {
+  let output = body;
+  output = output.replace(/\sdata-course-type="[^"]*"/g, '');
+  output = output.replace(/\sdata-published="[^"]*"/g, '');
+  output = output.replace(/\sclass="\s*"/g, '');
+  output = output.replace(/(href|src)="assets\/([^"]+)"/g, (_match, attr, path) => `${attr}="${ASSET_PREFIX}${path}"`);
+
+  for (const [filename, route] of Object.entries(sourceToRoute).sort((a, b) => b[0].length - a[0].length)) {
+    output = output.replaceAll(`href="${filename}"`, `href="${route}"`);
+  }
+
+  output = output.replace(/href="https:\/\/thonny\.org\/"/g, 'href="https://thonny.org/" rel="noopener noreferrer"');
+  return output;
+}
+
+const html = rewriteBody(extractBody(readFileSync(resolve(SOURCE_DIR, source), 'utf-8')));
+---
+
+<div class="imported-html" set:html={html} />
+
+<style>
+  .imported-html :global(img),
+  .imported-html :global(video),
+  .imported-html :global(iframe) {
+    max-width: 100%;
+  }
+
+  .imported-html :global(pre) {
+    overflow-x: auto;
+  }
+</style>

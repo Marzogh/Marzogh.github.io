@@ -15,6 +15,7 @@ if (!slug) {
 }
 
 const target = `/notebook/${slug}`;
+const redirectScript = `window.location.replace(${JSON.stringify(target)});`;
 ---
 
 <!doctype html>
@@ -27,8 +28,6 @@ const target = `/notebook/${slug}`;
   </head>
   <body>
     <p>Redirecting to <a href={target}>{target}</a>.</p>
-    <script is:inline>
-      window.location.replace({JSON.stringify(target)});
-    </script>
+    <script is:inline set:html={redirectScript} />
   </body>
 </html>

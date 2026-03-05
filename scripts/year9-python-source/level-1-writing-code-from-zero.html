@@ -1,0 +1,180 @@
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Level 1 - Writing code from zero</title>
+            <style>
+              :root {
+                color-scheme: light;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              html {
+                scroll-behavior: smooth;
+              }
+
+              body {
+                margin: 0;
+                padding: 24px 16px 56px;
+                font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+                background:
+                  radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 28%),
+                  linear-gradient(180deg, #f8fafc 0%, #eef6f1 100%);
+                color: #111827;
+              }
+
+              img,
+              video,
+              iframe {
+                max-width: 100%;
+              }
+
+              a {
+                color: #0f5ca8;
+              }
+
+              code,
+              pre {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+              }
+            </style>
+          </head>
+          <body>
+        <div style="max-width: 1040px; margin: 0 auto; padding: 12px 0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color: #222; line-height: 1.55;">
+<div style="border: 1px solid #d0d7de; border-radius: 18px; overflow: hidden; background: linear-gradient(135deg,#0b1220,#122a4a);  margin-bottom: 16px;">
+<div style="padding: 22px 24px; display: flex; align-items: center; gap: 16px;">
+<div style="width: 64px; height: 64px; border-radius: 14px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 32px; color: #fff;">🎮</div>
+<div>
+<div style="font-size: 1.7rem;  color: #eaf0ff;">Arcade Hub Level 1</div>
+<div style="color: #b8c4e6; margin-top: 6px;">Lesson 1: Writing code from zero</div>
+</div>
+</div>
+</div>
+
+<div style="border: 1px solid #d0d7de; border-radius: 14px; padding: 14px 16px; background: #fff; "><strong>Today you will:</strong>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Write Python code yourself (no copy–paste solutions)</li>
+<li>Make the computer ask questions and respond</li>
+<li>Create your first menu-based program</li>
+</ul>
+</div>
+<details style="border: 1px solid #d0d7de; border-radius: 14px; background: #fff; margin-bottom: 14px;">
+<summary style="cursor: pointer; padding: 12px 14px; ">Step 0 — Setup (5 minutes)</summary>
+<div style="padding: 0 14px 14px;">
+<ol style="padding-left: 18px;">
+<li>Download the '<em>Level 1 - Template.py</em>' file attached to this post.</li>
+<li>Open <strong>Thonny</strong></li>
+<li><span style="font-size: 1rem;">Open the </span><em style="font-size: 1rem;">Level 1 - Template.py</em><span style="font-size: 1rem;"> file you just downloaded</span></li>
+<li><span style="font-size: 1rem;">Save it as </span><strong style="font-size: 1rem;">arcade_hub_L1_your_name.py</strong></li>
+</ol>
+<div style="margin-top: 8px; background: #eef6ff; border-left: 6px solid #1a73e8; padding: 10px; border-radius: 10px;">You are starting with a <strong>blank file</strong>. Learning to code requires you to type it all in as much as you can.</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 14px; background: #fff; margin-bottom: 14px;">
+<summary style="cursor: pointer; padding: 12px 14px; ">Step 1 — Output: make Python talk (10 minutes)</summary>
+<div style="padding: 0 14px 14px;">
+<p>Your first goal is to print a welcome message.</p>
+<div style="background: #f6f8fa; border: 1px solid #d0d7de; padding: 10px; border-radius: 10px;"><strong>Your task:</strong><br>Write Python code that prints:<br><em>WELCOME TO ARCADE HUB</em></div>
+<div style="margin-top: 10px; background: #effaf3; border-left: 6px solid #1aa85b; padding: 10px; border-radius: 10px;">✅ <strong>Checkpoint:</strong> When you click Run, text appears in the Shell.</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 14px; background: #fff; margin-bottom: 14px;">
+<summary style="cursor: pointer; padding: 12px 14px; ">Step 2 — Input: ask the user something (10 minutes)</summary>
+<div style="padding: 0 14px 14px;">
+<p>Now make the program ask for the player’s name.</p>
+<div style="background: #f6f8fa; border: 1px solid #d0d7de; padding: 10px; border-radius: 10px;"><strong>Your task:</strong>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Ask the user for their name</li>
+<li>Store it in a variable</li>
+<li>Print a greeting using that name</li>
+</ul>
+</div>
+<div style="margin-top: 10px; background: #fff4db; border-left: 6px solid #b86b00; padding: 10px; border-radius: 10px;">Hint: You will need <code>input()</code> and a variable.</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 14px; background: #fff; margin-bottom: 14px;">
+<summary style="cursor: pointer; padding: 12px 14px; ">Step 3 — Decisions: your first menu (15 minutes)</summary>
+<div style="padding: 0 14px 14px;">
+<p>Your program should now show a menu.</p>
+<div style="background: #f6f8fa; border: 1px solid #d0d7de; padding: 10px; border-radius: 10px;"><strong>Menu requirements:</strong><br>1) Show player badge<br>Q) Quit</div>
+<p style="margin-top: 10px;">Ask the user to choose an option, then:</p>
+<ul style="padding-left: 18px;">
+<li>If they choose <strong>1</strong>, print their name</li>
+<li>If they choose <strong>Q</strong>, print goodbye</li>
+</ul>
+<div style="margin-top: 10px; background: #eef6ff; border-left: 6px solid #1a73e8; padding: 10px; border-radius: 10px;">You will need <strong>if</strong> and <strong>elif</strong>.</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 14px; background: #fff;">
+<summary style="cursor: pointer; padding: 12px 14px; ">Step 4 — Loop: make it repeat (15 minutes)</summary>
+<div style="padding: 0 14px 14px;">
+<p>Right now, your program probably runs once and stops.</p>
+<div style="background: #f6f8fa; border: 1px solid #d0d7de; padding: 10px; border-radius: 10px;"><strong>Your task:</strong>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Put your menu inside a loop</li>
+<li>Only quit when the user chooses Q</li>
+</ul>
+</div>
+<div style="margin-top: 10px; background: #effaf3; border-left: 6px solid #1aa85b; padding: 10px; border-radius: 10px;">✅ <strong>Success:</strong> The menu keeps coming back.</div>
+</div>
+</details></div>
+
+<div style="max-width: 1040px; margin: 0 auto; padding: 12px 0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color: #222; line-height: 1.55;">
+<div style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; padding: 16px;  margin-bottom: 14px;">
+<div style=" font-size: 1.2rem;">💬 Discussion: Arcade Hub v1 — Share + Learn</div>
+<p style="margin: 10px 0 0;">Post your <strong>tested, working code</strong> for Arcade Hub v1 below for peer feedback. Remember, code is never perfect. Coding is all about learning through building, testing, and improving.</p>
+<div style="margin-top: 12px; border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px;"><strong>Your post must include:</strong>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Your full code (use the template attached and copy/paste from Thonny)</li>
+<li>The “Student Submission Box” section at the top of the template filled in</li>
+<li>A short title: <strong>Arcade Hub v1 - [Your Name]</strong></li>
+</ul>
+</div>
+</div>
+
+<div style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; padding: 16px;  margin-bottom: 14px;">
+<div style=" font-size: 1.15rem;">🧑‍🤝‍🧑 Reply to one classmate (required)</div>
+<p style="margin: 10px 0 0;">Choose <strong>one </strong>classmate's posts and reply using this structure:</p>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>Reply Template (copy/paste)</div>
+<div style="margin-top: 8px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; white-space: pre-wrap;">1) ✅ Something that works well: - …</div>
+<div style="margin-top: 8px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; white-space: pre-wrap;">2) 🔍 One thing I tested: - I chose option ___ and I saw ___</div>
+<div style="margin-top: 8px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; white-space: pre-wrap;">3) 🛠️ One improvement suggestion: - You could improve by …</div>
+<div style="margin-top: 8px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; white-space: pre-wrap;">4) ⭐ A question (optional, but encouraged): - What would happen if … ?</div>
+</div>
+<div style="margin-top: 12px; border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px;"><strong>Rules:</strong>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Do not paste “fixed” versions of someone else’s code</li>
+<li>Do not roast people - we’re here to build skills</li>
+<li>If you found a bug, explain it clearly and kindly</li>
+</ul>
+</div>
+<div style="margin-top: 12px; border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px;"><strong>What good peer feedback looks like:</strong><br>Be specific. Be kind. Be useful.<br>Example sentence starters:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>“I like how you…”</li>
+<li>“One thing that works really well is…”</li>
+<li>“A small improvement you could try is…”</li>
+<li>“I tested your code by doing ___ and it…”</li>
+</ul>
+</div>
+</div>
+
+<div style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; padding: 16px; ">
+<div style=" font-size: 1.15rem;">✅ Peer checklist (use this when replying)</div>
+<p style="margin: 10px 0 0;">When you reply to a classmate, quickly check these items. You can copy the checklist into your reply and tick what you see.</p>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Arcade Hub v1 Checklist</div>
+<ul style="margin: 10px 0 0; padding-left: 18px;">
+<li>⬜ The program prints a welcome message</li>
+<li>⬜ The program asks for the user’s name and stores it in a variable</li>
+<li>⬜ The program prints a greeting that uses the name</li>
+<li>⬜ A menu is displayed with at least: <strong>1) Player badge</strong> and <strong>Q) Quit</strong></li>
+<li>⬜ Choosing <strong>1</strong> prints the player badge (their name)</li>
+<li>⬜ Choosing <strong>Q</strong> quits the program (loop ends)</li>
+<li>⬜ Invalid choices show</li>
+</ul>
+</div>
+</div>
+</div>
+          </body>
+        </html>
