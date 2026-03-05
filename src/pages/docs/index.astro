@@ -26,9 +26,15 @@ function toDateValue(doc: (typeof docs)[number]) {
   return candidate instanceof Date ? candidate.valueOf() : 0;
 }
 
+function formatDateStamp(value: number) {
+  if (!value) return 'n/a';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
 const docsByFresh = [...docs].sort((a, b) => toDateValue(b) - toDateValue(a));
 const startHere = docs.slice(0, 3);
 const latestDocs = docsByFresh.slice(0, 4);
+const latestDocUpdated = docsByFresh[0] ? toDateValue(docsByFresh[0]) : 0;
 
 const sectionBuckets = docs.reduce<
   Array<{
@@ -248,7 +254,9 @@ const cliManual = {
               statsLines={[
                 { label: 'published_docs', value: docs.length },
                 { label: 'sections', value: sectionBuckets.length },
+                { label: 'tags_in_use', value: tagCounts.size },
                 { label: 'featured_docs', value: docs.filter((doc) => doc.data.featured).length },
+                { label: 'last_updated', value: formatDateStamp(latestDocUpdated) },
               ]}
               presets={['ls', 'cd "Platform Guides"', 'grep setup', 'tag tutorial', 'man ls']}
             />

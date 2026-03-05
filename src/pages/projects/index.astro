@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import CliShell from '../../components/CliShell.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
@@ -25,6 +26,16 @@ function labelFor(project: (typeof projects)[number]) {
   return project.data.type ?? 'Project';
 }
 
+function projectDateValue(project: (typeof projects)[number]) {
+  const candidate = project.data.updatedDate ?? project.data.pubDate ?? null;
+  return candidate instanceof Date ? candidate.valueOf() : 0;
+}
+
+function formatDateStamp(value: number) {
+  if (!value) return 'n/a';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
 const uniqueTags = [...new Set(projects.flatMap((project) => project.data.tags ?? []))];
 const radioTags = uniqueTags
   .filter((tag) => getTagMeta(tag).family === 'radio')
@@ -32,6 +43,36 @@ const radioTags = uniqueTags
     slug: toTagSlug(tag),
     label: getTagMeta(tag).label,
   }));
+
+const cliEntries = projects.map((project) => ({
+  id: project.id,
+  title: project.data.title,
+  url: `/projects/${project.id}`,
+  section: labelFor(project),
+  description: project.data.description ?? '',
+  tags: project.data.tags ?? [],
+  updated: projectDateValue(project),
+  featured: Boolean(project.data.featured),
+}));
+
+const projectSections = [...new Set(cliEntries.map((entry) => entry.section))];
+const latestProjectUpdated = cliEntries.length ? Math.max(...cliEntries.map((entry) => entry.updated)) : 0;
+
+const cliManual = {
+  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level stats for Projects.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
+  help: { name: 'help', synopsis: 'help [command]', description: 'List commands or command help.', examples: ['help', 'help grep'], seeAlso: ['man', 'ls', 'grep'] },
+  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List project sections or entries in one section.', examples: ['ls', 'ls Project'], seeAlso: ['cd', 'pwd', 'grep'] },
+  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd Project', 'cd /'], seeAlso: ['pwd', 'ls'] },
+  pwd: { name: 'pwd', synopsis: 'pwd', description: 'Print current virtual path.', examples: ['pwd'], seeAlso: ['cd', 'ls'] },
+  cat: { name: 'cat', synopsis: 'cat <project-id|title>', description: 'Show summary for a project entry.', examples: ['cat kite-lifted-endfed-activation'], seeAlso: ['open', 'man', 'grep'] },
+  open: { name: 'open', synopsis: 'open <project-id|title>', description: 'Open a project page.', examples: ['open kite-lifted-endfed-activation'], seeAlso: ['cat', 'man'] },
+  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search title, description, section, and tags.', examples: ['grep antenna', 'grep pota'], seeAlso: ['find', 'tag', 'ls'] },
+  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find radio'], seeAlso: ['grep', 'tag'] },
+  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List entries by tag match.', examples: ['tag amateur-radio', 'tag portable'], seeAlso: ['grep', 'ls'] },
+  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open manual pages for commands or project entries.', examples: ['man', 'man ls', 'man kite'], seeAlso: ['help', 'cat', 'open'] },
+  history: { name: 'history', synopsis: 'history', description: 'Show shell command history.', examples: ['history'], seeAlso: ['clear'] },
+  clear: { name: 'clear', synopsis: 'clear', description: 'Clear shell output.', examples: ['clear'], seeAlso: ['history'] },
+};
 ---
 
 <!doctype html>
@@ -47,19 +88,32 @@ const radioTags = uniqueTags
 
     <main class="projects-index">
       <section class="projects-shell">
-        <div class="projects-main">
+        <div class="projects-hero">
+          <div class="projects-main">
           <IndexHeader
             eyebrow="Workshop"
             title="Projects"
             lede="Real builds, field tests, antenna experiments, firmware detours, and the occasional bit of engineering that behaved properly first time."
-            terminalTitle="projects.index"
-            statusLines={[
-              { label: 'published_projects', value: projects.length },
-              { label: 'tags_in_use', value: uniqueTags.length },
-              { label: 'radio_builds', value: projects.filter((project) => project.data.type === 'radio' || project.data.tags?.includes('amateur-radio')).length },
-            ]}
           />
+          </div>
+          <CliShell
+            shellId="projects-cli"
+            shellTitle="projects.query"
+            initialCommand="stat"
+            entries={cliEntries}
+            commandManual={cliManual}
+            statsLines={[
+              { label: 'published_projects', value: projects.length },
+              { label: 'sections', value: projectSections.length },
+              { label: 'tags_in_use', value: uniqueTags.length },
+              { label: 'featured_projects', value: projects.filter((project) => project.data.featured).length },
+              { label: 'last_updated', value: formatDateStamp(latestProjectUpdated) },
+            ]}
+            presets={['ls', 'grep radio', 'tag portable', 'man ls', 'open kite']}
+          />
+        </div>
 
+        <div class="projects-main">
           {radioTags.length ? (
             <details class="radio-drawer panel panel--soft">
               <summary class="radio-drawer__summary">
@@ -228,6 +282,13 @@ const radioTags = uniqueTags
     gap: var(--space-6);
     align-content:start;
     min-width: 0;
+  }
+
+  .projects-hero{
+    display:grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    gap: var(--space-5);
+    align-items:start;
   }
 
   .page-header{
@@ -688,6 +749,12 @@ const radioTags = uniqueTags
     .featured-desc,
     .radio-drawer__lede{
       max-width: none;
+    }
+  }
+
+  @media (max-width: 1080px){
+    .projects-hero{
+      grid-template-columns: 1fr;
     }
   }
 </style>

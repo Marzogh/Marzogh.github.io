@@ -257,7 +257,7 @@ const payload = {
           <p class="man-line">man [command|topic]</p>
           <h3 class="man-heading">COMMAND MANUALS</h3>
           <ul class="man-list">${cmdRows}</ul>
-          <h3 class="man-heading">DOC TOPICS</h3>
+          <h3 class="man-heading">TOPICS</h3>
           <ul class="man-list">${docRows}</ul>
         </article>
       `;
@@ -496,8 +496,9 @@ const payload = {
     presetButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const cmd = button.getAttribute('data-shell-cmd') || '';
-        run(cmd);
-        inputEl.value = '';
+        inputEl.value = cmd;
+        inputEl.focus();
+        inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length);
       });
     });
 

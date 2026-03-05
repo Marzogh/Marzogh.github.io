@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import CliShell from '../../components/CliShell.astro';
 import { toTagSlug } from '../../utils/tags';
 
 const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a, b) => {
@@ -43,6 +44,46 @@ function getToolIdentity(tool: (typeof tools)[number]) {
 
   return { symbol: '◦', label: 'Utility' };
 }
+
+function toolDateValue(tool: (typeof tools)[number]) {
+  const candidate = tool.data.updatedDate ?? tool.data.pubDate ?? null;
+  return candidate instanceof Date ? candidate.valueOf() : 0;
+}
+
+function formatDateStamp(value: number) {
+  if (!value) return 'n/a';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+const cliEntries = tools.map((tool) => ({
+  id: tool.id,
+  title: tool.data.title,
+  url: `/tools/${tool.id}`,
+  section: getToolIdentity(tool).label,
+  description: tool.data.description ?? '',
+  tags: tool.data.tags ?? [],
+  updated: toolDateValue(tool),
+  featured: tool.id === leadTool?.id,
+}));
+
+const toolSections = [...new Set(cliEntries.map((entry) => entry.section))];
+const latestToolUpdated = cliEntries.length ? Math.max(...cliEntries.map((entry) => entry.updated)) : 0;
+
+const cliManual = {
+  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level stats for Tools.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
+  help: { name: 'help', synopsis: 'help [command]', description: 'List commands or command help.', examples: ['help', 'help ls'], seeAlso: ['man', 'ls', 'grep'] },
+  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List tool sections or entries in one section.', examples: ['ls', 'ls "Mapping utility"'], seeAlso: ['cd', 'pwd', 'grep'] },
+  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd "Log utility"', 'cd /'], seeAlso: ['pwd', 'ls'] },
+  pwd: { name: 'pwd', synopsis: 'pwd', description: 'Print current virtual path.', examples: ['pwd'], seeAlso: ['cd', 'ls'] },
+  cat: { name: 'cat', synopsis: 'cat <tool-id|title>', description: 'Show summary for a tool entry.', examples: ['cat adif-log-analyser'], seeAlso: ['open', 'man', 'grep'] },
+  open: { name: 'open', synopsis: 'open <tool-id|title>', description: 'Open a tool page.', examples: ['open rgb565-colour-reference'], seeAlso: ['cat', 'man'] },
+  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search title, description, section, and tags.', examples: ['grep map', 'grep colour'], seeAlso: ['find', 'tag', 'ls'] },
+  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find adif'], seeAlso: ['grep', 'tag'] },
+  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List entries by tag match.', examples: ['tag mapping', 'tag reference'], seeAlso: ['grep', 'ls'] },
+  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open manual pages for commands or tool entries.', examples: ['man', 'man ls', 'man adif'], seeAlso: ['help', 'cat', 'open'] },
+  history: { name: 'history', synopsis: 'history', description: 'Show shell command history.', examples: ['history'], seeAlso: ['clear'] },
+  clear: { name: 'clear', synopsis: 'clear', description: 'Clear shell output.', examples: ['clear'], seeAlso: ['history'] },
+};
 ---
 
 <!doctype html>
@@ -56,17 +97,30 @@ function getToolIdentity(tool: (typeof tools)[number]) {
   <body>
     <Header />
     <main class="tools-index">
-      <IndexHeader
-        eyebrow="Tools"
-        title="Tools"
-        lede="Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread."
-        terminalTitle="tools.index"
-        statusLines={[
-          { label: 'published_tools', value: tools.length },
-          { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
-          { label: 'tags_in_use', value: toolTags.length },
-        ]}
-      />
+      <section class="tools-hero">
+        <div>
+          <IndexHeader
+            eyebrow="Tools"
+            title="Tools"
+            lede="Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread."
+          />
+        </div>
+        <CliShell
+          shellId="tools-cli"
+          shellTitle="tools.query"
+          initialCommand="stat"
+          entries={cliEntries}
+          commandManual={cliManual}
+          statsLines={[
+            { label: 'published_tools', value: tools.length },
+            { label: 'sections', value: toolSections.length },
+            { label: 'tags_in_use', value: toolTags.length },
+            { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
+            { label: 'last_updated', value: formatDateStamp(latestToolUpdated) },
+          ]}
+          presets={['ls', 'grep map', 'tag adif', 'man ls', 'open rgb565']}
+        />
+      </section>
 
       {tools.length === 0 ? (
         <div class="panel panel--soft empty">
@@ -165,6 +219,14 @@ function getToolIdentity(tool: (typeof tools)[number]) {
 <style>
   .tools-index {
     max-width: min(1320px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .tools-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    gap: var(--space-5);
+    align-items: start;
+    margin-bottom: var(--space-6);
   }
 
   .empty {
@@ -420,6 +482,10 @@ function getToolIdentity(tool: (typeof tools)[number]) {
   }
 
   @media (max-width: 980px) {
+    .tools-hero {
+      grid-template-columns: 1fr;
+    }
+
     .tool-featureBand__grid {
       grid-template-columns: 1fr;
     }

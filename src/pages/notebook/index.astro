@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import CliShell from '../../components/CliShell.astro';
 import { toTagSlug } from '../../utils/tags';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => {
@@ -33,6 +34,53 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
   if (kind === 'support') return '(max-width: 920px) 100vw, (max-width: 1240px) 42vw, 520px';
   return '(max-width: 720px) 100vw, (max-width: 1120px) 42vw, 360px';
 }
+
+function postDateValue(post: (typeof posts)[number]) {
+  const candidate = post.data.updatedDate ?? post.data.pubDate ?? null;
+  return candidate instanceof Date ? candidate.valueOf() : 0;
+}
+
+function formatDateStamp(value: number) {
+  if (!value) return 'n/a';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+function postSection(post: (typeof posts)[number]) {
+  if (post.data.featured) return 'Featured';
+  const firstTag = post.data.tags?.[0];
+  return firstTag ? `Tag: ${firstTag}` : 'Notebook';
+}
+
+const cliEntries = posts.map((post) => ({
+  id: post.id,
+  title: post.data.title,
+  url: `/notebook/${post.id}`,
+  section: postSection(post),
+  description: post.data.description ?? '',
+  tags: post.data.tags ?? [],
+  updated: postDateValue(post),
+  featured: Boolean(post.data.featured),
+}));
+
+const notebookSections = [...new Set(cliEntries.map((entry) => entry.section))];
+const notebookTags = [...new Set(posts.flatMap((post) => post.data.tags ?? []))];
+const latestPostUpdated = cliEntries.length ? Math.max(...cliEntries.map((entry) => entry.updated)) : 0;
+
+const cliManual = {
+  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level stats for Notebook.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
+  help: { name: 'help', synopsis: 'help [command]', description: 'List commands or command help.', examples: ['help', 'help ls'], seeAlso: ['man', 'ls', 'grep'] },
+  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List notebook sections or entries in one section.', examples: ['ls', 'ls Featured'], seeAlso: ['cd', 'pwd', 'grep'] },
+  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd Featured', 'cd /'], seeAlso: ['pwd', 'ls'] },
+  pwd: { name: 'pwd', synopsis: 'pwd', description: 'Print current virtual path.', examples: ['pwd'], seeAlso: ['cd', 'ls'] },
+  cat: { name: 'cat', synopsis: 'cat <post-id|title>', description: 'Show summary for a notebook entry.', examples: ['cat configuring-github-pages-custom-domain-with-squarespace'], seeAlso: ['open', 'man', 'grep'] },
+  open: { name: 'open', synopsis: 'open <post-id|title>', description: 'Open a notebook entry.', examples: ['open charlieplexing-6-leds-on-an-attiny85'], seeAlso: ['cat', 'man'] },
+  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search title, description, section, and tags.', examples: ['grep github', 'grep radio'], seeAlso: ['find', 'tag', 'ls'] },
+  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find design'], seeAlso: ['grep', 'tag'] },
+  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List entries by tag match.', examples: ['tag github-pages', 'tag electronics'], seeAlso: ['grep', 'ls'] },
+  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open manual pages for commands or notebook entries.', examples: ['man', 'man ls', 'man github'], seeAlso: ['help', 'cat', 'open'] },
+  history: { name: 'history', synopsis: 'history', description: 'Show shell command history.', examples: ['history'], seeAlso: ['clear'] },
+  clear: { name: 'clear', synopsis: 'clear', description: 'Clear shell output.', examples: ['clear'], seeAlso: ['history'] },
+};
 ---
 
 <!doctype html>
@@ -44,17 +92,30 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
     <Header />
 
     <main class="blog-index">
-      <IndexHeader
-        eyebrow="Notebook"
-        title="Notebook"
-        lede="Essays, field notes, technical write-ups, poetry, reflections, hobby rabbit holes, and the occasional deep dive into something that refused to behave."
-        terminalTitle="notebook.index"
-        statusLines={[
-          { label: 'published_posts', value: posts.length },
-          { label: 'featured_posts', value: totalFeatured },
-          { label: 'top_slots_used', value: `${Math.min(posts.length, 3)}/3` },
-        ]}
-      />
+      <section class="notebook-hero">
+        <div>
+          <IndexHeader
+            eyebrow="Notebook"
+            title="Notebook"
+            lede="Essays, field notes, technical write-ups, poetry, reflections, hobby rabbit holes, and the occasional deep dive into something that refused to behave."
+          />
+        </div>
+        <CliShell
+          shellId="notebook-cli"
+          shellTitle="notebook.query"
+          initialCommand="stat"
+          entries={cliEntries}
+          commandManual={cliManual}
+          statsLines={[
+            { label: 'published_posts', value: posts.length },
+            { label: 'sections', value: notebookSections.length },
+            { label: 'tags_in_use', value: notebookTags.length },
+            { label: 'featured_posts', value: totalFeatured },
+            { label: 'last_updated', value: formatDateStamp(latestPostUpdated) },
+          ]}
+          presets={['ls', 'grep github', 'tag electronics', 'man ls', 'open charlieplexing']}
+        />
+      </section>
 
       {posts.length === 0 ? (
         <div class="panel panel--soft empty">
@@ -229,6 +290,14 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
 <style>
   .blog-index {
     max-width: min(1380px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .notebook-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    gap: var(--space-5);
+    align-items: start;
+    margin-bottom: var(--space-6);
   }
 
   .section-head {
@@ -547,6 +616,10 @@ function imageSizes(kind: 'lead' | 'support' | 'archive') {
   }
 
   @media (max-width: 1240px) {
+    .notebook-hero {
+      grid-template-columns: 1fr;
+    }
+
     .feature-band__grid,
     .lead {
       grid-template-columns: 1fr;
