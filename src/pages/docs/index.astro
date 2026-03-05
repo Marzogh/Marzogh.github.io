@@ -127,10 +127,8 @@ const docGroups = shelfDocs.reduce<
 
                 <div class="doc-shelf">
                   {group.items.map((doc, index) => (
-                    <a
-                      href={`/docs/${doc.id}`}
+                    <article
                       class:list={['doc-card', index === 0 && group.items.length > 1 && 'doc-card--wide']}
-                      aria-label={`Open document: ${doc.data.title}`}
                     >
                       <div class="doc-card__meta">
                         {doc.data.featured ? <span class="pill pill--coral">Featured</span> : <span class="pill">Doc</span>}
@@ -138,9 +136,11 @@ const docGroups = shelfDocs.reduce<
                           <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
                         ))}
                       </div>
-                      <h3 class="doc-card__title">{doc.data.title}</h3>
+                      <h3 class="doc-card__title">
+                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
+                      </h3>
                       <p class="doc-card__desc">{doc.data.description}</p>
-                    </a>
+                    </article>
                   ))}
                 </div>
               </section>
@@ -256,13 +256,13 @@ const docGroups = shelfDocs.reduce<
   }
 
   .doc-lead__title a,
-  .doc-card__title {
+  .doc-card__title a {
     color: inherit;
     text-decoration: none;
   }
 
   .doc-lead__title a:hover,
-  .doc-card:hover .doc-card__title {
+  .doc-card:hover .doc-card__title a {
     color: var(--accent);
   }
 
