@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import IndexHeader from '../../components/IndexHeader.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
 
 const COLLECTION_CONFIG = [
@@ -145,6 +146,20 @@ const relatedTags = [...coTagCounts.entries()]
 
 const pageTitle = `${activeTag.label} — Tagged Content`;
 const pageDescription = activeTag.description;
+const kindSummary = Object.entries(countByKind)
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const topKind = kindSummary[0];
+const latestLabel = allItems[0]?.dateLabel ?? 'n/a';
+const kindMixLabel = kindSummary.length
+  ? kindSummary.map(([kind, count]) => `${kind}:${count}`).join(' · ')
+  : 'n/a';
+const statusLines = [
+  { label: 'tagged_items', value: allItems.length },
+  { label: 'collections', value: Object.keys(countByKind).length },
+  { label: 'top_collection', value: topKind ? `${topKind[0]} (${topKind[1]})` : 'n/a' },
+  { label: 'related_tags', value: relatedTags.length },
+  { label: 'latest_item', value: latestLabel },
+];
 ---
 
 <!doctype html>
@@ -157,31 +172,25 @@ const pageDescription = activeTag.description;
 
     <main>
       <header class:list={['page-header', activeTag.family === 'radio' && 'page-header--radio']}>
-        <p class="eyebrow">{activeTag.eyebrow}</p>
-        <h1 class="page-title">{activeTag.label}</h1>
-        <p class="page-lede">{pageDescription}</p>
-        <div class="summary">
-          <div class="summaryCard">
-            <div class="summaryCard__num">{allItems.length}</div>
-            <div class="summaryCard__lbl">Resources tagged</div>
-          </div>
-          <div class="summaryCard">
-            <div class="summaryCard__num">{Object.keys(countByKind).length}</div>
-            <div class="summaryCard__lbl">Collection{Object.keys(countByKind).length === 1 ? '' : 's'}</div>
-          </div>
-          <div class="summaryBreakdown">
-            {Object.entries(countByKind).map(([kind, count]) => (
-              <span class="summary__pill">{kind}: {count}</span>
-            ))}
-          </div>
+        <IndexHeader
+          eyebrow={activeTag.eyebrow}
+          title={activeTag.label}
+          lede={pageDescription}
+          terminalTitle={`tag.${tag}.log`}
+          statusLines={statusLines}
+        />
+        <div class="meta-strip" aria-label="Tag collection mix">
+          <span class="meta-strip__label">Collection mix</span>
+          <span class="meta-strip__value">{kindMixLabel}</span>
         </div>
         {relatedTags.length ? (
           <div class="related">
             <p class="related__label">Related tags</p>
             <div class="related__list">
               {relatedTags.map((relatedTag) => (
-                <a class="pill" href={`/tags/${relatedTag.slug}`}>
-                  #{relatedTag.label} <span class="pill__count">{relatedTag.count}</span>
+                <a class="related__link" href={`/tags/${relatedTag.slug}`}>
+                  <span>#{relatedTag.label}</span>
+                  <span class="related__count">{relatedTag.count}</span>
                 </a>
               ))}
             </div>
@@ -234,11 +243,11 @@ const pageDescription = activeTag.description;
   .page-header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
     margin-bottom: var(--space-6);
-    padding: var(--space-6);
+    padding: var(--space-4);
     border: 1px solid var(--border);
-    border-radius: 24px;
+    border-radius: 18px;
     background:
       radial-gradient(620px 180px at top right, color-mix(in srgb, var(--accent) 16%, transparent 84%), transparent 72%),
       radial-gradient(460px 160px at bottom left, color-mix(in srgb, var(--leaf) 12%, transparent 88%), transparent 74%),
@@ -253,133 +262,96 @@ const pageDescription = activeTag.description;
       var(--surface-raised);
   }
 
-  .eyebrow {
+  .page-header :global(.index-hero) {
     margin: 0;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-2);
+    gap: var(--space-4);
   }
 
-  .page-title {
+  .page-header :global(.index-hero__copy) {
+    gap: var(--space-2);
+  }
+
+  .page-header :global(.index-hero__lede) {
+    max-width: 64ch;
+  }
+
+  .page-header :global(.index-hero__title) {
     margin: 0;
-    font-size: clamp(2.2rem, 4.2vw, 4rem);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.02;
     text-wrap: balance;
   }
 
-  .page-lede {
-    margin: 0;
-    max-width: 70ch;
-    color: var(--text-2);
-  }
-
-  .summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: var(--space-3);
-  }
-
-  .summaryCard,
-  .summaryBreakdown,
-  .summary__pill,
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .summaryCard,
-  .summaryBreakdown {
-    border: 1px solid var(--border);
-    background: var(--surface-glass);
-    border-radius: 16px;
-    padding: 0.95rem 1rem;
-  }
-
-  .summaryCard {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .summaryCard__num {
-    font-size: 1.55rem;
-    font-weight: 800;
-    line-height: 1.1;
-    color: var(--text);
-  }
-
-  .summaryCard__lbl {
-    margin-top: 6px;
-    font-size: 0.92rem;
-    color: var(--text-2);
-  }
-
-  .summaryBreakdown {
+  .meta-strip {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    align-content: flex-start;
-  }
-
-  .summary__pill,
-  .pill {
-    padding: 0.45rem 0.75rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-raised) 72%, var(--surface) 28%);
-    color: var(--text-2);
-    font-size: 0.92rem;
-  }
-
-  .pill--muted {
-    opacity: 0.82;
-  }
-
-  .pill__count {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-width: 1.4rem;
-    height: 1.4rem;
-    padding: 0 0.35rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--surface-raised) 78%, var(--surface) 22%);
+    gap: 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.55rem 0.75rem;
+    background: var(--surface-glass);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  .meta-strip__label {
+    color: var(--text-2);
+  }
+
+  .meta-strip__value {
     color: var(--text);
-    font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .related {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: 0.5rem;
   }
 
   .related__label {
     margin: 0;
     color: var(--text-2);
-    font-size: 0.95rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .related__list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
+    gap: 0.45rem;
   }
 
-  .related__list a.pill {
+  .related__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface-raised) 84%, var(--surface) 16%);
     text-decoration: none;
     color: var(--text);
-    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.2;
+    transition: border-color 120ms ease, background 120ms ease;
   }
 
-  .related__list a.pill:hover {
-    transform: translateY(-1px);
+  .related__link:hover {
     border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
+    background: color-mix(in srgb, var(--surface-raised) 80%, var(--accent) 20%);
+  }
+
+  .related__count {
+    display: inline-flex;
+    min-width: 1rem;
+    justify-content: center;
+    color: var(--text-2);
+    font-weight: 700;
   }
 
   .empty {
@@ -450,7 +422,24 @@ const pageDescription = activeTag.description;
   .archive-item__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
+    gap: 0.4rem;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface-raised) 84%, var(--surface) 16%);
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.2;
+  }
+
+  .pill--muted {
+    opacity: 0.9;
   }
 
   .archive-item__tags .pill {
@@ -470,6 +459,10 @@ const pageDescription = activeTag.description;
 
     .page-header {
       padding: var(--space-4);
+    }
+
+    .meta-strip {
+      font-size: 0.75rem;
     }
   }
 </style>

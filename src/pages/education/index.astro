@@ -133,20 +133,16 @@ function getTagHref(value?: string | null) {
                     {supportItems.map((item) => {
                       const thumb = pickThumb(item.data);
                       return (
-                        <a
-                          href={`/education/${item.id}`}
-                          class:list={['edu-support panel panel--soft', !thumb && 'edu-support--textOnly']}
-                          aria-label={`Open education resource: ${item.data.title}`}
-                        >
+                        <article class:list={['edu-support panel panel--soft', !thumb && 'edu-support--textOnly']}>
                           {thumb ? (
-                            <div class="edu-support__media" aria-hidden="true">
+                            <a class="edu-support__media" href={`/education/${item.id}`} aria-label={`Open education resource: ${item.data.title}`}>
                               <img
                                 src={typeof thumb === 'string' ? thumb : thumb.src ?? thumb}
                                 alt=""
                                 loading="lazy"
                                 decoding="async"
                               />
-                            </div>
+                            </a>
                           ) : null}
 
                           <div class="edu-support__copy">
@@ -172,10 +168,12 @@ function getTagHref(value?: string | null) {
                                 )
                               ) : null}
                             </div>
-                            <h3 class="edu-support__title">{item.data.title}</h3>
+                            <h3 class="edu-support__title">
+                              <a href={`/education/${item.id}`}>{item.data.title}</a>
+                            </h3>
                             {item.data.description ? <p class="edu-support__desc">{item.data.description}</p> : null}
                           </div>
-                        </a>
+                        </article>
                       );
                     })}
                   </div>
@@ -198,16 +196,16 @@ function getTagHref(value?: string | null) {
                   const thumb = pickThumb(item.data);
 
                   return (
-                    <a href={`/education/${item.id}`} class:list={['edu-card', !thumb && 'edu-card--textOnly']} aria-label={`Open education resource: ${item.data.title}`}>
+                    <article class:list={['edu-card', !thumb && 'edu-card--textOnly']}>
                       {thumb ? (
-                        <div class="edu-card__media" aria-hidden="true">
+                        <a class="edu-card__media" href={`/education/${item.id}`} aria-label={`Open education resource: ${item.data.title}`}>
                           <img
                             src={typeof thumb === 'string' ? thumb : thumb.src ?? thumb}
                             alt=""
                             loading="lazy"
                             decoding="async"
                           />
-                        </div>
+                        </a>
                       ) : null}
 
                       <div class="edu-card__body">
@@ -224,10 +222,12 @@ function getTagHref(value?: string | null) {
                           ) : null}
                         </div>
 
-                        <h3 class="edu-card__title">{item.data.title}</h3>
+                        <h3 class="edu-card__title">
+                          <a href={`/education/${item.id}`}>{item.data.title}</a>
+                        </h3>
                         {item.data.description ? <p class="edu-card__desc">{item.data.description}</p> : null}
                       </div>
-                    </a>
+                    </article>
                   );
                 })}
               </div>
@@ -404,8 +404,8 @@ function getTagHref(value?: string | null) {
   }
 
   .edu-lead__title a,
-  .edu-support__title,
-  .edu-card__title {
+  .edu-support__title a,
+  .edu-card__title a {
     color: inherit;
     text-decoration: none;
   }
