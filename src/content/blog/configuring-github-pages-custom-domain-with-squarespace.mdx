@@ -1,0 +1,70 @@
+---
+title: Configuring a Custom Domain with GitHub Pages and Squarespace
+description: "A practical apex-domain setup for GitHub Pages on Squarespace DNS, including canonical records, domain verification, and HTTPS issuance checks."
+pubDate: 2024-12-04
+draft: false
+tags: [github-pages, dns, squarespace, custom-domain, https, apex-domain]
+type: how-to
+featured: false
+---
+
+To show my website on my custom domain, I had to configure GitHub Pages (hosting) and Squarespace (DNS/domain provider).
+
+The official docs are straightforward, and this setup worked reliably for an apex domain.
+
+## 1. Configure the custom domain in GitHub Pages
+
+In your repository, go to **Settings -> Pages** and set your custom domain to `chipsncode.com`.
+
+GitHub docs: [Managing a custom domain for your GitHub Pages site](https://docs.github.com/articles/setting-up-your-pages-site-repository)
+
+## 2. Configure Squarespace DNS for an apex domain
+
+For `chipsncode.com`, configure these records:
+
+- `A` record, host `@` -> `185.199.108.153`
+- `A` record, host `@` -> `185.199.109.153`
+- `A` record, host `@` -> `185.199.110.153`
+- `A` record, host `@` -> `185.199.111.153`
+- `AAAA` record, host `@` -> `2606:50c0:8000::153`
+- `AAAA` record, host `@` -> `2606:50c0:8001::153`
+- `AAAA` record, host `@` -> `2606:50c0:8002::153`
+- `AAAA` record, host `@` -> `2606:50c0:8003::153`
+- `CNAME` record, host `www` -> `marzogh.github.io`
+
+Canonical GitHub DNS table: [DNS records for your custom domain](https://docs.github.com/articles/setting-up-your-pages-site-repository#dns-records-for-your-custom-domain)
+
+## 3. Verify with `dig` while DNS propagates
+
+GitHub notes DNS changes can take up to **24 hours**.
+
+You can check propagation with `dig`:
+
+```bash
+dig chipsncode.com +noall +answer -t A
+dig chipsncode.com +noall +answer -t AAAA
+dig www.chipsncode.com +noall +answer -t CNAME
+```
+
+## 4. Add GitHub domain verification (recommended)
+
+In GitHub Pages domain verification, you'll get a TXT record like:
+
+- host: `_github-pages-challenge-marzogh`
+- value: `<token from GitHub>`
+
+In Squarespace, enter only the host label (`_github-pages-challenge-marzogh`), not the full domain name. Squarespace appends `.chipsncode.com` automatically.
+
+Verify with:
+
+```bash
+dig _github-pages-challenge-marzogh.chipsncode.com +nostats +nocomments +nocmd TXT
+```
+
+GitHub docs: [Verifying your custom domain for GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages)
+
+## 5. Enforce HTTPS
+
+After DNS and verification settle, GitHub Pages can issue the certificate and **Enforce HTTPS** becomes available.
+
+Note on speeding things up: propagation is bounded by DNS caching (TTL). If your provider lets you lower TTL (for example to `300`) before making changes, updates are usually visible sooner; otherwise you wait for existing cache windows to expire.

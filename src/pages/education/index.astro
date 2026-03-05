@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import { toTagSlug } from '../../utils/tags';
 
 const education = (await getCollection('education', ({ data }) => !data.draft && data.showInIndex !== false)).sort(
   (a, b) =>
@@ -17,9 +18,27 @@ const leadItem = featuredEducation[0] ?? education[0] ?? null;
 const shelfItems = education.filter((item) => item.id !== leadItem?.id);
 const supportItems = shelfItems.slice(0, 2);
 const archiveItems = shelfItems.slice(2);
+const availableTagSlugs = new Set(
+  education.flatMap((item) => (Array.isArray(item.data.tags) ? item.data.tags : [])).map((tag) => toTagSlug(tag))
+);
 
 function pickThumb(data: any) {
   return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? data.image ?? null;
+}
+
+function formatTaxonomyLabel(value?: string | null) {
+  if (!value) return null;
+  return value
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function getTagHref(value?: string | null) {
+  if (!value) return null;
+  const slug = toTagSlug(value);
+  return availableTagSlugs.has(slug) ? `/tags/${slug}` : null;
 }
 ---
 
@@ -81,8 +100,24 @@ function pickThumb(data: any) {
                   <div class="edu-lead__copy">
                     <div class="edu-lead__meta">
                       <span class="pill">{leadItem.data.featured ? 'Lead resource' : 'Latest resource'}</span>
-                      {leadItem.data.subject ? <span class="pill pill--soft">{leadItem.data.subject}</span> : null}
-                      {leadItem.data.level ? <span class="pill">{leadItem.data.level}</span> : null}
+                      {leadItem.data.subject ? (
+                        getTagHref(leadItem.data.subject) ? (
+                          <a class="pill pill--soft pill--link" href={getTagHref(leadItem.data.subject)!}>
+                            {formatTaxonomyLabel(leadItem.data.subject)}
+                          </a>
+                        ) : (
+                          <span class="pill pill--soft">{formatTaxonomyLabel(leadItem.data.subject)}</span>
+                        )
+                      ) : null}
+                      {leadItem.data.level ? (
+                        getTagHref(leadItem.data.level) ? (
+                          <a class="pill pill--link" href={getTagHref(leadItem.data.level)!}>
+                            {formatTaxonomyLabel(leadItem.data.level)}
+                          </a>
+                        ) : (
+                          <span class="pill">{formatTaxonomyLabel(leadItem.data.level)}</span>
+                        )
+                      ) : null}
                     </div>
 
                     <h3 class="edu-lead__title">
@@ -116,8 +151,26 @@ function pickThumb(data: any) {
 
                           <div class="edu-support__copy">
                             <div class="edu-support__meta">
-                              {item.data.subject ? <span class="pill">{item.data.subject}</span> : <span class="pill">Resource</span>}
-                              {item.data.level ? <span class="pill pill--soft">{item.data.level}</span> : null}
+                              {item.data.subject ? (
+                                getTagHref(item.data.subject) ? (
+                                  <a class="pill pill--link" href={getTagHref(item.data.subject)!}>
+                                    {formatTaxonomyLabel(item.data.subject)}
+                                  </a>
+                                ) : (
+                                  <span class="pill">{formatTaxonomyLabel(item.data.subject)}</span>
+                                )
+                              ) : (
+                                <span class="pill">Resource</span>
+                              )}
+                              {item.data.level ? (
+                                getTagHref(item.data.level) ? (
+                                  <a class="pill pill--soft pill--link" href={getTagHref(item.data.level)!}>
+                                    {formatTaxonomyLabel(item.data.level)}
+                                  </a>
+                                ) : (
+                                  <span class="pill pill--soft">{formatTaxonomyLabel(item.data.level)}</span>
+                                )
+                              ) : null}
                             </div>
                             <h3 class="edu-support__title">{item.data.title}</h3>
                             {item.data.description ? <p class="edu-support__desc">{item.data.description}</p> : null}
@@ -160,7 +213,15 @@ function pickThumb(data: any) {
                       <div class="edu-card__body">
                         <div class="edu-card__meta">
                           <span class="pill">Resource</span>
-                          {item.data.subject ? <span class="pill pill--soft">{item.data.subject}</span> : null}
+                          {item.data.subject ? (
+                            getTagHref(item.data.subject) ? (
+                              <a class="pill pill--soft pill--link" href={getTagHref(item.data.subject)!}>
+                                {formatTaxonomyLabel(item.data.subject)}
+                              </a>
+                            ) : (
+                              <span class="pill pill--soft">{formatTaxonomyLabel(item.data.subject)}</span>
+                            )
+                          ) : null}
                         </div>
 
                         <h3 class="edu-card__title">{item.data.title}</h3>
@@ -313,6 +374,17 @@ function pickThumb(data: any) {
     background: color-mix(in srgb, var(--surface) 86%, var(--accent) 14%);
     color: var(--text);
     border-color: color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
+  }
+
+  .pill--link {
+    text-decoration: none;
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .pill--link:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
   }
 
   .edu-lead__title,
