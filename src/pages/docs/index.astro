@@ -25,26 +25,65 @@ const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b
   return a.data.title.localeCompare(b.data.title);
 });
 
-const leadDoc = docs[0] ?? null;
-const shelfDocs = leadDoc ? docs.slice(1) : docs;
+function toDateValue(doc: (typeof docs)[number]) {
+  const candidate = doc.data.updatedDate ?? doc.data.pubDate ?? null;
+  return candidate instanceof Date ? candidate.valueOf() : 0;
+}
 
-const docGroups = shelfDocs.reduce<
+const docsByFresh = [...docs].sort((a, b) => toDateValue(b) - toDateValue(a));
+const startHere = docs.slice(0, 3);
+const latestDocs = docsByFresh.slice(0, 4);
+
+const sectionBuckets = docs.reduce<
   Array<{
     section: string;
+    description: string;
     items: typeof docs;
   }>
 >((groups, doc) => {
-  const section = getDocSectionMeta(doc.data.section).label;
-  const currentGroup = groups[groups.length - 1];
+  const sectionMeta = getDocSectionMeta(doc.data.section);
+  const current = groups[groups.length - 1];
 
-  if (!currentGroup || currentGroup.section !== section) {
-    groups.push({ section, items: [doc] });
+  if (!current || current.section !== sectionMeta.label) {
+    groups.push({
+      section: sectionMeta.label,
+      description: sectionMeta.description,
+      items: [doc],
+    });
     return groups;
   }
 
-  currentGroup.items.push(doc);
+  current.items.push(doc);
   return groups;
 }, []);
+
+const tagCounts = docs.reduce<Map<string, { label: string; count: number }>>((map, doc) => {
+  for (const tag of doc.data.tags ?? []) {
+    const slug = toTagSlug(tag);
+    const current = map.get(slug);
+    map.set(slug, {
+      label: tag,
+      count: (current?.count ?? 0) + 1,
+    });
+  }
+  return map;
+}, new Map());
+
+const popularTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label))
+  .slice(0, 8)
+  .map(([slug, info]) => ({ slug, label: info.label, count: info.count }));
+
+const cliIndex = docs.map((doc) => ({
+  title: doc.data.title,
+  url: `/docs/${doc.id}`,
+  id: doc.id,
+  section: getDocSectionMeta(doc.data.section).label,
+  description: doc.data.description,
+  tags: doc.data.tags ?? [],
+  updated: toDateValue(doc),
+  featured: Boolean(doc.data.featured),
+}));
 ---
 
 <!doctype html>
@@ -58,18 +97,6 @@ const docGroups = shelfDocs.reduce<
   <body>
     <Header />
     <main class="docs-index">
-      <IndexHeader
-        eyebrow="Documentation"
-        title="Documentation"
-        lede="Structured guides, reference notes, and longer-lived technical manuals. This page should read more like a library than a pile."
-        terminalTitle="docs.index"
-        statusLines={[
-          { label: 'published_docs', value: docs.length },
-          { label: 'sections', value: [...new Set(docs.map((doc) => doc.data.section))].length },
-          { label: 'featured_docs', value: docs.filter((doc) => doc.data.featured).length },
-        ]}
-      />
-
       {docs.length === 0 ? (
         <div class="panel panel--soft empty">
           <p class="empty-title">Documentation coming soon.</p>
@@ -79,83 +106,653 @@ const docGroups = shelfDocs.reduce<
         </div>
       ) : (
         <>
-          {leadDoc ? (
-            <section class="doc-leadBand" aria-labelledby="docs-lead-heading">
-              <div class="section-head">
-                <div>
-                  <p class="eyebrow eyebrow--accent">Reference Shelf</p>
-                  <h2 id="docs-lead-heading">Lead document</h2>
-                </div>
-              </div>
+          <section class="docs-top">
+            <div class="docs-top__main">
+              <IndexHeader
+                eyebrow="Documentation"
+                title="Documentation"
+                lede="Structured guides, reference notes, and longer-lived technical manuals. Built to scan fast without becoming a wall of text."
+                terminalTitle="docs.shell"
+              />
 
-              <article class="doc-lead panel">
-                <div class="doc-lead__copy">
-                  <div class="doc-lead__meta">
-                    <span class="pill">{leadDoc.data.featured ? 'Featured guide' : 'Guide'}</span>
-                    <span class="pill pill--soft">{getDocSectionMeta(leadDoc.data.section).label}</span>
-                    {leadDoc.data.tags?.slice(0, 2).map((tag) => (
-                      <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+              <div class="quick-panels">
+                <section class="quick-panel panel panel--soft" aria-labelledby="start-here-heading">
+                  <div class="quick-panel__head">
+                    <h2 id="start-here-heading">Start here</h2>
+                    <a href={`/docs/${startHere[0]?.id}`}>Open lead doc</a>
+                  </div>
+                  <ul>
+                    {startHere.map((doc) => (
+                      <li>
+                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section class="quick-panel panel panel--soft" aria-labelledby="latest-docs-heading">
+                  <div class="quick-panel__head">
+                    <h2 id="latest-docs-heading">Latest</h2>
+                  </div>
+                  <ul>
+                    {latestDocs.map((doc) => (
+                      <li>
+                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section class="quick-panel panel panel--soft" aria-labelledby="popular-tags-heading">
+                  <div class="quick-panel__head">
+                    <h2 id="popular-tags-heading">Popular tags</h2>
+                  </div>
+                  <div class="quick-tags">
+                    {popularTags.map((tag) => (
+                      <a class="quick-tag" href={`/tags/${tag.slug}`}>#{tag.label} <span>{tag.count}</span></a>
                     ))}
                   </div>
+                </section>
+              </div>
+            </div>
 
-                  <h3 class="doc-lead__title">
-                    <a href={`/docs/${leadDoc.id}`}>{leadDoc.data.title}</a>
-                  </h3>
+            <aside class="docs-cli" aria-label="Documentation command panel">
+              <div class="docs-cli__head">
+                <span class="docs-cli__dot" aria-hidden="true"></span>
+                <span class="docs-cli__title">docs.query</span>
+                <button type="button" class="docs-cli__manbtn" id="docs-cli-manbtn">man</button>
+              </div>
 
-                  <p class="doc-lead__desc">{leadDoc.data.description}</p>
-                </div>
+              <div class="docs-cli__output" id="docs-cli-output" role="status" aria-live="polite">
+                <p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>
+              </div>
 
-                <div class="doc-lead__aside">
-                  <p class="doc-lead__label">Section</p>
-                  <p class="doc-lead__value">{getDocSectionMeta(leadDoc.data.section).label}</p>
-                  <p class="doc-lead__note">{getDocSectionMeta(leadDoc.data.section).description}</p>
-                </div>
-              </article>
-            </section>
-          ) : null}
+              <form class="docs-cli__form" id="docs-cli-form">
+                <label for="docs-cli-input" class="sr-only">Enter docs command</label>
+                <input id="docs-cli-input" type="text" autocomplete="off" value="stat" placeholder="grep wifi" />
+                <button type="submit">Run</button>
+              </form>
 
-          <div class="doc-groups">
-            {docGroups.map((group) => (
-              <section class="doc-group" aria-label={group.section}>
-                <div class="doc-group__header">
-                  <div class="doc-group__intro">
-                    <h2 class="doc-group__title">{group.section}</h2>
-                    <p class="doc-group__desc">{getDocSectionMeta(group.section).description}</p>
-                  </div>
-                  <span class="pill">{group.items.length} item{group.items.length === 1 ? '' : 's'}</span>
-                </div>
+              <div class="docs-cli__presets" aria-label="Command shortcuts">
+                <button type="button" data-cmd="list">list</button>
+                <button type="button" data-cmd="ls">ls</button>
+                <button type="button" data-cmd="cd \"Platform Guides\"">cd</button>
+                <button type="button" data-cmd="grep setup">grep</button>
+                <button type="button" data-cmd="tag tutorial">tag</button>
+                <button type="button" data-cmd="man ls">man</button>
+              </div>
+            </aside>
+          </section>
 
-                <div class="doc-shelf">
-                  {group.items.map((doc, index) => (
-                    <article
-                      class:list={['doc-card', index === 0 && group.items.length > 1 && 'doc-card--wide']}
-                    >
-                      <div class="doc-card__meta">
-                        {doc.data.featured ? <span class="pill pill--coral">Featured</span> : <span class="pill">Doc</span>}
-                        {doc.data.tags?.slice(0, 2).map((tag) => (
-                          <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                        ))}
-                      </div>
-                      <h3 class="doc-card__title">
-                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
-                      </h3>
-                      <p class="doc-card__desc">{doc.data.description}</p>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          <section class="docs-directory" aria-labelledby="directory-heading">
+            <div class="docs-directory__head">
+              <h2 id="directory-heading">Directory</h2>
+              <p>Browse by section, then drill into each document.</p>
+            </div>
+
+            <div class="docs-sections">
+              {sectionBuckets.map((group) => (
+                <section class="doc-section panel panel--soft" aria-label={group.section}>
+                  <header class="doc-section__head">
+                    <div>
+                      <h3>{group.section}</h3>
+                      <p>{group.description}</p>
+                    </div>
+                    <span class="pill">{group.items.length} item{group.items.length === 1 ? '' : 's'}</span>
+                  </header>
+
+                  <ul class="doc-rows">
+                    {group.items.map((doc) => (
+                      <li class="doc-row">
+                        <div class="doc-row__main">
+                          <a class="doc-row__title" href={`/docs/${doc.id}`}>{doc.data.title}</a>
+                          <p class="doc-row__desc">{doc.data.description}</p>
+                        </div>
+                        <div class="doc-row__meta">
+                          <span class="pill">Doc</span>
+                          {doc.data.tags?.slice(0, 2).map((tag) => (
+                            <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                          ))}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </section>
         </>
       )}
     </main>
+
+    <div class="docs-shelldrawer" id="docs-shelldrawer" aria-hidden="true">
+      <div class="docs-shelldrawer__backdrop" data-drawer-close></div>
+      <aside class="docs-shelldrawer__panel" role="dialog" aria-modal="true" aria-labelledby="docs-shelldrawer-title">
+        <header class="docs-shelldrawer__head">
+          <p class="docs-shelldrawer__eyebrow">Manual</p>
+          <h2 id="docs-shelldrawer-title">man docs</h2>
+          <button type="button" class="docs-shelldrawer__close" data-drawer-close aria-label="Close manual panel">Close</button>
+        </header>
+        <div class="docs-shelldrawer__body" id="docs-shelldrawer-body"></div>
+      </aside>
+    </div>
+
+    <script type="application/json" id="docs-cli-data" set:html={JSON.stringify(cliIndex)}></script>
+
+    <script is:inline>
+      (() => {
+        const dataEl = document.getElementById('docs-cli-data');
+        const outputEl = document.getElementById('docs-cli-output');
+        const formEl = document.getElementById('docs-cli-form');
+        const inputEl = document.getElementById('docs-cli-input');
+        const presetButtons = Array.from(document.querySelectorAll('.docs-cli__presets button'));
+        const manButtonEl = document.getElementById('docs-cli-manbtn');
+        const drawerEl = document.getElementById('docs-shelldrawer');
+        const drawerBodyEl = document.getElementById('docs-shelldrawer-body');
+        const drawerTitleEl = document.getElementById('docs-shelldrawer-title');
+        const drawerCloseEls = Array.from(document.querySelectorAll('[data-drawer-close]'));
+
+        if (!(dataEl instanceof HTMLScriptElement) || !outputEl || !(formEl instanceof HTMLFormElement) || !(inputEl instanceof HTMLInputElement)) {
+          return;
+        }
+
+        const docs = JSON.parse(dataEl.textContent || '[]');
+        const history = [];
+        const sectionMap = new Map();
+        for (const doc of docs) {
+          const key = doc.section.toLowerCase();
+          if (!sectionMap.has(key)) sectionMap.set(key, { name: doc.section, docs: [] });
+          sectionMap.get(key).docs.push(doc);
+        }
+        const sections = [...sectionMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+        const commandManual = {
+          help: {
+            name: 'help',
+            synopsis: 'help [command]',
+            description: 'Display available commands or detailed manual for a command.',
+            examples: ['help', 'help ls', 'man ls'],
+            seeAlso: ['stat', 'man', 'ls', 'grep'],
+          },
+          stat: {
+            name: 'stat',
+            synopsis: 'stat',
+            description: 'Show documentation index status in terminal form.',
+            examples: ['stat'],
+            seeAlso: ['help', 'ls', 'man'],
+          },
+          ls: {
+            name: 'ls',
+            synopsis: 'ls [section]',
+            description: 'List sections or list documents in a section.',
+            examples: ['ls', 'ls "Platform Guides"', 'ls reference'],
+            seeAlso: ['cd', 'pwd', 'grep'],
+          },
+          cd: {
+            name: 'cd',
+            synopsis: 'cd <section> | cd /',
+            description: 'Change the virtual working section in the docs tree.',
+            examples: ['cd "Site Meta"', 'cd /', 'pwd'],
+            seeAlso: ['pwd', 'ls'],
+          },
+          pwd: {
+            name: 'pwd',
+            synopsis: 'pwd',
+            description: 'Print the current virtual section path.',
+            examples: ['pwd'],
+            seeAlso: ['cd', 'ls'],
+          },
+          cat: {
+            name: 'cat',
+            synopsis: 'cat <doc-id|title>',
+            description: 'Show a short summary for a document entry.',
+            examples: ['cat eduroam-on-the-rpi', 'cat "ASCII DIP Pinout Cheatsheet"'],
+            seeAlso: ['open', 'man', 'grep'],
+          },
+          open: {
+            name: 'open',
+            synopsis: 'open <doc-id|title>',
+            description: 'Open a document page in this tab.',
+            examples: ['open site-architecture-and-design-language'],
+            seeAlso: ['cat', 'man'],
+          },
+          grep: {
+            name: 'grep',
+            synopsis: 'grep <query>',
+            description: 'Search title, description, section, and tags.',
+            examples: ['grep terminal', 'grep setup', 'grep arduino'],
+            seeAlso: ['find', 'tag', 'ls'],
+          },
+          find: {
+            name: 'find',
+            synopsis: 'find <query>',
+            description: 'Alias for grep.',
+            examples: ['find tutorial'],
+            seeAlso: ['grep', 'tag'],
+          },
+          tag: {
+            name: 'tag',
+            synopsis: 'tag <name>',
+            description: 'List docs with matching tags.',
+            examples: ['tag tutorial', 'tag website'],
+            seeAlso: ['grep', 'ls'],
+          },
+          history: {
+            name: 'history',
+            synopsis: 'history',
+            description: 'Print command history for this session.',
+            examples: ['history'],
+            seeAlso: ['clear'],
+          },
+          clear: {
+            name: 'clear',
+            synopsis: 'clear',
+            description: 'Clear terminal output.',
+            examples: ['clear'],
+            seeAlso: ['history'],
+          },
+          man: {
+            name: 'man',
+            synopsis: 'man [command|topic]',
+            description: 'Open pager-style manual for a command or docs topic.',
+            examples: ['man', 'man ls', 'man setup', 'man site-architecture-and-design-language'],
+            seeAlso: ['help', 'cat', 'open'],
+          },
+        };
+
+        const state = {
+          cwd: '/',
+        };
+
+        function tokenize(input) {
+          const tokens = [];
+          const re = /\"([^\"]+)\"|'([^']+)'|(\S+)/g;
+          let match;
+          while ((match = re.exec(input)) !== null) {
+            tokens.push(match[1] ?? match[2] ?? match[3] ?? '');
+          }
+          return tokens;
+        }
+
+        function escapeHtml(value) {
+          return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+        }
+
+        function toLines(text) {
+          return text.split('\n').map((line) => `<p>${line}</p>`).join('');
+        }
+
+        function print(command, body) {
+          outputEl.innerHTML = `<p><span class="prompt">${escapeHtml(state.cwd)} $</span> ${escapeHtml(command)}</p>${toLines(body)}<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>`;
+        }
+
+        function listLines(items, limit = 10) {
+          if (!items.length) return 'No matches.';
+          return items
+            .slice(0, limit)
+            .map((item) => `- <a href="${item.url}">${escapeHtml(item.title)}</a> <span class="meta">(${escapeHtml(item.section)})</span>`)
+            .join('\n');
+        }
+
+        function matchDocs(query) {
+          const q = query.toLowerCase();
+          return docs.filter((doc) =>
+            doc.title.toLowerCase().includes(q) ||
+            doc.description.toLowerCase().includes(q) ||
+            doc.section.toLowerCase().includes(q) ||
+            doc.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+            doc.id.toLowerCase().includes(q)
+          );
+        }
+
+        function resolveSection(value) {
+          const q = value.toLowerCase();
+          return sections.find((section) => section.name.toLowerCase() === q || section.name.toLowerCase().includes(q));
+        }
+
+        function currentDocs() {
+          if (state.cwd === '/') return docs;
+          const section = resolveSection(state.cwd);
+          return section ? section.docs : [];
+        }
+
+        function resolveDoc(value) {
+          const q = value.toLowerCase();
+          return docs.find((doc) =>
+            doc.id.toLowerCase() === q ||
+            doc.title.toLowerCase() === q ||
+            doc.title.toLowerCase().includes(q)
+          );
+        }
+
+        function openDrawer(title, bodyHtml) {
+          if (!drawerEl || !drawerBodyEl || !drawerTitleEl) {
+            print('man', 'Manual drawer unavailable in this context.');
+            return;
+          }
+          drawerTitleEl.textContent = title;
+          drawerBodyEl.innerHTML = bodyHtml;
+          drawerEl.classList.add('is-open');
+          drawerEl.dataset.open = 'true';
+          drawerEl.setAttribute('aria-hidden', 'false');
+          drawerBodyEl.scrollTop = 0;
+        }
+
+        function closeDrawer() {
+          if (!drawerEl) return;
+          drawerEl.classList.remove('is-open');
+          drawerEl.dataset.open = 'false';
+          drawerEl.setAttribute('aria-hidden', 'true');
+        }
+
+        function renderManualPage(entry) {
+          return `
+            <article class="man-page">
+              <h3 class="man-heading">NAME</h3>
+              <p class="man-line">${escapeHtml(entry.name)} - ${escapeHtml(entry.summary)}</p>
+              <h3 class="man-heading">SYNOPSIS</h3>
+              <p class="man-line">${escapeHtml(entry.synopsis)}</p>
+              <h3 class="man-heading">DESCRIPTION</h3>
+              <p class="man-line">${escapeHtml(entry.description)}</p>
+              ${entry.examples.length ? `<h3 class="man-heading">EXAMPLES</h3><ul class="man-list">${entry.examples.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : ''}
+              ${entry.seeAlso.length ? `<h3 class="man-heading">SEE ALSO</h3><p class="man-line">${entry.seeAlso.map((item) => escapeHtml(item)).join(', ')}</p>` : ''}
+              <p class="man-line man-foot">q to quit, j/k to scroll, space/b for page, / to focus terminal input</p>
+            </article>
+          `;
+        }
+
+        function renderManIndex() {
+          const cmdRows = Object.keys(commandManual)
+            .sort((a, b) => a.localeCompare(b))
+            .map((cmd) => `<li><button type="button" class="man-open" data-man-open-cmd="${escapeHtml(cmd)}">${escapeHtml(cmd)}</button></li>`)
+            .join('');
+          const docRows = docs
+            .slice(0, 18)
+            .map((doc) => `<li><button type="button" class="man-open" data-man-open-doc="${escapeHtml(doc.id)}">${escapeHtml(doc.id)}</button> - ${escapeHtml(doc.title)}</li>`)
+            .join('');
+          return `
+            <article class="man-page">
+              <h3 class="man-heading">NAME</h3>
+              <p class="man-line">docs-manual - unix-style interface for ChipsnCode documentation</p>
+              <h3 class="man-heading">SYNOPSIS</h3>
+              <p class="man-line">man [command|topic]</p>
+              <h3 class="man-heading">COMMAND MANUALS</h3>
+              <ul class="man-list">${cmdRows}</ul>
+              <h3 class="man-heading">DOC TOPICS</h3>
+              <ul class="man-list">${docRows}</ul>
+            </article>
+          `;
+        }
+
+        function renderCommandManual(cmd) {
+          const entry = commandManual[cmd];
+          if (!entry) return null;
+          return renderManualPage({
+            name: cmd,
+            summary: entry.description,
+            synopsis: entry.synopsis,
+            description: entry.description,
+            examples: entry.examples,
+            seeAlso: entry.seeAlso,
+          });
+        }
+
+        function renderDocManual(doc) {
+          return renderManualPage({
+            name: doc.id,
+            summary: doc.title,
+            synopsis: `open ${doc.id}`,
+            description: doc.description,
+            examples: [`cat ${doc.id}`, `open ${doc.id}`, `grep ${doc.tags[0] || doc.section}`],
+            seeAlso: ['man', 'cat', 'open', ...doc.tags.slice(0, 2)],
+          });
+        }
+
+        function run(commandRaw) {
+          const command = commandRaw.trim();
+          if (!command) return;
+          history.push(command);
+
+          const tokens = tokenize(command);
+          const cmd = (tokens[0] || '').toLowerCase();
+          const helpFlags = new Set(['--help', '-h']);
+          const rawArgs = tokens.slice(1);
+          const wantsHelp = rawArgs.some((token) => helpFlags.has(token.toLowerCase()));
+          const filteredArgs = rawArgs.filter((token) => !helpFlags.has(token.toLowerCase()));
+          const arg = filteredArgs.join(' ').trim();
+          const canonicalCmd = cmd === 'list' ? 'ls' : cmd === 'find' ? 'grep' : cmd;
+
+          if (wantsHelp && cmd && cmd !== 'help') {
+            const manual = commandManual[canonicalCmd];
+            if (manual) {
+              print(
+                command,
+                `${manual.name}: ${manual.synopsis}\n${manual.description}\nexamples:\n${manual.examples.map((line) => `- ${line}`).join('\n')}`
+              );
+              return;
+            }
+          }
+
+          if (cmd === 'clear') {
+            outputEl.innerHTML = '<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>';
+            return;
+          }
+
+          if (cmd === 'help' || cmd === '--help') {
+            if (arg && commandManual[arg]) {
+              print(command, `${arg}: ${commandManual[arg].synopsis}\n${commandManual[arg].description}`);
+            } else {
+              print(command, 'Commands:\n- stat\n- help\n- ls\n- cd\n- pwd\n- cat\n- open\n- grep\n- find\n- tag\n- man\n- history\n- clear');
+            }
+            return;
+          }
+
+          if (cmd === 'stat') {
+            const featuredCount = docs.filter((doc) => doc.featured).length;
+            print(
+              command,
+              `published_docs ${docs.length}\nsections ${sections.length}\nfeatured_docs ${featuredCount}`
+            );
+            return;
+          }
+
+          if (cmd === 'history') {
+            print(command, history.map((item, i) => `${i + 1}  ${item}`).join('\n'));
+            return;
+          }
+
+          if (cmd === 'pwd') {
+            print(command, state.cwd);
+            return;
+          }
+
+          if (cmd === 'cd') {
+            if (!arg || arg === '/') {
+              state.cwd = '/';
+              print(command, state.cwd);
+              return;
+            }
+            const section = resolveSection(arg);
+            if (!section) {
+              print(command, `cd: no such section: ${arg}`);
+              return;
+            }
+            state.cwd = section.name;
+            print(command, `Entered section: ${section.name}`);
+            return;
+          }
+
+          if (cmd === 'ls' || cmd === 'list') {
+            if (!arg && state.cwd === '/') {
+              print(command, sections.map((section) => `${section.name} (${section.docs.length})`).join('\n'));
+              return;
+            }
+            const section = arg ? resolveSection(arg) : resolveSection(state.cwd);
+            if (!section) {
+              print(command, `ls: no such section: ${arg || state.cwd}`);
+              return;
+            }
+            print(command, listLines(section.docs, 20));
+            return;
+          }
+
+          if (cmd === 'grep' || cmd === 'find') {
+            if (!arg) {
+              print(command, `Usage: ${cmd} <query>`);
+              return;
+            }
+            const pool = state.cwd === '/' ? docs : currentDocs();
+            const matches = pool.filter((doc) =>
+              doc.title.toLowerCase().includes(arg.toLowerCase()) ||
+              doc.description.toLowerCase().includes(arg.toLowerCase()) ||
+              doc.tags.some((tag) => tag.toLowerCase().includes(arg.toLowerCase())) ||
+              doc.id.toLowerCase().includes(arg.toLowerCase())
+            );
+            print(command, listLines(matches, 12));
+            return;
+          }
+
+          if (cmd === 'tag') {
+            if (!arg) {
+              print(command, 'Usage: tag <name>');
+              return;
+            }
+            const matches = docs.filter((doc) => doc.tags.some((tag) => tag.toLowerCase().includes(arg.toLowerCase())));
+            print(command, listLines(matches, 12));
+            return;
+          }
+
+          if (cmd === 'cat') {
+            if (!arg) {
+              print(command, 'Usage: cat <doc-id|title>');
+              return;
+            }
+            const doc = resolveDoc(arg);
+            if (!doc) {
+              print(command, `cat: not found: ${arg}`);
+              return;
+            }
+            print(command, `${doc.title}\n${doc.description}\nsection: ${doc.section}\ntags: ${doc.tags.join(', ') || 'none'}\nopen: ${doc.url}`);
+            return;
+          }
+
+          if (cmd === 'open') {
+            if (!arg) {
+              print(command, 'Usage: open <doc-id|title>');
+              return;
+            }
+            const doc = resolveDoc(arg);
+            if (!doc) {
+              print(command, `open: not found: ${arg}`);
+              return;
+            }
+            window.location.assign(doc.url);
+            return;
+          }
+
+          if (cmd === 'man') {
+            if (!arg) {
+              openDrawer('man docs', renderManIndex());
+              print(command, 'Opened manual index.');
+              return;
+            }
+            const manualKey = arg.toLowerCase();
+            const commandManualHtml = renderCommandManual(manualKey);
+            if (commandManualHtml) {
+              openDrawer(`man ${manualKey}`, commandManualHtml);
+              print(command, `Opened manual page for ${manualKey}.`);
+              return;
+            }
+            const doc = resolveDoc(arg) || matchDocs(arg)[0];
+            if (!doc) {
+              print(command, `man: no entry for ${arg}`);
+              return;
+            }
+            openDrawer(`man ${doc.id}`, renderDocManual(doc));
+            print(command, `Opened manual page for ${doc.id}.`);
+            return;
+          }
+
+          print(command, `Unknown command: ${cmd}. Try help.`);
+        }
+
+        formEl.addEventListener('submit', (event) => {
+          event.preventDefault();
+          run(inputEl.value);
+          inputEl.value = '';
+        });
+
+        presetButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const cmd = button.getAttribute('data-cmd') || '';
+            run(cmd);
+            inputEl.value = '';
+          });
+        });
+
+        if (manButtonEl instanceof HTMLButtonElement) {
+          manButtonEl.addEventListener('click', () => {
+            run('man');
+            inputEl.value = '';
+          });
+        }
+
+        if (drawerBodyEl instanceof HTMLElement) {
+          drawerBodyEl.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            const cmdBtn = target.closest('.man-open');
+            if (!(cmdBtn instanceof HTMLElement)) return;
+            const cmd = cmdBtn.getAttribute('data-man-open-cmd');
+            const docId = cmdBtn.getAttribute('data-man-open-doc');
+            if (cmd) {
+              run(`man ${cmd}`);
+              return;
+            }
+            if (docId) {
+              run(`man ${docId}`);
+            }
+          });
+        }
+
+        drawerCloseEls.forEach((el) => {
+          el.addEventListener('click', closeDrawer);
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') closeDrawer();
+          if (!drawerEl || drawerEl.getAttribute('aria-hidden') !== 'false') return;
+          if (event.key === 'q') closeDrawer();
+          if (!(drawerBodyEl instanceof HTMLElement)) return;
+          if (event.key === 'j') drawerBodyEl.scrollBy({ top: 48, behavior: 'auto' });
+          if (event.key === 'k') drawerBodyEl.scrollBy({ top: -48, behavior: 'auto' });
+          if (event.key === ' ') {
+            event.preventDefault();
+            drawerBodyEl.scrollBy({ top: Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
+          }
+          if (event.key === 'b') drawerBodyEl.scrollBy({ top: -Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
+          if (event.key === '/') {
+            event.preventDefault();
+            inputEl.focus();
+          }
+        });
+
+      })();
+    </script>
+
     <Footer />
   </body>
 </html>
 
 <style>
   .docs-index {
-    max-width: min(1280px, calc(100% - 2 * var(--space-5)));
+    max-width: min(1260px, calc(100% - 2 * var(--space-5)));
+    display: grid;
+    gap: var(--space-6);
   }
 
   .empty {
@@ -174,62 +771,381 @@ const docGroups = shelfDocs.reduce<
     max-width: 80ch;
   }
 
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
+  .docs-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    gap: var(--space-5);
+    align-items: start;
   }
 
-  .section-head h2 {
+  .docs-top__main {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .docs-top__main :global(.index-hero) {
+    margin-bottom: 0;
+  }
+
+  .quick-panels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .quick-panel {
+    padding: 0.9rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .quick-panel__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .quick-panel__head h2,
+  .quick-panel__head a,
+  .quick-panel ul,
+  .quick-panel li {
     margin: 0;
   }
 
-  .eyebrow--accent {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
+  .quick-panel__head h2 {
+    font-size: 0.86rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--coral);
   }
 
-  .doc-leadBand {
-    display: grid;
-    gap: var(--space-5);
-    margin-bottom: var(--space-7);
+  .quick-panel__head a {
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-decoration: none;
   }
 
-  .doc-lead {
+  .quick-panel ul {
+    list-style: none;
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
-    gap: var(--space-5);
+    gap: 0.45rem;
+    padding: 0;
+  }
+
+  .quick-panel li a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .quick-panel li a:hover {
+    color: var(--accent);
+  }
+
+  .quick-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .quick-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.52rem;
+    text-decoration: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: var(--surface-glass);
+  }
+
+  .quick-tag span {
+    color: var(--text-2);
+    font-weight: 700;
+  }
+
+  .docs-cli {
+    border-radius: 18px;
+    border: 1px solid rgba(34, 197, 94, 0.22);
     background:
-      radial-gradient(760px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
-      radial-gradient(480px 180px at bottom left, rgba(20, 184, 166, 0.06), transparent 72%),
-      var(--surface-raised);
+      radial-gradient(560px 160px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: 420px;
+    overflow: hidden;
   }
 
-  .doc-lead__copy,
-  .doc-lead__aside {
+  .docs-cli__head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
+    background: rgba(3, 9, 6, 0.44);
+  }
+
+  .docs-cli__dot {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 999px;
+    background: #34d399;
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+    flex: 0 0 auto;
+  }
+
+  .docs-cli__title {
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+    color: rgba(187, 247, 208, 0.76);
+    margin-right: auto;
+  }
+
+  .docs-cli__manbtn {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    border-radius: 999px;
+    background: rgba(3, 9, 6, 0.44);
+    color: #bbf7d0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.14rem 0.52rem;
+    cursor: pointer;
+  }
+
+  .docs-cli__output {
+    padding: 0.9rem;
+    display: grid;
+    gap: 0.45rem;
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    color: #7fff50;
+    align-content: start;
+  }
+
+  .docs-cli__output :global(*) {
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace !important;
+    color: #7fff50;
+  }
+
+  .docs-cli .docs-cli__output :global(p),
+  .docs-cli .docs-cli__output :global(span),
+  .docs-cli .docs-cli__output :global(code) {
+    margin: 0;
+    color: #7fff50;
+  }
+
+  .docs-cli .docs-cli__output :global(.prompt) {
+    color: #b7ff6a;
+    margin-right: 0.42rem;
+  }
+
+  .docs-cli .docs-cli__output :global(.hint),
+  .docs-cli .docs-cli__output :global(.meta) {
+    color: #70e25c;
+  }
+
+  .docs-cli .docs-cli__output :global(a) {
+    color: #c9ff88;
+    text-decoration: underline;
+    text-decoration-color: rgba(160, 255, 120, 0.64);
+  }
+
+  .docs-cli .docs-cli__output :global(code) {
+    color: #d7ff9f;
+  }
+
+  .docs-cli__form {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 0.55rem;
+    padding: 0.75rem 0.9rem;
+    border-top: 1px solid rgba(34, 197, 94, 0.14);
+    align-items: center;
+  }
+
+  .docs-cli__form input,
+  .docs-cli__form button {
+    border-radius: 10px;
+    border: 1px solid rgba(74, 222, 128, 0.28);
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+
+  .docs-cli__form input {
+    background: rgba(3, 9, 6, 0.44);
+    color: #dcfce7;
+    padding: 0.5rem 0.6rem;
+    flex: 1 1 auto;
     min-width: 0;
   }
 
-  .doc-lead__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  .docs-cli__form button {
+    background: rgba(34, 197, 94, 0.18);
+    color: #dcfce7;
+    padding: 0.5rem 0.74rem;
+    cursor: pointer;
+    flex: 0 0 auto;
+    width: auto;
   }
 
-  .doc-lead__meta {
+  .docs-cli__presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0.45rem;
+    padding: 0 0.9rem 0.8rem;
   }
 
-  .pill--soft {
-    background: var(--surface-glass);
+  .docs-cli__presets button {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    border-radius: 999px;
+    background: rgba(3, 9, 6, 0.44);
+    color: #bbf7d0;
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.72rem;
+    padding: 0.24rem 0.55rem;
+    cursor: pointer;
+  }
+
+  .docs-cli .docs-cli__output :global(.cursorline) {
+    margin: 0;
+  }
+
+  .docs-cli .docs-cli__output :global(.cursorGlyph) {
+    color: #9aff74;
+    animation: docs-cli-cursor-blink 1s steps(2, start) infinite;
+  }
+
+  @keyframes docs-cli-cursor-blink {
+    to {
+      opacity: 0;
+    }
+  }
+
+  .docs-directory {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .docs-directory__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .docs-directory__head h2,
+  .docs-directory__head p {
+    margin: 0;
+  }
+
+  .docs-directory__head h2 {
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .docs-directory__head p {
+    color: var(--text-2);
+    font-size: 0.92rem;
+  }
+
+  .docs-sections {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .doc-section {
+    padding: 0.95rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .doc-section__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.8rem;
+  }
+
+  .doc-section__head h3,
+  .doc-section__head p {
+    margin: 0;
+  }
+
+  .doc-section__head h3 {
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  .doc-section__head p {
+    margin-top: 0.25rem;
+    color: var(--text-2);
+    font-size: 0.9rem;
+  }
+
+  .doc-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .doc-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    align-items: start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .doc-row__main,
+  .doc-row__meta {
+    min-width: 0;
+  }
+
+  .doc-row__title,
+  .doc-row__desc {
+    margin: 0;
+  }
+
+  .doc-row__title {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+
+  .doc-row__title:hover {
+    color: var(--accent);
+  }
+
+  .doc-row__desc {
+    margin-top: 0.22rem;
+    color: var(--text-2);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    max-width: 72ch;
+  }
+
+  .doc-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.45rem;
   }
 
   .pill--link {
@@ -243,175 +1159,194 @@ const docGroups = shelfDocs.reduce<
     background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
   }
 
-  .doc-lead__title,
-  .doc-lead__desc {
-    margin: 0;
-  }
-
-  .doc-lead__title {
-    font-size: clamp(2rem, 3vw, 3.3rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-
-  .doc-lead__title a,
-  .doc-card__title a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .doc-lead__title a:hover,
-  .doc-card:hover .doc-card__title a {
-    color: var(--accent);
-  }
-
-  .doc-lead__desc {
-    max-width: 46ch;
-    color: var(--text-2);
-    font-size: clamp(1rem, 1.2vw, 1.15rem);
-  }
-
-  .doc-lead__aside {
+  .docs-shelldrawer {
+    position: fixed;
+    inset: 0;
     display: grid;
-    align-content: start;
-    gap: 0.45rem;
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    background: var(--surface-glass);
-    border: 1px solid var(--border);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: 210;
   }
 
-  .doc-lead__label,
-  .doc-lead__value,
-  .doc-lead__note {
+  .docs-shelldrawer.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .docs-shelldrawer[aria-hidden='false'],
+  .docs-shelldrawer[data-open='true'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .docs-shelldrawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 8, 23, 0.58);
+    backdrop-filter: blur(2px);
+  }
+
+  .docs-shelldrawer__panel {
+    position: absolute;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%) translateY(24px);
+    width: min(980px, calc(100% - 1.25rem));
+    border: 1px solid rgba(34, 197, 94, 0.26);
+    border-radius: 14px;
+    background:
+      radial-gradient(620px 180px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
+    box-shadow: 0 18px 42px rgba(2, 6, 23, 0.5);
+    transition: transform 180ms ease;
+    overflow: hidden;
+  }
+
+  .docs-shelldrawer.is-open .docs-shelldrawer__panel {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .docs-shelldrawer[aria-hidden='false'] .docs-shelldrawer__panel,
+  .docs-shelldrawer[data-open='true'] .docs-shelldrawer__panel {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .docs-shelldrawer__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
+    background: rgba(3, 9, 6, 0.44);
+  }
+
+  .docs-shelldrawer__eyebrow {
     margin: 0;
-  }
-
-  .doc-lead__label {
+    color: rgba(167, 243, 208, 0.68);
     font-family: var(--font-mono);
-    font-size: 0.76rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
   }
 
-  .doc-lead__value {
-    font-weight: 700;
-    font-size: 1.12rem;
+  .docs-shelldrawer__head h2 {
+    margin: 0;
+    color: #dcfce7;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
   }
 
-  .doc-lead__note {
-    color: var(--text-2);
-    font-size: 0.96rem;
+  .docs-shelldrawer__close {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    background: rgba(3, 9, 6, 0.44);
+    border-radius: 999px;
+    color: #bbf7d0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
   }
 
-  .doc-groups {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+  .docs-shelldrawer__body {
+    max-height: min(70vh, 680px);
+    overflow: auto;
+    padding: 0.95rem;
+    color: #effff5;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.5;
   }
 
-  .doc-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  .man-page {
+    display: grid;
+    gap: 0.62rem;
   }
 
-  .doc-group__header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: start;
-    gap: var(--space-3);
+  .man-heading {
+    margin: 0.5rem 0 0;
+    color: #9ef0c2;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  .doc-group__intro {
-    display: flex;
-    flex-direction: column;
+  .man-line {
+    margin: 0;
+    color: #eafff3;
+  }
+
+  .man-label {
+    display: inline-block;
+    min-width: 100px;
+    color: #9ef0c2;
+    margin-right: 0.4rem;
+  }
+
+  .man-foot {
+    margin-top: 0.45rem;
+    color: #9fdcbc;
+    font-size: 0.76rem;
+  }
+
+  .man-list {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
     gap: 0.35rem;
   }
 
-  .doc-group__title,
-  .doc-group__desc {
-    margin: 0;
+  .man-open {
+    border: 0;
+    background: transparent;
+    color: #eafff3;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: underline;
+    text-decoration-color: rgba(134, 239, 172, 0.4);
+    cursor: pointer;
+    padding: 0;
   }
 
-  .doc-group__desc {
-    max-width: 72ch;
-    color: var(--text-2);
+  .docs-shelldrawer__body a {
+    color: #eafff3;
+    text-decoration: underline;
+    text-decoration-color: rgba(134, 239, 172, 0.4);
   }
 
-  .doc-shelf {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .doc-card {
-    display: flex;
-    flex-direction: column;
-    align-self: start;
-    gap: var(--space-3);
-    min-width: 0;
-    padding: var(--space-5);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background:
-      radial-gradient(460px 120px at top right, rgba(37, 99, 235, 0.08), transparent 72%),
-      radial-gradient(360px 110px at top left, rgba(45, 255, 178, 0.08), transparent 74%),
-      var(--surface-raised);
-    box-shadow: var(--shadow-sm);
-    text-decoration: none;
-    color: inherit;
-    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-  }
-
-  .doc-card--wide {
-    grid-column: span 2;
-  }
-
-  .doc-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
-  }
-
-  .doc-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .doc-card__title,
-  .doc-card__desc {
-    margin: 0;
-  }
-
-  .doc-card__title {
-    font-size: 1.25rem;
-    line-height: 1.16;
-    text-wrap: balance;
-  }
-
-  .doc-card__desc {
-    color: var(--text-2);
-  }
-
-  @media (max-width: 960px) {
-    .doc-lead {
+  @media (max-width: 1080px) {
+    .docs-top {
       grid-template-columns: 1fr;
+    }
+
+    .quick-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .docs-cli {
+      min-height: 340px;
     }
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 820px) {
     .docs-index {
       max-width: calc(100% - 2 * var(--space-4));
     }
 
-    .doc-card--wide {
-      grid-column: auto;
+    .doc-row {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+
+    .doc-row__meta {
+      justify-content: flex-start;
+    }
+
+    .docs-shelldrawer__panel {
+      bottom: 0.45rem;
+      width: calc(100% - 0.8rem);
     }
   }
 </style>
