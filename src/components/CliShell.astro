@@ -1,0 +1,906 @@
+---
+interface CliEntry {
+  id: string;
+  title: string;
+  url: string;
+  section: string;
+  description: string;
+  tags: string[];
+  updated: number;
+  featured?: boolean;
+}
+
+interface ManualCommand {
+  name: string;
+  synopsis: string;
+  description: string;
+  examples: string[];
+  seeAlso: string[];
+}
+
+interface StatsLine {
+  label: string;
+  value: string | number;
+}
+
+interface Props {
+  shellId?: string;
+  shellTitle?: string;
+  initialCommand?: string;
+  entries: CliEntry[];
+  commandManual: Record<string, ManualCommand>;
+  statsLines: StatsLine[];
+  presets?: string[];
+}
+
+const {
+  shellId = 'docs-cli-shell',
+  shellTitle = 'docs.query',
+  initialCommand = 'stat',
+  entries,
+  commandManual,
+  statsLines,
+  presets = ['ls', 'cd "Platform Guides"', 'grep setup', 'tag tutorial', 'man ls'],
+} = Astro.props;
+
+const payload = {
+  entries,
+  commandManual,
+  statsLines,
+  initialCommand,
+};
+---
+
+<aside class="cli-shell" data-shell-id={shellId} aria-label="Documentation command panel">
+  <div class="cli-shell__head">
+    <span class="cli-shell__dot" aria-hidden="true"></span>
+    <span class="cli-shell__title">{shellTitle}</span>
+    <button type="button" class="cli-shell__manbtn" data-shell-man>man</button>
+  </div>
+
+  <div class="cli-shell__output" data-shell-output role="status" aria-live="polite">
+    <p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>
+  </div>
+
+  <form class="cli-shell__form" data-shell-form>
+    <label for={`${shellId}-input`} class="sr-only">Enter CLI command</label>
+    <input id={`${shellId}-input`} data-shell-input type="text" autocomplete="off" value={initialCommand} placeholder="grep wifi" />
+    <button type="submit">Run</button>
+  </form>
+
+  <div class="cli-shell__presets" aria-label="Command shortcuts">
+    {presets.map((cmd) => (
+      <button type="button" data-shell-cmd={cmd}>{cmd.split(' ')[0]}</button>
+    ))}
+  </div>
+</aside>
+
+<div class="cli-shell-drawer" data-shell-drawer aria-hidden="true">
+  <div class="cli-shell-drawer__backdrop" data-shell-close></div>
+  <aside class="cli-shell-drawer__panel" role="dialog" aria-modal="true" aria-labelledby={`${shellId}-drawer-title`}>
+    <header class="cli-shell-drawer__head">
+      <p class="cli-shell-drawer__eyebrow">Manual</p>
+      <h2 id={`${shellId}-drawer-title`} data-shell-drawer-title>man docs</h2>
+      <div class="cli-shell-drawer__actions">
+        <button type="button" class="cli-shell-drawer__back" data-shell-back>Back</button>
+        <button type="button" class="cli-shell-drawer__close" data-shell-close>Close</button>
+      </div>
+    </header>
+    <div class="cli-shell-drawer__body" data-shell-drawer-body></div>
+  </aside>
+</div>
+
+<script type="application/json" data-shell-data set:html={JSON.stringify(payload)}></script>
+
+<script is:inline define:vars={{ shellId }}>
+  (() => {
+    const root = document.querySelector(`[data-shell-id="${shellId}"]`);
+    if (!(root instanceof HTMLElement)) return;
+
+    const outputEl = root.querySelector('[data-shell-output]');
+    const formEl = root.querySelector('[data-shell-form]');
+    const inputEl = root.querySelector('[data-shell-input]');
+    const manButtonEl = root.querySelector('[data-shell-man]');
+    const presetButtons = Array.from(root.querySelectorAll('[data-shell-cmd]'));
+    const dataEl = root.parentElement?.querySelector('[data-shell-data]');
+    const drawerEl = root.parentElement?.querySelector('[data-shell-drawer]');
+    const drawerBodyEl = root.parentElement?.querySelector('[data-shell-drawer-body]');
+    const drawerTitleEl = root.parentElement?.querySelector('[data-shell-drawer-title]');
+    const drawerBackEl = root.parentElement?.querySelector('[data-shell-back]');
+    const drawerCloseEls = Array.from(root.parentElement?.querySelectorAll('[data-shell-close]') ?? []);
+
+    if (!(outputEl instanceof HTMLElement) || !(formEl instanceof HTMLFormElement) || !(inputEl instanceof HTMLInputElement) || !(dataEl instanceof HTMLScriptElement)) {
+      return;
+    }
+
+    const payload = JSON.parse(dataEl.textContent || '{}');
+    const docs = Array.isArray(payload.entries) ? payload.entries : [];
+    const commandManual = payload.commandManual && typeof payload.commandManual === 'object' ? payload.commandManual : {};
+    const statsLines = Array.isArray(payload.statsLines) ? payload.statsLines : [];
+    const history = [];
+    const helpFlags = new Set(['--help', '-h']);
+
+    const sectionsMap = new Map();
+    for (const doc of docs) {
+      const key = String(doc.section || '').toLowerCase();
+      if (!sectionsMap.has(key)) sectionsMap.set(key, { name: doc.section, docs: [] });
+      sectionsMap.get(key).docs.push(doc);
+    }
+    const sections = [...sectionsMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+
+    const state = {
+      cwd: '/',
+      manualCurrent: null,
+      manualStack: [],
+    };
+
+    function tokenize(input) {
+      const tokens = [];
+      const re = /"([^"]+)"|'([^']+)'|(\S+)/g;
+      let match;
+      while ((match = re.exec(input)) !== null) tokens.push(match[1] ?? match[2] ?? match[3] ?? '');
+      return tokens;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function toLines(text) {
+      return text
+        .split('\n')
+        .map((line) => `<p>${line}</p>`)
+        .join('');
+    }
+
+    function print(command, body) {
+      outputEl.innerHTML = `<p><span class="prompt">${escapeHtml(state.cwd)} $</span> ${escapeHtml(command)}</p>${toLines(body)}<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>`;
+    }
+
+    function listLines(items, limit = 12) {
+      if (!items.length) return 'No matches.';
+      return items
+        .slice(0, limit)
+        .map((item) => `- <a href="${item.url}">${escapeHtml(item.title)}</a> <span class="meta">(${escapeHtml(item.section)})</span>`)
+        .join('\n');
+    }
+
+    function resolveSection(value) {
+      const q = String(value).toLowerCase();
+      return sections.find((section) => section.name.toLowerCase() === q || section.name.toLowerCase().includes(q));
+    }
+
+    function currentDocs() {
+      if (state.cwd === '/') return docs;
+      const section = resolveSection(state.cwd);
+      return section ? section.docs : [];
+    }
+
+    function resolveDoc(value) {
+      const q = String(value).toLowerCase();
+      return docs.find((doc) =>
+        String(doc.id).toLowerCase() === q ||
+        String(doc.title).toLowerCase() === q ||
+        String(doc.title).toLowerCase().includes(q)
+      );
+    }
+
+    function findDocs(query) {
+      const q = String(query).toLowerCase();
+      return docs.filter((doc) =>
+        String(doc.id).toLowerCase().includes(q) ||
+        String(doc.title).toLowerCase().includes(q) ||
+        String(doc.description).toLowerCase().includes(q) ||
+        String(doc.section).toLowerCase().includes(q) ||
+        (doc.tags || []).some((tag) => String(tag).toLowerCase().includes(q))
+      );
+    }
+
+    function resolveSeeAlsoRef(ref) {
+      const token = String(ref || '').trim();
+      if (!token) return null;
+      const key = token.toLowerCase();
+      if (commandManual[key]) return { type: 'cmd', value: key, label: `${key}(1)` };
+      const byDoc = resolveDoc(token) || findDocs(token)[0];
+      if (byDoc) return { type: 'doc', value: byDoc.id, label: byDoc.id };
+      return { type: 'text', value: token, label: token };
+    }
+
+    function renderSeeAlso(seeAlso) {
+      const links = (seeAlso || []).map(resolveSeeAlsoRef).filter(Boolean);
+      if (!links.length) return '';
+      const html = links
+        .map((item) => {
+          if (item.type === 'cmd') return `<button type="button" class="man-open" data-man-open-cmd="${escapeHtml(item.value)}">${escapeHtml(item.label)}</button>`;
+          if (item.type === 'doc') return `<button type="button" class="man-open" data-man-open-doc="${escapeHtml(item.value)}">${escapeHtml(item.label)}</button>`;
+          return `<span>${escapeHtml(item.label)}</span>`;
+        })
+        .join(' ');
+      return `<div class="man-see">${html}</div>`;
+    }
+
+    function renderManualPage(entry) {
+      return `
+        <article class="man-sheet man-page">
+          <h3 class="man-heading">NAME</h3>
+          <p class="man-line">${escapeHtml(entry.name)} - ${escapeHtml(entry.summary)}</p>
+          <h3 class="man-heading">SYNOPSIS</h3>
+          <p class="man-line">${escapeHtml(entry.synopsis)}</p>
+          <h3 class="man-heading">DESCRIPTION</h3>
+          <p class="man-line">${escapeHtml(entry.description)}</p>
+          ${entry.examples.length ? `<h3 class="man-heading">EXAMPLES</h3><ul class="man-list">${entry.examples.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : ''}
+          ${entry.seeAlso.length ? `<h3 class="man-heading">SEE ALSO</h3>${renderSeeAlso(entry.seeAlso)}` : ''}
+          <p class="man-line man-foot">q quit | backspace back | j/k scroll | space/b page | / focus input</p>
+        </article>
+      `;
+    }
+
+    function renderManIndex() {
+      const cmdRows = Object.keys(commandManual)
+        .sort((a, b) => a.localeCompare(b))
+        .map((cmd) => `<li><button type="button" class="man-open" data-man-open-cmd="${escapeHtml(cmd)}">${escapeHtml(cmd)}(1)</button></li>`)
+        .join('');
+      const docRows = docs
+        .slice(0, 20)
+        .map((doc) => `<li><button type="button" class="man-open" data-man-open-doc="${escapeHtml(doc.id)}">${escapeHtml(doc.id)}</button> — ${escapeHtml(doc.title)}</li>`)
+        .join('');
+      return `
+        <article class="man-sheet man-page">
+          <h3 class="man-heading">NAME</h3>
+          <p class="man-line">docs-manual - unix-style interface for indexed content</p>
+          <h3 class="man-heading">SYNOPSIS</h3>
+          <p class="man-line">man [command|topic]</p>
+          <h3 class="man-heading">COMMAND MANUALS</h3>
+          <ul class="man-list">${cmdRows}</ul>
+          <h3 class="man-heading">DOC TOPICS</h3>
+          <ul class="man-list">${docRows}</ul>
+        </article>
+      `;
+    }
+
+    function renderCommandManual(cmdKey) {
+      const entry = commandManual[cmdKey];
+      if (!entry) return null;
+      return renderManualPage({
+        name: entry.name,
+        summary: entry.description,
+        synopsis: entry.synopsis,
+        description: entry.description,
+        examples: entry.examples || [],
+        seeAlso: entry.seeAlso || [],
+      });
+    }
+
+    function renderDocManual(doc) {
+      return renderManualPage({
+        name: doc.id,
+        summary: doc.title,
+        synopsis: `open ${doc.id}`,
+        description: doc.description,
+        examples: [`cat ${doc.id}`, `open ${doc.id}`, `grep ${doc.tags?.[0] || doc.section}`],
+        seeAlso: ['man', 'cat', 'open', ...(doc.tags || []).slice(0, 2)],
+      });
+    }
+
+    function setBackState() {
+      if (!(drawerBackEl instanceof HTMLButtonElement)) return;
+      drawerBackEl.disabled = state.manualStack.length === 0;
+    }
+
+    function openDrawer(payload, pushCurrent = true) {
+      if (!(drawerEl instanceof HTMLElement) || !(drawerBodyEl instanceof HTMLElement) || !(drawerTitleEl instanceof HTMLElement)) {
+        print('man', 'Manual drawer unavailable in this context.');
+        return;
+      }
+      if (pushCurrent && state.manualCurrent) state.manualStack.push(state.manualCurrent);
+      state.manualCurrent = payload;
+      drawerTitleEl.textContent = payload.title;
+      drawerBodyEl.innerHTML = payload.html;
+      drawerEl.classList.add('is-open');
+      drawerEl.dataset.open = 'true';
+      drawerEl.setAttribute('aria-hidden', 'false');
+      drawerBodyEl.scrollTop = 0;
+      setBackState();
+    }
+
+    function closeDrawer() {
+      if (!(drawerEl instanceof HTMLElement)) return;
+      drawerEl.classList.remove('is-open');
+      drawerEl.dataset.open = 'false';
+      drawerEl.setAttribute('aria-hidden', 'true');
+      state.manualCurrent = null;
+      state.manualStack = [];
+      setBackState();
+    }
+
+    function goBackDrawer() {
+      if (!(drawerEl instanceof HTMLElement) || drawerEl.getAttribute('aria-hidden') !== 'false') return;
+      const previous = state.manualStack.pop();
+      if (!previous) return;
+      openDrawer(previous, false);
+      setBackState();
+    }
+
+    function run(commandRaw) {
+      const command = String(commandRaw || '').trim();
+      if (!command) return;
+      history.push(command);
+
+      const tokens = tokenize(command);
+      const cmd = String(tokens[0] || '').toLowerCase();
+      const rawArgs = tokens.slice(1);
+      const wantsHelp = rawArgs.some((token) => helpFlags.has(String(token).toLowerCase()));
+      const filteredArgs = rawArgs.filter((token) => !helpFlags.has(String(token).toLowerCase()));
+      const arg = filteredArgs.join(' ').trim();
+      const canonicalCmd = cmd === 'list' ? 'ls' : cmd === 'find' ? 'grep' : cmd;
+
+      if (wantsHelp && cmd && cmd !== 'help') {
+        const manual = commandManual[canonicalCmd];
+        if (manual) {
+          print(command, `${manual.name}: ${manual.synopsis}\n${manual.description}\nexamples:\n${(manual.examples || []).map((line) => `- ${line}`).join('\n')}`);
+          return;
+        }
+      }
+
+      if (cmd === 'clear') {
+        outputEl.innerHTML = '<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>';
+        return;
+      }
+
+      if (cmd === 'help' || cmd === '--help') {
+        if (arg && commandManual[arg]) {
+          const man = commandManual[arg];
+          print(command, `${man.name}: ${man.synopsis}\n${man.description}`);
+        } else {
+          print(command, `Commands:\n- ${Object.keys(commandManual).sort().join('\n- ')}`);
+        }
+        return;
+      }
+
+      if (cmd === 'stat') {
+        print(command, statsLines.map((line) => `${line.label} ${line.value}`).join('\n'));
+        return;
+      }
+
+      if (cmd === 'history') {
+        print(command, history.map((item, index) => `${index + 1}  ${item}`).join('\n'));
+        return;
+      }
+
+      if (cmd === 'pwd') {
+        print(command, state.cwd);
+        return;
+      }
+
+      if (cmd === 'cd') {
+        if (!arg || arg === '/') {
+          state.cwd = '/';
+          print(command, state.cwd);
+          return;
+        }
+        const section = resolveSection(arg);
+        if (!section) {
+          print(command, `cd: no such section: ${arg}`);
+          return;
+        }
+        state.cwd = section.name;
+        print(command, `entered ${section.name}`);
+        return;
+      }
+
+      if (cmd === 'ls' || cmd === 'list') {
+        if (!arg && state.cwd === '/') {
+          print(command, sections.map((section) => `${section.name} (${section.docs.length})`).join('\n'));
+          return;
+        }
+        const section = arg ? resolveSection(arg) : resolveSection(state.cwd);
+        if (!section) {
+          print(command, `ls: no such section: ${arg || state.cwd}`);
+          return;
+        }
+        print(command, listLines(section.docs, 20));
+        return;
+      }
+
+      if (cmd === 'grep' || cmd === 'find') {
+        if (!arg) {
+          print(command, `Usage: ${cmd} <query>`);
+          return;
+        }
+        const pool = state.cwd === '/' ? docs : currentDocs();
+        const matches = pool.filter((doc) =>
+          String(doc.id).toLowerCase().includes(arg.toLowerCase()) ||
+          String(doc.title).toLowerCase().includes(arg.toLowerCase()) ||
+          String(doc.description).toLowerCase().includes(arg.toLowerCase()) ||
+          (doc.tags || []).some((tag) => String(tag).toLowerCase().includes(arg.toLowerCase()))
+        );
+        print(command, listLines(matches, 14));
+        return;
+      }
+
+      if (cmd === 'tag') {
+        if (!arg) {
+          print(command, 'Usage: tag <name>');
+          return;
+        }
+        const matches = docs.filter((doc) => (doc.tags || []).some((tag) => String(tag).toLowerCase().includes(arg.toLowerCase())));
+        print(command, listLines(matches, 14));
+        return;
+      }
+
+      if (cmd === 'cat') {
+        if (!arg) {
+          print(command, 'Usage: cat <doc-id|title>');
+          return;
+        }
+        const doc = resolveDoc(arg);
+        if (!doc) {
+          print(command, `cat: not found: ${arg}`);
+          return;
+        }
+        print(command, `${doc.title}\n${doc.description}\nsection: ${doc.section}\ntags: ${(doc.tags || []).join(', ') || 'none'}\nopen: ${doc.url}`);
+        return;
+      }
+
+      if (cmd === 'open') {
+        if (!arg) {
+          print(command, 'Usage: open <doc-id|title>');
+          return;
+        }
+        const doc = resolveDoc(arg);
+        if (!doc) {
+          print(command, `open: not found: ${arg}`);
+          return;
+        }
+        window.location.assign(doc.url);
+        return;
+      }
+
+      if (cmd === 'man') {
+        if (!arg) {
+          openDrawer({ title: 'man docs', html: renderManIndex() });
+          print(command, 'Opened manual index.');
+          return;
+        }
+        const key = arg.toLowerCase();
+        const commandHtml = renderCommandManual(key);
+        if (commandHtml) {
+          openDrawer({ title: `man ${key}`, html: commandHtml });
+          print(command, `Opened manual page for ${key}.`);
+          return;
+        }
+        const doc = resolveDoc(arg) || findDocs(arg)[0];
+        if (!doc) {
+          print(command, `man: no entry for ${arg}`);
+          return;
+        }
+        openDrawer({ title: `man ${doc.id}`, html: renderDocManual(doc) });
+        print(command, `Opened manual page for ${doc.id}.`);
+        return;
+      }
+
+      print(command, `Unknown command: ${cmd}. Try help.`);
+    }
+
+    formEl.addEventListener('submit', (event) => {
+      event.preventDefault();
+      run(inputEl.value);
+      inputEl.value = '';
+    });
+
+    presetButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const cmd = button.getAttribute('data-shell-cmd') || '';
+        run(cmd);
+        inputEl.value = '';
+      });
+    });
+
+    if (manButtonEl instanceof HTMLButtonElement) {
+      manButtonEl.addEventListener('click', () => {
+        run('man');
+        inputEl.value = '';
+      });
+    }
+
+    if (drawerBodyEl instanceof HTMLElement) {
+      drawerBodyEl.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const openBtn = target.closest('.man-open');
+        if (!(openBtn instanceof HTMLElement)) return;
+        const cmd = openBtn.getAttribute('data-man-open-cmd');
+        const doc = openBtn.getAttribute('data-man-open-doc');
+        if (cmd) run(`man ${cmd}`);
+        if (doc) run(`man ${doc}`);
+      });
+    }
+
+    if (drawerBackEl instanceof HTMLButtonElement) {
+      drawerBackEl.addEventListener('click', goBackDrawer);
+      drawerBackEl.disabled = true;
+    }
+
+    drawerCloseEls.forEach((el) => {
+      el.addEventListener('click', closeDrawer);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeDrawer();
+        return;
+      }
+
+      if (!(drawerEl instanceof HTMLElement) || drawerEl.getAttribute('aria-hidden') !== 'false') return;
+      if (!(drawerBodyEl instanceof HTMLElement)) return;
+      const activeTag = document.activeElement instanceof HTMLElement ? document.activeElement.tagName : '';
+      const editable = activeTag === 'INPUT' || activeTag === 'TEXTAREA';
+
+      if (!editable && (event.key === 'Backspace' || (event.altKey && event.key === 'ArrowLeft'))) {
+        event.preventDefault();
+        goBackDrawer();
+      }
+      if (event.key === 'q') closeDrawer();
+      if (event.key === 'j') drawerBodyEl.scrollBy({ top: 48, behavior: 'auto' });
+      if (event.key === 'k') drawerBodyEl.scrollBy({ top: -48, behavior: 'auto' });
+      if (event.key === ' ') {
+        event.preventDefault();
+        drawerBodyEl.scrollBy({ top: Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
+      }
+      if (event.key === 'b') drawerBodyEl.scrollBy({ top: -Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
+      if (event.key === '/') {
+        event.preventDefault();
+        inputEl.focus();
+      }
+    });
+  })();
+</script>
+
+<style>
+  .cli-shell {
+    border-radius: 18px;
+    border: 1px solid rgba(34, 197, 94, 0.22);
+    background:
+      radial-gradient(560px 160px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: 420px;
+    overflow: hidden;
+  }
+
+  .cli-shell__head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
+    background: rgba(3, 9, 6, 0.44);
+  }
+
+  .cli-shell__dot {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 999px;
+    background: #34d399;
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+    flex: 0 0 auto;
+  }
+
+  .cli-shell__title {
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+    color: rgba(187, 247, 208, 0.76);
+    margin-right: auto;
+  }
+
+  .cli-shell__manbtn {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    border-radius: 999px;
+    background: rgba(3, 9, 6, 0.44);
+    color: #bbf7d0;
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.7rem;
+    padding: 0.14rem 0.52rem;
+    cursor: pointer;
+  }
+
+  .cli-shell__output {
+    padding: 0.9rem;
+    display: grid;
+    gap: 0.45rem;
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    color: #7fff50;
+    align-content: start;
+  }
+
+  .cli-shell__output :global(*) {
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace !important;
+    color: #7fff50;
+  }
+
+  .cli-shell__output :global(p),
+  .cli-shell__output :global(span),
+  .cli-shell__output :global(code) {
+    margin: 0;
+    color: #7fff50;
+  }
+
+  .cli-shell__output :global(.prompt) {
+    color: #b7ff6a;
+    margin-right: 0.42rem;
+  }
+
+  .cli-shell__output :global(.hint),
+  .cli-shell__output :global(.meta) {
+    color: #70e25c;
+  }
+
+  .cli-shell__output :global(a) {
+    color: #c9ff88;
+    text-decoration: underline;
+    text-decoration-color: rgba(160, 255, 120, 0.64);
+  }
+
+  .cli-shell__output :global(code) {
+    color: #d7ff9f;
+  }
+
+  .cli-shell__output :global(.cursorline) {
+    margin: 0;
+  }
+
+  .cli-shell__output :global(.cursorGlyph) {
+    color: #9aff74;
+    animation: cli-shell-cursor-blink 1s steps(2, start) infinite;
+  }
+
+  .cli-shell__form {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 0.55rem;
+    padding: 0.75rem 0.9rem;
+    border-top: 1px solid rgba(34, 197, 94, 0.14);
+    align-items: center;
+  }
+
+  .cli-shell__form input,
+  .cli-shell__form button {
+    border-radius: 10px;
+    border: 1px solid rgba(74, 222, 128, 0.28);
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+
+  .cli-shell__form input {
+    background: rgba(3, 9, 6, 0.44);
+    color: #dcfce7;
+    padding: 0.5rem 0.6rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .cli-shell__form button {
+    background: rgba(34, 197, 94, 0.18);
+    color: #dcfce7;
+    padding: 0.5rem 0.74rem;
+    cursor: pointer;
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .cli-shell__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 0 0.9rem 0.8rem;
+  }
+
+  .cli-shell__presets button {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    border-radius: 999px;
+    background: rgba(3, 9, 6, 0.44);
+    color: #bbf7d0;
+    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.72rem;
+    padding: 0.24rem 0.55rem;
+    cursor: pointer;
+  }
+
+  .cli-shell-drawer {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: 210;
+  }
+
+  .cli-shell-drawer.is-open,
+  .cli-shell-drawer[aria-hidden='false'],
+  .cli-shell-drawer[data-open='true'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cli-shell-drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 8, 23, 0.58);
+    backdrop-filter: blur(2px);
+  }
+
+  .cli-shell-drawer__panel {
+    position: absolute;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%) translateY(24px);
+    width: min(980px, calc(100% - 1.25rem));
+    border: 1px solid rgba(34, 197, 94, 0.26);
+    border-radius: 14px;
+    background:
+      radial-gradient(620px 180px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
+      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
+    box-shadow: 0 18px 42px rgba(2, 6, 23, 0.5);
+    transition: transform 180ms ease;
+    overflow: hidden;
+  }
+
+  .cli-shell-drawer.is-open .cli-shell-drawer__panel,
+  .cli-shell-drawer[aria-hidden='false'] .cli-shell-drawer__panel,
+  .cli-shell-drawer[data-open='true'] .cli-shell-drawer__panel {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .cli-shell-drawer__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
+    background: rgba(3, 9, 6, 0.44);
+  }
+
+  .cli-shell-drawer__eyebrow {
+    margin: 0;
+    color: rgba(167, 243, 208, 0.68);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cli-shell-drawer__head h2 {
+    margin: 0;
+    color: #dcfce7;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .cli-shell-drawer__actions {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .cli-shell-drawer__close,
+  .cli-shell-drawer__back {
+    border: 1px solid rgba(74, 222, 128, 0.26);
+    background: rgba(3, 9, 6, 0.44);
+    border-radius: 999px;
+    color: #bbf7d0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+  }
+
+  .cli-shell-drawer__back:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .cli-shell-drawer__body {
+    max-height: min(70vh, 680px);
+    overflow: auto;
+    padding: 0.8rem 0.9rem 1rem;
+    color: #e6ffef;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .cli-shell-drawer__body :global(.man-sheet) {
+    width: min(88ch, 100%);
+    margin: 0 auto;
+  }
+
+  .cli-shell-drawer__body :global(.man-page) {
+    display: grid;
+    gap: 0.62rem;
+  }
+
+  .cli-shell-drawer__body :global(.man-heading) {
+    margin: 0.5rem 0 0;
+    color: #9cffb3;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .cli-shell-drawer__body :global(.man-line) {
+    margin: 0;
+    color: #d8ffe4;
+  }
+
+  .cli-shell-drawer__body :global(.man-list) {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+  }
+
+  .cli-shell-drawer__body :global(.man-list li) {
+    display: block;
+    margin: 0;
+  }
+
+  .cli-shell-drawer__body :global(.man-see) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cli-shell-drawer__body :global(.man-open) {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0 !important;
+    background: transparent;
+    color: #b9ffd0 !important;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    text-decoration: underline;
+    text-decoration-color: rgba(156, 255, 179, 0.44);
+    cursor: pointer;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .cli-shell-drawer__body :global(.man-open:hover) {
+    color: #d9ffe6 !important;
+  }
+
+  .cli-shell-drawer__body :global(.man-foot) {
+    margin-top: 0.45rem;
+    color: #9fdcbc;
+    font-size: 0.76rem;
+    border-top: 1px solid rgba(125, 223, 152, 0.22);
+    padding-top: 0.5rem;
+  }
+
+  @keyframes cli-shell-cursor-blink {
+    to { opacity: 0; }
+  }
+
+  @media (max-width: 820px) {
+    .cli-shell-drawer__panel {
+      bottom: 0.45rem;
+      width: calc(100% - 0.8rem);
+    }
+  }
+</style>

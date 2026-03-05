@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import CliShell from '../../components/CliShell.astro';
 import { getDocSectionMeta } from '../../utils/docs';
 import { toTagSlug } from '../../utils/tags';
 
@@ -11,13 +12,8 @@ const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b
   const aSection = getDocSectionMeta(a.data.section);
   const bSection = getDocSectionMeta(b.data.section);
 
-  if (a.data.featured !== b.data.featured) {
-    return a.data.featured ? -1 : 1;
-  }
-
-  if (aSection.rank !== bSection.rank) {
-    return aSection.rank - bSection.rank;
-  }
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  if (aSection.rank !== bSection.rank) return aSection.rank - bSection.rank;
 
   const orderCompare = (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER);
   if (orderCompare !== 0) return orderCompare;
@@ -45,11 +41,7 @@ const sectionBuckets = docs.reduce<
   const current = groups[groups.length - 1];
 
   if (!current || current.section !== sectionMeta.label) {
-    groups.push({
-      section: sectionMeta.label,
-      description: sectionMeta.description,
-      items: [doc],
-    });
+    groups.push({ section: sectionMeta.label, description: sectionMeta.description, items: [doc] });
     return groups;
   }
 
@@ -61,10 +53,7 @@ const tagCounts = docs.reduce<Map<string, { label: string; count: number }>>((ma
   for (const tag of doc.data.tags ?? []) {
     const slug = toTagSlug(tag);
     const current = map.get(slug);
-    map.set(slug, {
-      label: tag,
-      count: (current?.count ?? 0) + 1,
-    });
+    map.set(slug, { label: tag, count: (current?.count ?? 0) + 1 });
   }
   return map;
 }, new Map());
@@ -74,7 +63,7 @@ const popularTags = [...tagCounts.entries()]
   .slice(0, 8)
   .map(([slug, info]) => ({ slug, label: info.label, count: info.count }));
 
-const cliIndex = docs.map((doc) => ({
+const cliEntries = docs.map((doc) => ({
   title: doc.data.title,
   url: `/docs/${doc.id}`,
   id: doc.id,
@@ -84,6 +73,100 @@ const cliIndex = docs.map((doc) => ({
   updated: toDateValue(doc),
   featured: Boolean(doc.data.featured),
 }));
+
+const cliManual = {
+  stat: {
+    name: 'stat',
+    synopsis: 'stat',
+    description: 'Show top-level index stats for this documentation set.',
+    examples: ['stat'],
+    seeAlso: ['help', 'ls', 'man'],
+  },
+  help: {
+    name: 'help',
+    synopsis: 'help [command]',
+    description: 'Display command list or brief command help.',
+    examples: ['help', 'help ls', 'man ls'],
+    seeAlso: ['man', 'ls', 'grep'],
+  },
+  ls: {
+    name: 'ls',
+    synopsis: 'ls [section]',
+    description: 'List sections or list docs in a section.',
+    examples: ['ls', 'ls "Platform Guides"', 'ls reference'],
+    seeAlso: ['cd', 'pwd', 'grep'],
+  },
+  cd: {
+    name: 'cd',
+    synopsis: 'cd <section> | cd /',
+    description: 'Change the virtual section context.',
+    examples: ['cd "Site Meta"', 'cd /', 'pwd'],
+    seeAlso: ['pwd', 'ls'],
+  },
+  pwd: {
+    name: 'pwd',
+    synopsis: 'pwd',
+    description: 'Print the current virtual docs path.',
+    examples: ['pwd'],
+    seeAlso: ['cd', 'ls'],
+  },
+  cat: {
+    name: 'cat',
+    synopsis: 'cat <doc-id|title>',
+    description: 'Show summary details for a doc entry.',
+    examples: ['cat eduroam-on-the-rpi', 'cat "ASCII DIP Pinout Cheatsheet"'],
+    seeAlso: ['open', 'man', 'grep'],
+  },
+  open: {
+    name: 'open',
+    synopsis: 'open <doc-id|title>',
+    description: 'Open a document page.',
+    examples: ['open site-architecture-and-design-language'],
+    seeAlso: ['cat', 'man'],
+  },
+  grep: {
+    name: 'grep',
+    synopsis: 'grep <query>',
+    description: 'Search title, description, section, and tags.',
+    examples: ['grep terminal', 'grep setup', 'grep arduino'],
+    seeAlso: ['find', 'tag', 'ls'],
+  },
+  find: {
+    name: 'find',
+    synopsis: 'find <query>',
+    description: 'Alias for grep.',
+    examples: ['find tutorial'],
+    seeAlso: ['grep', 'tag'],
+  },
+  tag: {
+    name: 'tag',
+    synopsis: 'tag <name>',
+    description: 'List docs by tag match.',
+    examples: ['tag tutorial', 'tag website'],
+    seeAlso: ['grep', 'ls'],
+  },
+  man: {
+    name: 'man',
+    synopsis: 'man [command|topic]',
+    description: 'Open manual pages for commands or docs topics.',
+    examples: ['man', 'man ls', 'man setup'],
+    seeAlso: ['help', 'cat', 'open'],
+  },
+  history: {
+    name: 'history',
+    synopsis: 'history',
+    description: 'Print shell command history.',
+    examples: ['history'],
+    seeAlso: ['clear'],
+  },
+  clear: {
+    name: 'clear',
+    synopsis: 'clear',
+    description: 'Clear terminal output.',
+    examples: ['clear'],
+    seeAlso: ['history'],
+  },
+};
 ---
 
 <!doctype html>
@@ -156,32 +239,19 @@ const cliIndex = docs.map((doc) => ({
               </div>
             </div>
 
-            <aside class="docs-cli" aria-label="Documentation command panel">
-              <div class="docs-cli__head">
-                <span class="docs-cli__dot" aria-hidden="true"></span>
-                <span class="docs-cli__title">docs.query</span>
-                <button type="button" class="docs-cli__manbtn" id="docs-cli-manbtn">man</button>
-              </div>
-
-              <div class="docs-cli__output" id="docs-cli-output" role="status" aria-live="polite">
-                <p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>
-              </div>
-
-              <form class="docs-cli__form" id="docs-cli-form">
-                <label for="docs-cli-input" class="sr-only">Enter docs command</label>
-                <input id="docs-cli-input" type="text" autocomplete="off" value="stat" placeholder="grep wifi" />
-                <button type="submit">Run</button>
-              </form>
-
-              <div class="docs-cli__presets" aria-label="Command shortcuts">
-                <button type="button" data-cmd="list">list</button>
-                <button type="button" data-cmd="ls">ls</button>
-                <button type="button" data-cmd="cd \"Platform Guides\"">cd</button>
-                <button type="button" data-cmd="grep setup">grep</button>
-                <button type="button" data-cmd="tag tutorial">tag</button>
-                <button type="button" data-cmd="man ls">man</button>
-              </div>
-            </aside>
+            <CliShell
+              shellId="docs-cli"
+              shellTitle="docs.query"
+              initialCommand="stat"
+              entries={cliEntries}
+              commandManual={cliManual}
+              statsLines={[
+                { label: 'published_docs', value: docs.length },
+                { label: 'sections', value: sectionBuckets.length },
+                { label: 'featured_docs', value: docs.filter((doc) => doc.data.featured).length },
+              ]}
+              presets={['ls', 'cd "Platform Guides"', 'grep setup', 'tag tutorial', 'man ls']}
+            />
           </section>
 
           <section class="docs-directory" aria-labelledby="directory-heading">
@@ -224,525 +294,6 @@ const cliIndex = docs.map((doc) => ({
         </>
       )}
     </main>
-
-    <div class="docs-shelldrawer" id="docs-shelldrawer" aria-hidden="true">
-      <div class="docs-shelldrawer__backdrop" data-drawer-close></div>
-      <aside class="docs-shelldrawer__panel" role="dialog" aria-modal="true" aria-labelledby="docs-shelldrawer-title">
-        <header class="docs-shelldrawer__head">
-          <p class="docs-shelldrawer__eyebrow">Manual</p>
-          <h2 id="docs-shelldrawer-title">man docs</h2>
-          <button type="button" class="docs-shelldrawer__close" data-drawer-close aria-label="Close manual panel">Close</button>
-        </header>
-        <div class="docs-shelldrawer__body" id="docs-shelldrawer-body"></div>
-      </aside>
-    </div>
-
-    <script type="application/json" id="docs-cli-data" set:html={JSON.stringify(cliIndex)}></script>
-
-    <script is:inline>
-      (() => {
-        const dataEl = document.getElementById('docs-cli-data');
-        const outputEl = document.getElementById('docs-cli-output');
-        const formEl = document.getElementById('docs-cli-form');
-        const inputEl = document.getElementById('docs-cli-input');
-        const presetButtons = Array.from(document.querySelectorAll('.docs-cli__presets button'));
-        const manButtonEl = document.getElementById('docs-cli-manbtn');
-        const drawerEl = document.getElementById('docs-shelldrawer');
-        const drawerBodyEl = document.getElementById('docs-shelldrawer-body');
-        const drawerTitleEl = document.getElementById('docs-shelldrawer-title');
-        const drawerCloseEls = Array.from(document.querySelectorAll('[data-drawer-close]'));
-
-        if (!(dataEl instanceof HTMLScriptElement) || !outputEl || !(formEl instanceof HTMLFormElement) || !(inputEl instanceof HTMLInputElement)) {
-          return;
-        }
-
-        const docs = JSON.parse(dataEl.textContent || '[]');
-        const history = [];
-        const sectionMap = new Map();
-        for (const doc of docs) {
-          const key = doc.section.toLowerCase();
-          if (!sectionMap.has(key)) sectionMap.set(key, { name: doc.section, docs: [] });
-          sectionMap.get(key).docs.push(doc);
-        }
-        const sections = [...sectionMap.values()].sort((a, b) => a.name.localeCompare(b.name));
-        const commandManual = {
-          help: {
-            name: 'help',
-            synopsis: 'help [command]',
-            description: 'Display available commands or detailed manual for a command.',
-            examples: ['help', 'help ls', 'man ls'],
-            seeAlso: ['stat', 'man', 'ls', 'grep'],
-          },
-          stat: {
-            name: 'stat',
-            synopsis: 'stat',
-            description: 'Show documentation index status in terminal form.',
-            examples: ['stat'],
-            seeAlso: ['help', 'ls', 'man'],
-          },
-          ls: {
-            name: 'ls',
-            synopsis: 'ls [section]',
-            description: 'List sections or list documents in a section.',
-            examples: ['ls', 'ls "Platform Guides"', 'ls reference'],
-            seeAlso: ['cd', 'pwd', 'grep'],
-          },
-          cd: {
-            name: 'cd',
-            synopsis: 'cd <section> | cd /',
-            description: 'Change the virtual working section in the docs tree.',
-            examples: ['cd "Site Meta"', 'cd /', 'pwd'],
-            seeAlso: ['pwd', 'ls'],
-          },
-          pwd: {
-            name: 'pwd',
-            synopsis: 'pwd',
-            description: 'Print the current virtual section path.',
-            examples: ['pwd'],
-            seeAlso: ['cd', 'ls'],
-          },
-          cat: {
-            name: 'cat',
-            synopsis: 'cat <doc-id|title>',
-            description: 'Show a short summary for a document entry.',
-            examples: ['cat eduroam-on-the-rpi', 'cat "ASCII DIP Pinout Cheatsheet"'],
-            seeAlso: ['open', 'man', 'grep'],
-          },
-          open: {
-            name: 'open',
-            synopsis: 'open <doc-id|title>',
-            description: 'Open a document page in this tab.',
-            examples: ['open site-architecture-and-design-language'],
-            seeAlso: ['cat', 'man'],
-          },
-          grep: {
-            name: 'grep',
-            synopsis: 'grep <query>',
-            description: 'Search title, description, section, and tags.',
-            examples: ['grep terminal', 'grep setup', 'grep arduino'],
-            seeAlso: ['find', 'tag', 'ls'],
-          },
-          find: {
-            name: 'find',
-            synopsis: 'find <query>',
-            description: 'Alias for grep.',
-            examples: ['find tutorial'],
-            seeAlso: ['grep', 'tag'],
-          },
-          tag: {
-            name: 'tag',
-            synopsis: 'tag <name>',
-            description: 'List docs with matching tags.',
-            examples: ['tag tutorial', 'tag website'],
-            seeAlso: ['grep', 'ls'],
-          },
-          history: {
-            name: 'history',
-            synopsis: 'history',
-            description: 'Print command history for this session.',
-            examples: ['history'],
-            seeAlso: ['clear'],
-          },
-          clear: {
-            name: 'clear',
-            synopsis: 'clear',
-            description: 'Clear terminal output.',
-            examples: ['clear'],
-            seeAlso: ['history'],
-          },
-          man: {
-            name: 'man',
-            synopsis: 'man [command|topic]',
-            description: 'Open pager-style manual for a command or docs topic.',
-            examples: ['man', 'man ls', 'man setup', 'man site-architecture-and-design-language'],
-            seeAlso: ['help', 'cat', 'open'],
-          },
-        };
-
-        const state = {
-          cwd: '/',
-        };
-
-        function tokenize(input) {
-          const tokens = [];
-          const re = /\"([^\"]+)\"|'([^']+)'|(\S+)/g;
-          let match;
-          while ((match = re.exec(input)) !== null) {
-            tokens.push(match[1] ?? match[2] ?? match[3] ?? '');
-          }
-          return tokens;
-        }
-
-        function escapeHtml(value) {
-          return String(value)
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#39;');
-        }
-
-        function toLines(text) {
-          return text.split('\n').map((line) => `<p>${line}</p>`).join('');
-        }
-
-        function print(command, body) {
-          outputEl.innerHTML = `<p><span class="prompt">${escapeHtml(state.cwd)} $</span> ${escapeHtml(command)}</p>${toLines(body)}<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>`;
-        }
-
-        function listLines(items, limit = 10) {
-          if (!items.length) return 'No matches.';
-          return items
-            .slice(0, limit)
-            .map((item) => `- <a href="${item.url}">${escapeHtml(item.title)}</a> <span class="meta">(${escapeHtml(item.section)})</span>`)
-            .join('\n');
-        }
-
-        function matchDocs(query) {
-          const q = query.toLowerCase();
-          return docs.filter((doc) =>
-            doc.title.toLowerCase().includes(q) ||
-            doc.description.toLowerCase().includes(q) ||
-            doc.section.toLowerCase().includes(q) ||
-            doc.tags.some((tag) => tag.toLowerCase().includes(q)) ||
-            doc.id.toLowerCase().includes(q)
-          );
-        }
-
-        function resolveSection(value) {
-          const q = value.toLowerCase();
-          return sections.find((section) => section.name.toLowerCase() === q || section.name.toLowerCase().includes(q));
-        }
-
-        function currentDocs() {
-          if (state.cwd === '/') return docs;
-          const section = resolveSection(state.cwd);
-          return section ? section.docs : [];
-        }
-
-        function resolveDoc(value) {
-          const q = value.toLowerCase();
-          return docs.find((doc) =>
-            doc.id.toLowerCase() === q ||
-            doc.title.toLowerCase() === q ||
-            doc.title.toLowerCase().includes(q)
-          );
-        }
-
-        function openDrawer(title, bodyHtml) {
-          if (!drawerEl || !drawerBodyEl || !drawerTitleEl) {
-            print('man', 'Manual drawer unavailable in this context.');
-            return;
-          }
-          drawerTitleEl.textContent = title;
-          drawerBodyEl.innerHTML = bodyHtml;
-          drawerEl.classList.add('is-open');
-          drawerEl.dataset.open = 'true';
-          drawerEl.setAttribute('aria-hidden', 'false');
-          drawerBodyEl.scrollTop = 0;
-        }
-
-        function closeDrawer() {
-          if (!drawerEl) return;
-          drawerEl.classList.remove('is-open');
-          drawerEl.dataset.open = 'false';
-          drawerEl.setAttribute('aria-hidden', 'true');
-        }
-
-        function renderManualPage(entry) {
-          return `
-            <article class="man-page">
-              <h3 class="man-heading">NAME</h3>
-              <p class="man-line">${escapeHtml(entry.name)} - ${escapeHtml(entry.summary)}</p>
-              <h3 class="man-heading">SYNOPSIS</h3>
-              <p class="man-line">${escapeHtml(entry.synopsis)}</p>
-              <h3 class="man-heading">DESCRIPTION</h3>
-              <p class="man-line">${escapeHtml(entry.description)}</p>
-              ${entry.examples.length ? `<h3 class="man-heading">EXAMPLES</h3><ul class="man-list">${entry.examples.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : ''}
-              ${entry.seeAlso.length ? `<h3 class="man-heading">SEE ALSO</h3><p class="man-line">${entry.seeAlso.map((item) => escapeHtml(item)).join(', ')}</p>` : ''}
-              <p class="man-line man-foot">q to quit, j/k to scroll, space/b for page, / to focus terminal input</p>
-            </article>
-          `;
-        }
-
-        function renderManIndex() {
-          const cmdRows = Object.keys(commandManual)
-            .sort((a, b) => a.localeCompare(b))
-            .map((cmd) => `<li><button type="button" class="man-open" data-man-open-cmd="${escapeHtml(cmd)}">${escapeHtml(cmd)}</button></li>`)
-            .join('');
-          const docRows = docs
-            .slice(0, 18)
-            .map((doc) => `<li><button type="button" class="man-open" data-man-open-doc="${escapeHtml(doc.id)}">${escapeHtml(doc.id)}</button> - ${escapeHtml(doc.title)}</li>`)
-            .join('');
-          return `
-            <article class="man-page">
-              <h3 class="man-heading">NAME</h3>
-              <p class="man-line">docs-manual - unix-style interface for ChipsnCode documentation</p>
-              <h3 class="man-heading">SYNOPSIS</h3>
-              <p class="man-line">man [command|topic]</p>
-              <h3 class="man-heading">COMMAND MANUALS</h3>
-              <ul class="man-list">${cmdRows}</ul>
-              <h3 class="man-heading">DOC TOPICS</h3>
-              <ul class="man-list">${docRows}</ul>
-            </article>
-          `;
-        }
-
-        function renderCommandManual(cmd) {
-          const entry = commandManual[cmd];
-          if (!entry) return null;
-          return renderManualPage({
-            name: cmd,
-            summary: entry.description,
-            synopsis: entry.synopsis,
-            description: entry.description,
-            examples: entry.examples,
-            seeAlso: entry.seeAlso,
-          });
-        }
-
-        function renderDocManual(doc) {
-          return renderManualPage({
-            name: doc.id,
-            summary: doc.title,
-            synopsis: `open ${doc.id}`,
-            description: doc.description,
-            examples: [`cat ${doc.id}`, `open ${doc.id}`, `grep ${doc.tags[0] || doc.section}`],
-            seeAlso: ['man', 'cat', 'open', ...doc.tags.slice(0, 2)],
-          });
-        }
-
-        function run(commandRaw) {
-          const command = commandRaw.trim();
-          if (!command) return;
-          history.push(command);
-
-          const tokens = tokenize(command);
-          const cmd = (tokens[0] || '').toLowerCase();
-          const helpFlags = new Set(['--help', '-h']);
-          const rawArgs = tokens.slice(1);
-          const wantsHelp = rawArgs.some((token) => helpFlags.has(token.toLowerCase()));
-          const filteredArgs = rawArgs.filter((token) => !helpFlags.has(token.toLowerCase()));
-          const arg = filteredArgs.join(' ').trim();
-          const canonicalCmd = cmd === 'list' ? 'ls' : cmd === 'find' ? 'grep' : cmd;
-
-          if (wantsHelp && cmd && cmd !== 'help') {
-            const manual = commandManual[canonicalCmd];
-            if (manual) {
-              print(
-                command,
-                `${manual.name}: ${manual.synopsis}\n${manual.description}\nexamples:\n${manual.examples.map((line) => `- ${line}`).join('\n')}`
-              );
-              return;
-            }
-          }
-
-          if (cmd === 'clear') {
-            outputEl.innerHTML = '<p class="cursorline" aria-hidden="true"><span class="cursorGlyph">█</span></p>';
-            return;
-          }
-
-          if (cmd === 'help' || cmd === '--help') {
-            if (arg && commandManual[arg]) {
-              print(command, `${arg}: ${commandManual[arg].synopsis}\n${commandManual[arg].description}`);
-            } else {
-              print(command, 'Commands:\n- stat\n- help\n- ls\n- cd\n- pwd\n- cat\n- open\n- grep\n- find\n- tag\n- man\n- history\n- clear');
-            }
-            return;
-          }
-
-          if (cmd === 'stat') {
-            const featuredCount = docs.filter((doc) => doc.featured).length;
-            print(
-              command,
-              `published_docs ${docs.length}\nsections ${sections.length}\nfeatured_docs ${featuredCount}`
-            );
-            return;
-          }
-
-          if (cmd === 'history') {
-            print(command, history.map((item, i) => `${i + 1}  ${item}`).join('\n'));
-            return;
-          }
-
-          if (cmd === 'pwd') {
-            print(command, state.cwd);
-            return;
-          }
-
-          if (cmd === 'cd') {
-            if (!arg || arg === '/') {
-              state.cwd = '/';
-              print(command, state.cwd);
-              return;
-            }
-            const section = resolveSection(arg);
-            if (!section) {
-              print(command, `cd: no such section: ${arg}`);
-              return;
-            }
-            state.cwd = section.name;
-            print(command, `Entered section: ${section.name}`);
-            return;
-          }
-
-          if (cmd === 'ls' || cmd === 'list') {
-            if (!arg && state.cwd === '/') {
-              print(command, sections.map((section) => `${section.name} (${section.docs.length})`).join('\n'));
-              return;
-            }
-            const section = arg ? resolveSection(arg) : resolveSection(state.cwd);
-            if (!section) {
-              print(command, `ls: no such section: ${arg || state.cwd}`);
-              return;
-            }
-            print(command, listLines(section.docs, 20));
-            return;
-          }
-
-          if (cmd === 'grep' || cmd === 'find') {
-            if (!arg) {
-              print(command, `Usage: ${cmd} <query>`);
-              return;
-            }
-            const pool = state.cwd === '/' ? docs : currentDocs();
-            const matches = pool.filter((doc) =>
-              doc.title.toLowerCase().includes(arg.toLowerCase()) ||
-              doc.description.toLowerCase().includes(arg.toLowerCase()) ||
-              doc.tags.some((tag) => tag.toLowerCase().includes(arg.toLowerCase())) ||
-              doc.id.toLowerCase().includes(arg.toLowerCase())
-            );
-            print(command, listLines(matches, 12));
-            return;
-          }
-
-          if (cmd === 'tag') {
-            if (!arg) {
-              print(command, 'Usage: tag <name>');
-              return;
-            }
-            const matches = docs.filter((doc) => doc.tags.some((tag) => tag.toLowerCase().includes(arg.toLowerCase())));
-            print(command, listLines(matches, 12));
-            return;
-          }
-
-          if (cmd === 'cat') {
-            if (!arg) {
-              print(command, 'Usage: cat <doc-id|title>');
-              return;
-            }
-            const doc = resolveDoc(arg);
-            if (!doc) {
-              print(command, `cat: not found: ${arg}`);
-              return;
-            }
-            print(command, `${doc.title}\n${doc.description}\nsection: ${doc.section}\ntags: ${doc.tags.join(', ') || 'none'}\nopen: ${doc.url}`);
-            return;
-          }
-
-          if (cmd === 'open') {
-            if (!arg) {
-              print(command, 'Usage: open <doc-id|title>');
-              return;
-            }
-            const doc = resolveDoc(arg);
-            if (!doc) {
-              print(command, `open: not found: ${arg}`);
-              return;
-            }
-            window.location.assign(doc.url);
-            return;
-          }
-
-          if (cmd === 'man') {
-            if (!arg) {
-              openDrawer('man docs', renderManIndex());
-              print(command, 'Opened manual index.');
-              return;
-            }
-            const manualKey = arg.toLowerCase();
-            const commandManualHtml = renderCommandManual(manualKey);
-            if (commandManualHtml) {
-              openDrawer(`man ${manualKey}`, commandManualHtml);
-              print(command, `Opened manual page for ${manualKey}.`);
-              return;
-            }
-            const doc = resolveDoc(arg) || matchDocs(arg)[0];
-            if (!doc) {
-              print(command, `man: no entry for ${arg}`);
-              return;
-            }
-            openDrawer(`man ${doc.id}`, renderDocManual(doc));
-            print(command, `Opened manual page for ${doc.id}.`);
-            return;
-          }
-
-          print(command, `Unknown command: ${cmd}. Try help.`);
-        }
-
-        formEl.addEventListener('submit', (event) => {
-          event.preventDefault();
-          run(inputEl.value);
-          inputEl.value = '';
-        });
-
-        presetButtons.forEach((button) => {
-          button.addEventListener('click', () => {
-            const cmd = button.getAttribute('data-cmd') || '';
-            run(cmd);
-            inputEl.value = '';
-          });
-        });
-
-        if (manButtonEl instanceof HTMLButtonElement) {
-          manButtonEl.addEventListener('click', () => {
-            run('man');
-            inputEl.value = '';
-          });
-        }
-
-        if (drawerBodyEl instanceof HTMLElement) {
-          drawerBodyEl.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            const cmdBtn = target.closest('.man-open');
-            if (!(cmdBtn instanceof HTMLElement)) return;
-            const cmd = cmdBtn.getAttribute('data-man-open-cmd');
-            const docId = cmdBtn.getAttribute('data-man-open-doc');
-            if (cmd) {
-              run(`man ${cmd}`);
-              return;
-            }
-            if (docId) {
-              run(`man ${docId}`);
-            }
-          });
-        }
-
-        drawerCloseEls.forEach((el) => {
-          el.addEventListener('click', closeDrawer);
-        });
-
-        document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') closeDrawer();
-          if (!drawerEl || drawerEl.getAttribute('aria-hidden') !== 'false') return;
-          if (event.key === 'q') closeDrawer();
-          if (!(drawerBodyEl instanceof HTMLElement)) return;
-          if (event.key === 'j') drawerBodyEl.scrollBy({ top: 48, behavior: 'auto' });
-          if (event.key === 'k') drawerBodyEl.scrollBy({ top: -48, behavior: 'auto' });
-          if (event.key === ' ') {
-            event.preventDefault();
-            drawerBodyEl.scrollBy({ top: Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
-          }
-          if (event.key === 'b') drawerBodyEl.scrollBy({ top: -Math.max(140, drawerBodyEl.clientHeight * 0.78), behavior: 'auto' });
-          if (event.key === '/') {
-            event.preventDefault();
-            inputEl.focus();
-          }
-        });
-
-      })();
-    </script>
 
     <Footer />
   </body>
@@ -866,167 +417,6 @@ const cliIndex = docs.map((doc) => ({
   .quick-tag span {
     color: var(--text-2);
     font-weight: 700;
-  }
-
-  .docs-cli {
-    border-radius: 18px;
-    border: 1px solid rgba(34, 197, 94, 0.22);
-    background:
-      radial-gradient(560px 160px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
-      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
-    box-shadow: var(--shadow-sm);
-    display: grid;
-    grid-template-rows: auto 1fr auto auto;
-    min-height: 420px;
-    overflow: hidden;
-  }
-
-  .docs-cli__head {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
-    background: rgba(3, 9, 6, 0.44);
-  }
-
-  .docs-cli__dot {
-    width: 0.72rem;
-    height: 0.72rem;
-    border-radius: 999px;
-    background: #34d399;
-    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
-    flex: 0 0 auto;
-  }
-
-  .docs-cli__title {
-    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
-    font-size: 0.8rem;
-    color: rgba(187, 247, 208, 0.76);
-    margin-right: auto;
-  }
-
-  .docs-cli__manbtn {
-    border: 1px solid rgba(74, 222, 128, 0.26);
-    border-radius: 999px;
-    background: rgba(3, 9, 6, 0.44);
-    color: #bbf7d0;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    padding: 0.14rem 0.52rem;
-    cursor: pointer;
-  }
-
-  .docs-cli__output {
-    padding: 0.9rem;
-    display: grid;
-    gap: 0.45rem;
-    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
-    font-size: 0.78rem;
-    letter-spacing: 0.01em;
-    line-height: 1.4;
-    color: #7fff50;
-    align-content: start;
-  }
-
-  .docs-cli__output :global(*) {
-    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace !important;
-    color: #7fff50;
-  }
-
-  .docs-cli .docs-cli__output :global(p),
-  .docs-cli .docs-cli__output :global(span),
-  .docs-cli .docs-cli__output :global(code) {
-    margin: 0;
-    color: #7fff50;
-  }
-
-  .docs-cli .docs-cli__output :global(.prompt) {
-    color: #b7ff6a;
-    margin-right: 0.42rem;
-  }
-
-  .docs-cli .docs-cli__output :global(.hint),
-  .docs-cli .docs-cli__output :global(.meta) {
-    color: #70e25c;
-  }
-
-  .docs-cli .docs-cli__output :global(a) {
-    color: #c9ff88;
-    text-decoration: underline;
-    text-decoration-color: rgba(160, 255, 120, 0.64);
-  }
-
-  .docs-cli .docs-cli__output :global(code) {
-    color: #d7ff9f;
-  }
-
-  .docs-cli__form {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    gap: 0.55rem;
-    padding: 0.75rem 0.9rem;
-    border-top: 1px solid rgba(34, 197, 94, 0.14);
-    align-items: center;
-  }
-
-  .docs-cli__form input,
-  .docs-cli__form button {
-    border-radius: 10px;
-    border: 1px solid rgba(74, 222, 128, 0.28);
-    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
-    font-size: 0.78rem;
-  }
-
-  .docs-cli__form input {
-    background: rgba(3, 9, 6, 0.44);
-    color: #dcfce7;
-    padding: 0.5rem 0.6rem;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .docs-cli__form button {
-    background: rgba(34, 197, 94, 0.18);
-    color: #dcfce7;
-    padding: 0.5rem 0.74rem;
-    cursor: pointer;
-    flex: 0 0 auto;
-    width: auto;
-  }
-
-  .docs-cli__presets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    padding: 0 0.9rem 0.8rem;
-  }
-
-  .docs-cli__presets button {
-    border: 1px solid rgba(74, 222, 128, 0.26);
-    border-radius: 999px;
-    background: rgba(3, 9, 6, 0.44);
-    color: #bbf7d0;
-    font-family: 'Courier New', 'Lucida Console', Menlo, Monaco, Consolas, monospace;
-    font-size: 0.72rem;
-    padding: 0.24rem 0.55rem;
-    cursor: pointer;
-  }
-
-  .docs-cli .docs-cli__output :global(.cursorline) {
-    margin: 0;
-  }
-
-  .docs-cli .docs-cli__output :global(.cursorGlyph) {
-    color: #9aff74;
-    animation: docs-cli-cursor-blink 1s steps(2, start) infinite;
-  }
-
-  @keyframes docs-cli-cursor-blink {
-    to {
-      opacity: 0;
-    }
   }
 
   .docs-directory {
@@ -1159,163 +549,6 @@ const cliIndex = docs.map((doc) => ({
     background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
   }
 
-  .docs-shelldrawer {
-    position: fixed;
-    inset: 0;
-    display: grid;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 180ms ease;
-    z-index: 210;
-  }
-
-  .docs-shelldrawer.is-open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .docs-shelldrawer[aria-hidden='false'],
-  .docs-shelldrawer[data-open='true'] {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .docs-shelldrawer__backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(2, 8, 23, 0.58);
-    backdrop-filter: blur(2px);
-  }
-
-  .docs-shelldrawer__panel {
-    position: absolute;
-    left: 50%;
-    bottom: 1rem;
-    transform: translateX(-50%) translateY(24px);
-    width: min(980px, calc(100% - 1.25rem));
-    border: 1px solid rgba(34, 197, 94, 0.26);
-    border-radius: 14px;
-    background:
-      radial-gradient(620px 180px at top left, rgba(34, 197, 94, 0.08), transparent 72%),
-      linear-gradient(180deg, rgba(4, 10, 7, 0.96), rgba(7, 15, 12, 0.98));
-    box-shadow: 0 18px 42px rgba(2, 6, 23, 0.5);
-    transition: transform 180ms ease;
-    overflow: hidden;
-  }
-
-  .docs-shelldrawer.is-open .docs-shelldrawer__panel {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .docs-shelldrawer[aria-hidden='false'] .docs-shelldrawer__panel,
-  .docs-shelldrawer[data-open='true'] .docs-shelldrawer__panel {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .docs-shelldrawer__head {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 0.9rem;
-    border-bottom: 1px solid rgba(34, 197, 94, 0.14);
-    background: rgba(3, 9, 6, 0.44);
-  }
-
-  .docs-shelldrawer__eyebrow {
-    margin: 0;
-    color: rgba(167, 243, 208, 0.68);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .docs-shelldrawer__head h2 {
-    margin: 0;
-    color: #dcfce7;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
-
-  .docs-shelldrawer__close {
-    border: 1px solid rgba(74, 222, 128, 0.26);
-    background: rgba(3, 9, 6, 0.44);
-    border-radius: 999px;
-    color: #bbf7d0;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    padding: 0.2rem 0.6rem;
-    cursor: pointer;
-  }
-
-  .docs-shelldrawer__body {
-    max-height: min(70vh, 680px);
-    overflow: auto;
-    padding: 0.95rem;
-    color: #effff5;
-    font-family: var(--font-mono);
-    font-size: 0.84rem;
-    line-height: 1.5;
-  }
-
-  .man-page {
-    display: grid;
-    gap: 0.62rem;
-  }
-
-  .man-heading {
-    margin: 0.5rem 0 0;
-    color: #9ef0c2;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .man-line {
-    margin: 0;
-    color: #eafff3;
-  }
-
-  .man-label {
-    display: inline-block;
-    min-width: 100px;
-    color: #9ef0c2;
-    margin-right: 0.4rem;
-  }
-
-  .man-foot {
-    margin-top: 0.45rem;
-    color: #9fdcbc;
-    font-size: 0.76rem;
-  }
-
-  .man-list {
-    margin: 0;
-    padding-left: 1.15rem;
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .man-open {
-    border: 0;
-    background: transparent;
-    color: #eafff3;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    text-decoration: underline;
-    text-decoration-color: rgba(134, 239, 172, 0.4);
-    cursor: pointer;
-    padding: 0;
-  }
-
-  .docs-shelldrawer__body a {
-    color: #eafff3;
-    text-decoration: underline;
-    text-decoration-color: rgba(134, 239, 172, 0.4);
-  }
-
   @media (max-width: 1080px) {
     .docs-top {
       grid-template-columns: 1fr;
@@ -1323,10 +556,6 @@ const cliIndex = docs.map((doc) => ({
 
     .quick-panels {
       grid-template-columns: 1fr;
-    }
-
-    .docs-cli {
-      min-height: 340px;
     }
   }
 
@@ -1342,11 +571,6 @@ const cliIndex = docs.map((doc) => ({
 
     .doc-row__meta {
       justify-content: flex-start;
-    }
-
-    .docs-shelldrawer__panel {
-      bottom: 0.45rem;
-      width: calc(100% - 0.8rem);
     }
   }
 </style>
