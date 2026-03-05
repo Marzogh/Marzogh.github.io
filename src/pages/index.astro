@@ -26,6 +26,34 @@ const latestTools = [...allTools]
   .sort((a, b) => entryDateValue(b) - entryDateValue(a))
   .slice(0, 5);
 
+const allEducation = await getCollection('education', ({ data }) => !data.draft);
+const EDUCATION_HOME_GROUPS = [
+  {
+    slug: 'student-resources',
+    label: 'For students',
+    linkLabel: 'Scaffolded lessons & exemplars',
+    note: 'Clear steps, checkpoints, and clean UI.',
+  },
+  {
+    slug: 'teaching-resources',
+    label: 'For teachers',
+    linkLabel: 'Planning resources & templates',
+    note: 'Reusable structures, rubrics, and workflows.',
+  },
+  {
+    slug: 'interactive-utilities',
+    label: 'Tools',
+    linkLabel: 'Interactive utilities',
+    note: 'Small helpers that save time and reduce friction.',
+  },
+] as const;
+const educationByHomeCategory = Object.fromEntries(
+  EDUCATION_HOME_GROUPS.map((group) => [
+    group.slug,
+    allEducation.filter((entry) => entry.data.homeCategory === group.slug),
+  ])
+);
+
 const toTagLine = (entry) => {
   const tags = entry?.data?.tags;
   if (Array.isArray(tags) && tags.length) return tags.slice(0, 4).join(' · ');
@@ -156,23 +184,21 @@ const rest = (pill) => byPill[pill].slice(3);
           </div>
 
           <div class="edu__stack">
-            <div class="edu__block">
-              <div class="edu__label">For students</div>
-              <a class="edu__link" href="/tags/student-resources">Scaffolded lessons &amp; exemplars</a>
-              <div class="edu__note">Clear steps, checkpoints, and clean UI.</div>
-            </div>
-
-            <div class="edu__block">
-              <div class="edu__label">For teachers</div>
-              <a class="edu__link" href="/tags/teaching-resources">Planning resources &amp; templates</a>
-              <div class="edu__note">Reusable structures, rubrics, and workflows.</div>
-            </div>
-
-            <div class="edu__block">
-              <div class="edu__label">Tools</div>
-              <a class="edu__link" href="/tags/interactive-utilities">Interactive utilities</a>
-              <div class="edu__note">Small helpers that save time and reduce friction.</div>
-            </div>
+            {EDUCATION_HOME_GROUPS.map((group) => {
+              const count = educationByHomeCategory[group.slug]?.length ?? 0;
+              return (
+                <div class="edu__block">
+                  <div class="edu__label">{group.label}</div>
+                  {count > 0 ? (
+                    <a class="edu__link" href={`/tags/${group.slug}`}>{group.linkLabel}</a>
+                  ) : (
+                    <span class="edu__link edu__link--muted">{group.linkLabel}</span>
+                  )}
+                  <div class="edu__note">{group.note}</div>
+                  <div class="edu__count">{count} resource{count === 1 ? '' : 's'}</div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -843,9 +869,20 @@ const rest = (pill) => byPill[pill].slice(3);
         color: var(--link-hover);
       }
 
+      .edu__link--muted {
+        color: var(--muted);
+      }
+
       .edu__note {
         color: var(--muted);
         font-size: 0.95rem;
+      }
+
+      .edu__count {
+        margin-top: 0.4rem;
+        color: var(--text-2);
+        font-size: 0.85rem;
+        font-weight: 600;
       }
 
       .feature-band__intro {

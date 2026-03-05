@@ -2,6 +2,8 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { DOC_SECTION_LABELS } from './utils/docs';
 
+const EDUCATION_HOME_CATEGORIES = ['student-resources', 'teaching-resources', 'interactive-utilities'] as const;
+
 // ------------------------
 // Blog Collection
 // ------------------------
@@ -104,11 +106,33 @@ const education = defineCollection({
       subject: z.string().optional(),
       order: z.number().optional(),
       tags: z.array(z.string()).default([]),
+      homeCategory: z.enum(EDUCATION_HOME_CATEGORIES),
       type: z.string().optional(),
       featured: z.boolean().default(false),
       showInIndex: z.boolean().default(true),
       image: z.string().optional(),
       headerStyle: z.enum(['panel', 'plain']).optional(),
+    }).superRefine((data, ctx) => {
+      if (data.draft) return;
+      const broadTags = EDUCATION_HOME_CATEGORIES as readonly string[];
+      const matchingBroadTags = data.tags.filter((tag) => broadTags.includes(tag));
+      const uniqueMatching = [...new Set(matchingBroadTags)];
+
+      if (uniqueMatching.length !== 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Education entries must include exactly one broad tag: student-resources, teaching-resources, or interactive-utilities.',
+          path: ['tags'],
+        });
+      }
+
+      if (!uniqueMatching.includes(data.homeCategory)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'homeCategory must match the broad classification tag in tags.',
+          path: ['homeCategory'],
+        });
+      }
     }),
 });
 
