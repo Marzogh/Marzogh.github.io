@@ -35,7 +35,14 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
       <article class="project-entry">
         <a href="/projects" class="project-back">← Back to Projects</a>
 
-        <header class:list={['project-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'project-hero--plain']}>
+        <header
+          class:list={[
+            'project-hero',
+            headerStyle === 'panel' && 'panel',
+            headerStyle === 'plain' && 'project-hero--plain',
+            headerStyle === 'panel' && !hero && 'project-hero--textOnly',
+          ]}
+        >
           <div class="project-copy">
             <div class="project-kickers">
               <span class="pill">Project</span>
@@ -69,7 +76,7 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
             {(entry.data.github || entry.data.demo) ? (
               <div class="project-links">
                 {entry.data.github ? <a class="btn" href={entry.data.github}>Source</a> : null}
-                {entry.data.demo ? <a class="btn btn--primary" href={entry.data.demo}>Live demo</a> : null}
+                {entry.data.demo ? <a class="btn btn--primary" href={entry.data.demo}>{entry.data.demoLabel ?? 'Live demo'}</a> : null}
               </div>
             ) : null}
           </div>
@@ -133,6 +140,10 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
       radial-gradient(800px 240px at top right, rgba(37, 99, 235, 0.08), transparent 70%),
       radial-gradient(620px 220px at bottom left, rgba(45, 255, 178, 0.08), transparent 76%),
       var(--surface-raised);
+  }
+
+  .project-hero.panel.project-hero--textOnly {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .project-hero--plain {
@@ -273,12 +284,108 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
     margin: 1.5rem 0 1.9rem;
   }
 
+  .project-prose :global(.spec-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin: 1rem 0 1.4rem;
+  }
+
+  .project-prose :global(.spec-card) {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface-raised) 86%, transparent 14%);
+    padding: 0.85rem 0.95rem;
+  }
+
+  .project-prose :global(.spec-card h3) {
+    margin: 0 0 0.3rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .project-prose :global(.spec-card p) {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  .project-prose :global(.cap-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .project-prose :global(.cap-card) {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface) 72%, transparent 28%);
+    padding: 0.9rem 1rem;
+  }
+
+  .project-prose :global(.cap-card h3) {
+    margin: 0 0 0.45rem;
+    font-size: 1.02rem;
+  }
+
+  .project-prose :global(.cap-card ul) {
+    margin: 0;
+  }
+
+  .project-prose :global(.quote-strip) {
+    margin: 1.2rem 0 1.6rem;
+    padding: 1rem 1.1rem;
+    border-left: 4px solid color-mix(in srgb, var(--accent) 72%, transparent 28%);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: color-mix(in srgb, var(--surface-raised) 88%, transparent 12%);
+  }
+
+  .project-prose :global(.quote-strip p) {
+    margin: 0.25rem 0;
+  }
+
+  .project-prose :global(.usecase-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .project-prose :global(.usecase-card) {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface-raised) 83%, transparent 17%);
+    padding: 0.95rem 1rem;
+  }
+
+  .project-prose :global(.usecase-card h3) {
+    margin: 0 0 0.45rem;
+    font-size: 1.02rem;
+  }
+
+  .project-prose :global(.link-row) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 0.85rem;
+  }
+
   @media (max-width: 860px) {
     .project-page {
       max-width: calc(100% - 2 * var(--space-4));
     }
 
     .project-hero.panel {
+      grid-template-columns: 1fr;
+    }
+
+    .project-prose :global(.spec-grid),
+    .project-prose :global(.cap-grid),
+    .project-prose :global(.usecase-grid) {
       grid-template-columns: 1fr;
     }
   }

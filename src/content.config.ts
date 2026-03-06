@@ -43,6 +43,7 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       github: z.string().url().optional(),
       demo: z.string().url().optional(),
+      demoLabel: z.string().optional(),
       image: z.string().optional(),
       headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
