@@ -1,0 +1,1077 @@
+---
+title: Design Language Archive — 2026-03-08
+description: "Archived 2026-03-02 working version of the site architecture and design language note."
+pubDate: 2026-03-01
+updatedDate: 2026-03-08
+draft: false
+section: Site Meta
+order: 3
+tags: [website, design, architecture, astro, docs, archive]
+type: docs
+featured: false
+headerStyle: plain
+---
+
+<div class="callout callout--note">
+  <strong>Archive note:</strong> this file preserves the previous working version of the design-language page.
+  The active version now lives in <code>site-architecture-and-design-language.mdx</code>.
+</div>
+
+<section class="design-manifesto" id="system">
+  <div class="design-manifesto__copy">
+    <p class="design-kicker">Working System</p>
+    <h2 class="design-manifesto__line">
+      One site, several modes, one visual grammar.
+    </h2>
+    <p class="design-manifesto__summary">
+      Chips'nCode should feel coherent across writing, utilities, documentation, education, projects, and
+      astrophotography without forcing them into one generic shell. The design language needs to hold the whole site
+      together while still letting each section behave like the thing it actually is.
+    </p>
+  </div>
+
+  <div class="design-state" aria-label="System snapshot">
+    <p class="design-state__title">design://site-state</p>
+    <dl>
+      <div><dt>sections</dt><dd>6</dd></div>
+      <div><dt>header modes</dt><dd>2</dd></div>
+      <div><dt>index model</dt><dd>editorial</dd></div>
+      <div><dt>rule</dt><dd>cohesive, not cloned</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="design-tldr">
+  <span class="design-tldr__label">TL:DR;</span>
+  <p>
+    one visual language, several page archetypes, and no obligation to force writing, utilities, and image-led work
+    into the same shell.
+  </p>
+</div>
+
+<nav class="design-index" aria-label="Design document navigation">
+  <span class="design-index__label">Index</span>
+  <a href="#system">system</a>
+  <span>/</span>
+  <a href="#structure">structure</a>
+  <span>/</span>
+  <a href="#headers">headers</a>
+  <span>/</span>
+  <a href="#archetypes">archetypes</a>
+  <span>/</span>
+  <a href="#patterns">patterns</a>
+  <span>/</span>
+  <a href="#rules">rules</a>
+  <span>/</span>
+  <a href="#history">history</a>
+</nav>
+
+<section class="design-split">
+  <article>
+    <p class="design-kicker">Shared</p>
+    <h2>What should stay consistent</h2>
+    <ul class="design-list">
+      <li>type scale and spacing rhythm</li>
+      <li>surface, border, and shadow tokens</li>
+      <li>metadata, link, and code styling</li>
+      <li>the general mood of calm technical material</li>
+    </ul>
+  </article>
+  <article>
+    <p class="design-kicker">Variable</p>
+    <h2>What is allowed to change</h2>
+    <ul class="design-list">
+      <li>header treatment</li>
+      <li>archive structure</li>
+      <li>media priority</li>
+      <li>interaction model and information density</li>
+    </ul>
+  </article>
+</section>
+
+<section class="design-rulestrip">
+  <article>
+    <p class="design-kicker">Bad rule</p>
+    <p>Every page should use the same shell.</p>
+  </article>
+  <article>
+    <p class="design-kicker">Better rule</p>
+    <p>Every page should feel like it belongs to the same site.</p>
+  </article>
+  <article>
+    <p class="design-kicker">Actual rule</p>
+    <p>Keep one visual grammar, then let each section earn its own pacing.</p>
+  </article>
+</section>
+
+<section id="structure">
+
+## Current structure
+
+<div class="design-map" aria-label="Site structure map">
+  <div class="design-map__row">
+    <span class="design-map__step">01</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/</span>
+    </div>
+    <span class="design-map__label">switchboard</span>
+  </div>
+  <div class="design-map__row">
+    <span class="design-map__step">02</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/blog</span>
+      <span class="design-map__route">/projects</span>
+      <span class="design-map__route">/tools</span>
+      <span class="design-map__route">/docs</span>
+      <span class="design-map__route">/education</span>
+      <span class="design-map__route">/astrophotography</span>
+    </div>
+    <span class="design-map__label">shelves</span>
+  </div>
+  <div class="design-map__row">
+    <span class="design-map__step">03</span>
+    <div class="design-map__routes">
+      <span class="design-map__route">/notebook/[slug]</span>
+      <span class="design-map__route">/docs/[slug]</span>
+      <span class="design-map__route">/tools/[slug]</span>
+      <span class="design-map__route">/projects/[slug]</span>
+      <span class="design-map__route">/education/[slug]</span>
+      <span class="design-map__route">/astrophotography/[slug]</span>
+    </div>
+    <span class="design-map__label">actual work</span>
+  </div>
+</div>
+
+<p class="design-note">
+  The homepage is the switchboard. The section indexes are the shelves. The individual entries are where the real
+  work happens. The site gets clearer once those layers stop pretending to have the same job.
+</p>
+
+</section>
+
+<section id="headers">
+
+## Header modes
+
+<div class="design-headerModes">
+  <div class="design-headerModes__spec">
+    <span class="design-headerModes__mode">headerStyle: plain</span>
+    <div class="design-headerModes__wire design-headerModes__wire--plain"></div>
+    <p>Use when the page wants title-first reading, less chrome, and a quieter technical tone.</p>
+  </div>
+  <div class="design-headerModes__spec">
+    <span class="design-headerModes__mode">headerStyle: panel</span>
+    <div class="design-headerModes__wire design-headerModes__wire--panel"></div>
+    <p>Use when the page benefits from framed metadata, early media, or a stronger artifact-led opening.</p>
+  </div>
+</div>
+
+<p class="design-note">
+  Plain is not automatically better. It is simply better for some kinds of content. Showcase-style material can still
+  need a stronger frame.
+</p>
+
+</section>
+
+<section id="archetypes">
+
+## Section archetypes
+
+<div class="design-rows">
+  <article class="design-row">
+    <span class="design-row__name">blog</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Notebook-like and editorial.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--blog">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--lead"></span>
+              <span class="design-mini__bar design-mini__bar--rail"></span>
+              <span class="design-mini__bar design-mini__bar--archive"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>wide lead story</li>
+              <li>support rail</li>
+              <li>denser archive below</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Lead story, support rail, denser archive below, plain headers by default.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">projects</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Field log crossed with a lab notebook.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--projects">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--hero"></span>
+              <span class="design-mini__bar design-mini__bar--artifact"></span>
+              <span class="design-mini__bar design-mini__bar--notes"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>framed hero</li>
+              <li>artifact-first body</li>
+              <li>field log pacing</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Artifact-friendly entries, stronger hero framing, and a more material-first index tone.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">tools</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Utility-first and compact.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--tools">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--utility"></span>
+              <span class="design-mini__bar design-mini__bar--meta"></span>
+              <span class="design-mini__bar design-mini__bar--list"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>small utility marker</li>
+              <li>light metadata</li>
+              <li>text-first card deck</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Text-first when images do not exist, with reduced metadata clutter and faster scanning.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">docs</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Reference-friendly and structured.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--docs">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--plain"></span>
+              <span class="design-mini__bar design-mini__bar--callout"></span>
+              <span class="design-mini__bar design-mini__bar--reference"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>plain engraved header</li>
+              <li>reference callout</li>
+              <li>dense technical body</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Plain headers by default, heavier use of callouts and denser technical pacing when needed.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">education</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Structured and step-aware.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--education">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--schoolHero"></span>
+              <span class="design-mini__bar design-mini__bar--facts"></span>
+              <span class="design-mini__bar design-mini__bar--guide"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>context-setting hero</li>
+              <li>supporting fact panel</li>
+              <li>guided task flow</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Still benefits from a stronger hero and supporting fact panels because the teaching context needs them.</p>
+    </div>
+  </article>
+  <article class="design-row">
+    <span class="design-row__name">astrophotography</span>
+    <div class="design-row__body">
+      <div class="design-row__head">
+        <strong>Atmospheric, image-led, and separate on purpose.</strong>
+        <details class="design-row__inspect">
+          <summary>inspect specimen</summary>
+          <div class="design-mini design-mini--astro">
+            <div class="design-mini__canvas">
+              <span class="design-mini__bar design-mini__bar--photo"></span>
+              <span class="design-mini__bar design-mini__bar--caption"></span>
+              <span class="design-mini__bar design-mini__bar--atmosphere"></span>
+            </div>
+            <ul class="design-mini__notes">
+              <li>large image field</li>
+              <li>caption and session notes</li>
+              <li>kept separate on purpose</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p>Should be changed carefully and in isolation. It has earned its own stronger treatment.</p>
+    </div>
+  </article>
+</div>
+
+</section>
+
+<section id="patterns">
+
+## Patterns in use
+
+<div class="design-patternList">
+  <a href="/notebook" class="design-patternList__item">
+    <span>editorial archive</span>
+    <p>Lead story, support rail, then a denser archive below.</p>
+  </a>
+  <a href="/docs/ascii-dip-pinout-cheatsheet" class="design-patternList__item">
+    <span>terminal reference module</span>
+    <p>Use terminal framing where the content is plain-text by nature and copyable.</p>
+  </a>
+  <a href="/notebook/wia-band-plan-2026" class="design-patternList__item">
+    <span>inspector layout</span>
+    <p>Use selector-driven inspection when dense technical comparisons would be worse as a stack.</p>
+  </a>
+  <a href="/tools" class="design-patternList__item">
+    <span>text-first utility index</span>
+    <p>Do not fake image cards when the content has no images. Let utility pages stay useful.</p>
+  </a>
+</div>
+
+</section>
+
+<section id="rules">
+
+## Current rules
+
+<div class="design-ledger">
+  <div>
+    <p class="design-kicker">Do</p>
+    <ul class="design-list">
+      <li>let layouts react to the content, not just the viewport</li>
+      <li>use text-first variants when entries have no media</li>
+      <li>treat indexes as editorial surfaces rather than uniform grids</li>
+      <li>choose <code>headerStyle</code> on editorial grounds</li>
+      <li>keep image-led sections image-led</li>
+    </ul>
+  </div>
+  <div>
+    <p class="design-kicker">Do not</p>
+    <ul class="design-list">
+      <li>force every section into the same post shell</li>
+      <li>replace one repetitive card system with another repetitive card system</li>
+      <li>add terminal styling where it serves no purpose</li>
+      <li>assume plain headers are universally better</li>
+      <li>change astrophotography casually because another section changed well</li>
+    </ul>
+  </div>
+</div>
+
+</section>
+
+## Practical authoring note
+
+If a new entry is mostly writing, reference, or explanation, start with:
+
+```yaml
+headerStyle: plain
+```
+
+If it is mostly artifact, media, or structured showcase material, start with:
+
+```yaml
+headerStyle: panel
+```
+
+Then let the page argue its case.
+
+<section id="history">
+
+## Design history
+
+<div class="design-timeline">
+  <div class="design-timeline__item">
+    <time>2026-03-01</time>
+    <div>
+      <strong>Initial design-language pass</strong>
+      <p>The first version focused on section archetypes, shared tokens, and the idea that the site should feel cohesive rather than cloned.</p>
+    </div>
+  </div>
+  <div class="design-timeline__item">
+    <time>2026-03-02</time>
+    <div>
+      <strong>System update</strong>
+      <p>The live system now includes editorial indexes, terminal status headers, text-first utility/archive handling, the WIA band inspector, and the <code>headerStyle</code> option.</p>
+    </div>
+  </div>
+  <div class="design-timeline__item">
+    <time>Archive</time>
+    <div>
+      <strong>Earlier version preserved</strong>
+      <p><a href="/docs/site-architecture-and-design-language-archive-2026-03-01">Open the archived first-pass version</a>.</p>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<style>{`
+  .design-manifesto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+    gap: 1.2rem 1.6rem;
+    align-items: start;
+    margin: 0.35rem 0 0.9rem;
+    padding: 0.65rem 0 0.4rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .design-kicker {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .design-manifesto__line,
+  .design-manifesto__summary,
+  .design-state__title,
+  .design-ruleband p,
+  .design-note,
+  .design-row__body p,
+  .design-patternList__item p,
+  .design-timeline__item p {
+    margin: 0;
+  }
+
+  .design-manifesto__copy {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+    min-width: 0;
+  }
+
+  .design-manifesto__line {
+    font-size: clamp(1.95rem, 3.9vw, 3.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+
+  .design-manifesto__summary {
+    max-width: none;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .design-state {
+    align-self: stretch;
+    padding: 0.1rem 0 0.1rem 1.1rem;
+    border-left: 1px solid color-mix(in srgb, var(--accent) 26%, var(--border) 74%);
+  }
+
+  .design-state__title {
+    margin-bottom: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .design-state dl {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  .design-state dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .design-state dt,
+  .design-state dd {
+    margin: 0;
+  }
+
+  .design-state dt {
+    color: var(--muted);
+  }
+
+  .design-state dd {
+    color: var(--text);
+  }
+
+  .design-tldr {
+    display: block;
+    margin: 0.45rem 0 0.7rem;
+    padding: 0.1rem 0 0.15rem;
+  }
+
+  .design-tldr__label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.4rem;
+  }
+
+  .design-tldr p {
+    margin: 0;
+    max-width: none;
+    width: 100%;
+    font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+    line-height: 1.35;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .design-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    align-items: center;
+    margin: 0.2rem 0 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.81rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+  }
+
+  .design-index__label {
+    margin-right: 0.5rem;
+    color: var(--accent) !important;
+  }
+
+  section[id] {
+    margin: 1.35rem 0 0;
+    scroll-margin-top: 6rem;
+  }
+
+  section[id] > h2 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+  }
+
+  .design-index a,
+  .design-index span {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .design-index a:hover {
+    color: var(--accent);
+  }
+
+  .design-split,
+  .design-ledger {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1.2rem;
+    margin: 0.8rem 0 1rem;
+  }
+
+  .design-split > article,
+  .design-ledger > div {
+    padding: 0.2rem 0 0 1rem;
+    border-left: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
+
+  .design-split h2,
+  .design-ledger h2,
+  .design-ledger h3 {
+    margin: 0 0 0.7rem;
+  }
+
+  .design-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .design-list li {
+    margin: 0;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 76%, transparent 24%);
+  }
+
+  .design-list li::before {
+    content: "—";
+    margin-right: 0.55rem;
+    color: var(--accent);
+  }
+
+  .design-list li:last-child {
+    border-bottom: 0;
+  }
+
+  .design-rulestrip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem 1rem;
+    margin: 0.8rem 0 1.1rem;
+  }
+
+  .design-rulestrip article {
+    padding: 0.7rem 1rem 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+    position: relative;
+  }
+
+  .design-rulestrip article:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0.7rem;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background: color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
+
+  .design-map {
+    display: grid;
+    gap: 0;
+    margin: 0.75rem 0 0.75rem;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 48%, transparent 52%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 42%, transparent 58%) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    background-position: center;
+  }
+
+  .design-map__row {
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent 28%);
+  }
+
+  .design-map__row:last-child {
+    border-bottom: 0;
+  }
+
+  .design-map__routes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .design-map__step {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .design-map__route {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    color: var(--text);
+  }
+
+  .design-map__label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .design-note {
+    color: var(--text-2);
+    max-width: 62ch;
+  }
+
+  .design-headerModes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+    margin: 0.75rem 0;
+  }
+
+  .design-headerModes__spec {
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+    padding-top: 0.35rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
+  }
+
+  .design-headerModes__mode {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text);
+  }
+
+  .design-headerModes__wire {
+    min-height: 92px;
+    position: relative;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
+  }
+
+  .design-headerModes__wire::before,
+  .design-headerModes__wire::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 20%;
+  }
+
+  .design-headerModes__wire::before {
+    top: 1rem;
+    height: 0.75rem;
+    background: color-mix(in srgb, var(--text) 8%, transparent 92%);
+  }
+
+  .design-headerModes__wire::after {
+    top: 2.35rem;
+    height: 2.1rem;
+    background: color-mix(in srgb, var(--text) 5%, transparent 95%);
+  }
+
+  .design-headerModes__wire--panel::after {
+    right: 0;
+    height: 3rem;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--text) 5%, transparent 95%) 0 58%, transparent 58% 100%);
+  }
+
+  .design-rows {
+    display: grid;
+    margin: 0.75rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .design-row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 0.8rem 1.2rem;
+    align-items: start;
+    padding: 0.72rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .design-row__name {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-transform: lowercase;
+    padding-top: 1.05rem;
+  }
+
+  .design-row__body {
+    display: grid;
+    gap: 0.22rem;
+    min-width: 0;
+  }
+
+  .design-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .design-row__body strong {
+    display: block;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .design-row__inspect {
+    min-width: 0;
+  }
+
+  .design-row__inspect summary {
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--accent);
+  }
+
+  .design-row__inspect summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .design-row__inspect summary::before {
+    content: "+ ";
+  }
+
+  .design-row__inspect[open] summary::before {
+    content: "− ";
+  }
+
+  .design-mini {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: 0.8rem 1rem;
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
+
+  .design-mini__canvas {
+    position: relative;
+    height: 5.6rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border) 84%);
+    background:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 44%, transparent 56%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 44%, transparent 56%) 1px, transparent 1px);
+    background-size: 1.05rem 1.05rem;
+  }
+
+  .design-mini__bar {
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    background: color-mix(in srgb, var(--text) 9%, transparent 91%);
+  }
+
+  .design-mini__bar--lead,
+  .design-mini__bar--hero,
+  .design-mini__bar--plain,
+  .design-mini__bar--utility,
+  .design-mini__bar--schoolHero,
+  .design-mini__bar--photo {
+    top: 0.45rem;
+    height: 0.45rem;
+  }
+
+  .design-mini__bar--rail,
+  .design-mini__bar--artifact,
+  .design-mini__bar--callout,
+  .design-mini__bar--meta,
+  .design-mini__bar--facts,
+  .design-mini__bar--caption {
+    top: 1.35rem;
+    height: 1.5rem;
+  }
+
+  .design-mini__bar--archive,
+  .design-mini__bar--notes,
+  .design-mini__bar--reference,
+  .design-mini__bar--list,
+  .design-mini__bar--guide,
+  .design-mini__bar--atmosphere {
+    top: 3.3rem;
+    height: 1.55rem;
+  }
+
+  .design-mini--blog .design-mini__bar--rail {
+    right: 7rem;
+  }
+
+  .design-mini--projects .design-mini__bar--artifact,
+  .design-mini--education .design-mini__bar--facts,
+  .design-mini--astro .design-mini__bar--caption {
+    right: 4.8rem;
+  }
+
+  .design-mini--projects .design-mini__bar--notes,
+  .design-mini--education .design-mini__bar--guide,
+  .design-mini--astro .design-mini__bar--atmosphere {
+    left: 7.4rem;
+    background: color-mix(in srgb, var(--accent) 12%, transparent 88%);
+  }
+
+  .design-mini__notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .design-mini__notes li {
+    margin: 0;
+    padding: 0.18rem 0;
+    color: var(--text-2);
+  }
+
+  .design-mini__notes li::before {
+    content: "→";
+    margin-right: 0.45rem;
+    color: var(--accent);
+  }
+
+  .design-patternList {
+    display: grid;
+    margin: 0.75rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .design-patternList__item {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    align-items: start;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .design-patternList__item::after {
+    content: "→";
+    color: var(--muted);
+  }
+
+  .design-patternList__item span {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-transform: lowercase;
+  }
+
+  .design-patternList__item:hover span {
+    text-decoration: underline;
+  }
+
+  .design-timeline {
+    display: grid;
+    gap: 1rem;
+    margin: 0.8rem 0 0;
+    position: relative;
+  }
+
+  .design-timeline::before {
+    content: "";
+    position: absolute;
+    left: 5.6rem;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
+  }
+
+  .design-timeline__item {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: start;
+  }
+
+  .design-timeline__item time {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.2rem;
+  }
+
+  .design-timeline__item > div {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.1rem 0 0.9rem;
+  }
+
+  .design-timeline__item > div::before {
+    content: "";
+    position: absolute;
+    left: -0.86rem;
+    top: 0.3rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent 86%);
+  }
+
+  @media (max-width: 980px) {
+    .design-manifesto,
+    .design-split,
+    .design-headerModes,
+    .design-ledger,
+    .design-rulestrip {
+      grid-template-columns: 1fr;
+    }
+
+    .design-state {
+      border-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--accent) 26%, var(--border) 74%);
+      padding: 0.8rem 0 0 0;
+    }
+
+    .design-patternList__item,
+    .design-row {
+      grid-template-columns: 1fr;
+    }
+
+    .design-row__name {
+      padding-top: 0;
+    }
+
+    .design-mini {
+      grid-template-columns: 1fr;
+    }
+
+    .design-patternList__item::after {
+      display: none;
+    }
+
+    .design-map__label {
+      width: auto;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .design-index__label {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .design-map__row {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .design-timeline::before {
+      display: none;
+    }
+
+    .design-timeline__item {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .design-timeline__item > div::before {
+      display: none;
+    }
+  }
+`}</style>
