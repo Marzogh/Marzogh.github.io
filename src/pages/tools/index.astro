@@ -105,21 +105,6 @@ const cliManual = {
             lede="Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread."
           />
         </div>
-        <CliShell
-          shellId="tools-cli"
-          shellTitle="tools.query"
-          initialCommand="stat"
-          entries={cliEntries}
-          commandManual={cliManual}
-          statsLines={[
-            { label: 'published_tools', value: tools.length },
-            { label: 'sections', value: toolSections.length },
-            { label: 'tags_in_use', value: toolTags.length },
-            { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
-            { label: 'last_updated', value: formatDateStamp(latestToolUpdated) },
-          ]}
-          presets={['ls', 'grep map', 'tag adif', 'man ls', 'open rgb565']}
-        />
       </section>
 
       {tools.length === 0 ? (
@@ -213,6 +198,40 @@ const cliManual = {
       )}
     </main>
     <Footer />
+
+    <div class="edge-drawer-instance">
+      <input id="tools-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
+      <label
+        for="tools-query-toggle"
+        class="edge-drawer-tab"
+        data-drawer-name="Tools Query"
+        aria-label="Open tools query drawer"
+      >
+        Tools Query
+      </label>
+
+      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="tools-query-toggle">
+        <label for="tools-query-toggle" class="edge-drawer-backdrop" aria-label="Close tools query drawer"></label>
+        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Tools query drawer">
+          <label for="tools-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
+          <CliShell
+            shellId="tools-cli"
+            shellTitle="tools.query"
+            initialCommand="stat"
+            entries={cliEntries}
+            commandManual={cliManual}
+            statsLines={[
+              { label: 'published_tools', value: tools.length },
+              { label: 'sections', value: toolSections.length },
+              { label: 'tags_in_use', value: toolTags.length },
+              { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
+              { label: 'last_updated', value: formatDateStamp(latestToolUpdated) },
+            ]}
+            presets={['ls', 'grep map', 'tag adif', 'man ls', 'open rgb565']}
+          />
+        </aside>
+      </div>
+    </div>
   </body>
 </html>
 
@@ -223,7 +242,7 @@ const cliManual = {
 
   .tools-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    grid-template-columns: 1fr;
     gap: var(--space-5);
     align-items: start;
     margin-bottom: var(--space-6);

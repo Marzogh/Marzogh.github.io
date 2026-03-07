@@ -96,47 +96,9 @@ const cliManual = {
             lede="Real builds, field tests, antenna experiments, firmware detours, and the occasional bit of engineering that behaved properly first time."
           />
           </div>
-          <CliShell
-            shellId="projects-cli"
-            shellTitle="projects.query"
-            initialCommand="stat"
-            entries={cliEntries}
-            commandManual={cliManual}
-            statsLines={[
-              { label: 'published_projects', value: projects.length },
-              { label: 'sections', value: projectSections.length },
-              { label: 'tags_in_use', value: uniqueTags.length },
-              { label: 'featured_projects', value: projects.filter((project) => project.data.featured).length },
-              { label: 'last_updated', value: formatDateStamp(latestProjectUpdated) },
-            ]}
-            presets={['ls', 'grep radio', 'tag portable', 'man ls', 'open kite']}
-          />
         </div>
 
         <div class="projects-main">
-          {radioTags.length ? (
-            <details class="radio-drawer panel panel--soft">
-              <summary class="radio-drawer__summary">
-                <div class="radio-drawer__summaryText">
-                  <p class="eyebrow eyebrow--radio">Radio Shelf</p>
-                  <h2>Browse the radio work properly</h2>
-                </div>
-                <span class="radio-drawer__hint">Open shelf</span>
-              </summary>
-              <div class="radio-drawer__body">
-                <p class="radio-drawer__lede">
-                  The radio side of the site is going to keep growing, so these tags are the quickest way into activations, antennas,
-                  POTA, and related field work.
-                </p>
-                <div class="radio-drawer__tags">
-                  {radioTags.map((tag) => (
-                    <a class="tagChip" href={`/tags/${tag.slug}`}>#{tag.label}</a>
-                  ))}
-                </div>
-              </div>
-            </details>
-          ) : null}
-
           {featuredProject ? (
             <section class:list={['featured panel', !pickThumb(featuredProject.data) && 'featured--textOnly']} aria-labelledby="featured-project-heading">
               <div class="featured-copy">
@@ -204,14 +166,14 @@ const cliManual = {
             <p>Everything else currently on the bench, in the field, or already written up.</p>
           </div>
 
-          <div class="grid">
+          <div class:list={['grid', remainingProjects.length === 1 && 'grid--single']}>
             {remainingProjects.map((project) => {
               const thumb = pickThumb(project.data);
 
               return (
-                <a href={`/projects/${project.id}`} class:list={['card', !thumb && 'card--textOnly']} aria-label={`Open project: ${project.data.title}`}>
+                <article class:list={['card', !thumb && 'card--textOnly']} aria-label={`Project: ${project.data.title}`}>
                   {thumb ? (
-                    <div class="thumb" aria-hidden="true">
+                    <a class="thumb thumb-link" href={`/projects/${project.id}`} aria-label={`Open project: ${project.data.title}`}>
                       {typeof thumb === 'string' ? (
                         <img src={thumb} alt="" loading="lazy" decoding="async" />
                       ) : (
@@ -222,7 +184,7 @@ const cliManual = {
                           sizes="(max-width: 520px) 100vw, (max-width: 920px) 50vw, 33vw"
                         />
                       )}
-                    </div>
+                    </a>
                   ) : null}
 
                   <div class="card-body">
@@ -235,7 +197,9 @@ const cliManual = {
                       ) : null}
                     </div>
 
-                    <h3 class="card-title">{project.data.title}</h3>
+                    <h3 class="card-title">
+                      <a class="card-titleLink" href={`/projects/${project.id}`}>{project.data.title}</a>
+                    </h3>
                     {project.data.description ? <p class="card-desc">{project.data.description}</p> : null}
 
                     {project.data.tags?.length ? (
@@ -246,7 +210,7 @@ const cliManual = {
                       </div>
                     ) : null}
                   </div>
-                </a>
+                </article>
               );
             })}
           </div>
@@ -262,6 +226,77 @@ const cliManual = {
     </main>
 
     <Footer />
+
+    <div class="edge-drawer-instance">
+      <input id="projects-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
+      <label
+        for="projects-query-toggle"
+        class="edge-drawer-tab"
+        data-drawer-name="Projects Query"
+        aria-label="Open projects query drawer"
+      >
+        Projects Query
+      </label>
+
+      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="projects-query-toggle">
+        <label for="projects-query-toggle" class="edge-drawer-backdrop" aria-label="Close projects query drawer"></label>
+        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Projects query drawer">
+          <label for="projects-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
+          <CliShell
+            shellId="projects-cli"
+            shellTitle="projects.query"
+            initialCommand="stat"
+            entries={cliEntries}
+            commandManual={cliManual}
+            statsLines={[
+              { label: 'published_projects', value: projects.length },
+              { label: 'sections', value: projectSections.length },
+              { label: 'tags_in_use', value: uniqueTags.length },
+              { label: 'featured_projects', value: projects.filter((project) => project.data.featured).length },
+              { label: 'last_updated', value: formatDateStamp(latestProjectUpdated) },
+            ]}
+            presets={['ls', 'grep radio', 'tag portable', 'man ls', 'open kite']}
+          />
+        </aside>
+      </div>
+    </div>
+
+    {radioTags.length ? (
+      <div class="edge-drawer-instance">
+        <input id="radio-shelf-toggle" class="edge-drawer-toggle" type="checkbox" />
+        <label
+          for="radio-shelf-toggle"
+          class="edge-drawer-tab"
+          data-drawer-name="Radio Shelf"
+          aria-label="Open radio shelf"
+        >
+          Radio Shelf
+        </label>
+
+        <div class="edge-drawer-overlay" data-edge-drawer="radio-shelf-toggle">
+          <label for="radio-shelf-toggle" class="edge-drawer-backdrop" aria-label="Close radio shelf"></label>
+          <aside class="edge-drawer-panel radio-panel" role="dialog" aria-modal="true" aria-labelledby="radio-shelf-title">
+            <div class="edge-drawer-panel__tag" aria-hidden="true">Radio Shelf</div>
+            <header class="edge-drawer-head">
+              <div>
+                <p class="eyebrow eyebrow--radio">Radio Shelf</p>
+                <h2 id="radio-shelf-title">Radio Tags</h2>
+              </div>
+              <label for="radio-shelf-toggle" class="edge-drawer-close">Close</label>
+            </header>
+            <p class="edge-drawer-lede">
+              The radio side of the site keeps growing. Use these tags to jump straight to activations, antenna experiments, POTA,
+              and field operations.
+            </p>
+            <div class="radio-panel__tags">
+              {radioTags.map((tag) => (
+                <a class="tagChip" href={`/tags/${tag.slug}`}>#{tag.label}</a>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </div>
+    ) : null}
 
   </body>
 </html>
@@ -286,7 +321,7 @@ const cliManual = {
 
   .projects-hero{
     display:grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
     align-items:start;
   }
@@ -414,84 +449,11 @@ const cliManual = {
     font-weight: 700;
   }
 
-  .radio-drawer{
-    display:grid;
-    gap: 0;
-    background:
-      radial-gradient(560px 180px at top right, rgba(37, 99, 235, 0.07), transparent 72%),
-      radial-gradient(520px 200px at bottom left, rgba(16, 185, 129, 0.07), transparent 72%),
-      var(--surface-raised);
+  .radio-panel{
+    --edge-drawer-width: minmax(320px, 460px);
   }
 
-  .radio-drawer[open] .radio-drawer__hint{
-    content: "Hide shelf";
-  }
-
-  .radio-drawer__summary{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: var(--space-4);
-    list-style:none;
-    cursor:pointer;
-  }
-
-  .radio-drawer__summary::-webkit-details-marker{
-    display:none;
-  }
-
-  .radio-drawer__summaryText{
-    display:flex;
-    flex-direction:column;
-    gap: 8px;
-  }
-
-  .radio-drawer__summaryText h2,
-  .radio-drawer__summaryText p,
-  .radio-drawer__lede{
-    margin: 0;
-  }
-
-  .radio-drawer__summaryText h2{
-    font-size: clamp(1.15rem, 1.5vw, 1.55rem);
-    line-height: 1.08;
-  }
-
-  .radio-drawer__hint{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding: 0.45rem 0.8rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-glass);
-    color: var(--text-2);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .radio-drawer[open] .radio-drawer__hint{
-    color: var(--text);
-  }
-
-  .radio-drawer__body{
-    display:grid;
-    gap: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    margin-top: 14px;
-  }
-
-  .radio-drawer__lede{
-    color: var(--text-2);
-    max-width: 66ch;
-    font-size: 0.96rem;
-  }
-
-  .radio-drawer__tags{
+  .radio-panel__tags{
     display:flex;
     flex-wrap:wrap;
     gap: 10px;
@@ -669,6 +631,11 @@ const cliManual = {
     transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
   }
 
+  .thumb-link{
+    text-decoration: none;
+    color: inherit;
+  }
+
   .card--textOnly{
     background:
       radial-gradient(520px 180px at top left, rgba(37, 99, 235, 0.06), transparent 72%),
@@ -699,6 +666,15 @@ const cliManual = {
     line-height:1.16;
     color:var(--text);
     text-wrap: balance;
+  }
+
+  .card-titleLink{
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .card-titleLink:hover{
+    color: var(--accent);
   }
 
   .card-desc{
@@ -737,6 +713,47 @@ const cliManual = {
 
     .page-header{
       grid-template-columns: 1fr;
+    }
+
+  }
+
+  .grid--single{
+    grid-template-columns: 1fr;
+  }
+
+  .grid > .card:only-child,
+  .grid--single .card{
+    display:grid;
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+    align-items: stretch;
+    max-width: 1100px;
+  }
+
+  .grid > .card:only-child .thumb,
+  .grid--single .thumb{
+    aspect-ratio: 4 / 3;
+    min-height: 220px;
+    max-height: 320px;
+    height: 100%;
+  }
+
+  .grid > .card:only-child .card-body,
+  .grid--single .card-body{
+    justify-content: center;
+  }
+
+  @media (max-width: 980px){
+    .grid > .card:only-child,
+    .grid--single .card{
+      grid-template-columns: 1fr;
+      max-width: none;
+    }
+
+    .grid > .card:only-child .thumb,
+    .grid--single .thumb{
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+      max-height: none;
     }
   }
 

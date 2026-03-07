@@ -245,21 +245,6 @@ const cliManual = {
               </div>
             </div>
 
-            <CliShell
-              shellId="docs-cli"
-              shellTitle="docs.query"
-              initialCommand="stat"
-              entries={cliEntries}
-              commandManual={cliManual}
-              statsLines={[
-                { label: 'published_docs', value: docs.length },
-                { label: 'sections', value: sectionBuckets.length },
-                { label: 'tags_in_use', value: tagCounts.size },
-                { label: 'featured_docs', value: docs.filter((doc) => doc.data.featured).length },
-                { label: 'last_updated', value: formatDateStamp(latestDocUpdated) },
-              ]}
-              presets={['ls', 'cd "Platform Guides"', 'grep setup', 'tag tutorial', 'man ls']}
-            />
           </section>
 
           <section class="docs-directory" aria-labelledby="directory-heading">
@@ -304,6 +289,40 @@ const cliManual = {
     </main>
 
     <Footer />
+
+    <div class="edge-drawer-instance">
+      <input id="docs-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
+      <label
+        for="docs-query-toggle"
+        class="edge-drawer-tab"
+        data-drawer-name="Docs Query"
+        aria-label="Open docs query drawer"
+      >
+        Docs Query
+      </label>
+
+      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="docs-query-toggle">
+        <label for="docs-query-toggle" class="edge-drawer-backdrop" aria-label="Close docs query drawer"></label>
+        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Docs query drawer">
+          <label for="docs-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
+          <CliShell
+            shellId="docs-cli"
+            shellTitle="docs.query"
+            initialCommand="stat"
+            entries={cliEntries}
+            commandManual={cliManual}
+            statsLines={[
+              { label: 'published_docs', value: docs.length },
+              { label: 'sections', value: sectionBuckets.length },
+              { label: 'tags_in_use', value: tagCounts.size },
+              { label: 'featured_docs', value: docs.filter((doc) => doc.data.featured).length },
+              { label: 'last_updated', value: formatDateStamp(latestDocUpdated) },
+            ]}
+            presets={['ls', 'cd "Platform Guides"', 'grep setup', 'tag tutorial', 'man ls']}
+          />
+        </aside>
+      </div>
+    </div>
   </body>
 </html>
 
@@ -332,7 +351,7 @@ const cliManual = {
 
   .docs-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    grid-template-columns: 1fr;
     gap: var(--space-5);
     align-items: start;
   }

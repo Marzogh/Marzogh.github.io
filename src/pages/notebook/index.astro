@@ -100,21 +100,6 @@ const cliManual = {
             lede="Essays, field notes, technical write-ups, poetry, reflections, hobby rabbit holes, and the occasional deep dive into something that refused to behave."
           />
         </div>
-        <CliShell
-          shellId="notebook-cli"
-          shellTitle="notebook.query"
-          initialCommand="stat"
-          entries={cliEntries}
-          commandManual={cliManual}
-          statsLines={[
-            { label: 'published_posts', value: posts.length },
-            { label: 'sections', value: notebookSections.length },
-            { label: 'tags_in_use', value: notebookTags.length },
-            { label: 'featured_posts', value: totalFeatured },
-            { label: 'last_updated', value: formatDateStamp(latestPostUpdated) },
-          ]}
-          presets={['ls', 'grep github', 'tag electronics', 'man ls', 'open charlieplexing']}
-        />
       </section>
 
       {posts.length === 0 ? (
@@ -284,6 +269,40 @@ const cliManual = {
     </main>
 
     <Footer />
+
+    <div class="edge-drawer-instance">
+      <input id="notebook-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
+      <label
+        for="notebook-query-toggle"
+        class="edge-drawer-tab"
+        data-drawer-name="Notebook Query"
+        aria-label="Open notebook query drawer"
+      >
+        Notebook Query
+      </label>
+
+      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="notebook-query-toggle">
+        <label for="notebook-query-toggle" class="edge-drawer-backdrop" aria-label="Close notebook query drawer"></label>
+        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Notebook query drawer">
+          <label for="notebook-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
+          <CliShell
+            shellId="notebook-cli"
+            shellTitle="notebook.query"
+            initialCommand="stat"
+            entries={cliEntries}
+            commandManual={cliManual}
+            statsLines={[
+              { label: 'published_posts', value: posts.length },
+              { label: 'sections', value: notebookSections.length },
+              { label: 'tags_in_use', value: notebookTags.length },
+              { label: 'featured_posts', value: totalFeatured },
+              { label: 'last_updated', value: formatDateStamp(latestPostUpdated) },
+            ]}
+            presets={['ls', 'grep github', 'tag electronics', 'man ls', 'open charlieplexing']}
+          />
+        </aside>
+      </div>
+    </div>
   </body>
 </html>
 
@@ -294,7 +313,7 @@ const cliManual = {
 
   .notebook-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    grid-template-columns: 1fr;
     gap: var(--space-5);
     align-items: start;
     margin-bottom: var(--space-6);

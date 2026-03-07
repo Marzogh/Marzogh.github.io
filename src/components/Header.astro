@@ -81,6 +81,32 @@ import HeaderLink from './HeaderLink.astro';
       });
     }
 
+    function initEdgeDrawers() {
+      const tabs = Array.from(document.querySelectorAll('.edge-drawer-tab'));
+      if (!tabs.length) return;
+
+      const palette = ['#8fb4f5', '#8fd3c7', '#c5b4f4', '#f2c59f', '#f1b0cb', '#9ec9de'];
+      const named = tabs
+        .map((tab) => ({
+          tab,
+          name: (tab.getAttribute('data-drawer-name') || tab.textContent || '').trim().toLowerCase(),
+          toggleId: tab.getAttribute('for') || '',
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      named.forEach((item, index) => {
+        const hue = palette[index % palette.length];
+        item.tab.style.setProperty('--edge-drawer-order', String(index));
+        item.tab.style.setProperty('--edge-drawer-hue', hue);
+        if (item.toggleId) {
+          const overlay = document.querySelector(`.edge-drawer-overlay[data-edge-drawer="${item.toggleId}"]`);
+          if (overlay instanceof HTMLElement) {
+            overlay.style.setProperty('--edge-drawer-hue', hue);
+          }
+        }
+      });
+    }
+
     function setPressed() {
       const explicit = root.dataset.theme;
       const isDark = explicit ? explicit === 'dark' : prefersDark();
@@ -151,8 +177,18 @@ import HeaderLink from './HeaderLink.astro';
       }
     }
 
-    positionNav();
-    window.addEventListener('resize', positionNav, { passive: true });
+    const applyHeaderLayout = () => {
+      positionNav();
+      initEdgeDrawers();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', applyHeaderLayout, { once: true });
+    } else {
+      applyHeaderLayout();
+    }
+
+    window.addEventListener('resize', applyHeaderLayout, { passive: true });
   })();
 </script>
 
