@@ -7,6 +7,7 @@ import { poetry } from '../data/poetry';
 
 const title = 'Chips’nCode';
 const description = 'A living technical playground — projects, tools, documentation, and education.';
+const contentUpdatedAt = import.meta.env.PUBLIC_CONTENT_UPDATED_AT || import.meta.env.PUBLIC_SITE_BUILD_AT || '';
 
 const entryDateValue = (entry) =>
   new Date(entry?.data?.pubDate ?? entry?.data?.updatedDate ?? 0).valueOf();
@@ -215,6 +216,14 @@ const rest = (pill) => byPill[pill].slice(3);
     <Header />
 
     <main class="page" id="top">
+      <section class="migration-note" aria-label="Migration status">
+        <p>
+          <span class="migration-note__badge" aria-hidden="true">Under Construction</span>
+          Chips'nCode is being migrated post-by-post from a previous version of the website. More archived content will return over time.
+          {contentUpdatedAt ? <span class="migration-note__updated">Last content update: {contentUpdatedAt}</span> : null}
+        </p>
+      </section>
+
       <!-- HERO (banner-driven) -->
       <section class="hero" aria-label="Site introduction">
         <div class="hero__bg" aria-hidden="true"></div>
@@ -643,6 +652,73 @@ const rest = (pill) => byPill[pill].slice(3);
         max-width: 1280px;
         margin: 0 auto;
         padding: 1.25rem 1rem 3.5rem;
+      }
+
+      .migration-note {
+        width: min(100%, 1220px);
+        margin: 0 auto 0.6rem;
+        padding: 0.42rem 0.2rem 0.55rem;
+        border-top: 1px solid color-mix(in srgb, var(--border) 85%, var(--text) 15%);
+        border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
+        background:
+          linear-gradient(
+            90deg,
+            transparent 0%,
+            color-mix(in srgb, var(--surface-raised) 35%, transparent 65%) 24%,
+            color-mix(in srgb, var(--surface-raised) 22%, transparent 78%) 76%,
+            transparent 100%
+          );
+      }
+
+      .migration-note p {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.55rem;
+        color: color-mix(in srgb, var(--muted) 84%, var(--text) 16%);
+        font-size: 0.86rem;
+        line-height: 1.45;
+        letter-spacing: 0.01em;
+        text-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 72%, transparent 28%);
+      }
+
+      .migration-note__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--accent) 46%, var(--text) 54%);
+        padding: 0.18rem 0.45rem;
+        border: 1px solid color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
+        border-radius: 999px;
+        background:
+          repeating-linear-gradient(
+            -45deg,
+            color-mix(in srgb, var(--surface) 70%, transparent 30%) 0 6px,
+            color-mix(in srgb, var(--surface-raised) 70%, transparent 30%) 6px 12px
+          );
+        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface) 85%, transparent 15%);
+      }
+
+      .migration-note__updated {
+        margin-left: auto;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        color: color-mix(in srgb, var(--muted) 72%, var(--text) 28%);
+        white-space: nowrap;
+      }
+
+      @media (max-width: 860px) {
+        .migration-note__updated {
+          width: 100%;
+          margin-left: 0;
+          margin-top: 0.12rem;
+        }
       }
 
       /* HERO */

@@ -31,6 +31,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Compute content/build dates
+        run: |
+          CONTENT_UPDATED_AT="$(git log -1 --format=%cs -- src/content || true)"
+          if [ -z "$CONTENT_UPDATED_AT" ]; then
+            CONTENT_UPDATED_AT="$(date -u +%Y-%m-%d)"
+          fi
+          echo "PUBLIC_CONTENT_UPDATED_AT=$CONTENT_UPDATED_AT" >> "$GITHUB_ENV"
+          echo "PUBLIC_SITE_BUILD_AT=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
+
       - name: Build
         run: npm run build
 
