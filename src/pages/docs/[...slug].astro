@@ -237,11 +237,19 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
   }
 
   .prose--docs :global(table) {
-    display: block;
-    overflow-x: auto;
+    display: table;
+    width: auto;
+    max-width: 100%;
+    table-layout: auto;
+    margin: 1.4rem 0;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--surface-raised);
+  }
+
+  .prose--docs :global(th),
+  .prose--docs :global(td) {
+    min-width: 0;
   }
 
   .prose--docs :global(th) {
