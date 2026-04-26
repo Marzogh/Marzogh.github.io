@@ -1,0 +1,97 @@
+---
+title: PDF Link Downloaders
+description: "Three small Python command-line helpers for saving directly linked PDFs from normal pages, same-site crawls, or JavaScript-rendered pages."
+pubDate: 2026-04-26
+draft: false
+tags: [python, pdf, downloader, scraping, utility]
+---
+
+Sometimes a page has a useful pile of linked PDFs, and the humane thing to do is let the computer do the clicking.
+
+The simple version reads one webpage, finds links that point directly to `.pdf` files, and downloads them into a local folder. There are also two heavier versions below: one that crawls more pages on the same site, and one that renders JavaScript-heavy pages with Selenium before looking for PDF links.
+
+## Choose a version
+
+### Single-page version
+
+Use this when the page already contains direct PDF links in its HTML.
+
+<p>
+  <a className="buttonLike" href="/assets/downloads/download_pdfs.py" download>
+    Download download_pdfs.py
+  </a>
+</p>
+
+```bash
+python -m pip install requests beautifulsoup4
+python download_pdfs.py "https://example.com/page-with-pdfs"
+```
+
+### Same-site crawler version
+
+Use this when the PDFs are spread across several pages on the same website. It starts at one page, follows links on the same domain, and downloads any direct PDF links it finds.
+
+<p>
+  <a className="buttonLike" href="/assets/downloads/download_pdfs_crawl_site.py" download>
+    Download download_pdfs_crawl_site.py
+  </a>
+</p>
+
+```bash
+python -m pip install requests beautifulsoup4
+python download_pdfs_crawl_site.py "https://example.com/start-page"
+```
+
+You can limit how far it wanders:
+
+```bash
+python download_pdfs_crawl_site.py "https://example.com/start-page" "my_pdfs" --max-pages 25 --max-depth 2
+```
+
+### Selenium version
+
+Use this when a page creates its PDF links after JavaScript runs. This opens the page in headless Chrome, waits for it to render, then searches the rendered HTML for direct PDF links.
+
+<p>
+  <a className="buttonLike" href="/assets/downloads/download_pdfs_selenium.py" download>
+    Download download_pdfs_selenium.py
+  </a>
+</p>
+
+```bash
+python -m pip install requests beautifulsoup4 selenium
+python download_pdfs_selenium.py "https://example.com/javascript-page"
+```
+
+You will also need Chrome installed. Recent Selenium versions can usually manage the matching Chrome driver automatically.
+
+If the page is slow to load, give it a longer wait:
+
+```bash
+python download_pdfs_selenium.py "https://example.com/javascript-page" "my_pdfs" --wait 8
+```
+
+## Shared behaviour
+
+- saves files into `downloaded_pdfs` unless you provide a custom folder
+- creates the output folder if it does not already exist
+- resolves relative PDF links into absolute URLs
+- checks that each download looks like a PDF response
+- saves each file with a filesystem-safe name
+- avoids overwriting files with duplicate names
+
+## Caveats
+
+- These scripts look for direct links to PDF files. They do not solve logins, paywalls, or permission problems.
+- The crawler only follows links on the same domain as the starting URL.
+- The Selenium version can see links created by JavaScript, but it still needs those links to exist in the rendered page.
+- Some sites block scraping, require login, or forbid automated downloads.
+- Be sensible with copyright, rate limits, and the site terms.
+
+## Legal and ethical use
+
+Only download files that you are allowed to access and save. Check the website's terms of use, copyright notices, robots guidance, and any licence attached to the material. Do not use these scripts to bypass paywalls, login requirements, access controls, or technical restrictions.
+
+If you are downloading from someone else's site, keep requests modest and respectful. Automated downloads can create load for the site owner, even when the files are publicly linked.
+
+This page is a technical note, not legal advice. You are responsible for making sure your use of these scripts is lawful and appropriate where you live and where the website operates.
