@@ -86,7 +86,7 @@ const docs = defineCollection({
       type: z.string().optional(),
       featured: z.boolean().default(false),
       image: z.string().optional(),
-      headerStyle: z.enum(['panel', 'plain']).optional(),
+      headerStyle: z.enum(['panel', 'plain', 'tool']).optional(),
     }),
 });
 

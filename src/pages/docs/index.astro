@@ -31,10 +31,68 @@ function formatDateStamp(value: number) {
   return new Date(value).toISOString().slice(0, 10);
 }
 
+function getDocKind(doc: (typeof docs)[number]) {
+  const section = getDocSectionMeta(doc.data.section).label;
+  const tags = new Set((doc.data.tags ?? []).map((tag) => tag.toLowerCase()));
+
+  if (tags.has('protocol')) return 'Protocol reference';
+  if (tags.has('setup') || tags.has('tutorial') || section === 'Platform Guides') return 'Setup guide';
+  if (section === 'Reference' || tags.has('reference') || tags.has('field-reference') || tags.has('pinout')) return 'Reference';
+  if (section === 'Arduino Notes' || tags.has('electronics') || tags.has('hardware')) return 'Hardware note';
+  if (section === 'Site Meta' || tags.has('website') || tags.has('design-system')) return 'Site meta';
+  return 'Guide';
+}
+
+function uniqueDocs(items: typeof docs) {
+  const seen = new Set<string>();
+  return items.filter((doc) => {
+    if (seen.has(doc.id)) return false;
+    seen.add(doc.id);
+    return true;
+  });
+}
+
 const docsByFresh = [...docs].sort((a, b) => toDateValue(b) - toDateValue(a));
-const startHere = docs.slice(0, 3);
 const latestDocs = docsByFresh.slice(0, 4);
 const latestDocUpdated = docsByFresh[0] ? toDateValue(docsByFresh[0]) : 0;
+const practicalDocs = uniqueDocs([
+  ...docs.filter((doc) => doc.data.featured),
+  ...docs.filter((doc) => ['Reference', 'Setup guide', 'Protocol reference', 'Hardware note'].includes(getDocKind(doc))),
+  ...docsByFresh,
+]).slice(0, 4);
+
+const quickPaths = [
+  {
+    label: 'Field references',
+    description: 'Bench and field lookups: radios, pinouts, menus, and compact tables.',
+    query: 'kind:reference',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Reference').slice(0, 3),
+  },
+  {
+    label: 'Setup guides',
+    description: 'Procedural notes for getting machines, networks, and tools behaving.',
+    query: 'kind:setup',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Setup guide').slice(0, 3),
+  },
+  {
+    label: 'Hardware notes',
+    description: 'Electronics-facing notes for boards, wiring, storage, and bench work.',
+    query: 'kind:hardware',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Hardware note').slice(0, 3),
+  },
+  {
+    label: 'Protocol references',
+    description: 'Wire-level notes, packet formats, and implementation details.',
+    query: 'kind:protocol',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Protocol reference').slice(0, 3),
+  },
+  {
+    label: 'Site notes',
+    description: 'Architecture, design language, and maintenance notes for this site.',
+    query: 'kind:site',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Site meta').slice(0, 3),
+  },
+].filter((path) => path.docs.length > 0);
 
 const sectionBuckets = docs.reduce<
   Array<{
@@ -68,6 +126,19 @@ const popularTags = [...tagCounts.entries()]
   .sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label))
   .slice(0, 8)
   .map(([slug, info]) => ({ slug, label: info.label, count: info.count }));
+
+const docKindCounts = docs.reduce<Map<string, number>>((map, doc) => {
+  const kind = getDocKind(doc);
+  map.set(kind, (map.get(kind) ?? 0) + 1);
+  return map;
+}, new Map());
+
+const docKindFilters = [
+  { label: 'All', value: 'all', count: docs.length },
+  ...[...docKindCounts.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([label, count]) => ({ label, value: label, count })),
+];
 
 const cliEntries = docs.map((doc) => ({
   title: doc.data.title,
@@ -204,14 +275,51 @@ const cliManual = {
                 terminalTitle="docs.shell"
               />
 
+              <section class="docs-search-panel panel panel--soft" aria-labelledby="docs-search-heading">
+                <div>
+                  <h2 id="docs-search-heading">Find a document</h2>
+                  <p>{docs.length} published notes across {sectionBuckets.length} sections.</p>
+                </div>
+                <label class="docs-search">
+                  <span>Search docs</span>
+                  <input type="search" data-docs-search placeholder="FT-857D, eduroam, pinout, protocol..." autocomplete="off" />
+                </label>
+              </section>
+
+              <section class="quick-paths" aria-labelledby="quick-paths-heading">
+                <div class="section-heading">
+                  <h2 id="quick-paths-heading">Quick paths</h2>
+                  <p>Start from the kind of thing you are trying to find.</p>
+                </div>
+                <div class="quick-path-grid">
+                  {quickPaths.map((path) => (
+                    <article class="quick-path panel panel--soft">
+                      <div class="quick-path__head">
+                        <div>
+                          <h3>{path.label}</h3>
+                          <p>{path.description}</p>
+                        </div>
+                        <a href="#directory" data-docs-preset={path.query}>Show</a>
+                      </div>
+                      <ul>
+                        {path.docs.map((doc) => (
+                          <li>
+                            <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
               <div class="quick-panels">
-                <section class="quick-panel panel panel--soft" aria-labelledby="start-here-heading">
+                <section class="quick-panel panel panel--soft" aria-labelledby="practical-docs-heading">
                   <div class="quick-panel__head">
-                    <h2 id="start-here-heading">Start here</h2>
-                    <a href={`/docs/${startHere[0]?.id}`}>Open lead doc</a>
+                    <h2 id="practical-docs-heading">Useful now</h2>
                   </div>
                   <ul>
-                    {startHere.map((doc) => (
+                    {practicalDocs.map((doc) => (
                       <li>
                         <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
                       </li>
@@ -221,7 +329,7 @@ const cliManual = {
 
                 <section class="quick-panel panel panel--soft" aria-labelledby="latest-docs-heading">
                   <div class="quick-panel__head">
-                    <h2 id="latest-docs-heading">Latest</h2>
+                    <h2 id="latest-docs-heading">Recently updated</h2>
                   </div>
                   <ul>
                     {latestDocs.map((doc) => (
@@ -249,13 +357,23 @@ const cliManual = {
 
           <section class="docs-directory" aria-labelledby="directory-heading">
             <div class="docs-directory__head">
-              <h2 id="directory-heading">Directory</h2>
+              <h2 id="directory-heading">Browse the library</h2>
               <p>Browse by section, then drill into each document.</p>
             </div>
 
+            <div class="docs-filterbar" id="directory" aria-label="Filter documentation directory">
+              {docKindFilters.map((filter, index) => (
+                <button class:list={[index === 0 && 'is-active']} type="button" data-doc-kind-filter={filter.value}>
+                  {filter.label} <span>{filter.count}</span>
+                </button>
+              ))}
+            </div>
+
+            <p class="docs-result-count" data-docs-result-count>{docs.length} documents shown</p>
+
             <div class="docs-sections">
               {sectionBuckets.map((group) => (
-                <section class="doc-section panel panel--soft" aria-label={group.section}>
+                <section class="doc-section panel panel--soft" aria-label={group.section} data-doc-section>
                   <header class="doc-section__head">
                     <div>
                       <h3>{group.section}</h3>
@@ -266,13 +384,18 @@ const cliManual = {
 
                   <ul class="doc-rows">
                     {group.items.map((doc) => (
-                      <li class="doc-row">
+                      <li
+                        class="doc-row"
+                        data-doc-row
+                        data-doc-kind={getDocKind(doc)}
+                        data-doc-terms={`${doc.data.title} ${doc.data.description} ${getDocSectionMeta(doc.data.section).label} ${getDocKind(doc)} ${(doc.data.tags ?? []).join(' ')}`.toLowerCase()}
+                      >
                         <div class="doc-row__main">
                           <a class="doc-row__title" href={`/docs/${doc.id}`}>{doc.data.title}</a>
                           <p class="doc-row__desc">{doc.data.description}</p>
                         </div>
                         <div class="doc-row__meta">
-                          <span class="pill">Doc</span>
+                          <span class="pill">{getDocKind(doc)}</span>
                           {doc.data.tags?.slice(0, 2).map((tag) => (
                             <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
                           ))}
@@ -283,6 +406,8 @@ const cliManual = {
                 </section>
               ))}
             </div>
+
+            <p class="docs-empty-results" data-docs-empty-results hidden>No matching documents.</p>
           </section>
         </>
       )}
@@ -326,6 +451,79 @@ const cliManual = {
   </body>
 </html>
 
+<script is:inline>
+  (() => {
+    const search = document.querySelector('[data-docs-search]');
+    const rows = Array.from(document.querySelectorAll('[data-doc-row]'));
+    const sections = Array.from(document.querySelectorAll('[data-doc-section]'));
+    const filters = Array.from(document.querySelectorAll('[data-doc-kind-filter]'));
+    const presets = Array.from(document.querySelectorAll('[data-docs-preset]'));
+    const count = document.querySelector('[data-docs-result-count]');
+    const empty = document.querySelector('[data-docs-empty-results]');
+    let activeKind = 'all';
+
+    if (!rows.length) return;
+
+    const aliases = {
+      'kind:reference': 'Reference',
+      'kind:setup': 'Setup guide',
+      'kind:hardware': 'Hardware note',
+      'kind:protocol': 'Protocol reference',
+      'kind:site': 'Site meta',
+    };
+
+    const setActiveFilter = (kind) => {
+      activeKind = kind;
+      filters.forEach((filter) => {
+        filter.classList.toggle('is-active', filter.getAttribute('data-doc-kind-filter') === kind);
+      });
+    };
+
+    const update = () => {
+      const query = search?.value.trim().toLowerCase() ?? '';
+      let shown = 0;
+
+      rows.forEach((row) => {
+        const terms = row.getAttribute('data-doc-terms') ?? '';
+        const kind = row.getAttribute('data-doc-kind') ?? '';
+        const kindMatch = activeKind === 'all' || activeKind === kind;
+        const queryMatch = !query || terms.includes(query);
+        const visible = kindMatch && queryMatch;
+        row.hidden = !visible;
+        if (visible) shown += 1;
+      });
+
+      sections.forEach((section) => {
+        const visibleRows = section.querySelectorAll('[data-doc-row]:not([hidden])').length;
+        section.hidden = visibleRows === 0;
+      });
+
+      if (count) count.textContent = `${shown} document${shown === 1 ? '' : 's'} shown`;
+      if (empty) empty.hidden = shown !== 0;
+    };
+
+    filters.forEach((filter) => {
+      filter.addEventListener('click', () => {
+        setActiveFilter(filter.getAttribute('data-doc-kind-filter') || 'all');
+        update();
+      });
+    });
+
+    search?.addEventListener('input', update);
+
+    presets.forEach((preset) => {
+      preset.addEventListener('click', () => {
+        const target = aliases[preset.getAttribute('data-docs-preset') || ''] || 'all';
+        setActiveFilter(target);
+        if (search) search.value = '';
+        update();
+      });
+    });
+
+    update();
+  })();
+</script>
+
 <style>
   .docs-index {
     max-width: min(1260px, calc(100% - 2 * var(--space-5)));
@@ -363,6 +561,164 @@ const cliManual = {
 
   .docs-top__main :global(.index-hero) {
     margin-bottom: 0;
+  }
+
+  .docs-search-panel {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: end;
+    padding: 1rem;
+  }
+
+  .docs-search-panel h2,
+  .docs-search-panel p {
+    margin: 0;
+  }
+
+  .docs-search-panel h2 {
+    font-size: 1rem;
+  }
+
+  .docs-search-panel p {
+    margin-top: 0.28rem;
+    color: var(--text-2);
+    font-size: 0.9rem;
+  }
+
+  .docs-search {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .docs-search span {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .docs-search input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.72rem 0.82rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text);
+    font: inherit;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .docs-search input:focus {
+    outline: 2px solid color-mix(in srgb, var(--accent) 34%, transparent 66%);
+    outline-offset: 2px;
+    border-color: color-mix(in srgb, var(--accent) 44%, var(--border) 56%);
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .section-heading h2,
+  .section-heading p {
+    margin: 0;
+  }
+
+  .section-heading h2 {
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-heading p {
+    color: var(--text-2);
+    font-size: 0.9rem;
+  }
+
+  .quick-paths {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .quick-path-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .quick-path {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.95rem;
+  }
+
+  .quick-path__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.8rem;
+  }
+
+  .quick-path h3,
+  .quick-path p,
+  .quick-path ul,
+  .quick-path li {
+    margin: 0;
+  }
+
+  .quick-path h3 {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .quick-path p {
+    margin-top: 0.28rem;
+    color: var(--text-2);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .quick-path__head a {
+    flex: 0 0 auto;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.62rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    background: var(--surface-glass);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .quick-path__head a:hover {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    color: var(--accent);
+  }
+
+  .quick-path ul {
+    list-style: none;
+    display: grid;
+    gap: 0.42rem;
+    padding: 0;
+  }
+
+  .quick-path li a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .quick-path li a:hover {
+    color: var(--accent);
   }
 
   .quick-panels {
@@ -474,6 +830,45 @@ const cliManual = {
     font-size: 0.92rem;
   }
 
+  .docs-filterbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .docs-filterbar button {
+    min-height: 36px;
+    padding: 0.42rem 0.66rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-raised);
+    color: var(--text-2);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  .docs-filterbar button:hover,
+  .docs-filterbar button.is-active {
+    border-color: color-mix(in srgb, var(--accent) 44%, var(--border) 56%);
+    background: color-mix(in srgb, var(--surface-raised) 80%, var(--accent) 20%);
+    color: var(--text);
+  }
+
+  .docs-filterbar span {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+  }
+
+  .docs-result-count,
+  .docs-empty-results {
+    margin: -0.35rem 0 0;
+    color: var(--text-2);
+    font-size: 0.9rem;
+  }
+
   .docs-sections {
     display: grid;
     gap: 0.9rem;
@@ -529,6 +924,12 @@ const cliManual = {
     padding-bottom: 0;
   }
 
+  .doc-row[hidden],
+  .doc-section[hidden],
+  .docs-empty-results[hidden] {
+    display: none;
+  }
+
   .doc-row__main,
   .doc-row__meta {
     min-width: 0;
@@ -581,6 +982,8 @@ const cliManual = {
       grid-template-columns: 1fr;
     }
 
+    .docs-search-panel,
+    .quick-path-grid,
     .quick-panels {
       grid-template-columns: 1fr;
     }
@@ -589,6 +992,20 @@ const cliManual = {
   @media (max-width: 820px) {
     .docs-index {
       max-width: calc(100% - 2 * var(--space-4));
+    }
+
+    .docs-search-panel,
+    .quick-path,
+    .quick-panel,
+    .doc-section {
+      padding: 0.85rem;
+    }
+
+    .section-heading,
+    .docs-directory__head,
+    .quick-path__head {
+      align-items: flex-start;
+      flex-direction: column;
     }
 
     .doc-row {

@@ -1,0 +1,1089 @@
+---
+const tasks = [
+  {
+    id: 'quick-start',
+    group: 'get-on-air',
+    title: 'Quick start',
+    summary: 'Use this when the radio is on the bench or in the field and you just need to get it awake, listening, and not doing anything surprising.',
+    steps: [
+      'Connect 13.8 V DC power: red to positive, black to negative.',
+      'Put the antenna on the right port: HF/50 MHz or 144/430 MHz.',
+      'Hold POWER for one second.',
+      'Choose the band with BAND UP/DWN.',
+      'Choose the mode with MODE LEFT/RIGHT.',
+      'Tune with DIAL for SSB, CW, or DIG. Use SELECT for AM, FM, or PKT channel steps.',
+      'Bring AF up gently. FM noise has no manners.',
+    ],
+    confirm: 'The display shows the frequency, band, mode, and meter. Audio rises and falls with AF.',
+    fix: 'If the receiver is just roaring at you, lower AF, set squelch, and then start troubleshooting.',
+    related: ['AF', 'BAND', 'MODE', 'DIAL', 'SELECT'],
+  },
+  {
+    id: 'ssb-voice',
+    group: 'get-on-air',
+    title: 'SSB voice',
+    summary: 'Use this when you want a normal HF voice contact and would rather not discover your mic gain is awful from the other station.',
+    steps: [
+      'Select a legal band and frequency.',
+      'Press MODE LEFT/RIGHT until LSB or USB is selected: LSB below 10 MHz, USB above 10 MHz.',
+      'Press FUNC, then rotate SELECT until the LCD shows MTR, -, DISP.',
+      'Press the A button under MTR until ALC is selected.',
+      'Press PTT and speak normally.',
+      'Adjust Menu 081 SSB MIC GAIN if ALC is absent, lazy, or pinned.',
+    ],
+    confirm: 'TX/BUSY is red while transmitting, and ALC moves on voice peaks without sitting hard against the end stop.',
+    fix: 'If reports say your audio is harsh, lower mic gain first. If PROC is on, back that off next.',
+    related: ['081', '074', '075', 'MFi'],
+  },
+  {
+    id: 'repeater',
+    group: 'get-on-air',
+    title: 'Open a repeater',
+    summary: 'Use this when you know the repeater output frequency but need to set the shift and access tone without spelunking through menus.',
+    steps: [
+      'Press MODE LEFT/RIGHT until FM is selected.',
+      'Tune the repeater output frequency.',
+      'Press FUNC, then rotate SELECT until the LCD shows RPT, REV, VOX.',
+      'Press the A button under RPT until +, -, or simplex is correct.',
+      'Press FUNC, then rotate SELECT until the LCD shows TON/ENC, DEC, TDCH.',
+      'Press the A button under TON/ENC to enable the tone mode you need.',
+      'Hold the A button under TON/ENC, then set Menu 083 TONE FREQ.',
+      'Transmit briefly, identify, and ask for a signal check.',
+    ],
+    confirm: 'The shift and tone indicators are visible before you transmit. A repeater tail or reply tells you the path is working.',
+    fix: 'If it still will not open, return to RPT, REV, VOX and press the B button under REV to listen on the input. That often tells you more than another blind PTT stab.',
+    related: ['076', '083', 'MFd', 'MFe'],
+  },
+  {
+    id: 'cw',
+    group: 'get-on-air',
+    title: 'CW',
+    summary: 'Use this when you want the keyer, break-in, pitch, and spot tone set before your fist gets blamed for the radio.',
+    steps: [
+      'Connect key or paddle to KEY with a three-conductor plug.',
+      'Press MODE LEFT/RIGHT until CW or CWR is selected.',
+      'Press FUNC, then rotate SELECT until the LCD shows SPOT, BK, KYR.',
+      'Press the A button under SPOT to match pitch.',
+      'Press the B button under BK for semi-break-in.',
+      'Press the C button under KYR for the internal keyer if using paddles.',
+      'Hold the C button under KYR, then set Menu 030 CW SPEED.',
+    ],
+    confirm: 'You hear sidetone while keying, and TX/BUSY turns red during key-down.',
+    fix: 'If dots and dashes are swapped, set Menu 025 CW KEY REV before blaming your hand.',
+    related: ['024', '025', '027', '030', '032', 'MFj'],
+  },
+  {
+    id: 'digital',
+    group: 'get-on-air',
+    title: 'Digital / packet',
+    summary: 'Use this when the computer or TNC is doing the talking and the FT-857D needs clean levels through the DATA jack.',
+    steps: [
+      'Connect DATA jack to TNC or soundcard interface.',
+      'Press MODE LEFT/RIGHT until DIG or PKT is selected.',
+      'For DIG, set Menu 038 DIG MODE.',
+      'For DIG, set Menu 037 DIG GAIN.',
+      'For packet, set Menu 073 PKT RATE.',
+      'Set Menu 071 PKT1200 or 072 PKT9600.',
+      'Transmit from software and watch power/ALC.',
+    ],
+    confirm: 'The DATA jack path keys and passes audio. The front mic is not the active transmit audio source during rear DATA digital transmit.',
+    fix: 'If ALC is high or the transmitted signal is wide, reduce software audio first, then Menu 037 DIG GAIN.',
+    related: ['037', '038', '071', '072', '073'],
+  },
+  {
+    id: 'high-swr',
+    group: 'fix',
+    title: 'High SWR / HI SWR',
+    summary: 'Use this after you have stopped transmitting and need to work out what to check before trying again.',
+    steps: [
+      'Press FUNC, then rotate SELECT until the LCD shows MTR, -, DISP.',
+      'Press the A button under MTR until SWR appears.',
+      'Lower Menu 075 RF POWER SET before any retest.',
+      'Check the antenna port. HF/50 and 144/430 are very much not the same hole.',
+      'Check coax, tuner state, antenna range, and counterpoise/grounding.',
+      'Retest briefly at low power.',
+    ],
+    confirm: 'The HI SWR warning is gone and a low-power check gives a sensible SWR reading.',
+    fix: 'If it is still bad, stop testing the transmitter and fix the antenna system. The finals are not sacrificial components.',
+    related: ['075', '085', 'MFi', 'MFk'],
+  },
+  {
+    id: 'no-audio',
+    group: 'fix',
+    title: 'No audio',
+    summary: 'Use this when the radio appears alive but the speaker is giving you the silent treatment.',
+    steps: [
+      'Rotate AF up slowly.',
+      'Open squelch, or check what the SQL/RF knob is doing with Menu 080.',
+      'If using earphones, check rear SP-PH switch.',
+      'Set SP-PH to PH before earphones.',
+      'Check external speaker impedance if fitted.',
+    ],
+    confirm: 'Speaker or headphone audio returns.',
+    fix: 'If the channel is still silent, verify mode, frequency, antenna, and squelch before assuming anything more exotic.',
+    related: ['AF', 'SQL/RF', '080', 'SP-PH'],
+  },
+  {
+    id: 'weak-rx',
+    group: 'fix',
+    title: 'Weak receive',
+    summary: 'Use this when the signal is there, sort of, but the radio is making you work too hard for it.',
+    steps: [
+      'Check antenna and band first.',
+      'Check SQL/RF gain role with Menu 080.',
+      'Press FUNC, then rotate SELECT until the LCD shows IPO, ATT, NAR.',
+      'Press the B button under ATT to turn attenuation off unless overload is present.',
+      'Press the A button under IPO only when band noise already moves the S-meter.',
+      'Use DSP DNR/DBF only after RF-side checks.',
+    ],
+    confirm: 'The wanted signal becomes easier to copy without simply making everything quieter.',
+    fix: 'Change one receive tool at a time. If the signal gets worse, undo the last thing you did. Very scientific, annoyingly effective.',
+    related: ['080', 'MFl', 'MFm', 'MFp'],
+  },
+  {
+    id: 'keys-locked',
+    group: 'fix',
+    title: 'Keys locked',
+    summary: 'Use this when the front panel seems to have joined a silent protest.',
+    steps: [
+      'Press LOCK once.',
+      'Press FUNC to leave row mode if active.',
+      'Press CLAR or hold CLAR to clear RIT/IF SHIFT.',
+      'Press V/M to verify VFO or memory state.',
+      'If needed, set Menu 054 LOCK MODE.',
+    ],
+    confirm: 'Lock icon disappears and controls respond.',
+    fix: 'Power-cycle before reaching for reset options. Most mysteries are just state, not corruption.',
+    related: ['054', 'LOCK', 'CLAR', 'V/M'],
+  },
+  {
+    id: 'memory',
+    group: 'configure',
+    title: 'Memory store',
+    summary: 'Use this when the VFO is set up properly and you want to keep it for more than the next five minutes.',
+    steps: [
+      'Set frequency, mode, shift, tone, and power.',
+      'Press FUNC, then rotate SELECT until the LCD shows MW, SKIP, TAG.',
+      'Press the A button under MW briefly for memory check.',
+      'Rotate SELECT to an empty channel.',
+      'Hold the A button under MW for one second.',
+      'Press V/M and rotate SELECT to verify recall.',
+    ],
+    confirm: 'Memory channel number appears and stored operating data returns.',
+    fix: 'If this is only a temporary parking spot, use QMB, the quick memory bank: hold V/M, or press FUNC and rotate SELECT until STO, RCL, PROC appears.',
+    related: ['MFb', 'MFc', '055', '056'],
+  },
+  {
+    id: 'scan',
+    group: 'configure',
+    title: 'Scan',
+    summary: 'Use this when you want the radio to search, but not behave like it has never met squelch before.',
+    steps: [
+      'Set squelch so the channel is quiet with no signal.',
+      'Choose VFO or memory mode with V/M.',
+      'Press FUNC, then rotate SELECT until the LCD shows SCN, PRI, DW.',
+      'Press the A button under SCN.',
+      'Rotate DIAL or SELECT to reverse direction.',
+      'Press PTT or the A button under SCN to stop.',
+    ],
+    confirm: 'Scan advances and pauses when squelch opens.',
+    fix: 'If scan stops or resumes in a way that feels cursed, check Menu 077 SCAN MODE and 078 SCAN RESUME.',
+    related: ['077', '078', 'MFg'],
+  },
+  {
+    id: 'tuner-atas',
+    group: 'configure',
+    title: 'Tuner / ATAS',
+    summary: 'Use this when the TUNE key needs to know whether it is talking to an FC-30 or an ATAS antenna.',
+    steps: [
+      'Hold FUNC to open Menu.',
+      'Rotate SELECT to Menu 085 TUNER/ATAS.',
+      'Choose TUNER, ATAS(HF), ATAS(HF&50), or ATAS(ALL).',
+      'Hold FUNC to save.',
+      'Press FUNC, then rotate SELECT until the LCD shows TUNE, DOWN, UP.',
+      'Press the A button under TUNE to activate; hold it to retune.',
+    ],
+    confirm: 'Tuner/ATAS status icon appears, then normal display returns.',
+    fix: 'If the radio complains about SWR or range, stop and check the antenna, coax, grounding/counterpoise, and selected port.',
+    related: ['085', '075', 'MFk'],
+  },
+  {
+    id: 'reset',
+    group: 'lookup',
+    title: 'Reset / recovery',
+    summary: 'Use this when the radio is acting strange and you want the least dramatic recovery path first.',
+    steps: [
+      'Press LOCK if controls do not respond.',
+      'Press FUNC to leave row mode.',
+      'Clear CLAR/IF SHIFT.',
+      'Check VFO/memory with V/M.',
+      'Power-cycle before using reset combinations.',
+    ],
+    confirm: 'Normal VFO or memory display returns and controls respond.',
+    fix: 'Master reset clears memories and menu settings. Record important values before choosing the big red metaphorical button.',
+    related: ['LOCK', 'FUNC', 'CLAR', 'V/M'],
+  },
+];
+
+const rows = [
+  { id: 'MFa', labels: ['A/B', 'A=B', 'SPL'], uses: ['VFO A/B toggle', 'Copy Main VFO to Sub VFO', 'Split on/off'], hint: 'VFO and split operation.' },
+  { id: 'MFb', labels: ['MW', 'SKIP', 'TAG'], uses: ['Memory write/check', 'Scan skip memory', 'Frequency/tag display'], hint: 'Memory management.' },
+  { id: 'MFc', labels: ['STO', 'RCL', 'PROC'], uses: ['Store QMB', 'Recall QMB', 'Speech processor'], hint: 'Quick memory and voice punch.' },
+  { id: 'MFd', labels: ['RPT', 'REV', 'VOX'], uses: ['Repeater shift', 'Reverse repeater TX/RX', 'VOX'], hint: 'Repeater and hands-free transmit.' },
+  { id: 'MFe', labels: ['TON/ENC', 'DEC', 'TDCH'], uses: ['CTCSS/DCS encoder', 'Decoder if split tone on', 'Tone/DCS search'], hint: 'Tone access.' },
+  { id: 'MFf', labels: ['ARTS', 'SRCH', 'PMS'], uses: ['ARTS', 'Smart Search', 'PMS scan'], hint: 'Search and programmed scanning.' },
+  { id: 'MFg', labels: ['SCN', 'PRI', 'DW'], uses: ['Scan', 'Priority scan', 'Dual Watch'], hint: 'Scanning.' },
+  { id: 'MFh', labels: ['SCOP', 'WID', 'STEP'], uses: ['Spectrum scope', 'Scope width', 'Scope step / max hold'], hint: 'Band activity view.' },
+  { id: 'MFi', labels: ['MTR', '-', 'DISP'], uses: ['Meter select', 'Alternate meter select', 'Large/small display'], hint: 'Transmit checks and display.' },
+  { id: 'MFj', labels: ['SPOT', 'BK', 'KYR'], uses: ['CW spot tone', 'CW break-in', 'Electronic keyer'], hint: 'CW operation.' },
+  { id: 'MFk', labels: ['TUNE', 'DOWN', 'UP'], uses: ['Tuner/ATAS tune', 'ATAS down', 'ATAS up'], hint: 'Antenna tuner and ATAS motion.' },
+  { id: 'MFl', labels: ['NB', 'AGC', '-'], uses: ['Noise blanker', 'AGC on/off', 'AGC fast/slow/auto'], hint: 'IF-stage receive cleanup.' },
+  { id: 'MFm', labels: ['IPO', 'ATT', 'NAR'], uses: ['Preamp off IPO', '10 dB attenuator', 'Narrow FM'], hint: 'RF front-end control.' },
+  { id: 'MFn', labels: ['CFIL', '-', '-'], uses: ['Ceramic IF filter', 'Optional FIL-1', 'Optional FIL-2'], hint: 'Optional IF filters.' },
+  { id: 'MFo', labels: ['PLY1', 'PLY2', 'PLY3'], uses: ['Send CW beacon text 1', 'Send CW beacon text 2', 'Send CW beacon text 3'], hint: 'CW beacon memory.' },
+  { id: 'MFp', labels: ['DNR', 'DNF', 'DBF'], uses: ['DSP noise reduction', 'DSP notch', 'DSP bandpass / CW peak'], hint: 'DSP audio cleanup. The front-panel DSP key also jumps here.' },
+  { id: 'MFq', labels: ['MONI', 'QSPL', 'ATC'], uses: ['Monitor squelch', 'Quick split +5 kHz', '1750 Hz tone call'], hint: 'Monitor, quick split, tone call.' },
+];
+
+const menuItems = [
+  ['004', 'AM&FM DIAL', 'RF', 'Enable MAIN DIAL in AM/FM', 'Use if SELECT channel steps are too coarse.'],
+  ['005', 'AM MIC GAIN', 'Audio', 'AM microphone gain', 'Set if AM audio is weak or overdriven.'],
+  ['019', 'CAT RATE', 'System', 'CAT baud rate', 'Match computer/control software.'],
+  ['020', 'CAT/LIN/TUN', 'System', 'Rear CAT/LINEAR jack role', 'Set CAT, LINEAR, or TUNER to match connected device.'],
+  ['021', 'CLAR DIAL SEL', 'RF', 'Clarifier control knob', 'Choose SELECT or MAIN for RIT offset.'],
+  ['024', 'CW DELAY', 'CW', 'CW break-in recovery', 'Lengthen if receiver returns too quickly.'],
+  ['025', 'CW KEY REV', 'CW', 'Paddle polarity', 'Reverse if dots/dashes are swapped.'],
+  ['027', 'CW PITCH', 'CW', 'CW sidetone/filter pitch', 'Set to preferred CW tone.'],
+  ['030', 'CW SPEED', 'CW', 'Internal keyer speed', 'Set sending speed.'],
+  ['033', 'DCS CODE', 'Repeater', 'DCS encode/decode code', 'Set for DCS repeaters.'],
+  ['037', 'DIG GAIN', 'Digital', 'Digital input level', 'Set for soundcard/TNC drive.'],
+  ['038', 'DIG MODE', 'Digital', 'Digital mode/sideband', 'Select RTTY, PSK31, or user mode.'],
+  ['040', 'DIG VOX', 'Digital', 'Digital VOX gain', 'Use for audio-triggered digital transmit.'],
+  ['042', 'DISP CONTRAST', 'Display', 'LCD contrast', 'Set for viewing angle.'],
+  ['043', 'DISP INTENSITY', 'Display', 'LCD brightness', 'Dim for night, bright for daylight.'],
+  ['044', 'DISP MODE', 'Display', 'LCD lamp mode', 'AUTO2 for external power, OFF for stealth.'],
+  ['049', 'DSP NR LEVEL', 'Audio', 'DSP noise reduction level', 'Increase until noise drops without watery audio.'],
+  ['051', 'FM MIC GAIN', 'Audio', 'FM microphone gain', 'Set if FM audio is low or distorted.'],
+  ['052', 'FM STEP', 'RF', 'FM SELECT tuning step', 'Match channel spacing.'],
+  ['054', 'LOCK MODE', 'System', 'What LOCK disables', 'Choose DIAL, FREQ, PANEL, or ALL.'],
+  ['056', 'MEM TAG', 'Memory', 'Memory alpha tag', 'Label memory channels.'],
+  ['063', 'NB LEVEL', 'RF', 'Noise blanker level', 'Raise only enough to reduce impulse noise.'],
+  ['071', 'PKT1200', 'Digital', '1200 bps packet input level', 'Set TNC audio drive.'],
+  ['072', 'PKT9600', 'Digital', '9600 bps packet input level', 'Set TNC audio drive.'],
+  ['073', 'PKT RATE', 'Digital', 'Packet rate', 'Choose 1200 or 9600 bps.'],
+  ['074', 'PROC LEVEL', 'TX', 'Speech processor compression', 'Set for SSB/AM punch without distortion.'],
+  ['075', 'RF POWER SET', 'TX', 'Max RF power for band', 'Reduce for battery, heat, nearby people, or tuning.'],
+  ['076', 'RPT SHIFT', 'Repeater', 'Repeater offset amount', 'Set regional offset value.'],
+  ['077', 'SCAN MODE', 'Memory', 'Scan resume rule', 'TIME, BUSY, or STOP.'],
+  ['078', 'SCAN RESUME', 'Memory', 'Scan resume delay', 'Set hold time after signal.'],
+  ['080', 'SQL/RF GAIN', 'RF', 'SQL/RF knob role', 'Choose RF gain or squelch.'],
+  ['081', 'SSB MIC GAIN', 'Audio', 'SSB microphone gain', 'Set with ALC during speech.'],
+  ['082', 'SSB STEP', 'RF', 'SSB SELECT tuning step', 'Set quick tuning step.'],
+  ['083', 'TONE FREQ', 'Repeater', 'CTCSS tone frequency', 'Set repeater tone. Default is 88.5 Hz.'],
+  ['084', 'TOT TIME', 'TX', 'Transmit timeout timer', 'Protect finals and prevent stuck PTT.'],
+  ['085', 'TUNER/ATAS', 'Antenna', 'TUNE key device', 'Select FC-30 or ATAS-120A.'],
+  ['087', 'VOX DELAY', 'TX', 'VOX hang time', 'Set delay before returning to receive.'],
+  ['088', 'VOX GAIN', 'TX', 'VOX trigger gain', 'Set so voice keys TX and noise does not.'],
+];
+
+const categories = ['All', ...Array.from(new Set(menuItems.map((item) => item[2])))];
+
+const groupLabels = {
+  'get-on-air': 'Get on air',
+  fix: 'Fix',
+  configure: 'Configure',
+  lookup: 'Look up',
+};
+---
+
+<section class="ft-console" data-ft-console>
+  <div class="ft-resource" aria-label="Printable field manual">
+    <div>
+      <p class="ft-resource__label">Printable field manual</p>
+      <p class="ft-resource__text">Use this page for quick lookups. Use the PDF when you want the field-card version in the radio bag.</p>
+    </div>
+    <a class="ft-resource__pdf" href="/assets/downloads/ft-857d-field-manual.pdf" download>Download PDF</a>
+  </div>
+
+  <nav class="ft-tabs" aria-label="FT-857D console sections">
+    <button class="is-active" type="button" data-panel-target="tasks">Tasks</button>
+    <button type="button" data-panel-target="rows">Function Rows</button>
+    <button type="button" data-panel-target="menus">Menu Lookup</button>
+    <button type="button" data-panel-target="maps">Controls</button>
+  </nav>
+
+  <div class="ft-panel is-active" data-panel="tasks">
+    <div class="ft-tools">
+      <label class="ft-search">
+        <span>Find a task</span>
+        <input type="search" data-task-search placeholder="SWR, repeater, no audio, digital..." />
+      </label>
+      <div class="ft-filterbar" aria-label="Task filters">
+        <button class="is-active" type="button" data-task-filter="all">All</button>
+        <button type="button" data-task-filter="get-on-air">Get on air</button>
+        <button type="button" data-task-filter="fix">Fix</button>
+        <button type="button" data-task-filter="configure">Configure</button>
+        <button type="button" data-task-filter="lookup">Look up</button>
+      </div>
+    </div>
+
+    <div class="ft-task-grid">
+      {tasks.map((task) => (
+        <article class="ft-task" data-task-card data-group={task.group} data-terms={`${task.title} ${task.summary} ${task.steps.join(' ')} ${task.confirm} ${task.fix} ${task.related.join(' ')}`.toLowerCase()}>
+          <div class="ft-task__head">
+            <p>{groupLabels[task.group] ?? task.group}</p>
+            <h3>{task.title}</h3>
+            <span>{task.summary}</span>
+          </div>
+          <p class="ft-task__steps-label">Press path</p>
+          <ol>
+            {task.steps.map((step) => <li>{step}</li>)}
+          </ol>
+          <div class="ft-task__check">
+            <strong>You know it worked when</strong>
+            <p>{task.confirm}</p>
+          </div>
+          <details>
+            <summary>If it still refuses</summary>
+            <p>{task.fix}</p>
+          </details>
+          <div class="ft-tags" aria-label={`Related items for ${task.title}`}>
+            {task.related.map((tag) => <button type="button" data-jump-term={tag}>{tag}</button>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="ft-panel" data-panel="rows">
+    <div class="ft-row-layout">
+      <div class="ft-row-list" aria-label="Function row selector">
+        {rows.map((row, index) => (
+          <button class:list={[index === 0 && 'is-active']} type="button" data-row-target={row.id}>
+            <strong>{row.labels.join('  ')}</strong>
+            <span>Manual map: {row.id}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="ft-row-stage">
+        {rows.map((row, index) => (
+          <article class:list={['ft-row-card', index === 0 && 'is-active']} data-row-card={row.id}>
+            <p class="ft-row-card__kicker">Press FUNC, then rotate SELECT until these labels appear. Manual map: {row.id}</p>
+            <div class="ft-row-display">
+              {row.labels.map((label) => <span>{label}</span>)}
+            </div>
+            <p class="ft-row-card__hint">{row.hint}</p>
+            <div class="ft-abc">
+              {row.uses.map((use, actionIndex) => (
+                <div>
+                  <span>{['A', 'B', 'C'][actionIndex]}</span>
+                  <strong>{row.labels[actionIndex]}</strong>
+                  <p>{use}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="ft-panel" data-panel="menus">
+    <div class="ft-tools">
+      <label class="ft-search">
+        <span>Find a menu item</span>
+        <input type="search" data-menu-search placeholder="075, RF power, tone, mic gain..." />
+      </label>
+      <div class="ft-filterbar" aria-label="Menu category filters">
+        {categories.map((category, index) => (
+          <button class:list={[index === 0 && 'is-active']} type="button" data-menu-filter={category}>
+            {category}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="ft-menu-count" data-menu-count>{menuItems.length} menu items shown</div>
+
+    <div class="ft-menu-list">
+      {menuItems.map(([number, name, category, meaning, when]) => (
+        <article class="ft-menu-item" data-menu-item data-category={category} data-terms={`${number} ${name} ${category} ${meaning} ${when}`.toLowerCase()}>
+          <div class="ft-menu-item__num">{number}</div>
+          <div>
+            <h3>{name}</h3>
+            <p>{meaning}</p>
+          </div>
+          <div>
+            <span>{category}</span>
+            <p>{when}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="ft-panel" data-panel="maps">
+    <div class="ft-map-grid">
+      <section>
+        <h3>Front panel controls</h3>
+        <dl class="ft-dl">
+          <div><dt>AF</dt><dd>Speaker or headphone volume.</dd></div>
+          <div><dt>SQL/RF</dt><dd>RF gain or squelch depending on Menu 080.</dd></div>
+          <div><dt>SELECT</dt><dd>Function rows, AM/FM tuning, memories, menu numbers.</dd></div>
+          <div><dt>FUNC</dt><dd>Press to use the A/B/C function labels. Hold to open the numbered menu.</dd></div>
+          <div><dt>A/B/C</dt><dd>Press the button under the label currently shown on the LCD.</dd></div>
+          <div><dt>DSP</dt><dd>Jump to the DNR, DNF, DBF function labels.</dd></div>
+          <div><dt>V/M</dt><dd>Toggle VFO and memory. Hold to store QMB.</dd></div>
+          <div><dt>LOCK</dt><dd>Lock controls; behavior is set by Menu 054.</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h3>Connector checks</h3>
+        <dl class="ft-dl">
+          <div><dt>INPUT</dt><dd>13.8 V DC, negative ground, 22 A supply.</dd></div>
+          <div><dt>HF/50 MHz ANT</dt><dd>HF and 50 MHz antenna port.</dd></div>
+          <div><dt>144/430 MHz ANT</dt><dd>2 m and 70 cm antenna port.</dd></div>
+          <div><dt>DATA</dt><dd>AFSK, packet, audio, PTT, SQL status.</dd></div>
+          <div><dt>KEY</dt><dd>Straight key or paddle. Use stereo plug.</dd></div>
+          <div><dt>SP/PH</dt><dd>Set rear SP-PH to PH before earphones.</dd></div>
+        </dl>
+      </section>
+
+      <section class="ft-safety-card">
+        <h3>Before the first transmission on a new setup</h3>
+        <ol>
+          <li>Licensed for frequency and mode.</li>
+          <li>Correct antenna port and antenna for band.</li>
+          <li>SWR meter selected before power check.</li>
+          <li>Menu 075 set to lowest practical power.</li>
+          <li>People clear of antenna.</li>
+          <li>No HI SWR, abnormal voltage, or pinned ALC.</li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-ft-console]');
+    if (!root) return;
+
+    const setActive = (items, activeItem) => {
+      items.forEach((item) => item.classList.toggle('is-active', item === activeItem));
+    };
+
+    const panels = Array.from(root.querySelectorAll('[data-panel]'));
+    const panelButtons = Array.from(root.querySelectorAll('[data-panel-target]'));
+    panelButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-panel-target');
+        setActive(panelButtons, button);
+        panels.forEach((panel) => panel.classList.toggle('is-active', panel.getAttribute('data-panel') === target));
+      });
+    });
+
+    const taskCards = Array.from(root.querySelectorAll('[data-task-card]'));
+    const taskSearch = root.querySelector('[data-task-search]');
+    const taskFilters = Array.from(root.querySelectorAll('[data-task-filter]'));
+    let activeTaskFilter = 'all';
+
+    const filterTasks = () => {
+      const query = (taskSearch?.value || '').trim().toLowerCase();
+      taskCards.forEach((card) => {
+        const groupMatch = activeTaskFilter === 'all' || card.getAttribute('data-group') === activeTaskFilter;
+        const terms = card.getAttribute('data-terms') || '';
+        const queryMatch = !query || terms.includes(query);
+        card.hidden = !(groupMatch && queryMatch);
+      });
+    };
+
+    taskSearch?.addEventListener('input', filterTasks);
+    taskFilters.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeTaskFilter = button.getAttribute('data-task-filter') || 'all';
+        setActive(taskFilters, button);
+        filterTasks();
+      });
+    });
+
+    root.querySelectorAll('[data-jump-term]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const term = button.getAttribute('data-jump-term') || '';
+        const menuTab = root.querySelector('[data-panel-target="menus"]');
+        menuTab?.click();
+        const menuInput = root.querySelector('[data-menu-search]');
+        if (menuInput) {
+          menuInput.value = term;
+          menuInput.dispatchEvent(new Event('input', { bubbles: true }));
+          menuInput.focus();
+        }
+      });
+    });
+
+    const rowButtons = Array.from(root.querySelectorAll('[data-row-target]'));
+    const rowCards = Array.from(root.querySelectorAll('[data-row-card]'));
+    rowButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-row-target');
+        setActive(rowButtons, button);
+        rowCards.forEach((card) => card.classList.toggle('is-active', card.getAttribute('data-row-card') === target));
+      });
+    });
+
+    const menuItems = Array.from(root.querySelectorAll('[data-menu-item]'));
+    const menuSearch = root.querySelector('[data-menu-search]');
+    const menuFilters = Array.from(root.querySelectorAll('[data-menu-filter]'));
+    const menuCount = root.querySelector('[data-menu-count]');
+    let activeMenuFilter = 'All';
+
+    const filterMenus = () => {
+      const query = (menuSearch?.value || '').trim().toLowerCase();
+      let count = 0;
+      menuItems.forEach((item) => {
+        const category = item.getAttribute('data-category');
+        const categoryMatch = activeMenuFilter === 'All' || category === activeMenuFilter;
+        const terms = item.getAttribute('data-terms') || '';
+        const queryMatch = !query || terms.includes(query);
+        const show = categoryMatch && queryMatch;
+        item.hidden = !show;
+        if (show) count += 1;
+      });
+      if (menuCount) menuCount.textContent = `${count} menu item${count === 1 ? '' : 's'} shown`;
+    };
+
+    menuSearch?.addEventListener('input', filterMenus);
+    menuFilters.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeMenuFilter = button.getAttribute('data-menu-filter') || 'All';
+        setActive(menuFilters, button);
+        filterMenus();
+      });
+    });
+  })();
+</script>
+
+<style>
+  .ft-console {
+    --ft-ink: var(--text);
+    --ft-muted: var(--muted);
+    --ft-line: var(--border);
+    --ft-panel: var(--surface-raised);
+    --ft-soft: var(--surface);
+    --ft-blue: var(--accent);
+    --ft-green: var(--leaf);
+    --ft-red: var(--coral);
+    --ft-amber: #f59e0b;
+    --ft-active: color-mix(in srgb, var(--ft-blue) 10%, var(--ft-panel) 90%);
+    --ft-success: color-mix(in srgb, var(--ft-green) 11%, var(--ft-panel) 89%);
+    --ft-success-ink: color-mix(in srgb, var(--ft-green) 68%, var(--ft-ink) 32%);
+    display: grid;
+    gap: 1rem;
+    margin: 1.2rem 0 2.4rem;
+    color: var(--ft-ink);
+  }
+
+  .ft-resource {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--ft-line);
+    border-left: 5px solid var(--ft-blue);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ft-blue) 7%, var(--ft-panel) 93%);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  }
+
+  .ft-resource__label,
+  .ft-resource__text {
+    margin: 0;
+  }
+
+  .ft-resource__label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ft-muted);
+  }
+
+  .ft-resource__text {
+    font-size: 0.96rem;
+    color: var(--text-2);
+  }
+
+  .ft-resource__pdf,
+  .ft-tabs button,
+  .ft-filterbar button,
+  .ft-tags button,
+  .ft-row-list button {
+    font: inherit;
+  }
+
+  .ft-resource__pdf {
+    flex: 0 0 auto;
+    padding: 0.58rem 0.78rem;
+    border-radius: 8px;
+    background: var(--ft-ink);
+    color: var(--surface);
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .ft-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .ft-tabs button,
+  .ft-filterbar button,
+  .ft-row-list button,
+  .ft-tags button {
+    border: 1px solid var(--ft-line);
+    background: var(--ft-panel);
+    color: var(--text-2);
+    cursor: pointer;
+  }
+
+  .ft-tabs button {
+    min-height: 44px;
+    border-radius: 8px;
+    font-weight: 800;
+  }
+
+  .ft-tabs button:hover,
+  .ft-tabs button.is-active,
+  .ft-filterbar button:hover,
+  .ft-filterbar button.is-active,
+  .ft-row-list button:hover,
+  .ft-row-list button.is-active,
+  .ft-tags button:hover {
+    border-color: color-mix(in srgb, var(--ft-blue) 48%, var(--ft-line) 52%);
+    background: var(--ft-active);
+    color: var(--ft-ink);
+  }
+
+  .ft-panel {
+    display: none;
+  }
+
+  .ft-panel.is-active {
+    display: block;
+  }
+
+  .ft-tools {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .ft-search {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .ft-search span,
+  .ft-menu-count {
+    color: var(--ft-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ft-search input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 8px;
+    background: var(--ft-panel);
+    color: var(--ft-ink);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  .ft-filterbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ft-filterbar button,
+  .ft-tags button {
+    min-height: 36px;
+    padding: 0.45rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  .ft-task-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .ft-task {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding: 1rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 10px;
+    background: var(--ft-panel);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ft-task[hidden],
+  .ft-menu-item[hidden] {
+    display: none;
+  }
+
+  .ft-task__head p,
+  .ft-task__head h3,
+  .ft-task__head span,
+  .ft-task__steps-label,
+  .ft-task__check p,
+  .ft-task details p {
+    margin: 0;
+  }
+
+  .ft-task__head p {
+    color: var(--ft-muted);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ft-task__head h3 {
+    margin-top: 0.15rem;
+    font-size: 1.18rem;
+  }
+
+  .ft-task__head span {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--text-2);
+  }
+
+  .ft-task__steps-label {
+    color: var(--ft-muted);
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ft-task ol,
+  .ft-safety-card ol {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .ft-task li + li,
+  .ft-safety-card li + li {
+    margin-top: 0.38rem;
+  }
+
+  .ft-task__check {
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: var(--ft-success);
+    border: 1px solid color-mix(in srgb, var(--ft-green) 28%, var(--ft-line) 72%);
+  }
+
+  .ft-task__check strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--ft-success-ink);
+  }
+
+  .ft-task details {
+    padding: 0.75rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 8px;
+    background: var(--ft-soft);
+  }
+
+  .ft-task summary {
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .ft-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.42rem;
+  }
+
+  .ft-row-layout {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .ft-row-list {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+
+  .ft-row-list button {
+    display: grid;
+    gap: 0.16rem;
+    align-items: start;
+    min-height: 46px;
+    padding: 0.55rem 0.65rem;
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  .ft-row-list span {
+    font-family: var(--font-mono);
+    color: var(--ft-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  .ft-row-list strong {
+    overflow: hidden;
+    color: var(--ft-ink);
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ft-row-card {
+    display: none;
+    padding: 1rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 12px;
+    background: #101827;
+    color: #dbeafe;
+  }
+
+  .ft-row-card.is-active {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ft-row-card__kicker,
+  .ft-row-card__hint {
+    margin: 0;
+    color: #bfdbfe;
+  }
+
+  .ft-row-card__kicker {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  .ft-row-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    padding: 0.8rem;
+    border: 1px solid rgba(147, 197, 253, 0.35);
+    border-radius: 10px;
+    background: #172554;
+  }
+
+  .ft-row-display span {
+    display: grid;
+    place-items: center;
+    min-height: 62px;
+    border: 1px solid rgba(191, 219, 254, 0.3);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.45);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    font-weight: 900;
+  }
+
+  .ft-abc {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .ft-abc div {
+    padding: 0.8rem;
+    border: 1px solid rgba(191, 219, 254, 0.22);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .ft-abc span {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.45rem;
+    border-radius: 50%;
+    background: #dbeafe;
+    color: #0f172a;
+    font-weight: 900;
+  }
+
+  .ft-abc strong,
+  .ft-abc p {
+    display: block;
+    margin: 0;
+  }
+
+  .ft-abc strong {
+    color: #fff;
+  }
+
+  .ft-abc p {
+    margin-top: 0.25rem;
+    color: #bfdbfe;
+  }
+
+  .ft-menu-list {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+  }
+
+  .ft-menu-item {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(180px, 0.7fr);
+    gap: 0.8rem;
+    align-items: start;
+    padding: 0.8rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 9px;
+    background: var(--ft-panel);
+  }
+
+  .ft-menu-item__num {
+    display: grid;
+    place-items: center;
+    min-height: 42px;
+    border-radius: 8px;
+    background: var(--ft-ink);
+    color: var(--surface);
+    font-family: var(--font-mono);
+    font-weight: 900;
+  }
+
+  .ft-menu-item h3,
+  .ft-menu-item p {
+    margin: 0;
+  }
+
+  .ft-menu-item h3 {
+    font-size: 1rem;
+  }
+
+  .ft-menu-item p {
+    color: var(--text-2);
+    font-size: 0.92rem;
+  }
+
+  .ft-menu-item span {
+    display: inline-flex;
+    margin-bottom: 0.24rem;
+    color: var(--ft-blue);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ft-map-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .ft-map-grid section {
+    padding: 1rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 10px;
+    background: var(--ft-panel);
+  }
+
+  .ft-map-grid h3 {
+    margin: 0 0 0.75rem;
+  }
+
+  .ft-dl {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+  }
+
+  .ft-dl div {
+    display: grid;
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--ft-line);
+  }
+
+  .ft-dl div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .ft-dl dt {
+    font-family: var(--font-mono);
+    font-weight: 900;
+  }
+
+  .ft-dl dd {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  .ft-safety-card {
+    grid-column: 1 / -1;
+    border-left: 5px solid var(--ft-amber) !important;
+    background: color-mix(in srgb, var(--ft-amber) 9%, var(--ft-panel) 91%) !important;
+  }
+
+  @media (max-width: 780px) {
+    .ft-resource {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .ft-row-layout,
+    .ft-map-grid,
+    .ft-task-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ft-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ft-menu-item {
+      grid-template-columns: 1fr;
+    }
+
+    .ft-row-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ft-row-display,
+    .ft-abc {
+      grid-template-columns: 1fr;
+    }
+
+    .ft-dl div {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

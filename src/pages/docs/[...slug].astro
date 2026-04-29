@@ -43,7 +43,7 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
           ← Back to Docs
         </a>
 
-        <header class:list={['docs-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'docs-hero--plain']}>
+        <header class:list={['docs-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'docs-hero--plain', headerStyle === 'tool' && 'docs-hero--tool']}>
           <div class="docs-hero__eyebrow">
             {entry.data.section ? <span class="pill">{entry.data.section}</span> : null}
             {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
@@ -133,6 +133,26 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
     box-shadow: none;
   }
 
+  .docs-hero--tool {
+    position: relative;
+    gap: 0.7rem;
+    padding: 0 0 var(--space-2);
+    margin: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .docs-hero--tool::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin-top: 0.4rem;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent 76%), color-mix(in srgb, var(--border) 72%, transparent 28%));
+  }
+
   .docs-hero--plain::after {
     content: "";
     display: block;
@@ -165,6 +185,14 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
     text-wrap: balance;
   }
 
+  .docs-hero--tool .docs-title {
+    max-width: 16ch;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
   .docs-description {
     margin: 0;
     max-width: 68ch;
@@ -173,6 +201,15 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
 
   .docs-hero--plain .docs-description {
     font-size: clamp(1rem, 1.2vw, 1.14rem);
+  }
+
+  .docs-hero--tool .docs-description {
+    max-width: 62ch;
+    font-size: 1rem;
+  }
+
+  .docs-hero--tool .docs-tags {
+    display: none;
   }
 
   .docs-meta {

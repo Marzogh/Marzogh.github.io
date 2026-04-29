@@ -29,6 +29,9 @@ const latestTools = [...allTools]
   .slice(0, 5);
 
 const allDocs = await getCollection('docs', ({ data }) => !data.draft);
+const latestDocs = [...allDocs]
+  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
+  .slice(0, 5);
 const allAstrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
 
 const allEducation = await getCollection('education', ({ data }) => !data.draft);
@@ -319,6 +322,22 @@ const rest = (pill) => byPill[pill].slice(3);
               <li>
                 <a href={`/tools/${safeSlug(tool)}`}>{tool.data?.title ?? safeSlug(tool)}</a>
                 {toTagLine(tool) ? <span class="dash__sub">{toTagLine(tool)}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="home-card dash__col dash__col--docs home-card--docs" aria-label="Latest documentation">
+          <div class="dash__head">
+            <h2 class="dash__title">Documentation</h2>
+            <a class="dash__more" href="/docs">Docs index →</a>
+          </div>
+
+          <ul class="dash__list">
+            {latestDocs.map((doc) => (
+              <li>
+                <a href={`/docs/${safeSlug(doc)}`}>{doc.data?.title ?? safeSlug(doc)}</a>
+                {toTagLine(doc) ? <span class="dash__sub">{toTagLine(doc)}</span> : null}
               </li>
             ))}
           </ul>
@@ -927,6 +946,7 @@ const rest = (pill) => byPill[pill].slice(3);
         .home-card--writing,
         .home-card--projects,
         .home-card--education,
+        .home-card--docs,
         .home-card--elsewhere,
         .home-card--astro {
           grid-column: span 2;
@@ -1000,6 +1020,14 @@ const rest = (pill) => byPill[pill].slice(3);
       .dash__sub {
         color: var(--muted);
         font-size: 0.95rem;
+      }
+
+      .dash__col--docs {
+        border-color: color-mix(in srgb, var(--coral) 18%, var(--border) 82%);
+        background:
+          radial-gradient(680px 260px at 8% 0%, color-mix(in srgb, var(--coral) 13%, transparent 87%), transparent 56%),
+          radial-gradient(620px 240px at 100% 100%, color-mix(in srgb, var(--accent) 9%, transparent 91%), transparent 58%),
+          color-mix(in srgb, var(--surface) 92%, transparent 8%);
       }
 
       /* Education column: calmer, more structured */
