@@ -79,6 +79,7 @@ This site tracks [The Living Codex](https://github.com/Marzogh/The-Living-Codex)
 - Submodule path: `vendor/the-living-codex`
 - Tracking branch: `main`
 - Served route: `/living-codex/*` (synced into `public/living-codex` at build time)
+- Deploy behavior: GitHub Pages build updates the submodule to latest `origin/main` before running the site build.
 
 ### Automatic sync
 

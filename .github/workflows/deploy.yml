@@ -23,6 +23,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Update Living Codex submodule to latest main
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --remote --recursive vendor/the-living-codex
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
