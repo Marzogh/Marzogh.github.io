@@ -1,0 +1,4 @@
+[submodule "vendor/the-living-codex"]
+	path = vendor/the-living-codex
+	url = https://github.com/Marzogh/The-Living-Codex.git
+	branch = main

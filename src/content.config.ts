@@ -42,7 +42,10 @@ const projects = defineCollection({
       type: z.string().optional(),
       featured: z.boolean().default(false),
       github: z.string().url().optional(),
-      demo: z.string().url().optional(),
+      demo: z.union([
+        z.string().url(),
+        z.string().regex(/^\/(?!\/).+/, 'Must be an absolute URL or a site-relative path starting with /.'),
+      ]).optional(),
       demoLabel: z.string().optional(),
       image: z.string().optional(),
       headerStyle: z.enum(['panel', 'plain']).optional(),

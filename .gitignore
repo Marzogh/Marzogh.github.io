@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # disposable asset intake
 src/assets/_inbox/
+
+# build-synced static app payload
+public/living-codex/

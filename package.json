@@ -7,6 +7,8 @@
     "npm": ">=9.6.5"
   },
   "scripts": {
+    "sync:living-codex": "node scripts/sync-living-codex.mjs",
+    "prebuild": "node scripts/sync-living-codex.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
