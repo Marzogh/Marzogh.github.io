@@ -8,17 +8,20 @@
   },
   "scripts": {
     "sync:living-codex": "node scripts/sync-living-codex.mjs",
+    "predev": "bash scripts/update-living-codex-local.sh",
     "prebuild": "node scripts/sync-living-codex.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "update:living-codex:local": "bash scripts/update-living-codex-local.sh"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
+    "@rollup/rollup-darwin-arm64": "^4.52.4",
     "astro": "^5.17.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
