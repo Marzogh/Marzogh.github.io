@@ -1,7 +1,12 @@
 <section class="lcx-story" aria-label="The Living Codex story">
   <div class="lcx-hero panel">
-    <p class="lcx-hero__lede">I got tired of opening a character tool and feeling like I was crossing a border checkpoint. Log in. Subscribe. Hand over the sheet. Repeat. I built The Living Codex because I wanted a companion I could keep on my own machine, understand line by line, and trust when the session got messy.</p>
-    <p class="lcx-hero__oath">My table rules for this project are simple: no forced cloud, no account gate, no silent tracking, and no pretending the player does not own their own sheet.</p>
+    <div class="lcx-hero__copy">
+      <p class="lcx-hero__lede">I got tired of opening a character tool and feeling like I was crossing a border checkpoint. Log in. Subscribe. Hand over the sheet. Repeat. I built The Living Codex because I wanted a companion I could keep on my own machine, understand line by line, and trust when the session got messy.</p>
+      <p class="lcx-hero__oath">My table rules for this project are simple: no forced cloud, no account gate, no silent tracking, and no pretending the player does not own their own sheet.</p>
+    </div>
+    <figure class="lcx-hero__figure">
+      <img src="/images/projects/living-codex/tarakesh-standing.png" alt="Tarakesh standing with staff and shield." loading="lazy" decoding="async" />
+    </figure>
   </div>
 
   <div class="lcx-chapters">
@@ -26,20 +31,25 @@
     </article>
   </div>
 
+  <figure class="lcx-scene" aria-label="Rahu banner">
+    <img src="/images/projects/living-codex/rahu-banner.png" alt="Night banner scene with moonlit skyline and owl silhouette." loading="lazy" decoding="async" />
+  </figure>
+
   <section class="lcx-guide panel panel--soft" aria-label="How to use The Living Codex">
+    <img class="lcx-guide__watermark" src="/images/projects/living-codex/rahu-watermark-1.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <h3>How To Use It</h3>
     <p>If you are opening The Living Codex for the first time, start by creating a new character and choosing your ruleset, class, species, and base ability scores. Once the sheet appears, fill your core identity details, then move through spells, inventory, and session log in the same order you would use them at the table.</p>
     <p>When you reach a good stopping point, export a ZIP so you have a portable snapshot. On your next session, import that ZIP, sanity-check your spell and inventory sections, and keep going. That simple export/import habit gives you a clean trail of character history and makes it easy to move between machines without drama.</p>
     <p>The files inside that ZIP are human-editable by design, so if you are comfortable tweaking JSON or CSV, you can inspect and adjust your data directly before importing again.</p>
     <p>PDF export support is on the roadmap and coming soon. For now, ZIP export is the reliable way to save and move your character sheets.</p>
     <details class="lcx-schema">
-      <summary>What is inside the ZIP (schema overview)</summary>
+      <summary>What is inside the ZIP (exact file contract)</summary>
       <div class="lcx-schema__body">
-        <p><code>character.json</code> is the canonical source of truth for your character and is written in readable JSON; its contract is in <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/character.schema.json">character.schema.json</a>.</p>
-        <p><code>inventory.csv</code> contains your inventory rows in a table format that is easy to edit in spreadsheet tools; the expected columns are in <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/inventory.schema.csv">inventory.schema.csv</a>.</p>
-        <p><code>spells_known.csv</code> and <code>spells_prepared.csv</code> split spell knowledge from prepared state so both are explicit; both use <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/spells.schema.csv">spells.schema.csv</a>.</p>
-        <p><code>log.csv</code> stores session log entries for your running notes and history; its format is defined in <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/log.schema.csv">log.schema.csv</a>.</p>
-        <p>During import diagnostics, an optional <code>report/import-report.json</code> may be generated to explain fixes, warnings, or blocked issues; fix policy details live in <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/import-fix-rules.md">import-fix-rules.md</a>.</p>
+        <p><code>character.json</code> is required and is the canonical source of truth for the whole character; schema: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/character.schema.json">character.schema.json</a>.</p>
+        <p><code>inventory.csv</code> is optional and can override inventory rows on import; columns: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/inventory.schema.csv">inventory.schema.csv</a>.</p>
+        <p><code>spells_known.csv</code> and <code>spells_prepared.csv</code> are optional and both use the same columns from <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/spells.schema.csv">spells.schema.csv</a>.</p>
+        <p><code>log.csv</code> is optional and can override log rows on import; columns: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/log.schema.csv">log.schema.csv</a>.</p>
+        <p><code>report/import-report.json</code> is optional and diagnostic-only; it is generated during import checks and is never required. Fix policy: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/import-fix-rules.md">import-fix-rules.md</a>.</p>
       </div>
     </details>
   </section>
@@ -59,11 +69,18 @@
   .lcx-hero {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1.35fr) minmax(180px, 0.55fr);
+    align-items: stretch;
     background:
       radial-gradient(800px 220px at -10% -10%, rgba(236, 201, 75, 0.16), transparent 64%),
       radial-gradient(680px 220px at 110% 110%, rgba(225, 85, 70, 0.14), transparent 68%),
       linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 90%, #fff 10%), var(--surface-raised));
     border: 1px solid color-mix(in srgb, var(--border) 74%, #d6a041 26%);
+  }
+
+  .lcx-hero__copy {
+    display: grid;
+    gap: 0.9rem;
   }
 
   .lcx-hero__lede {
@@ -81,6 +98,22 @@
     border-radius: 0.55rem;
     color: var(--text-2);
     line-height: 1.64;
+  }
+
+  .lcx-hero__figure {
+    margin: 0;
+    display: block;
+    width: min(100%, 207px);
+    justify-self: end;
+  }
+
+  .lcx-hero__figure img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 4 / 5;
+    object-fit: contain;
+    object-position: 50% 92%;
+    transform: none;
   }
 
   .lcx-chapters {
@@ -128,24 +161,60 @@
   }
 
   .lcx-guide {
+    position: relative;
     display: grid;
     gap: 0.65rem;
+    overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--border) 72%, #cf9b44 28%);
     background:
       radial-gradient(520px 160px at 10% 0%, rgba(236, 201, 75, 0.08), transparent 74%),
       linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 93%, #fff 7%), color-mix(in srgb, var(--surface) 90%, #f3ede3 10%));
   }
 
+  .lcx-guide__watermark {
+    position: absolute;
+    right: 0.45rem;
+    top: 0.3rem;
+    width: clamp(100px, 18vw, 168px);
+    opacity: 0.1;
+    pointer-events: none;
+    filter: grayscale(1) contrast(1.08);
+  }
+
   .lcx-guide h3 {
+    position: relative;
+    z-index: 1;
     margin: 0;
     font-size: 1.05rem;
     letter-spacing: -0.01em;
   }
 
   .lcx-guide p {
+    position: relative;
+    z-index: 1;
     margin: 0;
     line-height: 1.68;
     color: var(--text-2);
+  }
+
+  .lcx-scene {
+    margin: 0 calc(-1 * var(--space-2));
+    overflow: hidden;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .lcx-scene img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    object-position: center;
+    background: transparent;
   }
 
   .lcx-schema {
@@ -191,8 +260,37 @@
   }
 
   @media (max-width: 880px) {
+    .lcx-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .lcx-hero__figure img {
+      aspect-ratio: 4 / 5;
+      object-fit: contain;
+      object-position: 50% 94%;
+      transform: none;
+    }
+
+    .lcx-hero__figure {
+      width: min(100%, 180px);
+      justify-self: center;
+    }
+
     .lcx-chapters {
       grid-template-columns: 1fr;
+    }
+
+    .lcx-guide__watermark {
+      width: clamp(88px, 24vw, 132px);
+      opacity: 0.08;
+    }
+
+    .lcx-scene {
+      margin: 0 calc(-1 * var(--space-1));
+    }
+
+    .lcx-scene img {
+      aspect-ratio: 16 / 9;
     }
   }
 </style>
