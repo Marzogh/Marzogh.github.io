@@ -226,48 +226,257 @@ const tasks = [
 ];
 
 const rows = [
-  { id: 'MFa', labels: ['A/B', 'A=B', 'SPL'], uses: ['VFO A/B toggle', 'Copy Main VFO to Sub VFO', 'Split on/off'], hint: 'VFO and split operation.' },
-  { id: 'MFb', labels: ['MW', 'SKIP', 'TAG'], uses: ['Memory write/check', 'Scan skip memory', 'Frequency/tag display'], hint: 'Memory management.' },
-  { id: 'MFc', labels: ['STO', 'RCL', 'PROC'], uses: ['Store QMB', 'Recall QMB', 'Speech processor'], hint: 'Quick memory and voice punch.' },
-  { id: 'MFd', labels: ['RPT', 'REV', 'VOX'], uses: ['Repeater shift', 'Reverse repeater TX/RX', 'VOX'], hint: 'Repeater and hands-free transmit.' },
-  { id: 'MFe', labels: ['TON/ENC', 'DEC', 'TDCH'], uses: ['CTCSS/DCS encoder', 'Decoder if split tone on', 'Tone/DCS search'], hint: 'Tone access.' },
-  { id: 'MFf', labels: ['ARTS', 'SRCH', 'PMS'], uses: ['ARTS', 'Smart Search', 'PMS scan'], hint: 'Search and programmed scanning.' },
-  { id: 'MFg', labels: ['SCN', 'PRI', 'DW'], uses: ['Scan', 'Priority scan', 'Dual Watch'], hint: 'Scanning.' },
-  { id: 'MFh', labels: ['SCOP', 'WID', 'STEP'], uses: ['Spectrum scope', 'Scope width', 'Scope step / max hold'], hint: 'Band activity view.' },
-  { id: 'MFi', labels: ['MTR', '-', 'DISP'], uses: ['Meter select', 'Alternate meter select', 'Large/small display'], hint: 'Transmit checks and display.' },
-  { id: 'MFj', labels: ['SPOT', 'BK', 'KYR'], uses: ['CW spot tone', 'CW break-in', 'Electronic keyer'], hint: 'CW operation.' },
-  { id: 'MFk', labels: ['TUNE', 'DOWN', 'UP'], uses: ['Tuner/ATAS tune', 'ATAS down', 'ATAS up'], hint: 'Antenna tuner and ATAS motion.' },
-  { id: 'MFl', labels: ['NB', 'AGC', '-'], uses: ['Noise blanker', 'AGC on/off', 'AGC fast/slow/auto'], hint: 'IF-stage receive cleanup.' },
-  { id: 'MFm', labels: ['IPO', 'ATT', 'NAR'], uses: ['Preamp off IPO', '10 dB attenuator', 'Narrow FM'], hint: 'RF front-end control.' },
-  { id: 'MFn', labels: ['CFIL', '-', '-'], uses: ['Ceramic IF filter', 'Optional FIL-1', 'Optional FIL-2'], hint: 'Optional IF filters.' },
-  { id: 'MFo', labels: ['PLY1', 'PLY2', 'PLY3'], uses: ['Send CW beacon text 1', 'Send CW beacon text 2', 'Send CW beacon text 3'], hint: 'CW beacon memory.' },
-  { id: 'MFp', labels: ['DNR', 'DNF', 'DBF'], uses: ['DSP noise reduction', 'DSP notch', 'DSP bandpass / CW peak'], hint: 'DSP audio cleanup. The front-panel DSP key also jumps here.' },
-  { id: 'MFq', labels: ['MONI', 'QSPL', 'ATC'], uses: ['Monitor squelch', 'Quick split +5 kHz', '1750 Hz tone call'], hint: 'Monitor, quick split, tone call.' },
+  {
+    id: 'MFa',
+    labels: ['A/B', 'A=B', 'SPL'],
+    hint: 'VFO and split operation.',
+    keys: [
+      { key: 'A', label: 'A/B', press: 'Switch the display between VFO-A and VFO-B.' },
+      { key: 'B', label: 'A=B', press: 'Copy the Main VFO contents into the Sub VFO.' },
+      { key: 'C', label: 'SPL', press: 'Turn split-frequency operation between VFO-A and VFO-B on or off.' },
+    ],
+  },
+  {
+    id: 'MFb',
+    labels: ['MW', 'SKIP', 'TAG'],
+    hint: 'Memory management.',
+    keys: [
+      { key: 'A', label: 'MW', press: 'Open Memory Check so you can choose a channel.', hold: 'Write the current VFO into the selected memory.' },
+      { key: 'B', label: 'SKIP', press: 'Mark the current memory channel to be skipped during scanning.' },
+      { key: 'C', label: 'TAG', press: 'Toggle memory display between frequency and alpha tag.', hold: 'Open Menu 056 MEM TAG for the recalled memory.', menus: ['056'] },
+    ],
+  },
+  {
+    id: 'MFc',
+    labels: ['STO', 'RCL', 'PROC'],
+    hint: 'Quick memory and voice punch.',
+    keys: [
+      { key: 'A', label: 'STO', press: 'Store the current VFO into the QMB quick memory.' },
+      { key: 'B', label: 'RCL', press: 'Recall the QMB quick memory.' },
+      { key: 'C', label: 'PROC', press: 'Turn the SSB/AM speech processor on or off.', hold: 'Open Menu 074 PROC LEVEL.', menus: ['074'] },
+    ],
+  },
+  {
+    id: 'MFd',
+    labels: ['RPT', 'REV', 'VOX'],
+    hint: 'Repeater and hands-free transmit.',
+    keys: [
+      { key: 'A', label: 'RPT', press: 'Select repeater shift direction: plus, minus, or simplex.', hold: 'Open Menu 076 RPT SHIFT.', menus: ['076'] },
+      { key: 'B', label: 'REV', press: 'Reverse repeater transmit and receive frequencies.' },
+      { key: 'C', label: 'VOX', press: 'Turn voice-operated transmit switching on or off in SSB, AM, and FM.', hold: 'Open Menu 088 VOX GAIN.', menus: ['088'] },
+    ],
+  },
+  {
+    id: 'MFe',
+    labels: ['TON', '---', 'TDCH'],
+    altLabels: ['ENC', 'DEC', 'TDCH'],
+    hint: 'Tone access. With Menu 079 SPLIT TONE on, the LCD changes from TON, ---, TDCH to ENC, DEC, TDCH.',
+    keys: [
+      { key: 'A', label: 'TON/ENC', press: 'Turn CTCSS/DCS tone operation on FM on or off. In split-tone mode, controls the encoder.', hold: 'Open Menu 083 TONE FREQ.', menus: ['079', '083'] },
+      { key: 'B', label: '---/DEC', press: 'Normally unused. In split-tone mode, controls the CTCSS/DCS decoder.', hold: 'Open Menu 033 DCS CODE in split-tone use.', menus: ['079', '033'] },
+      { key: 'C', label: 'TDCH', press: 'Start CTCSS tone or DCS search.' },
+    ],
+  },
+  {
+    id: 'MFf',
+    labels: ['ARTS', 'SRCH', 'PMS'],
+    hint: 'Search and programmed scanning.',
+    keys: [
+      { key: 'A', label: 'ARTS', press: 'Start Auto-Range Transponder System operation.', hold: 'Open Menu 008 ARTS BEEP.', menus: ['008'] },
+      { key: 'B', label: 'SRCH', press: 'Activate Smart Search, then press again to begin Smart Search scanning.' },
+      { key: 'C', label: 'PMS', press: 'Activate Programmable Memory Scan using stored sub-band limits.' },
+    ],
+  },
+  {
+    id: 'MFg',
+    labels: ['SCN', 'PRI', 'DW'],
+    hint: 'Scanning.',
+    keys: [
+      { key: 'A', label: 'SCN', press: 'Start scanning upward in frequency.' },
+      { key: 'B', label: 'PRI', press: 'Turn priority scan on or off.' },
+      { key: 'C', label: 'DW', press: 'Turn Dual Watch on or off.' },
+    ],
+    menus: ['077', '078'],
+  },
+  {
+    id: 'MFh',
+    labels: ['SCOP', 'WID', 'STEP'],
+    hint: 'Spectrum scope and band activity view.',
+    keys: [
+      { key: 'A', label: 'SCOP', press: 'Activate the Spectrum Scope monitor.', hold: 'Start the Spectrum Scope.' },
+      { key: 'B', label: 'WID', press: 'Select the visible Spectrum Scope bandwidth.', hold: 'Select the Spectrum Scope operating mode.' },
+      { key: 'C', label: 'STEP', press: 'Select Spectrum Scope channel steps.', hold: 'Turn Spectrum Scope MAX HOLD on.' },
+    ],
+  },
+  {
+    id: 'MFi',
+    labels: ['MTR', '---', 'DISP'],
+    hint: 'Transmit meter and display controls.',
+    keys: [
+      { key: 'A', label: 'MTR', press: 'Cycle transmit meter function: PWR, ALC, SWR, MOD.', hold: 'Open Menu 062 MTR PEAK HOLD.', menus: ['062'] },
+      { key: 'B', label: 'meter value', press: 'Cycle the meter display function shown above the B key.' },
+      { key: 'C', label: 'DISP', press: 'Toggle large and small character display.', hold: 'Open Menu 043 DISP INTENSITY.', menus: ['043'] },
+    ],
+    menus: ['060', '061'],
+  },
+  {
+    id: 'MFj',
+    labels: ['SPOT', 'BK', 'KYR'],
+    hint: 'CW operation.',
+    keys: [
+      { key: 'A', label: 'SPOT', press: 'Activate the CW spotting heterodyne oscillator.' },
+      { key: 'B', label: 'BK', press: 'Turn CW semi-break-in on or off.', hold: 'Open Menu 029 CW SIDE TONE.', menus: ['029'] },
+      { key: 'C', label: 'KYR', press: 'Turn the built-in electronic keyer on or off.', hold: 'Open Menu 030 CW SPEED.', menus: ['030'] },
+    ],
+    menus: ['024', '025', '027', '032'],
+  },
+  {
+    id: 'MFk',
+    labels: ['TUNE', 'DOWN', 'UP'],
+    hint: 'Antenna tuner and ATAS motion.',
+    keys: [
+      { key: 'A', label: 'TUNE', press: 'Activate the FC-30 tuner or ATAS-120A control.', hold: 'Retune the tuner or antenna.', menus: ['085'] },
+      { key: 'B', label: 'DOWN', press: 'Hold to lower the ATAS-120A antenna manually.' },
+      { key: 'C', label: 'UP', press: 'Hold to raise the ATAS-120A antenna manually.' },
+    ],
+    menus: ['085'],
+  },
+  {
+    id: 'MFl',
+    labels: ['NB', 'AGC', '---'],
+    hint: 'IF-stage receive cleanup.',
+    keys: [
+      { key: 'A', label: 'NB', press: 'Turn the IF Noise Blanker on or off.', hold: 'Open Menu 063 NB LEVEL.', menus: ['063'] },
+      { key: 'B', label: 'AGC', press: 'Turn receiver AGC off or back on. Normally leave AGC on.' },
+      { key: 'C', label: 'AGC mode', press: 'Select AGC recovery time: Slow, Fast, or Auto.' },
+    ],
+  },
+  {
+    id: 'MFm',
+    labels: ['IPO', 'ATT', 'NAR'],
+    hint: 'RF front-end control.',
+    keys: [
+      { key: 'A', label: 'IPO', press: 'Bypass the receiver preamp on HF/50 MHz for better overload behaviour. Not used on 144/430 MHz.' },
+      { key: 'B', label: 'ATT', press: 'Turn on the receiver front-end attenuator, about 10 dB. Not used on 144/430 MHz.' },
+      { key: 'C', label: 'NAR', press: 'Select low-deviation mode for HF FM operation on 29 MHz.' },
+    ],
+  },
+  {
+    id: 'MFn',
+    labels: ['CFIL', '---', '---'],
+    hint: 'IF filter selection. Optional filter positions show N/A when no filter is installed.',
+    keys: [
+      { key: 'A', label: 'CFIL', press: 'Select the 2.4 kHz ceramic IF filter.' },
+      { key: 'B', label: 'FIL-1/N/A', press: 'Select optional IF filter slot FIL-1, or show N/A if no filter is installed.' },
+      { key: 'C', label: 'FIL-2/N/A', press: 'Select optional IF filter slot FIL-2, or show N/A if no filter is installed.' },
+    ],
+    menus: ['064'],
+  },
+  {
+    id: 'MFo',
+    labels: ['PLY1', 'PLY2', 'PLY3'],
+    hint: 'CW beacon memory playback.',
+    keys: [
+      { key: 'A', label: 'PLY1', press: 'Send CW beacon text 1.', hold: 'Open Menu 011 BEACON TEXT 1.', menus: ['011'] },
+      { key: 'B', label: 'PLY2', press: 'Send CW beacon text 2.' },
+      { key: 'C', label: 'PLY3', press: 'Send CW beacon text 3.' },
+    ],
+    menus: ['011', '012'],
+  },
+  {
+    id: 'MFp',
+    labels: ['DNR', 'DNF', 'DBF'],
+    hint: 'DSP audio cleanup. The front-panel DSP key jumps directly to this row.',
+    keys: [
+      { key: 'A', label: 'DNR', press: 'Turn DSP Noise Reduction on or off.', hold: 'Open Menu 049 DSP NR LEVEL.', menus: ['049'] },
+      { key: 'B', label: 'DNF', press: 'Turn the DSP Auto Notch Filter on or off.' },
+      { key: 'C', label: 'DBF', press: 'Turn the DSP receiver bandpass filter on or off.', hold: 'In SSB/AM/FM/AFSK, open Menu 047 DSP LPF CUTOFF; one SELECT click lower reaches Menu 046. In CW, open Menu 045 DSP BPF WIDTH.', menus: ['047', '046', '045'] },
+    ],
+  },
+  {
+    id: 'MFq',
+    labels: ['MONI', 'QSPL', 'ATC'],
+    hint: 'Monitor, quick split, tone call. This row is programmable.',
+    keys: [
+      { key: 'A', label: 'MONI', press: 'Disable the noise squelch.', hold: 'Programmable via Menu 065 PG A.', menus: ['065'] },
+      { key: 'B', label: 'QSPL', press: 'Quick Split: set Sub VFO to Main VFO plus 5 kHz and enable split.', hold: 'Programmable via Menu 066 PG B.', menus: ['066'] },
+      { key: 'C', label: 'ATC', press: 'Send a 1750 Hz burst tone for two seconds while pressing PTT on a clear channel.', hold: 'Programmable via Menu 067 PG C.', menus: ['067'] },
+    ],
+    menus: ['065', '066', '067'],
+  },
 ];
 
 const menuItems = [
+  ['001', 'EXT MENU', 'System', 'Extended menu access', 'Default: OFF. Turn ON when the menu item you need is hidden.'],
+  ['002', '144 MHz ARS', 'Repeater', 'Automatic repeater shift on 144 MHz', 'Default: ON depending on version. Use for regional 2 m repeater offsets.'],
+  ['003', '430 MHz ARS', 'Repeater', 'Automatic repeater shift on 430 MHz', 'Default: ON depending on version. Use for regional 70 cm repeater offsets.'],
   ['004', 'AM&FM DIAL', 'RF', 'Enable MAIN DIAL in AM/FM', 'Use if SELECT channel steps are too coarse.'],
   ['005', 'AM MIC GAIN', 'Audio', 'AM microphone gain', 'Set if AM audio is weak or overdriven.'],
+  ['006', 'AM STEP', 'RF', 'AM SELECT tuning step', 'Default: 5 kHz depending on version. Match local AM channel spacing.'],
+  ['007', 'APO TIME', 'System', 'Auto power-off timer', 'Default: OFF. Use to protect batteries or stop accidental overnight operation.'],
+  ['008', 'ARTS BEEP', 'Repeater', 'ARTS beep mode', 'Default: RANGE. Controls ARTS alert beeps: OFF, RANGE, or ALL.'],
+  ['009', 'ARTS ID', 'Repeater', 'ARTS CW identifier on/off', 'Default: OFF. Enable if ARTS should send your CW ID.'],
+  ['010', 'ARTS IDW', 'Repeater', 'ARTS CW identifier text', 'Default: YAESU. Store your callsign for ARTS ID.'],
+  ['011', 'BEACON TEXT 1', 'CW', 'CW beacon message 1', 'Store up to 40 characters for CW beacon playback.'],
+  ['012', 'BEACON TIME', 'CW', 'CW beacon interval', 'Default: OFF. Sets repeat interval from 1 to 255 seconds.'],
+  ['013', 'BEEP TONE', 'System', 'Key beep pitch', 'Default: 880 Hz. Choose 440, 880, or 1760 Hz.'],
+  ['014', 'BEEP VOL', 'System', 'Key beep volume', 'Default: 50. Lower it if the radio is being too cheerful.'],
+  ['015', 'CAR LSB R', 'RF', 'LSB receive carrier point', 'Default: 0 Hz. Fine alignment for LSB receive audio.'],
+  ['016', 'CAR LSB T', 'TX', 'LSB transmit carrier point', 'Default: 0 Hz. Fine alignment for LSB transmit audio.'],
+  ['017', 'CAR USB R', 'RF', 'USB receive carrier point', 'Default: 0 Hz. Fine alignment for USB receive audio.'],
+  ['018', 'CAR USB T', 'TX', 'USB transmit carrier point', 'Default: 0 Hz. Fine alignment for USB transmit audio.'],
   ['019', 'CAT RATE', 'System', 'CAT baud rate', 'Match computer/control software.'],
   ['020', 'CAT/LIN/TUN', 'System', 'Rear CAT/LINEAR jack role', 'Set CAT, LINEAR, or TUNER to match connected device.'],
   ['021', 'CLAR DIAL SEL', 'RF', 'Clarifier control knob', 'Choose SELECT or MAIN for RIT offset.'],
+  ['022', 'CW AUTO MODE', 'CW', 'KEY jack behavior outside CW', 'Default: OFF. Controls whether the KEY jack can key while using SSB.'],
+  ['023', 'CW BFO', 'CW', 'CW carrier oscillator injection side', 'Default: USB. Choose USB, LSB, or AUTO.'],
   ['024', 'CW DELAY', 'CW', 'CW break-in recovery', 'Lengthen if receiver returns too quickly.'],
   ['025', 'CW KEY REV', 'CW', 'Paddle polarity', 'Reverse if dots/dashes are swapped.'],
+  ['026', 'CW PADDLE', 'CW', 'Mic UP/DWN CW keying mode', 'Default: ELEKEY. Choose normal electronic keyer or MICKEY.'],
   ['027', 'CW PITCH', 'CW', 'CW sidetone/filter pitch', 'Set to preferred CW tone.'],
+  ['028', 'CW QSK', 'CW', 'CW QSK transmit delay', 'Default: 10 ms. Sets delay before carrier appears after PTT/keying.'],
+  ['029', 'CW SIDE TONE', 'CW', 'CW sidetone volume', 'Default: 50. Adjust what you hear while sending.'],
   ['030', 'CW SPEED', 'CW', 'Internal keyer speed', 'Set sending speed.'],
+  ['031', 'CW TRAINING', 'CW', 'Morse training generator', 'Default: N. Sends random practice groups through the sidetone.'],
+  ['032', 'CW WEIGHT', 'CW', 'Keyer dot-dash weighting', 'Default: 1:3.0. Adjust the built-in keyer ratio.'],
   ['033', 'DCS CODE', 'Repeater', 'DCS encode/decode code', 'Set for DCS repeaters.'],
+  ['034', 'DCS INV', 'Repeater', 'DCS normal/inverted polarity', 'Default: Tn-Rn. Change only when a DCS path demands it.'],
+  ['035', 'DIAL STEP', 'RF', 'MAIN DIAL tuning speed', 'Default: FINE. Choose FINE or COARSE.'],
+  ['036', 'DIG DISP', 'Digital', 'Digital display frequency offset', 'Default: 0 Hz. Used with DIG USER-L or USER-U.'],
   ['037', 'DIG GAIN', 'Digital', 'Digital input level', 'Set for soundcard/TNC drive.'],
   ['038', 'DIG MODE', 'Digital', 'Digital mode/sideband', 'Select RTTY, PSK31, or user mode.'],
+  ['039', 'DIG SHIFT', 'Digital', 'Digital carrier frequency offset', 'Default: 0 Hz. Used with DIG USER-L or USER-U.'],
   ['040', 'DIG VOX', 'Digital', 'Digital VOX gain', 'Use for audio-triggered digital transmit.'],
+  ['041', 'DISP COLOR', 'Display', 'LCD illumination color by status', 'Default: FIX 26. Set colors for ARTS, band, memory, mode, meter, or VFO states.'],
   ['042', 'DISP CONTRAST', 'Display', 'LCD contrast', 'Set for viewing angle.'],
   ['043', 'DISP INTENSITY', 'Display', 'LCD brightness', 'Dim for night, bright for daylight.'],
   ['044', 'DISP MODE', 'Display', 'LCD lamp mode', 'AUTO2 for external power, OFF for stealth.'],
+  ['045', 'DSP BPF WIDTH', 'Audio', 'DSP CW audio filter bandwidth', 'Default: 240 Hz. Narrow CW audio with 60, 120, or 240 Hz.'],
+  ['046', 'DSP HPF CUTOFF', 'Audio', 'DSP high-pass low-cut frequency', 'Default: 100 Hz. Raise for voice-mode low-frequency rejection.'],
+  ['047', 'DSP LPF CUTOFF', 'Audio', 'DSP low-pass high-cut frequency', 'Default: 6000 Hz. Lower for voice-mode high-frequency rejection.'],
+  ['048', 'DSP MIC EQ', 'Audio', 'DSP microphone equalizer', 'Default: OFF. Choose LPF, HPF, or BOTH for transmit audio shaping.'],
   ['049', 'DSP NR LEVEL', 'Audio', 'DSP noise reduction level', 'Increase until noise drops without watery audio.'],
+  ['050', 'EMERGENCY', 'System', 'Alaska emergency channel enable', 'USA version only. Default: OFF. Enables 5167.5 kHz under the manual restrictions.'],
   ['051', 'FM MIC GAIN', 'Audio', 'FM microphone gain', 'Set if FM audio is low or distorted.'],
   ['052', 'FM STEP', 'RF', 'FM SELECT tuning step', 'Match channel spacing.'],
+  ['053', 'HOME > VFO', 'Memory', 'Copy HOME channel data to VFO when tuning', 'Default: ON. Lets HOME data move into the current VFO without changing stored HOME.'],
   ['054', 'LOCK MODE', 'System', 'What LOCK disables', 'Choose DIAL, FREQ, PANEL, or ALL.'],
+  ['055', 'MEM GROUP', 'Memory', 'Memory grouping on/off', 'Default: OFF. Splits standard memories into ten groups.'],
   ['056', 'MEM TAG', 'Memory', 'Memory alpha tag', 'Label memory channels.'],
+  ['057', 'MEM/VFO DIAL MODE', 'System', 'SELECT knob secondary function', 'Default: MHz/MEM GRP. Choose quick access behavior when pressing SELECT.'],
+  ['058', 'MIC SCAN', 'Memory', 'Mic UP/DWN scanning access', 'Default: ON. Enables scan control from microphone keys.'],
+  ['059', 'MIC SEL', 'System', 'MIC jack equipment type', 'Default: NOR. Choose normal mic, MH-59A8J remote mic, or CAT.'],
+  ['060', 'MTR ARX SEL', 'Display', 'Analog meter receive display', 'Default: SIG. Choose signal, center, voltage, calibration, or off.'],
+  ['061', 'MTR ATX SEL', 'Display', 'Analog meter transmit display', 'Default: PWR. Choose power, ALC, modulation, SWR, voltage, or off.'],
+  ['062', 'MTR PEAK HOLD', 'Display', 'Meter peak hold', 'Default: ON. Holds meter peaks briefly.'],
   ['063', 'NB LEVEL', 'RF', 'Noise blanker level', 'Raise only enough to reduce impulse noise.'],
+  ['064', 'OP FILTER 1', 'System', 'Optional filter slot 1', 'Not available at this time. Included for complete menu search.'],
+  ['065', 'PG A', 'System', 'Program MFq A key', 'Default: MONI. Assign the A key in row q.'],
+  ['066', 'PG B', 'System', 'Program MFq B key', 'Default: Q.SPL. Assign the B key in row q.'],
+  ['067', 'PG C', 'System', 'Program MFq C key', 'Default: ATC. Assign the C key in row q.'],
+  ['068', 'PG ACC', 'System', 'Program MH-59A8J ACC key', 'Default: MONI. Assign the optional remote mic ACC button.'],
+  ['069', 'PG P1', 'System', 'Program MH-59A8J P1 key', 'Default: Q.SPL. Assign the optional remote mic P1 button.'],
+  ['070', 'PG P2', 'System', 'Program MH-59A8J P2 key', 'Default: TCALL. Assign the optional remote mic P2 button.'],
   ['071', 'PKT1200', 'Digital', '1200 bps packet input level', 'Set TNC audio drive.'],
   ['072', 'PKT9600', 'Digital', '9600 bps packet input level', 'Set TNC audio drive.'],
   ['073', 'PKT RATE', 'Digital', 'Packet rate', 'Choose 1200 or 9600 bps.'],
@@ -276,14 +485,19 @@ const menuItems = [
   ['076', 'RPT SHIFT', 'Repeater', 'Repeater offset amount', 'Set regional offset value.'],
   ['077', 'SCAN MODE', 'Memory', 'Scan resume rule', 'TIME, BUSY, or STOP.'],
   ['078', 'SCAN RESUME', 'Memory', 'Scan resume delay', 'Set hold time after signal.'],
+  ['079', 'SPLIT TONE', 'Repeater', 'Separate CTCSS/DCS encode and decode', 'Default: OFF. Use for repeaters needing split tone logic.'],
   ['080', 'SQL/RF GAIN', 'RF', 'SQL/RF knob role', 'Choose RF gain or squelch.'],
   ['081', 'SSB MIC GAIN', 'Audio', 'SSB microphone gain', 'Set with ALC during speech.'],
   ['082', 'SSB STEP', 'RF', 'SSB SELECT tuning step', 'Set quick tuning step.'],
   ['083', 'TONE FREQ', 'Repeater', 'CTCSS tone frequency', 'Set repeater tone. Default is 88.5 Hz.'],
   ['084', 'TOT TIME', 'TX', 'Transmit timeout timer', 'Protect finals and prevent stuck PTT.'],
   ['085', 'TUNER/ATAS', 'Antenna', 'TUNE key device', 'Select FC-30 or ATAS-120A.'],
+  ['086', 'TX IF FILTER', 'TX', 'Transmit IF filter selection', 'Default: CFIL. Choose CFIL, FIL1, or FIL2.'],
   ['087', 'VOX DELAY', 'TX', 'VOX hang time', 'Set delay before returning to receive.'],
   ['088', 'VOX GAIN', 'TX', 'VOX trigger gain', 'Set so voice keys TX and noise does not.'],
+  ['089', 'XVTR A FREQ', 'System', 'Transverter A display frequency', 'Default: current VFO frequency. Set arbitrary display readout for transverter use.'],
+  ['090', 'XVTR B FREQ', 'System', 'Transverter B display frequency', 'Default: current VFO frequency. Set second arbitrary transverter display readout.'],
+  ['091', 'XVTR SEL', 'System', 'Transverter selection', 'Default: OFF. Enable X VTR A or X VTR B display operation.'],
 ];
 
 const categories = ['All', ...Array.from(new Set(menuItems.map((item) => item[2])))];
@@ -357,13 +571,25 @@ const groupLabels = {
 
   <div class="ft-panel" data-panel="rows">
     <div class="ft-row-layout">
-      <div class="ft-row-list" aria-label="Function row selector">
-        {rows.map((row, index) => (
-          <button class:list={[index === 0 && 'is-active']} type="button" data-row-target={row.id}>
-            <strong>{row.labels.join('  ')}</strong>
-            <span>Manual map: {row.id}</span>
-          </button>
-        ))}
+      <div class="ft-row-picker">
+        <label class="ft-search ft-row-search">
+          <span>Find a function row</span>
+          <input type="search" data-row-search placeholder="VOX, DSP, tone, Menu 063, row j..." />
+        </label>
+        <div class="ft-row-strip" aria-label="Function row selector">
+          {rows.map((row, index) => (
+            <button
+              class:list={[index === 0 && 'is-active']}
+              type="button"
+              data-row-target={row.id}
+              data-row-terms={`${row.id} ${row.labels.join(' ')} ${row.altLabels?.join(' ') ?? ''} ${row.hint} ${row.keys.map((item) => `${item.key} ${item.label} ${item.press} ${item.hold ?? ''} ${item.menus?.join(' ') ?? ''}`).join(' ')} ${row.menus?.join(' ') ?? ''}`.toLowerCase()}
+            >
+              <span>{row.id.replace('MF', '')}</span>
+              <strong>{row.labels.join('  ')}</strong>
+            </button>
+          ))}
+        </div>
+        <p class="ft-row-empty" data-row-empty hidden>No matching function rows.</p>
       </div>
 
       <div class="ft-row-stage">
@@ -373,16 +599,31 @@ const groupLabels = {
             <div class="ft-row-display">
               {row.labels.map((label) => <span>{label}</span>)}
             </div>
+            {row.altLabels ? (
+              <p class="ft-row-card__alt">Alternate LCD labels: <strong>{row.altLabels.join('  ')}</strong></p>
+            ) : null}
             <p class="ft-row-card__hint">{row.hint}</p>
             <div class="ft-abc">
-              {row.uses.map((use, actionIndex) => (
+              {row.keys.map((item) => (
                 <div>
-                  <span>{['A', 'B', 'C'][actionIndex]}</span>
-                  <strong>{row.labels[actionIndex]}</strong>
-                  <p>{use}</p>
+                  <span>{item.key}</span>
+                  <strong>{item.label}</strong>
+                  <p>{item.press}</p>
+                  {item.hold ? <p class="ft-abc__hold"><b>Hold:</b> {item.hold}</p> : null}
+                  {item.menus ? (
+                    <div class="ft-row-links" aria-label={`Menu links for ${row.id} ${item.label}`}>
+                      {item.menus.map((menu) => <button type="button" data-jump-term={menu}>Menu {menu}</button>)}
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
+            {row.menus ? (
+              <div class="ft-row-related" aria-label={`Related menu items for ${row.id}`}>
+                <span>Related menus</span>
+                {row.menus.map((menu) => <button type="button" data-jump-term={menu}>Menu {menu}</button>)}
+              </div>
+            ) : null}
           </article>
         ))}
       </div>
@@ -525,13 +766,39 @@ const groupLabels = {
 
     const rowButtons = Array.from(root.querySelectorAll('[data-row-target]'));
     const rowCards = Array.from(root.querySelectorAll('[data-row-card]'));
+    const rowSearch = root.querySelector('[data-row-search]');
+    const rowEmpty = root.querySelector('[data-row-empty]');
+    const activateRow = (button) => {
+      const target = button.getAttribute('data-row-target');
+      setActive(rowButtons, button);
+      rowCards.forEach((card) => card.classList.toggle('is-active', card.getAttribute('data-row-card') === target));
+      button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    };
+
     rowButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const target = button.getAttribute('data-row-target');
-        setActive(rowButtons, button);
-        rowCards.forEach((card) => card.classList.toggle('is-active', card.getAttribute('data-row-card') === target));
-      });
+      button.addEventListener('click', () => activateRow(button));
     });
+
+    const filterRows = () => {
+      const query = (rowSearch?.value || '').trim().toLowerCase();
+      let firstVisible = null;
+      let visibleCount = 0;
+      rowButtons.forEach((button) => {
+        const terms = button.getAttribute('data-row-terms') || '';
+        const show = !query || terms.includes(query);
+        button.hidden = !show;
+        if (show) {
+          visibleCount += 1;
+          firstVisible ??= button;
+        }
+      });
+      if (rowEmpty) rowEmpty.hidden = visibleCount !== 0;
+      const activeVisible = rowButtons.some((button) => button.classList.contains('is-active') && !button.hidden);
+      if (!activeVisible && firstVisible) activateRow(firstVisible);
+      if (!firstVisible) rowCards.forEach((card) => card.classList.remove('is-active'));
+    };
+
+    rowSearch?.addEventListener('input', filterRows);
 
     const menuItems = Array.from(root.querySelectorAll('[data-menu-item]'));
     const menuSearch = root.querySelector('[data-menu-search]');
@@ -620,7 +887,9 @@ const groupLabels = {
   .ft-tabs button,
   .ft-filterbar button,
   .ft-tags button,
-  .ft-row-list button {
+  .ft-row-links button,
+  .ft-row-related button,
+  .ft-row-strip button {
     font: inherit;
   }
 
@@ -642,7 +911,9 @@ const groupLabels = {
 
   .ft-tabs button,
   .ft-filterbar button,
-  .ft-row-list button,
+  .ft-row-strip button,
+  .ft-row-links button,
+  .ft-row-related button,
   .ft-tags button {
     border: 1px solid var(--ft-line);
     background: var(--ft-panel);
@@ -660,8 +931,10 @@ const groupLabels = {
   .ft-tabs button.is-active,
   .ft-filterbar button:hover,
   .ft-filterbar button.is-active,
-  .ft-row-list button:hover,
-  .ft-row-list button.is-active,
+  .ft-row-strip button:hover,
+  .ft-row-strip button.is-active,
+  .ft-row-links button:hover,
+  .ft-row-related button:hover,
   .ft-tags button:hover {
     border-color: color-mix(in srgb, var(--ft-blue) 48%, var(--ft-line) 52%);
     background: var(--ft-active);
@@ -825,39 +1098,72 @@ const groupLabels = {
 
   .ft-row-layout {
     display: grid;
-    grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
     gap: 1rem;
   }
 
-  .ft-row-list {
+  .ft-row-picker {
     display: grid;
-    gap: 0.4rem;
-    align-content: start;
+    gap: 0.65rem;
   }
 
-  .ft-row-list button {
+  .ft-row-search {
+    margin-bottom: 0;
+  }
+
+  .ft-row-strip {
     display: grid;
-    gap: 0.16rem;
-    align-items: start;
-    min-height: 46px;
-    padding: 0.55rem 0.65rem;
+    grid-template-columns: repeat(auto-fit, minmax(8.8rem, 1fr));
+    gap: 0.45rem;
+  }
+
+  .ft-row-strip button {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 0.6rem;
     border-radius: 8px;
     text-align: left;
   }
 
-  .ft-row-list span {
+  .ft-row-strip button[hidden] {
+    display: none;
+  }
+
+  .ft-row-strip span {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ft-blue) 10%, var(--ft-soft) 90%);
     font-family: var(--font-mono);
-    color: var(--ft-muted);
-    font-size: 0.72rem;
+    color: var(--ft-blue);
+    font-size: 0.8rem;
     font-weight: 900;
   }
 
-  .ft-row-list strong {
+  .ft-row-strip strong {
     overflow: hidden;
     color: var(--ft-ink);
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .ft-row-strip button.is-active span {
+    background: var(--ft-ink);
+    color: var(--surface);
+  }
+
+  .ft-row-empty {
+    margin: 0;
+    padding: 0.75rem;
+    border: 1px dashed var(--ft-line);
+    border-radius: 8px;
+    color: var(--ft-muted);
+    font-weight: 800;
   }
 
   .ft-row-card {
@@ -875,9 +1181,16 @@ const groupLabels = {
   }
 
   .ft-row-card__kicker,
+  .ft-row-card__alt,
   .ft-row-card__hint {
     margin: 0;
     color: #bfdbfe;
+  }
+
+  .ft-row-card__alt strong {
+    color: #fff;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
   }
 
   .ft-row-card__kicker {
@@ -946,6 +1259,50 @@ const groupLabels = {
   .ft-abc p {
     margin-top: 0.25rem;
     color: #bfdbfe;
+  }
+
+  .ft-abc__hold {
+    padding-top: 0.45rem;
+    border-top: 1px solid rgba(191, 219, 254, 0.16);
+  }
+
+  .ft-abc__hold b {
+    color: #fff;
+  }
+
+  .ft-row-links,
+  .ft-row-related {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+  }
+
+  .ft-row-related {
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(191, 219, 254, 0.22);
+  }
+
+  .ft-row-related span {
+    color: #bfdbfe;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ft-row-links button,
+  .ft-row-related button {
+    min-height: 32px;
+    padding: 0.35rem 0.55rem;
+    border-color: rgba(191, 219, 254, 0.32);
+    border-radius: 999px;
+    background: rgba(219, 234, 254, 0.1);
+    color: #dbeafe;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 900;
   }
 
   .ft-menu-list {
@@ -1072,8 +1429,18 @@ const groupLabels = {
       grid-template-columns: 1fr;
     }
 
-    .ft-row-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .ft-row-strip {
+      display: flex;
+      gap: 0.5rem;
+      margin-inline: -0.2rem;
+      overflow-x: auto;
+      padding: 0.15rem 0.2rem 0.55rem;
+      scroll-padding-inline: 0.2rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ft-row-strip button {
+      flex: 0 0 10rem;
     }
 
     .ft-row-display,

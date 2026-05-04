@@ -29,7 +29,7 @@ pnpm-debug.log*
 src/assets/_inbox/
 
 # private local import helpers
-scripts/import-poetry.mjs
+scripts/import-poetry*.mjs
 
 # build-synced static app payload
 public/living-codex/

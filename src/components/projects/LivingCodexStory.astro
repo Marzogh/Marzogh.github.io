@@ -45,19 +45,126 @@
     <details class="lcx-schema">
       <summary>What is inside the ZIP (exact file contract)</summary>
       <div class="lcx-schema__body">
-        <p><code>character.json</code> is required and is the canonical source of truth for the whole character; schema: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/character.schema.json">character.schema.json</a>.</p>
-        <p><code>inventory.csv</code> is optional and can override inventory rows on import; columns: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/inventory.schema.csv">inventory.schema.csv</a>.</p>
-        <p><code>spells_known.csv</code> and <code>spells_prepared.csv</code> are optional and both use the same columns from <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/spells.schema.csv">spells.schema.csv</a>.</p>
-        <p><code>log.csv</code> is optional and can override log rows on import; columns: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/log.schema.csv">log.schema.csv</a>.</p>
-        <p><code>report/import-report.json</code> is optional and diagnostic-only; it is generated during import checks and is never required. Fix policy: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/import-fix-rules.md">import-fix-rules.md</a>.</p>
+        <p class="lcx-schema__intro">If you want to hand-edit a save pack, this is the practical map. Start with the import order, then use the schemas and fix rules.</p>
+
+        <div class="lcx-schema__grid">
+          <section class="lcx-schema__card">
+            <h4>Import order (v2)</h4>
+            <p><code>1) character.json</code> loads first and remains canonical.</p>
+            <p><code>2) CSV overrides</code> apply next if present.</p>
+            <p><code>3) validation/fixes</code> run, then diagnostics are written.</p>
+          </section>
+
+          <section class="lcx-schema__card">
+            <h4>Required file</h4>
+            <p><code>character.json</code> is mandatory and must pass the v2 schema.</p>
+            <p><a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/character.schema.json">character.schema.json</a></p>
+          </section>
+
+          <section class="lcx-schema__card">
+            <h4>Optional CSV overrides</h4>
+            <p><code>inventory.csv</code> using <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/inventory.schema.csv">inventory.schema.csv</a></p>
+            <p><code>spells_known.csv</code> + <code>spells_prepared.csv</code> using <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/spells.schema.csv">spells.schema.csv</a></p>
+            <p><code>log.csv</code> using <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/log.schema.csv">log.schema.csv</a></p>
+          </section>
+
+          <section class="lcx-schema__card">
+            <h4>Diagnostics</h4>
+            <p><code>report/import-report.json</code> is optional output, never required input.</p>
+            <p>Fix policy: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/import-fix-rules.md">import-fix-rules.md</a></p>
+          </section>
+        </div>
+
+        <section class="lcx-schema__block">
+          <h4>CSV header quick reference</h4>
+          <p>Keep headers exact, keep booleans <code>true/false</code>, and keep numbers numeric.</p>
+          <pre><code>inventory.csv: id,name,category,qty,weight_each,weight_unit,value,value_currency,attunement,container,equipped,notes
+spells_known.csv / spells_prepared.csv: id,name,level,school,casting_time,range,components,duration,concentration,ritual,source,notes
+log.csv: id,ts,title,body,tags,location</code></pre>
+        </section>
+
+        <section class="lcx-schema__block">
+          <h4>Import fixes in plain language</h4>
+          <p>Safe fixes are automatic: missing optional arrays/objects can be initialized, minor type coercions can be applied, and known aliases can be normalized.</p>
+          <p>Guided fixes need your approval: unknown ruleset ids, migrating legacy class fields, and non-trivial slot/race rewrites.</p>
+          <p>Blocked issues stop import: invalid root JSON shape, missing required metadata, unparseable date values, or malformed CSV headers that cannot be mapped.</p>
+        </section>
       </div>
     </details>
+
+    <details class="lcx-tech">
+      <summary>Technical details (v2): read this before hand-editing packs</summary>
+      <div class="lcx-tech__body">
+        <p>If you ever edit a character pack by hand, this section is meant to be enough to work from directly. It covers storage, import order, exact file contracts, fix behavior, and a safe edit workflow.</p>
+
+        <h4>Runtime and storage</h4>
+        <p>The Living Codex v2 runs entirely in-browser. Primary persistence is IndexedDB (<code>living-codex-v2</code>) and recovery backup is localStorage (<code>living-codex-v2.backup</code>). Changes autosave (debounced), export triggers a save first, and successful saves update <code>meta.modified_utc</code>.</p>
+
+        <h4>ZIP contract and import order</h4>
+        <p>Expected pack contents:</p>
+        <p><code>character.json</code> (required, canonical), <code>inventory.csv</code> (optional override), <code>spells_known.csv</code> (optional override), <code>spells_prepared.csv</code> (optional override), <code>log.csv</code> (optional override), and <code>report/import-report.json</code> (optional diagnostics output only).</p>
+        <p>Import precedence is strict:</p>
+        <p>1) Load <code>character.json</code> 2) Apply present CSV overrides 3) Normalize and validate 4) Accept or block import with diagnostics report.</p>
+
+        <h4>Contract sources of truth</h4>
+        <p>Runtime headers: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/js/v2/io/headers.js">js/v2/io/headers.js</a>.</p>
+        <p>Schemas: <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/character.schema.json">character.schema.json</a>, <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/inventory.schema.csv">inventory.schema.csv</a>, <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/spells.schema.csv">spells.schema.csv</a>, <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/log.schema.csv">log.schema.csv</a>.</p>
+
+        <h4>Exact CSV columns (v2)</h4>
+        <p><strong>inventory.csv</strong> (exact order): <code>id,name,category,qty,weight_each,weight_unit,value,value_currency,attunement,container,equipped,notes</code></p>
+        <p><strong>spells_known.csv</strong> and <strong>spells_prepared.csv</strong> (exact order): <code>id,name,level,school,source,ritual,concentration,casting_time,range,components,duration,spell_id,page,notes</code></p>
+        <p><strong>log.csv</strong> (exact order): <code>timestamp_utc,type,label,data_json</code></p>
+        <p>Keep headers and file names exactly unchanged if you want import overrides to apply cleanly.</p>
+
+        <h4><code>character.json</code> safety guide</h4>
+        <p>Safe edits: text fields (names/notes/labels), numeric counters (HP/slots/tracker counts), and list contents (<code>spells_known</code>, <code>inventory</code>, <code>log</code>).</p>
+        <p>Be careful with IDs (<code>meta.id</code>, row IDs), booleans (use <code>true/false</code>, not quoted strings), numeric fields (keep numeric), and timestamps (ISO format).</p>
+        <p>Avoid deleting required roots like <code>meta</code>, <code>core</code>, <code>abilities</code>, and <code>combat</code>.</p>
+
+        <h4>How import fixes work</h4>
+        <p>Fix behavior is defined in <a href="https://github.com/Marzogh/The-Living-Codex/blob/main/contracts/v2/import-fix-rules.md">import-fix-rules.md</a> and uses three modes: <code>auto</code>, <code>guided</code>, and <code>blocked</code>.</p>
+        <p><strong>Auto</strong> fixes (safe/deterministic) include: missing optional arrays/objects initialization, numeric string coercion, boolean coercion (<code>yes/no/1/0</code>), duplicate list de-duplication, alias normalization (<code>armour -&gt; armor</code>, <code>saving_throws -&gt; saves</code>, <code>raceId/race_id -&gt; speciesId</code>), ability clamp <code>1..30</code>, tracker clamp rules, spell level clamp <code>0..9</code>, generated missing row IDs, and missing meta timestamp fill-ins.</p>
+        <p><strong>Guided</strong> fixes (requires user confirmation) include: unknown <code>ruleset_id</code>, migrating legacy class fields into <code>core.classes</code>, prepared spells not present in known list, invalid tracker reset values, and non-trivial slot overuse corrections.</p>
+        <p><strong>Blocked</strong> issues (import stops) include: invalid root JSON object, missing/unsupported <code>meta.schema</code>, missing <code>meta.id</code>, missing <code>meta.name</code>, missing <code>meta.ruleset_id</code> without fallback, malformed CSV headers that cannot be mapped, and unparseable <code>data_json</code> in log rows when no fallback extraction exists.</p>
+
+        <h4>Diagnostics report fields</h4>
+        <p>Each fix candidate is reported with <code>code</code> (stable id), <code>path</code> (JSON/CSV location), <code>message</code>, <code>before</code>, <code>after</code>, and <code>mode</code> (<code>auto</code>, <code>guided</code>, <code>blocked</code>), so edits remain auditable.</p>
+
+        <h4>Practical hand-edit workflow</h4>
+        <ol class="lcx-steps">
+          <li>Export from The Living Codex.</li>
+          <li>Unzip to a working location.</li>
+          <li>Edit <code>character.json</code> and/or CSV files.</li>
+          <li>Keep filenames and CSV headers exact.</li>
+          <li>Re-zip with files at ZIP root (no extra parent folder).</li>
+          <li>Import in v2.</li>
+          <li>Check diagnostics and resolve guided/blocked items.</li>
+        </ol>
+      </div>
+    </details>
+  </section>
+
+  <section class="lcx-forge panel panel--soft" aria-label="Forge your field journal">
+    <h3>Forge Your Field Journal</h3>
+    <p>Bring me your Living Codex export, and I’ll turn it into a print-ready campaign chronicle: character sheet, spellbook, session log, and campaign notes, styled to match your Codex theme.</p>
+    <p class="lcx-forge__trust">Your ZIP is used only to generate this PDF request.</p>
+
+    <form id="lcx-pdf-form" class="lcx-forge__form">
+      <label for="lcx-zip" class="lcx-forge__label">Character Export ZIP</label>
+      <input id="lcx-zip" name="zip" type="file" accept=".zip,application/zip" required />
+      <div class="lcx-forge__actions">
+        <button type="submit" class="button button--primary">Open Print Layout</button>
+      </div>
+      <p id="lcx-pdf-status" class="lcx-forge__status" role="status" aria-live="polite"></p>
+    </form>
   </section>
 
   <aside class="lcx-cta panel" aria-label="Call to adventure">
     <p>If you want to peek behind the screen, <a href="https://github.com/Marzogh/The-Living-Codex">open the source</a>. If you want to play, <a href="/living-codex/index.html">enter The Living Codex</a> and roll for initiative.</p>
   </aside>
 </section>
+
+<script type="module" src="/scripts/living-codex-print-launcher.mjs"></script>
 
 <style>
   .lcx-story {
@@ -151,6 +258,55 @@
       radial-gradient(540px 190px at 100% 100%, rgba(236, 201, 75, 0.14), transparent 74%),
       linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 88%, #fff 12%), var(--surface-raised));
     border: 1px solid color-mix(in srgb, var(--border) 72%, #cf9b44 28%);
+  }
+
+  .lcx-forge {
+    display: grid;
+    gap: 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--border) 72%, #cf9b44 28%);
+    background:
+      radial-gradient(520px 160px at 90% 0%, rgba(92, 101, 64, 0.09), transparent 74%),
+      linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 93%, #fff 7%), color-mix(in srgb, var(--surface) 90%, #f3ede3 10%));
+  }
+
+  .lcx-forge h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+
+  .lcx-forge p {
+    margin: 0;
+    line-height: 1.66;
+    color: var(--text-2);
+  }
+
+  .lcx-forge__trust {
+    font-size: 0.93rem;
+    color: var(--muted);
+  }
+
+  .lcx-forge__form {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .lcx-forge__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .lcx-forge__actions {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .lcx-forge__status {
+    min-height: 1.2em;
+    font-size: 0.9rem;
+    color: var(--text-2);
   }
 
   .lcx-cta p {
@@ -249,13 +405,121 @@
 
   .lcx-schema__body {
     display: grid;
-    gap: 0.48rem;
+    gap: 0.75rem;
     padding: 0 0.85rem 0.85rem;
   }
 
   .lcx-schema__body p {
     margin: 0;
     line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .lcx-schema__intro {
+    font-size: 0.98rem;
+  }
+
+  .lcx-schema__grid {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lcx-schema__card,
+  .lcx-schema__block {
+    padding: 0.7rem 0.8rem;
+    border-radius: 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--border) 78%, #caa865 22%);
+    background: color-mix(in srgb, var(--surface-raised) 92%, #fff 8%);
+  }
+
+  .lcx-schema__card {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .lcx-schema__body h4 {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+
+  .lcx-schema__block {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .lcx-schema__block pre {
+    margin: 0;
+    overflow-x: auto;
+    padding: 0.6rem 0.65rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--surface) 88%, #fff 12%);
+    border: 1px solid color-mix(in srgb, var(--border) 82%, #cdb47f 18%);
+    font-size: 0.79rem;
+    line-height: 1.5;
+  }
+
+  .lcx-steps {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.26rem;
+    line-height: 1.58;
+    color: var(--text-2);
+  }
+
+  .lcx-steps li {
+    margin: 0;
+  }
+
+  .lcx-tech {
+    margin-top: 0.35rem;
+    border: 1px solid color-mix(in srgb, var(--border) 75%, #7f9ec8 25%);
+    border-radius: 0.72rem;
+    background: color-mix(in srgb, var(--surface) 88%, #fff 12%);
+    overflow: hidden;
+  }
+
+  .lcx-tech summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.72rem 0.85rem;
+    color: var(--text);
+    list-style: none;
+  }
+
+  .lcx-tech summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .lcx-tech summary::before {
+    content: "▸";
+    margin-right: 0.45rem;
+    color: var(--muted);
+  }
+
+  .lcx-tech[open] summary::before {
+    content: "▾";
+  }
+
+  .lcx-tech__body {
+    display: grid;
+    gap: 0.58rem;
+    padding: 0 0.85rem 0.9rem;
+  }
+
+  .lcx-tech__body h4 {
+    margin: 0.2rem 0 0;
+    font-size: 0.93rem;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+
+  .lcx-tech__body p {
+    margin: 0;
+    line-height: 1.62;
     color: var(--text-2);
   }
 
@@ -283,6 +547,10 @@
     .lcx-guide__watermark {
       width: clamp(88px, 24vw, 132px);
       opacity: 0.08;
+    }
+
+    .lcx-schema__grid {
+      grid-template-columns: 1fr;
     }
 
     .lcx-scene {
