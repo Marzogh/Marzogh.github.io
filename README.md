@@ -2,13 +2,13 @@
 
 Astro-powered personal site for technical writing, projects, tools, education resources, poetry, and astrophotography.
 
-Live deployment is served via GitHub Pages.
+Live deployment is served as a static site.
 
 ## Stack
 
 - Astro 5
 - Astro Content Collections (Markdown/MDX)
-- GitHub Actions + GitHub Pages deployment
+- CI-based static deployment
 
 ## Content Collections
 
@@ -40,7 +40,7 @@ Run all commands from repository root:
 1. Add or edit content in the relevant `src/content/<collection>/` directory.
 2. Include frontmatter fields expected by the schema (for example: `title`, `description`, `pubDate`, `tags`, optional `updatedDate`, optional `featured`).
 3. Run `npm run build` before pushing.
-4. Push to `master` to trigger deployment.
+4. Push through the normal repository workflow to trigger deployment.
 
 Tags are normalized to slug routes under `/tags/<tag-slug>/`.
 
@@ -66,11 +66,10 @@ Notes:
 
 ## Deployment
 
-- Primary branch: `master`
-- Deployment target: GitHub Pages
+- Deployment target: static hosting
 - Build output: static files in `dist/`
 
-If deployment fails, check the GitHub Actions workflow logs in the repository Actions tab.
+Deployment is handled by the repository's configured CI workflow.
 
 ## Living Codex Sync
 
@@ -79,11 +78,11 @@ This site tracks [The Living Codex](https://github.com/Marzogh/The-Living-Codex)
 - Submodule path: `vendor/the-living-codex`
 - Tracking branch: `main`
 - Served route: `/living-codex/*` (synced into `public/living-codex` at build time)
-- Deploy behavior: GitHub Pages build updates the submodule to latest `origin/main` before running the site build.
+- Deploy behavior: the build uses the checked-out submodule content when generating the static site.
 
 ### Automatic sync
 
-The workflow `.github/workflows/sync-living-codex.yml` runs daily (and on manual dispatch), updates the submodule to latest `main`, and opens/updates a PR on branch `sync/living-codex` when changes exist.
+An internal maintenance workflow can refresh the submodule and open an update PR when changes exist.
 
 ### Manual fallback sync
 
@@ -105,7 +104,7 @@ npm run sync:living-codex
 
 ## Domain and DNS
 
-Custom domain DNS is managed outside this repo (Squarespace DNS host), while site hosting is GitHub Pages.
+Custom domain DNS is managed outside this repository.
 
 ## Repository Layout
 
