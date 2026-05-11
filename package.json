@@ -12,6 +12,7 @@
     "prebuild": "node scripts/sync-living-codex.mjs",
     "dev": "astro dev",
     "build": "astro build",
+    "validate:sitemap": "node scripts/validate-sitemap.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "update:living-codex:local": "bash scripts/update-living-codex-local.sh"
