@@ -209,13 +209,18 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
   }
 
   .poetry-curator {
-    display: flow-root;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 430px);
+    column-gap: 2rem;
+    row-gap: 1.2rem;
+    align-items: start;
   }
 
   .poetry-ledger {
-    float: right;
-    width: min(100%, 430px);
-    margin: 0 0 1.5rem 2rem;
+    grid-column: 2;
+    grid-row: 1 / span 6;
+    width: 100%;
+    margin: 0;
     border-radius: 22px;
     background:
       radial-gradient(760px 220px at top left, rgba(180, 83, 9, 0.09), transparent 70%),
@@ -277,6 +282,7 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
   }
 
   .poetry-curator__paragraph {
+    grid-column: 1;
     margin: 0;
     max-width: 72ch;
     color: var(--text-2);
@@ -305,7 +311,7 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
   }
 
   .poetry-curator__rights {
-    clear: both;
+    grid-column: 1 / -1;
     margin-top: 1.5rem;
     padding: 1rem 1.1rem;
     max-width: 72ch;
@@ -454,8 +460,15 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
   }
 
   @media (max-width: 920px) {
+    .poetry-curator {
+      grid-template-columns: 1fr;
+      column-gap: 0;
+      row-gap: 1rem;
+    }
+
     .poetry-ledger {
-      float: none;
+      grid-column: 1;
+      grid-row: auto;
       width: 100%;
       margin: 0 0 1.25rem;
     }
