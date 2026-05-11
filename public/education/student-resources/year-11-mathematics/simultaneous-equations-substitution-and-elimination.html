@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Simultaneous Equations: Substitution and Elimination</title>
+ <style>
+ :root {
+ --ink: #172033;
+ --muted: #475569;
+ --line: #cbd5e1;
+ --soft: #f8fafc;
+ --blue: #1d4ed8;
+ --blue-2: #2563eb;
+ --green: #047857;
+ --green-2: #16a34a;
+ --purple: #6d28d9;
+ --red: #dc2626;
+ --orange: #c2410c;
+ --amber: #92400e;
+ --shadow: rgba(15, 23, 42, 0.09);
+ }
+ * { box-sizing: border-box; }
+ html { scroll-behavior: smooth; }
+ body {
+ margin: 0;
+ font-family: Arial, Helvetica, sans-serif;
+ color: var(--ink);
+ background: #eef2ff;
+ line-height: 1.62;
+ }
+ .page { max-width: 1080px; margin: 0 auto; padding: 24px 18px 48px; }
+ .hero {
+ border-radius: 26px;
+ overflow: hidden;
+ border: 1px solid #bfdbfe;
+ box-shadow: 0 10px 28px rgba(15,23,42,0.13);
+ background: #fff;
+ margin-bottom: 18px;
+ }
+ .hero-top {
+ background: linear-gradient(135deg, #312e81 0%, #1d4ed8 52%, #0f766e 100%);
+ color: #fff;
+ padding: 32px 34px 30px;
+ }
+ .eyebrow { margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.08em; font-size: 13px; font-weight: bold; opacity: 0.96; }
+ h1 { margin: 0; font-size: 38px; line-height: 1.12; }
+ .hero-subtitle { margin: 12px 0 0 0; font-size: 18px; max-width: 900px; }
+ .hero-bottom { background: #eff6ff; border-top: 1px solid #bfdbfe; padding: 16px 34px; }
+ .nav-card, .card, .plain-card, .soft-card, .checkpoint-card { border-radius: 20px; margin-bottom: 18px; }
+ .nav-card {
+ background: rgba(255,255,255,0.96);
+ border: 1px solid #d1d5db;
+ padding: 14px 16px;
+ box-shadow: 0 5px 16px rgba(15,23,42,0.08);
+ position: sticky;
+ top: 0;
+ z-index: 20;
+ backdrop-filter: blur(6px);
+ }
+ .nav-pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+ .nav-pills a { display: inline-block; text-decoration: none; color: #0f172a; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 999px; padding: 8px 12px; font-size: 14px; font-weight: bold; }
+ .nav-pills a:hover, .nav-pills a:focus { outline: none; border-color: #1d4ed8; background: #eff6ff; }
+ .card { background: #fff; border: 1px solid var(--line); padding: 22px 24px; box-shadow: 0 5px 16px var(--shadow); }
+ .plain-card { background: #fff; border: 1px solid var(--line); padding: 22px 24px; }
+ .soft-card { background: var(--soft); border: 1px solid #cbd5e1; padding: 20px 22px; }
+ .checkpoint-card { background: #fffbeb; border: 1px solid #fde68a; padding: 20px 22px; }
+ .section-title { margin: 0 0 12px 0; color: #0f172a; font-size: 25px; line-height: 1.22; }
+ .mini-title { margin: 0 0 8px 0; font-size: 20px; line-height: 1.25; }
+ p { margin-top: 0; }
+ ul, ol { margin-top: 6px; }
+ li { margin-bottom: 7px; }
+ .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+ .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+ .tile { border-radius: 18px; padding: 18px; border: 1px solid #d1d5db; background: #fff; }
+ .tile-blue { background: #eff6ff; border-color: #bfdbfe; }
+ .tile-green { background: #ecfdf5; border-color: #a7f3d0; }
+ .tile-red { background: #fef2f2; border-color: #fecaca; }
+ .tile-purple { background: #f5f3ff; border-color: #ddd6fe; }
+ .tile-amber { background: #fffbeb; border-color: #fde68a; }
+ .callout { border-left: 6px solid #14b8a6; background: #f8fafc; padding: 14px 16px; border-radius: 14px; margin: 14px 0 0; }
+ .warning { border-left-color: #f97316; background: #fff7ed; }
+ .scratchpad {
+ display: block;
+ width: 100%;
+ min-height: 104px;
+ resize: vertical;
+ border: 1px solid #cbd5e1;
+ background: #fff;
+ border-radius: 16px;
+ padding: 12px 14px;
+ margin-top: 10px;
+ font: 16px/1.45 Arial, Helvetica, sans-serif;
+ color: #0f172a;
+ }
+ .scratchpad::placeholder { color: #94a3b8; opacity: 1; }
+ .scratchpad:focus { outline: 3px solid #bfdbfe; border-color: #2563eb; }
+ .scratch-note { font-size: 13px; color: #64748b; margin-top: 8px; }
+ .scratch-tools { display: flex; justify-content: flex-end; gap: 8px; margin: 8px 0 12px; }
+ .scratch-reset-button { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
+ .scratch-reset-button:hover, .scratch-reset-button:focus { background: #eff6ff; border-color: #1d4ed8; }
+
+ .lesson-tools {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+ justify-content: flex-end;
+ align-items: center;
+ margin: 8px 0 12px;
+ }
+ .practice-section-tools {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+ justify-content: flex-end;
+ align-items: center;
+ margin: 8px 0 12px;
+ }
+ .section-tool-button {
+ font-size: 13px;
+ padding: 6px 10px;
+ background: #ffffff;
+ color: #334155;
+ border-color: #cbd5e1;
+ }
+ .section-tool-button.primary-lite {
+ background: #eff6ff;
+ border-color: #bfdbfe;
+ color: #1d4ed8;
+ }
+ .generator-note {
+ font-size: 13px;
+ color: #475569;
+ background: #f8fafc;
+ border: 1px solid #e2e8f0;
+ border-radius: 14px;
+ padding: 10px 12px;
+ margin: 8px 0 12px;
+ }
+ .storage-warning { display: none; border-left: 6px solid #f97316; background: #fff7ed; padding: 12px 14px; border-radius: 14px; margin: 12px 0; color: #7c2d12; }
+ button, select, input { font: 15px Arial, Helvetica, sans-serif; }
+ button {
+ border: 1px solid #94a3b8;
+ background: #fff;
+ border-radius: 999px;
+ padding: 8px 12px;
+ cursor: pointer;
+ font-weight: bold;
+ }
+ button:hover, button:focus { outline: none; border-color: #1d4ed8; background: #eff6ff; }
+ .primary-button { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+ .primary-button:hover, .primary-button:focus { background: #1e40af; color: #fff; }
+ .equation-stack {
+ font-family: "Courier New", Courier, monospace;
+ background: #f8fafc;
+ border: 1px solid #cbd5e1;
+ border-radius: 16px;
+ padding: 12px 14px;
+ margin: 10px 0 14px;
+ overflow-x: auto;
+ white-space: pre;
+ }
+ .math-line {
+ display: inline-block;
+ font-family: "Courier New", Courier, monospace;
+ font-weight: bold;
+ background: #f8fafc;
+ border: 1px solid #cbd5e1;
+ border-radius: 999px;
+ padding: 8px 12px;
+ margin: 4px 0 10px;
+ }
+ .worked { border: 1px solid #dbeafe; background: #f8fbff; border-radius: 20px; padding: 20px 22px; margin: 18px 0; }
+ .method-tag { display: inline-block; font-size: 13px; color: #fff; background: var(--purple); border-radius: 999px; padding: 4px 9px; margin-right: 6px; vertical-align: middle; }
+ .method-tag.elim { background: var(--green); }
+ .method-tag.choice { background: var(--orange); }
+ .step-label { font-weight: bold; color: #1d4ed8; }
+ table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; }
+ th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; vertical-align: top; }
+ th { background: #f1f5f9; }
+ details { border: 1px solid #cbd5e1; border-radius: 16px; padding: 12px 14px; background: #fff; margin-top: 12px; }
+ details.practice-bank { margin: 14px 0; background: #f8fafc; }
+ details.practice-bank > summary { font-size: 18px; }
+ summary { cursor: pointer; font-weight: bold; }
+ .small { font-size: 14px; color: var(--muted); }
+ .footer { text-align: center; padding: 16px 0 0; }
+ .footer-topic { color: #475569; font-size: 13px; }
+ .footer-credit { margin-top: 2px; color: #94a3b8; font-size: 11px; font-weight: 400; letter-spacing: 0.035em; }
+ .widget-card { background: #f8fafc; border-color: #bfdbfe; }
+ .widget-grid { display: grid; grid-template-columns: minmax(270px, 0.85fr) minmax(340px, 1.15fr); gap: 16px; align-items: start; }
+ .control-panel { background: #fff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 16px; }
+ .control-group { margin-bottom: 14px; }
+ .control-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+ .control-group select, .control-group input {
+ width: 100%;
+ border: 1px solid #cbd5e1;
+ border-radius: 12px;
+ padding: 9px 10px;
+ background: #fff;
+ }
+ .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+ .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+ .graph-wrap { background: #fff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 10px; }
+ #lineGraph { width: 100%; max-height: 390px; height: auto; display: block; }
+ .feedback { border-radius: 14px; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; margin-top: 12px; white-space: pre-line; }
+ .feedback.good { background: #ecfdf5; border-color: #86efac; }
+ .feedback.warn { background: #fff7ed; border-color: #fed7aa; }
+ .feedback.bad { background: #fef2f2; border-color: #fecaca; }
+ .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #475569; margin-top: 8px; }
+ .legend span::before { content: ""; display: inline-block; width: 16px; height: 4px; border-radius: 99px; margin-right: 6px; vertical-align: middle; background: currentColor; }
+ .legend .line-one { color: #2563eb; }
+ .legend .line-two { color: #16a34a; }
+ .legend .point { color: #dc2626; }
+ .legend .test-point { color: #7c3aed; }
+ .legend .point::before, .legend .test-point::before { width: 10px; height: 10px; border-radius: 999px; }
+ .answer-list { margin: 0; padding-left: 18px; }
+ .answer-list li { margin-bottom: 10px; }
+ .problem-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+ .problem { border: 1px solid #d1d5db; border-radius: 16px; padding: 14px; background: #fff; }
+ .problem h4 { margin: 0 0 8px; font-size: 17px; }
+ .teacher-note { font-size: 14px; color: #334155; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 10px 12px; margin-top: 12px; }
+
+ .phase-header {
+ margin: 26px 0 10px;
+ padding: 4px 2px 0;
+ }
+ .phase-header h2 {
+ margin: 0 0 4px;
+ font-size: 26px;
+ line-height: 1.2;
+ color: #0f172a;
+ }
+ .phase-header p {
+ margin: 0;
+ color: #475569;
+ font-size: 15px;
+ }
+ .reset-notice {
+ display: none;
+ border-left: 6px solid #16a34a;
+ background: #ecfdf5;
+ border: 1px solid #bbf7d0;
+ border-left-width: 6px;
+ border-radius: 14px;
+ padding: 10px 12px;
+ margin: 10px 0 12px;
+ color: #14532d;
+ font-weight: bold;
+ }
+ .decision-table td:first-child,
+ .decision-table th:first-child { width: 38%; }
+ .decision-table td:nth-child(2),
+ .decision-table th:nth-child(2) { width: 27%; }
+ .decision-table td:nth-child(3),
+ .decision-table th:nth-child(3) { width: 35%; }
+ .decision-table strong { color: #0f172a; }
+ .choice-examples { margin-top: 14px; }
+ .choice-examples details { background: #f8fafc; }
+ .practice-intro {
+ display: grid;
+ grid-template-columns: 1.2fr 0.8fr;
+ gap: 14px;
+ align-items: start;
+ }
+ .practice-controls-card {
+ border: 1px solid #dbeafe;
+ background: #f8fbff;
+ border-radius: 16px;
+ padding: 12px;
+ }
+ .practice-controls-card .lesson-tools { margin: 0; justify-content: flex-start; }
+
+ @media (max-width: 860px) {
+ h1 { font-size: 31px; }
+ .hero-top, .hero-bottom { padding-left: 22px; padding-right: 22px; }
+ .grid-2, .grid-3, .widget-grid, .problem-list, .practice-intro { grid-template-columns: 1fr; }
+ .nav-card { position: static; }
+ }
+ @media print {
+ body { background: #fff; }
+ .nav-card, .scratch-tools, .button-row, .lesson-tools, .practice-section-tools { display: none; }
+ .card, .plain-card, .soft-card, .checkpoint-card, .worked, .tile, .control-panel, .graph-wrap, .problem { box-shadow: none; break-inside: avoid; }
+ .scratchpad { min-height: 90px; }
+ details { break-inside: avoid; }
+ }
+ </style>
+</head>
+<body>
+ <main class="page">
+ <header class="hero">
+ <div class="hero-top">
+ <p class="eyebrow">Year 11 General Mathematics</p>
+ <h1>Simultaneous Equations: Substitution and Elimination</h1>
+ <p class="hero-subtitle">Two equations. Two unknowns. One ordered pair that makes both of them work.</p>
+ </div>
+ <div class="hero-bottom">
+ By the end of this lesson, you should be able to explain what a simultaneous solution means, solve pairs of linear equations using substitution and elimination, and decide which method is easier for a given pair of equations.
+ </div>
+ </header>
+
+ <nav class="nav-card" aria-label="Lesson navigation">
+ <div class="nav-pills">
+ <a href="#start">Start</a>
+ <a href="#substitution">Substitution</a>
+ <a href="#elimination">Elimination</a>
+ <a href="#widget">Graph</a>
+ <a href="#choose">Choose</a>
+ <a href="#practice">Practice</a>
+ <a href="#extension">Extension</a>
+ </div>
+ </nav>
+
+ <section id="start" class="card">
+ <h2 class="section-title">Getting started</h2>
+ <p>One unknown is usually enough trouble. Today, we are dealing with two.</p>
+ <p>In this lesson, you will solve problems where <strong>two unknown values</strong> are connected by <strong>two equations</strong>. Your job is to find the pair of values that makes both equations true.</p>
+ <p>For example, if the unknowns are <strong>x</strong> and <strong>y</strong>, the final answer will usually look like this:</p>
+ <div class="math-line">(x, y)</div>
+ <p>This pair is called the <strong>solution</strong>.</p>
+ <div class="callout">
+ The important rule is simple: the answer has to work in <strong>both equations</strong>, not just one. If it only works in one equation, it is close-ish, but not the answer.
+ </div>
+ <div class="grid-2">
+ <div class="tile tile-blue">
+ <h3 class="mini-title">One equation</h3>
+ <div class="math-line">x + y = 10</div>
+ <p class="small">Many pairs work, such as (6, 4) and (8, 2).</p>
+ </div>
+ <div class="tile tile-green">
+ <h3 class="mini-title">Two equations together</h3>
+ <div class="equation-stack">x + y = 10
+x - y = 2</div>
+ <p class="small">Now the pair must work in both equations. The pair (6, 4) works.</p>
+ </div>
+ </div>
+ <div class="checkpoint-card">
+ <h3 class="mini-title">Checkpoint</h3>
+ <p>Check that <strong>(6, 4)</strong> works in both equations above. Write one line for each equation.</p>
+ <textarea class="scratchpad" data-scratch-id="start-checkpoint" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+ <div id="storageWarning" class="storage-warning">This browser is blocking local storage, so scratchpad text cannot persist after the page is closed.</div>
+ <div id="resetNotice" class="reset-notice" role="status" aria-live="polite">Question history and scratchpads reset.</div>
+ <div class="teacher-note"><strong>Scratchpad note:</strong> Text typed here is saved only on this device. It is not submitted.</div>
+ </section>
+ <section id="substitution" class="card">
+ <h2 class="section-title">Substitution</h2>
+ <p>Substitution means replacing one thing with another thing that has the same value. It is usually the easiest method when one equation already has <strong>x</strong> or <strong>y</strong> by itself.</p>
+ <div class="soft-card">
+ <h3 class="mini-title">What substitution is doing</h3>
+ <p>If an equation says <strong>y = x + 4</strong>, then wherever you see <strong>y</strong>, you are allowed to write <strong>x + 4</strong> instead. That turns two equations with two unknowns into one equation with one unknown.</p>
+ <ol>
+ <li>Find the equation where one variable is already by itself.</li>
+ <li>Copy the other equation.</li>
+ <li>Replace the isolated variable with the expression it equals.</li>
+ <li>Solve the new one-variable equation.</li>
+ <li>Put that answer back into either original equation to find the second value.</li>
+ <li>Check both original equations.</li>
+ </ol>
+ </div>
+
+ <div class="worked">
+ <h3 class="mini-title"><span class="method-tag">Worked example</span> Substitution when y is already by itself</h3>
+ <p>Solve:</p>
+ <div class="equation-stack">y = x + 4
+2x + y = 10</div>
+ <p><span class="step-label">Start with the equation that has y by itself:</span></p>
+ <div class="equation-stack">y = x + 4</div>
+ <p>This means <strong>y</strong> and <strong>x + 4</strong> are equal. In the second equation, replace <strong>y</strong> with <strong>x + 4</strong>.</p>
+ <div class="equation-stack">2x + y = 10
+2x + (x + 4) = 10</div>
+ <p>Now there is only <strong>x</strong>, so solve it like a normal linear equation.</p>
+ <div class="equation-stack">2x + x + 4 = 10
+3x + 4 = 10
+3x = 6
+x = 2</div>
+ <p>Use <strong>x = 2</strong> to find <strong>y</strong>.</p>
+ <div class="equation-stack">y = x + 4
+y = 2 + 4
+y = 6</div>
+ <p><span class="step-label">Answer:</span> <strong>(2, 6)</strong>.</p>
+ <details>
+ <summary>Check the answer</summary>
+ <div class="equation-stack">Equation A: y = x + 4
+6 = 2 + 4
+6 = 6 OK
+
+Equation B: 2x + y = 10
+2(2) + 6 = 10
+10 = 10 OK</div>
+ </details>
+ </div>
+
+ <div class="checkpoint-card">
+ <h3 class="mini-title">Your turn</h3>
+ <p>Solve using substitution. Show the replacement step clearly.</p>
+ <div class="equation-stack">y = 3x - 1
+x + y = 11</div>
+ <textarea class="scratchpad" data-scratch-id="substitution-your-turn" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <div class="scratch-note">Hint: replace y with 3x - 1 in the second equation.</div>
+ <details>
+ <summary>Check your solution</summary>
+ <div class="equation-stack">x + (3x - 1) = 11
+4x - 1 = 11
+4x = 12
+x = 3
+
+y = 3(3) - 1
+y = 8
+
+Solution: (3, 8)</div>
+ </details>
+ </div>
+ </section>
+
+ <section id="elimination" class="card">
+ <h2 class="section-title">Elimination</h2>
+ <p>Elimination means making one variable disappear by adding or subtracting whole equations. It is usually the easiest method when the equations are already lined up, especially when one variable has matching or opposite coefficients.</p>
+ <div class="soft-card">
+ <h3 class="mini-title">What elimination is doing</h3>
+ <p>If one equation has <strong>+y</strong> and another has <strong>-y</strong>, adding the equations makes the <strong>y</strong> terms cancel. If both equations have the same <strong>+2y</strong>, subtracting the equations makes the <strong>2y</strong> terms cancel.</p>
+ <ol>
+ <li>Line up the <strong>x</strong> terms, <strong>y</strong> terms and numbers.</li>
+ <li>Look for a variable that can cancel.</li>
+ <li>Add if the signs are opposite, such as <strong>+y</strong> and <strong>-y</strong>.</li>
+ <li>Subtract if the signs are the same, such as <strong>+2y</strong> and <strong>+2y</strong>.</li>
+ <li>If nothing cancels yet, multiply one or both whole equations first.</li>
+ <li>Solve, substitute back, and check.</li>
+ </ol>
+ </div>
+
+ <div class="worked">
+ <h3 class="mini-title"><span class="method-tag elim">Worked example</span> Opposite terms are ready to cancel</h3>
+ <p>Solve:</p>
+ <div class="equation-stack">x + y = 9
+x - y = 3</div>
+ <p>The equations contain <strong>+y</strong> and <strong>-y</strong>. Add the equations and the <strong>y</strong> terms cancel.</p>
+ <div class="equation-stack"> x + y = 9
++ x - y = 3
+-----------
+ 2x = 12
+ x = 6</div>
+ <p>Substitute <strong>x = 6</strong> into one original equation.</p>
+ <div class="equation-stack">x + y = 9
+6 + y = 9
+y = 3</div>
+ <p><span class="step-label">Answer:</span> <strong>(6, 3)</strong>.</p>
+ </div>
+
+ <div class="worked">
+ <h3 class="mini-title"><span class="method-tag elim">Worked example</span> Multiply one equation first</h3>
+ <p>Solve:</p>
+ <div class="equation-stack">2x + y = 7
+3x + 2y = 12</div>
+ <p>The first equation has <strong>y</strong>. The second equation has <strong>2y</strong>. Multiply the whole first equation by 2 so both equations have <strong>2y</strong>.</p>
+ <div class="equation-stack">2(2x + y = 7)
+4x + 2y = 14</div>
+ <p>Now subtract the second equation because both equations have <strong>+2y</strong>.</p>
+ <div class="equation-stack"> 4x + 2y = 14
+- 3x + 2y = 12
+-------------
+ x = 2</div>
+ <p>Substitute <strong>x = 2</strong> into the first original equation.</p>
+ <div class="equation-stack">2x + y = 7
+2(2) + y = 7
+4 + y = 7
+y = 3</div>
+ <p><span class="step-label">Answer:</span> <strong>(2, 3)</strong>.</p>
+ </div>
+
+ <div class="checkpoint-card">
+ <h3 class="mini-title">Your turn</h3>
+ <p>Solve using elimination.</p>
+ <div class="equation-stack">3x + y = 13
+2x - y = 7</div>
+ <textarea class="scratchpad" data-scratch-id="elimination-your-turn" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <div class="scratch-note">Hint: the y terms are already opposites, so add the equations.</div>
+ <details>
+ <summary>Check your solution</summary>
+ <div class="equation-stack"> 3x + y = 13
++ 2x - y = 7
+-------------
+ 5x = 20
+x = 4
+
+3(4) + y = 13
+12 + y = 13
+y = 1
+
+Solution: (4, 1)</div>
+ </details>
+ </div>
+ </section>
+
+
+ <section id="widget" class="card widget-card">
+ <h2 class="section-title">The same answer on a graph</h2>
+ <p>Every linear equation can be drawn as a straight line. A point on the blue line follows Equation A. A point on the green line follows Equation B. The red dot marks the intercept where the two lines meet, so that point follows both equations at the same time.</p>
+ <p>This lesson is about solving algebraically using substitution and elimination. The graph is included as a visual check. The full graphing method is part of another lesson on graphing simultaneous equations.</p>
+ <div class="widget-grid">
+ <div class="control-panel">
+ <div class="control-group">
+ <label for="exampleSelect">Choose a pair of equations</label>
+ <select id="exampleSelect">
+ <option value="0">Substitution example: y = x + 4 and 2x + y = 10</option>
+ <option value="1">Elimination example: x + y = 9 and x - y = 3</option>
+ <option value="2">Multiply first: 2x + y = 7 and 3x + 2y = 12</option>
+ <option value="3">Checkpoint style: 3x + y = 13 and 2x - y = 7</option>
+ </select>
+ </div>
+ <div id="widgetEquations" class="equation-stack" aria-live="polite"></div>
+ <p class="small">Type any ordered pair. The widget checks whether your point balances both equations.</p>
+ <div class="input-row">
+ <div class="control-group">
+ <label for="testX">x value</label>
+ <input id="testX" type="number" step="any" inputmode="decimal" placeholder="e.g. 2" autocomplete="off">
+ </div>
+ <div class="control-group">
+ <label for="testY">y value</label>
+ <input id="testY" type="number" step="any" inputmode="decimal" placeholder="e.g. 6" autocomplete="off">
+ </div>
+ </div>
+ <div class="button-row">
+ <button class="primary-button" id="checkPointButton" type="button">Test this point</button>
+ <button id="fillSolutionButton" type="button">Use the intercept</button>
+ <button id="toggleWorkingButton" type="button">Show working</button>
+ </div>
+ <div id="widgetFeedback" class="feedback" aria-live="polite">Pick an example, then test a point.</div>
+ </div>
+ <div class="graph-wrap">
+ <svg id="lineGraph" viewBox="0 0 560 440" role="img" aria-label="Graph of two simultaneous linear equations"></svg>
+ <div class="legend">
+ <span class="line-one">Equation A</span>
+ <span class="line-two">Equation B</span>
+ <span class="point">Intercept</span>
+ <span class="test-point">Your tested point</span>
+ </div>
+ </div>
+ </div>
+ <details id="workingDetails">
+ <summary>Algebra shown for the selected example</summary>
+ <div id="widgetWorking" class="equation-stack"></div>
+ </details>
+ </section>
+
+ <section id="choose" class="card">
+ <h2 class="section-title">Choosing a method</h2>
+ <p>Both methods can give the same answer. The trick is choosing the method that makes the work easier for the equations in front of you.</p>
+ <div class="soft-card">
+ <h3 class="mini-title">A decision making table</h3>
+ <table class="decision-table">
+ <thead>
+ <tr>
+ <th>What you see</th>
+ <th>Try this</th>
+ <th>Why</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>Already says <strong>x = ...</strong> or <strong>y = ...</strong></td>
+ <td><strong>Substitution</strong></td>
+ <td>One variable is ready to replace.</td>
+ </tr>
+ <tr>
+ <td>Easy to make <strong>x = ...</strong> or <strong>y = ...</strong></td>
+ <td><strong>Substitution</strong></td>
+ <td>Rearrange first, then replace.</td>
+ </tr>
+ <tr>
+ <td>Opposite terms, like <strong>+y</strong> and <strong>-y</strong></td>
+ <td><strong>Elimination: add</strong></td>
+ <td>Opposites make zero.</td>
+ </tr>
+ <tr>
+ <td>Matching terms, like <strong>+2y</strong> and <strong>+2y</strong></td>
+ <td><strong>Elimination: subtract</strong></td>
+ <td>Same terms subtract to zero.</td>
+ </tr>
+ <tr>
+ <td>Nothing cancels yet</td>
+ <td><strong>Elimination: multiply first</strong></td>
+ <td>Make a matching term, then cancel.</td>
+ </tr>
+ </tbody>
+ </table>
+ <div class="choice-examples">
+ <details>
+ <summary>Example: choose substitution</summary>
+ <p>Use substitution when one equation already has a variable by itself.</p>
+ <div class="equation-stack">y = x + 4
+2x + y = 10</div>
+ <p>Since <strong>y</strong> already equals <strong>x + 4</strong>, replace <strong>y</strong> in the second equation.</p>
+ </details>
+ <details>
+ <summary>Example: choose elimination</summary>
+ <p>Use elimination when the equations are lined up and a variable can cancel.</p>
+ <div class="equation-stack">x + y = 9
+x - y = 3</div>
+ <p>The <strong>+y</strong> and <strong>-y</strong> cancel if you add the equations.</p>
+ </details>
+ <details>
+ <summary>Example: multiply first</summary>
+ <p>Sometimes nothing cancels straight away.</p>
+ <div class="equation-stack">2x + y = 7
+3x + 2y = 12</div>
+ <p>The first equation has <strong>y</strong>. The second has <strong>2y</strong>. Multiply the first equation by 2 to make the <strong>y</strong> terms match.</p>
+ </details>
+ </div>
+ </div>
+ </section>
+
+ <section id="practice" class="card">
+ <h2 class="section-title">Practice</h2>
+ <div class="practice-intro">
+ <div>
+ <p>Open one section at a time. For each question, choose a method, solve the equations, and check your answer in at least one original equation.</p>
+ <div class="generator-note">Use <strong>New questions</strong> for a fresh set.</div>
+ </div>
+ <div class="practice-controls-card">
+ <p class="small"><strong>Practice tools</strong></p>
+ <div class="lesson-tools" aria-label="Practice tools">
+ <button type="button" class="scratch-reset-button" data-reset-scratchpads>Reset all scratchpads</button>
+ <button type="button" id="resetGeneratedQuestionsButton" class="scratch-reset-button">Reset generated questions</button>
+ </div>
+ </div>
+ </div>
+
+ <details class="practice-bank" data-practice-section="substitution" open>
+ <summary>Substitution practice</summary>
+ <div class="practice-section-tools">
+ <button type="button" class="section-tool-button primary-lite" data-new-questions="substitution">New questions</button>
+ <button type="button" class="section-tool-button" data-clear-section="substitution">Clear work</button>
+ </div>
+ <p>Use substitution. Each question has one variable already by itself.</p>
+ <div id="substitutionProblems" class="problem-list"></div>
+ <details><summary>Check answers</summary><ul id="substitutionAnswers" class="answer-list"></ul></details>
+ </details>
+
+ <details class="practice-bank" data-practice-section="elimination">
+ <summary>Elimination practice</summary>
+ <div class="practice-section-tools">
+ <button type="button" class="section-tool-button primary-lite" data-new-questions="elimination">New questions</button>
+ <button type="button" class="section-tool-button" data-clear-section="elimination">Clear work</button>
+ </div>
+ <p>Use elimination. One variable can be cancelled by adding or subtracting the equations.</p>
+ <div id="eliminationProblems" class="problem-list"></div>
+ <details><summary>Check answers</summary><ul id="eliminationAnswers" class="answer-list"></ul></details>
+ </details>
+
+ <details class="practice-bank" data-practice-section="multiply">
+ <summary>Elimination with multiplying first</summary>
+ <div class="practice-section-tools">
+ <button type="button" class="section-tool-button primary-lite" data-new-questions="multiply">New questions</button>
+ <button type="button" class="section-tool-button" data-clear-section="multiply">Clear work</button>
+ </div>
+ <p>Use elimination, but multiply one equation first so one variable can cancel.</p>
+ <div id="multiplyProblems" class="problem-list"></div>
+ <details><summary>Check answers</summary><ul id="multiplyAnswers" class="answer-list"></ul></details>
+ </details>
+
+ <details class="practice-bank" data-practice-section="mixed">
+ <summary>Mixed method practice</summary>
+ <div class="practice-section-tools">
+ <button type="button" class="section-tool-button primary-lite" data-new-questions="mixed">New questions</button>
+ <button type="button" class="section-tool-button" data-clear-section="mixed">Clear work</button>
+ </div>
+ <p>Choose substitution or elimination. Write why you chose that method before solving.</p>
+ <div id="mixedProblems" class="problem-list"></div>
+ <details><summary>Check answers</summary><ul id="mixedAnswers" class="answer-list"></ul></details>
+ </details>
+ </section>
+
+ <section id="extension" class="plain-card">
+ <h2 class="section-title">Extension challenge</h2>
+ <p>First, solve a tougher pair of equations. Then make your own pair and check that your chosen solution works in both.</p>
+ <div class="grid-2">
+ <div class="tile tile-purple">
+ <h3 class="mini-title">Part A: solve</h3>
+ <p>Solve this pair of equations. You may use substitution or elimination, but you should explain why your method makes sense.</p>
+ <div class="equation-stack">3x + 2y = 23
+4x - 3y = 8</div>
+ </div>
+ <div class="tile tile-green">
+ <h3 class="mini-title">Part B: create</h3>
+ <p>Create two new pairs of simultaneous equations with the same solution as Part A.</p>
+ <ol>
+ <li>Make one pair that is best solved by substitution.</li>
+ <li>Make one pair that is best solved by elimination.</li>
+ <li>Check that your solution works in both pairs.</li>
+ </ol>
+ </div>
+ </div>
+ <textarea class="scratchpad" data-scratch-id="extension-challenge" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details>
+ <summary>Extension answer</summary>
+ <div class="equation-stack">Part A:
+3x + 2y = 23
+4x - 3y = 8
+
+Multiply the first equation by 3:
+9x + 6y = 69
+
+Multiply the second equation by 2:
+8x - 6y = 16
+
+Add:
+17x = 85
+x = 5
+
+Use 3x + 2y = 23:
+3(5) + 2y = 23
+15 + 2y = 23
+2y = 8
+y = 4
+
+Solution: (5, 4)
+
+Example substitution pair with the same solution:
+y = x - 1
+2x + y = 14
+
+Example elimination pair with the same solution:
+3x + 2y = 23
+4x - 2y = 12</div>
+ </details>
+ </section>
+
+ <section id="exit" class="card">
+ <h2 class="section-title">Exit ticket</h2>
+ <p>Complete these before the end of the lesson.</p>
+ <div class="grid-3">
+ <div class="tile tile-purple">
+ <h3 class="mini-title">Explain</h3>
+ <p>In your own words, what does the solution to simultaneous equations represent?</p>
+ <textarea class="scratchpad" data-scratch-id="exit-explain" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+ <div class="tile tile-blue">
+ <h3 class="mini-title">Solve by substitution</h3>
+ <div class="equation-stack">y = 2x - 3
+x + y = 12</div>
+ <textarea class="scratchpad" data-scratch-id="exit-substitution" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+ <div class="tile tile-green">
+ <h3 class="mini-title">Solve by elimination</h3>
+ <div class="equation-stack">2x + y = 11
+3x - y = 9</div>
+ <textarea class="scratchpad" data-scratch-id="exit-elimination" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+ </div>
+ <details>
+ <summary>Exit ticket answers</summary>
+ <ul class="answer-list">
+ <li>The solution is the ordered pair that makes both equations true at the same time.</li>
+ <li>Substitution problem: <strong>(5, 7)</strong>.</li>
+ <li>Elimination problem: <strong>(4, 3)</strong>.</li>
+ </ul>
+ </details>
+ <div class="callout">
+ <strong>Last check:</strong> put your ordered pair back into the original equations. It should make both equations true. If it does not, check for a sign error or arithmetic slip.
+ </div>
+ </section>
+
+ <div class="footer">
+ <div class="footer-topic">Year 11 General Mathematics | Simultaneous equations | Substitution and elimination</div>
+ <div class="footer-credit">Mr. B · 2026</div>
+ </div>
+ </main>
+
+ <script>
+ (function () {
+ const examples = [
+ {
+ title: "Substitution example",
+ eqs: ["y = x + 4", "2x + y = 10"],
+ lines: [{m: 1, b: 4}, {m: -2, b: 10}],
+ solution: {x: 2, y: 6},
+ tests: [
+ {label: "Equation A", text: "y = x + 4", lhsName: "y", rhsName: "x + 4", lhs: (x, y) => y, rhs: (x, y) => x + 4},
+ {label: "Equation B", text: "2x + y = 10", lhsName: "2x + y", rhsName: "10", lhs: (x, y) => 2 * x + y, rhs: () => 10}
+ ],
+ working: [
+ "y = x + 4",
+ "2x + y = 10",
+ "2x + (x + 4) = 10",
+ "3x + 4 = 10",
+ "3x = 6",
+ "x = 2",
+ "y = 2 + 4",
+ "y = 6",
+ "Solution: (2, 6)"
+ ]
+ },
+ {
+ title: "Elimination example",
+ eqs: ["x + y = 9", "x - y = 3"],
+ lines: [{m: -1, b: 9}, {m: 1, b: -3}],
+ solution: {x: 6, y: 3},
+ tests: [
+ {label: "Equation A", text: "x + y = 9", lhsName: "x + y", rhsName: "9", lhs: (x, y) => x + y, rhs: () => 9},
+ {label: "Equation B", text: "x - y = 3", lhsName: "x - y", rhsName: "3", lhs: (x, y) => x - y, rhs: () => 3}
+ ],
+ working: [
+ " x + y = 9",
+ "+ x - y = 3",
+ "-----------",
+ " 2x = 12",
+ "x = 6",
+ "6 + y = 9",
+ "y = 3",
+ "Solution: (6, 3)"
+ ]
+ },
+ {
+ title: "Multiply first",
+ eqs: ["2x + y = 7", "3x + 2y = 12"],
+ lines: [{m: -2, b: 7}, {m: -1.5, b: 6}],
+ solution: {x: 2, y: 3},
+ tests: [
+ {label: "Equation A", text: "2x + y = 7", lhsName: "2x + y", rhsName: "7", lhs: (x, y) => 2 * x + y, rhs: () => 7},
+ {label: "Equation B", text: "3x + 2y = 12", lhsName: "3x + 2y", rhsName: "12", lhs: (x, y) => 3 * x + 2 * y, rhs: () => 12}
+ ],
+ working: [
+ "2x + y = 7",
+ "3x + 2y = 12",
+ "Multiply the first equation by 2:",
+ "4x + 2y = 14",
+ "Subtract the second equation:",
+ "(4x + 2y) - (3x + 2y) = 14 - 12",
+ "x = 2",
+ "2(2) + y = 7",
+ "y = 3",
+ "Solution: (2, 3)"
+ ]
+ },
+ {
+ title: "Checkpoint style",
+ eqs: ["3x + y = 13", "2x - y = 7"],
+ lines: [{m: -3, b: 13}, {m: 2, b: -7}],
+ solution: {x: 4, y: 1},
+ tests: [
+ {label: "Equation A", text: "3x + y = 13", lhsName: "3x + y", rhsName: "13", lhs: (x, y) => 3 * x + y, rhs: () => 13},
+ {label: "Equation B", text: "2x - y = 7", lhsName: "2x - y", rhsName: "7", lhs: (x, y) => 2 * x - y, rhs: () => 7}
+ ],
+ working: [
+ " 3x + y = 13",
+ "+ 2x - y = 7",
+ "-------------",
+ " 5x = 20",
+ "x = 4",
+ "3(4) + y = 13",
+ "y = 1",
+ "Solution: (4, 1)"
+ ]
+ }
+ ];
+
+ const svg = document.getElementById("lineGraph");
+ const select = document.getElementById("exampleSelect");
+ const eqBox = document.getElementById("widgetEquations");
+ const workingBox = document.getElementById("widgetWorking");
+ const feedback = document.getElementById("widgetFeedback");
+ const xInput = document.getElementById("testX");
+ const yInput = document.getElementById("testY");
+ const workingDetails = document.getElementById("workingDetails");
+
+ const width = 560;
+ const height = 440;
+ const pad = 54;
+ const xMin = -2;
+ const xMax = 10;
+ const yMin = -2;
+ const yMax = 12;
+ let testedPoint = null;
+
+ function sx(x) { return pad + (x - xMin) / (xMax - xMin) * (width - 2 * pad); }
+ function sy(y) { return height - pad - (y - yMin) / (yMax - yMin) * (height - 2 * pad); }
+ function roundNice(value) {
+ if (Math.abs(value - Math.round(value)) < 1e-9) return String(Math.round(value));
+ return String(Math.round(value * 100) / 100);
+ }
+ function makeSvg(tag, attrs) {
+ const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+ Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
+ return el;
+ }
+ function drawText(text, x, y, attrs) {
+ const el = makeSvg("text", Object.assign({x, y, "font-size": 12, fill: "#475569"}, attrs || {}));
+ el.textContent = text;
+ svg.appendChild(el);
+ }
+ function linePath(line) {
+ const y1 = line.m * xMin + line.b;
+ const y2 = line.m * xMax + line.b;
+ return "M " + sx(xMin) + " " + sy(y1) + " L " + sx(xMax) + " " + sy(y2);
+ }
+ function drawGraph(example) {
+ svg.innerHTML = "";
+ const defs = makeSvg("defs", {});
+ const clip = makeSvg("clipPath", {id: "plotClip"});
+ clip.appendChild(makeSvg("rect", {x: sx(xMin), y: sy(yMax), width: sx(xMax) - sx(xMin), height: sy(yMin) - sy(yMax)}));
+ defs.appendChild(clip);
+ svg.appendChild(defs);
+
+ svg.appendChild(makeSvg("rect", {x: 0, y: 0, width, height, fill: "#ffffff", rx: 16}));
+ svg.appendChild(makeSvg("rect", {x: sx(xMin), y: sy(yMax), width: sx(xMax) - sx(xMin), height: sy(yMin) - sy(yMax), fill: "#ffffff", stroke: "#dbe4ef"}));
+
+ for (let x = xMin; x <= xMax; x++) {
+ const major = x === 0;
+ svg.appendChild(makeSvg("line", {x1: sx(x), y1: sy(yMin), x2: sx(x), y2: sy(yMax), stroke: major ? "#64748b" : "#e2e8f0", "stroke-width": major ? 1.8 : 1}));
+ if (x !== 0) drawText(String(x), sx(x) - 4, sy(0) + 18);
+ }
+ for (let y = yMin; y <= yMax; y++) {
+ const major = y === 0;
+ svg.appendChild(makeSvg("line", {x1: sx(xMin), y1: sy(y), x2: sx(xMax), y2: sy(y), stroke: major ? "#64748b" : "#e2e8f0", "stroke-width": major ? 1.8 : 1}));
+ if (y !== 0) drawText(String(y), sx(0) - 26, sy(y) + 4);
+ }
+ drawText("x", sx(xMax) + 8, sy(0) + 4, {"font-weight": "bold", "font-size": 14});
+ drawText("y", sx(0) - 4, sy(yMax) - 10, {"font-weight": "bold", "font-size": 14});
+
+ const lineGroup = makeSvg("g", {"clip-path": "url(#plotClip)"});
+ lineGroup.appendChild(makeSvg("path", {d: linePath(example.lines[0]), fill: "none", stroke: "#2563eb", "stroke-width": 4, "stroke-linecap": "round"}));
+ lineGroup.appendChild(makeSvg("path", {d: linePath(example.lines[1]), fill: "none", stroke: "#16a34a", "stroke-width": 4, "stroke-linecap": "round"}));
+ svg.appendChild(lineGroup);
+
+ const px = sx(example.solution.x);
+ const py = sy(example.solution.y);
+ svg.appendChild(makeSvg("circle", {cx: px, cy: py, r: 7, fill: "#dc2626", stroke: "#ffffff", "stroke-width": 2}));
+ drawText("(" + roundNice(example.solution.x) + ", " + roundNice(example.solution.y) + ")", px + 10, py - 10, {fill: "#dc2626", "font-weight": "bold", "font-size": 13});
+
+ if (testedPoint && testedPoint.x >= xMin && testedPoint.x <= xMax && testedPoint.y >= yMin && testedPoint.y <= yMax) {
+ const tx = sx(testedPoint.x);
+ const ty = sy(testedPoint.y);
+ svg.appendChild(makeSvg("circle", {cx: tx, cy: ty, r: 6, fill: "#7c3aed", stroke: "#ffffff", "stroke-width": 2}));
+ drawText("your point", tx + 9, ty + 18, {fill: "#7c3aed", "font-weight": "bold", "font-size": 12});
+ }
+ }
+ function loadExample() {
+ const example = examples[Number(select.value)];
+ testedPoint = null;
+ xInput.value = "";
+ yInput.value = "";
+ eqBox.textContent = example.eqs.join("\n");
+ workingBox.textContent = example.working.join("\n");
+ feedback.className = "feedback";
+ feedback.textContent = "Test a point, or use the intercept to fill in the correct answer.";
+ drawGraph(example);
+ }
+ function testPoint() {
+ const example = examples[Number(select.value)];
+ const x = Number(xInput.value);
+ const y = Number(yInput.value);
+ if (!Number.isFinite(x) || !Number.isFinite(y) || xInput.value === "" || yInput.value === "") {
+ feedback.className = "feedback warn";
+ feedback.textContent = "Type both an x value and a y value first.";
+ return;
+ }
+ testedPoint = {x, y};
+ drawGraph(example);
+
+ const results = example.tests.map(test => {
+ const left = test.lhs(x, y);
+ const right = test.rhs(x, y);
+ return {
+ label: test.label,
+ lhsName: test.lhsName,
+ rhsName: test.rhsName,
+ left,
+ right,
+ ok: Math.abs(left - right) < 1e-8
+ };
+ });
+
+ const workingCount = results.filter(result => result.ok).length;
+ const allOk = workingCount === results.length;
+ const testedText = "You tested: (" + roundNice(x) + ", " + roundNice(y) + ")";
+ let opening = "Not quite. Try another point.";
+ if (allOk) opening = "Correct. This point works in both equations.";
+ else if (workingCount === 1) opening = "Close. This point works for one equation only.";
+
+ const lines = [opening, "", testedText, ""];
+ results.forEach((result, index) => {
+ if (index > 0) lines.push("");
+ lines.push(result.label + ":");
+ const rightIsNumber = /^-?\d+(\.\d+)?$/.test(result.rhsName);
+ if (result.ok) {
+ if (rightIsNumber) {
+ lines.push(result.lhsName + " = " + roundNice(result.left) + ", so it works.");
+ } else {
+ lines.push(result.lhsName + " = " + roundNice(result.left) + ", and " + result.rhsName + " = " + roundNice(result.right) + ", so it works.");
+ }
+ } else {
+ if (rightIsNumber) {
+ lines.push(result.lhsName + " = " + roundNice(result.left) + ", but it needs to equal " + roundNice(result.right) + ".");
+ } else {
+ lines.push(result.lhsName + " = " + roundNice(result.left) + ", but " + result.rhsName + " = " + roundNice(result.right) + ".");
+ }
+ lines.push("So " + result.label + " does not work.");
+ }
+ });
+ if (!allOk) lines.push("", "A solution must make both equations true.");
+
+ feedback.className = allOk ? "feedback good" : "feedback bad";
+ feedback.textContent = lines.join("\n");
+ }
+ function fillSolution() {
+ const example = examples[Number(select.value)];
+ xInput.value = example.solution.x;
+ yInput.value = example.solution.y;
+ testPoint();
+ }
+
+ select.addEventListener("change", loadExample);
+ document.getElementById("checkPointButton").addEventListener("click", testPoint);
+ document.getElementById("fillSolutionButton").addEventListener("click", fillSolution);
+ document.getElementById("toggleWorkingButton").addEventListener("click", function () {
+ workingDetails.open = !workingDetails.open;
+ });
+ const storageKeyBase = "year11-general-maths-simultaneous-equations-v2";
+ const scratchStoragePrefix = storageKeyBase + ":scratch";
+ const questionStateKey = storageKeyBase + ":practice-state";
+ const questionHistoryKey = storageKeyBase + ":practice-history";
+ let storageWorks = false;
+
+ function canUseLocalStorage() {
+ try {
+ const testKey = storageKeyBase + ":test";
+ window.localStorage.setItem(testKey, "1");
+ window.localStorage.removeItem(testKey);
+ return true;
+ } catch (error) {
+ return false;
+ }
+ }
+
+ function storageGet(key, fallback) {
+ if (!storageWorks) return fallback;
+ try {
+ const value = window.localStorage.getItem(key);
+ return value === null ? fallback : JSON.parse(value);
+ } catch (error) {
+ return fallback;
+ }
+ }
+
+ function storageSet(key, value) {
+ if (!storageWorks) return;
+ try {
+ window.localStorage.setItem(key, JSON.stringify(value));
+ } catch (error) {
+ // If storage is full or blocked during use, keep the page working without persistence.
+ }
+ }
+
+ function storageRemove(key) {
+ if (!storageWorks) return;
+ try { window.localStorage.removeItem(key); } catch (error) {}
+ }
+
+ function clearStoredKeysWithPrefix(prefix) {
+ if (!storageWorks) return;
+ try {
+ const keys = [];
+ for (let i = 0; i < window.localStorage.length; i++) {
+ const key = window.localStorage.key(i);
+ if (key && key.indexOf(prefix) === 0) keys.push(key);
+ }
+ keys.forEach(key => window.localStorage.removeItem(key));
+ } catch (error) {}
+ }
+
+ function hashString(text) {
+ let hash = 2166136261;
+ for (let i = 0; i < text.length; i++) {
+ hash ^= text.charCodeAt(i);
+ hash = Math.imul(hash, 16777619);
+ }
+ return (hash >>> 0).toString(36);
+ }
+
+ function randInt(min, max) {
+ return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
+
+ function pick(list) {
+ return list[randInt(0, list.length - 1)];
+ }
+
+ function coefficientText(coef, variable, first) {
+ const abs = Math.abs(coef);
+ const body = (abs === 1 ? variable : abs + variable);
+ if (first) return coef < 0 ? "-" + body : body;
+ return coef < 0 ? " - " + body : " + " + body;
+ }
+
+ function formatLinear(a, b, c) {
+ return coefficientText(a, "x", true) + coefficientText(b, "y", false) + " = " + c;
+ }
+
+ function formatExpression(coef, variable, constant) {
+ let text = coefficientText(coef, variable, true);
+ if (constant > 0) text += " + " + constant;
+ if (constant < 0) text += " - " + Math.abs(constant);
+ return text;
+ }
+
+ function formatSolution(x, y) {
+ return "(" + x + ", " + y + ")";
+ }
+
+ function determinant(a1, b1, a2, b2) {
+ return a1 * b2 - a2 * b1;
+ }
+
+ function questionFingerprint(scope, eqs, text) {
+ return hashString(scope + "|" + (eqs ? eqs.join("|") : "") + "|" + (text || ""));
+ }
+
+ function makeQuestion(scope, code, eqs, answer, hint, answerHtml, text) {
+ const fp = questionFingerprint(scope, eqs, text);
+ return {scope, code, eqs, answer, hint, answerHtml, text, fingerprint: fp};
+ }
+
+ function makeSubstitutionQuestion(scope, code) {
+ for (let attempt = 0; attempt < 300; attempt++) {
+ const x = randInt(1, 9);
+ const y = randInt(1, 9);
+ const isolateY = Math.random() < 0.65;
+ const m = pick([-3, -2, -1, 1, 2, 3, 4]);
+ const constant = isolateY ? y - m * x : x - m * y;
+ if (Math.abs(constant) > 12) continue;
+ let a = randInt(1, 4);
+ let b = randInt(1, 4);
+ if (Math.random() < 0.25) b *= -1;
+ const c = a * x + b * y;
+ if (Math.abs(c) > 55 || c === 0) continue;
+ const isolated = isolateY ? "y = " + formatExpression(m, "x", constant) : "x = " + formatExpression(m, "y", constant);
+ const other = formatLinear(a, b, c);
+ const eqs = [isolated, other];
+ const hint = "Substitution is a good choice because one variable is already by itself.";
+ const answerHtml = code + ": <strong>" + formatSolution(x, y) + "</strong>. " + hint;
+ return makeQuestion(scope, code, eqs, {x, y}, hint, answerHtml, "");
+ }
+ return makeQuestion(scope, code, ["y = x + 4", "2x + y = 10"], {x: 2, y: 6}, "Substitution is direct because y is already by itself.", code + ": <strong>(2, 6)</strong>. Substitution is direct because y is already by itself.", "");
+ }
+
+ function makeEliminationQuestion(scope, code) {
+ for (let attempt = 0; attempt < 300; attempt++) {
+ const x = randInt(1, 8);
+ const y = randInt(1, 8);
+ const cancelY = Math.random() < 0.7;
+ const sameSign = Math.random() < 0.45;
+ let a1 = randInt(1, 5);
+ let a2 = randInt(1, 5);
+ let b1 = randInt(1, 4);
+ let b2 = sameSign ? b1 : -b1;
+ if (!cancelY) {
+ a1 = randInt(1, 4);
+ a2 = sameSign ? a1 : -a1;
+ b1 = randInt(1, 5);
+ b2 = randInt(1, 5);
+ }
+ if (determinant(a1, b1, a2, b2) === 0) continue;
+ const c1 = a1 * x + b1 * y;
+ const c2 = a2 * x + b2 * y;
+ if (Math.abs(c1) > 60 || Math.abs(c2) > 60) continue;
+ const eqs = [formatLinear(a1, b1, c1), formatLinear(a2, b2, c2)];
+ const target = cancelY ? "y" : "x";
+ const signText = sameSign ? "matching" : "opposite";
+ const actionText = sameSign ? "subtracting" : "adding";
+ const hint = "Elimination is a good choice because the " + target + " coefficients are " + signText + ", so they can cancel by " + actionText + " the equations.";
+ const answerHtml = code + ": <strong>" + formatSolution(x, y) + "</strong>. " + hint;
+ return makeQuestion(scope, code, eqs, {x, y}, hint, answerHtml, "");
+ }
+ return makeQuestion(scope, code, ["x + y = 9", "x - y = 3"], {x: 6, y: 3}, "Elimination is direct because +y and -y cancel.", code + ": <strong>(6, 3)</strong>. Elimination is direct because +y and -y cancel.", "");
+ }
+
+ function makeMultiplyQuestion(scope, code) {
+ for (let attempt = 0; attempt < 400; attempt++) {
+ const x = randInt(1, 8);
+ const y = randInt(1, 8);
+ const cancelY = Math.random() < 0.7;
+ const multiplier = randInt(2, 4);
+ let a1, b1, a2, b2;
+ if (cancelY) {
+ b1 = randInt(1, 3);
+ b2 = b1 * multiplier;
+ a1 = randInt(1, 5);
+ a2 = randInt(1, 6);
+ } else {
+ a1 = randInt(1, 3);
+ a2 = a1 * multiplier;
+ b1 = randInt(1, 5);
+ b2 = randInt(1, 6);
+ }
+ if (a1 === a2 || b1 === b2) continue;
+ if (determinant(a1, b1, a2, b2) === 0) continue;
+ const c1 = a1 * x + b1 * y;
+ const c2 = a2 * x + b2 * y;
+ if (c1 > 75 || c2 > 95) continue;
+ const eqs = [formatLinear(a1, b1, c1), formatLinear(a2, b2, c2)];
+ const target = cancelY ? "y" : "x";
+ const hint = "Multiply the first equation by " + multiplier + " so the " + target + " terms can cancel.";
+ const answerHtml = code + ": <strong>" + formatSolution(x, y) + "</strong>. " + hint;
+ return makeQuestion(scope, code, eqs, {x, y}, hint, answerHtml, "");
+ }
+ return makeQuestion(scope, code, ["2x + y = 7", "3x + 2y = 12"], {x: 2, y: 3}, "Multiply the first equation by 2 so the y terms can cancel.", code + ": <strong>(2, 3)</strong>. Multiply the first equation by 2 so the y terms can cancel.", "");
+ }
+
+ function makeMixedQuestion(scope, code) {
+ const kind = pick(["substitution", "elimination", "multiply"]);
+ if (kind === "substitution") return makeSubstitutionQuestion(scope, code);
+ if (kind === "elimination") return makeEliminationQuestion(scope, code);
+ return makeMultiplyQuestion(scope, code);
+ }
+
+ const practiceSections = {
+ substitution: {count: 8, prefix: "S", maker: makeSubstitutionQuestion, listId: "substitutionProblems", answerId: "substitutionAnswers"},
+ elimination: {count: 6, prefix: "E", maker: makeEliminationQuestion, listId: "eliminationProblems", answerId: "eliminationAnswers"},
+ multiply: {count: 6, prefix: "M", maker: makeMultiplyQuestion, listId: "multiplyProblems", answerId: "multiplyAnswers"},
+ mixed: {count: 8, prefix: "X", maker: makeMixedQuestion, listId: "mixedProblems", answerId: "mixedAnswers"}
+ };
+
+ let practiceState = {};
+ let questionHistory = {};
+
+ function getHistory(scope) {
+ if (!questionHistory[scope]) questionHistory[scope] = [];
+ return questionHistory[scope];
+ }
+
+ function addToHistory(scope, fingerprint) {
+ const history = getHistory(scope);
+ if (history.indexOf(fingerprint) === -1) history.push(fingerprint);
+ if (history.length > 500) history.splice(0, history.length - 500);
+ }
+
+ function generateUniqueQuestion(scope, code, maker) {
+ const history = getHistory(scope);
+ for (let attempt = 0; attempt < 1000; attempt++) {
+ const q = maker(scope, code);
+ if (history.indexOf(q.fingerprint) === -1) {
+ addToHistory(scope, q.fingerprint);
+ return q;
+ }
+ }
+ const q = maker(scope, code);
+ addToHistory(scope, q.fingerprint);
+ return q;
+ }
+
+ function generateSection(scope) {
+ const config = practiceSections[scope];
+ const questions = [];
+ for (let i = 1; i <= config.count; i++) {
+ const code = config.prefix + i;
+ questions.push(generateUniqueQuestion(scope, code, config.maker));
+ }
+ practiceState[scope] = questions;
+ storageSet(questionStateKey, practiceState);
+ storageSet(questionHistoryKey, questionHistory);
+ }
+
+ function renderQuestion(q) {
+ const problem = document.createElement("div");
+ problem.className = "problem";
+
+ const heading = document.createElement("h4");
+ heading.textContent = "Question " + q.code;
+ problem.appendChild(heading);
+
+ if (q.text) {
+ const p = document.createElement("p");
+ p.textContent = q.text;
+ problem.appendChild(p);
+ } else {
+ const eq = document.createElement("div");
+ eq.className = "equation-stack";
+ eq.textContent = q.eqs.join("\n");
+ problem.appendChild(eq);
+ }
+
+ const scratch = document.createElement("textarea");
+ scratch.className = "scratchpad";
+ scratch.setAttribute("autocomplete", "off");
+ scratch.setAttribute("spellcheck", "false");
+ scratch.setAttribute("placeholder", "Text typed here is saved only on this device.");
+ scratch.setAttribute("data-scratch-id", "practice-" + q.scope + "-" + q.fingerprint);
+ scratch.setAttribute("data-scratch-scope", q.scope);
+ problem.appendChild(scratch);
+ return problem;
+ }
+
+ function renderSection(scope) {
+ const config = practiceSections[scope];
+ const list = document.getElementById(config.listId);
+ const answers = document.getElementById(config.answerId);
+ if (!list || !answers) return;
+ list.innerHTML = "";
+ answers.innerHTML = "";
+ (practiceState[scope] || []).forEach(function (q) {
+ list.appendChild(renderQuestion(q));
+ const li = document.createElement("li");
+ li.innerHTML = q.answerHtml;
+ answers.appendChild(li);
+ });
+ }
+
+ function clearScratchpads(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("textarea.scratchpad"));
+ boxes.forEach(function (box) {
+ box.value = "";
+ const id = box.getAttribute("data-scratch-id");
+ if (id) storageRemove(scratchStoragePrefix + ":" + id);
+ });
+ }
+
+ function clearScratchpadsForScope(scope) {
+ clearScratchpads(document.querySelector('[data-practice-section="' + scope + '"]'));
+ clearStoredKeysWithPrefix(scratchStoragePrefix + ":practice-" + scope + "-");
+ }
+
+ function setupScratchpads(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("textarea.scratchpad"));
+ boxes.forEach(function (box, index) {
+ if (!box.getAttribute("data-scratch-id")) {
+ const section = box.closest("section");
+ const sectionId = section && section.id ? section.id : "static";
+ box.setAttribute("data-scratch-id", sectionId + "-scratchpad-" + String(index + 1).padStart(2, "0"));
+ }
+ box.setAttribute("placeholder", "Text typed here is saved only on this device.");
+ if (box.getAttribute("data-scratch-ready") === "true") return;
+ box.setAttribute("data-scratch-ready", "true");
+
+ const key = scratchStoragePrefix + ":" + box.getAttribute("data-scratch-id");
+ if (storageWorks) {
+ const saved = window.localStorage.getItem(key);
+ if (saved !== null) box.value = saved;
+ box.addEventListener("input", function () {
+ try { window.localStorage.setItem(key, box.value); } catch (error) {}
+ });
+ }
+ });
+ }
+
+ function resetAllScratchpads() {
+ clearScratchpads(document);
+ clearStoredKeysWithPrefix(scratchStoragePrefix + ":");
+ }
+
+ function showResetNotice() {
+ const notice = document.getElementById("resetNotice");
+ if (!notice) return;
+ notice.style.display = "block";
+ window.setTimeout(function () {
+ notice.style.display = "none";
+ }, 4500);
+ }
+
+ function handleHashReset() {
+ const hash = String(window.location.hash || "").toLowerCase();
+ if (hash !== "#resetall") return false;
+ storageRemove(questionStateKey);
+ storageRemove(questionHistoryKey);
+ clearStoredKeysWithPrefix(scratchStoragePrefix + ":");
+ practiceState = {};
+ questionHistory = {};
+ if (window.history && window.history.replaceState) {
+ window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+ }
+ return true;
+ }
+
+ function setupPracticeEngine() {
+ practiceState = storageGet(questionStateKey, {});
+ questionHistory = storageGet(questionHistoryKey, {});
+
+ Object.keys(practiceSections).forEach(function (scope) {
+ if (!Array.isArray(practiceState[scope]) || practiceState[scope].length === 0) {
+ generateSection(scope);
+ }
+ renderSection(scope);
+ });
+
+ document.querySelectorAll("[data-new-questions]").forEach(function (button) {
+ button.addEventListener("click", function (event) {
+ event.preventDefault();
+ event.stopPropagation();
+ const scope = button.getAttribute("data-new-questions");
+ clearScratchpadsForScope(scope);
+ generateSection(scope);
+ renderSection(scope);
+ setupScratchpads(document.querySelector('[data-practice-section="' + scope + '"]'));
+ });
+ });
+
+ document.querySelectorAll("[data-clear-section]").forEach(function (button) {
+ button.addEventListener("click", function (event) {
+ event.preventDefault();
+ event.stopPropagation();
+ const scope = button.getAttribute("data-clear-section");
+ clearScratchpadsForScope(scope);
+ });
+ });
+
+ const resetGenerated = document.getElementById("resetGeneratedQuestionsButton");
+ if (resetGenerated) {
+ resetGenerated.addEventListener("click", function () {
+ practiceState = {};
+ questionHistory = {};
+ storageRemove(questionStateKey);
+ storageRemove(questionHistoryKey);
+ Object.keys(practiceSections).forEach(function (scope) {
+ clearScratchpadsForScope(scope);
+ generateSection(scope);
+ renderSection(scope);
+ });
+ setupScratchpads(document.getElementById("practice"));
+ });
+ }
+ }
+
+ document.querySelectorAll("[data-reset-scratchpads]").forEach(function (button) {
+ button.addEventListener("click", resetAllScratchpads);
+ });
+
+ window.addEventListener("pageshow", function () {
+ xInput.value = "";
+ yInput.value = "";
+ });
+
+ storageWorks = canUseLocalStorage();
+ const warning = document.getElementById("storageWarning");
+ if (warning && !storageWorks) warning.style.display = "block";
+ const resetFromHash = handleHashReset();
+ setupPracticeEngine();
+ setupScratchpads(document);
+ loadExample();
+ if (resetFromHash) showResetNotice();
+ })();
+ </script>
+</body>
+</html>

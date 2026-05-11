@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Thursday Worksheet: Simultaneous Equations Word Problems</title>
+ <style>
+ :root {
+ --ink: #172033;
+ --muted: #475569;
+ --line: #cbd5e1;
+ --soft: #f8fafc;
+ --blue: #1d4ed8;
+ --green: #047857;
+ --purple: #6d28d9;
+ --red: #dc2626;
+ --orange: #c2410c;
+ --amber: #92400e;
+ --shadow: rgba(15, 23, 42, 0.09);
+ }
+
+ * { box-sizing: border-box; }
+
+ html { scroll-behavior: smooth; }
+
+ body {
+ margin: 0;
+ font-family: Arial, Helvetica, sans-serif;
+ color: var(--ink);
+ background: #eef2ff;
+ line-height: 1.62;
+ }
+
+ .page {
+ max-width: 1080px;
+ margin: 0 auto;
+ padding: 24px 18px 48px;
+ }
+
+ .hero {
+ border-radius: 26px;
+ overflow: hidden;
+ border: 1px solid #bfdbfe;
+ box-shadow: 0 10px 28px rgba(15,23,42,0.13);
+ background: #fff;
+ margin-bottom: 18px;
+ }
+
+ .hero-top {
+ background: linear-gradient(135deg, #6d28d9 0%, #2563eb 38%, #0891b2 68%, #16a34a 100%);
+ color: #fff;
+ padding: 32px 34px 30px;
+ }
+
+ .eyebrow {
+ margin: 0 0 8px 0;
+ text-transform: uppercase;
+ letter-spacing: 0.08em;
+ font-size: 13px;
+ font-weight: bold;
+ opacity: 0.96;
+ }
+
+ h1 {
+ margin: 0;
+ font-size: 38px;
+ line-height: 1.12;
+ }
+
+ .hero-subtitle {
+ margin: 12px 0 0 0;
+ font-size: 18px;
+ max-width: 900px;
+ }
+
+ .hero-bottom {
+ background: #eff6ff;
+ border-top: 1px solid #bfdbfe;
+ padding: 16px 34px;
+ }
+
+ .nav-card, .card, .plain-card, .soft-card, .checkpoint-card {
+ border-radius: 20px;
+ margin-bottom: 18px;
+ }
+
+ .nav-card {
+ background: rgba(255,255,255,0.96);
+ border: 1px solid #d1d5db;
+ padding: 14px 16px;
+ box-shadow: 0 5px 16px rgba(15,23,42,0.08);
+ position: sticky;
+ top: 0;
+ z-index: 20;
+ backdrop-filter: blur(6px);
+ }
+
+ .nav-pills {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+ align-items: center;
+ }
+
+ .nav-pills a {
+ display: inline-block;
+ text-decoration: none;
+ color: #0f172a;
+ background: #f8fafc;
+ border: 1px solid #cbd5e1;
+ border-radius: 999px;
+ padding: 8px 12px;
+ font-size: 14px;
+ font-weight: bold;
+ }
+
+ .nav-pills a:hover, .nav-pills a:focus {
+ outline: none;
+ border-color: #1d4ed8;
+ background: #eff6ff;
+ }
+
+ .card {
+ background: #fff;
+ border: 1px solid var(--line);
+ padding: 22px 24px;
+ box-shadow: 0 5px 16px var(--shadow);
+ }
+
+ .plain-card {
+ background: #fff;
+ border: 1px solid var(--line);
+ padding: 22px 24px;
+ }
+
+ .soft-card {
+ background: var(--soft);
+ border: 1px solid #cbd5e1;
+ padding: 20px 22px;
+ }
+
+ .checkpoint-card {
+ background: #fffbeb;
+ border: 1px solid #fde68a;
+ padding: 20px 22px;
+ }
+
+ .section-title {
+ margin: 0 0 12px 0;
+ color: #0f172a;
+ font-size: 25px;
+ line-height: 1.22;
+ }
+
+ .mini-title {
+ margin: 0 0 8px 0;
+ font-size: 20px;
+ line-height: 1.25;
+ }
+
+ p { margin-top: 0; }
+
+ ul, ol { margin-top: 6px; }
+
+ li { margin-bottom: 10px; }
+
+ .grid-2 {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 16px;
+ margin-bottom: 18px;
+ }
+
+ .grid-3 {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 14px;
+ margin-bottom: 18px;
+ }
+
+ .tile {
+ border-radius: 18px;
+ padding: 18px;
+ border: 1px solid #d1d5db;
+ background: #fff;
+ }
+
+ .tile-blue { background: #eff6ff; border-color: #bfdbfe; }
+ .tile-green { background: #ecfdf5; border-color: #a7f3d0; }
+ .tile-purple { background: #f5f3ff; border-color: #ddd6fe; }
+ .tile-amber { background: #fffbeb; border-color: #fde68a; }
+ .tile-red { background: #fef2f2; border-color: #fecaca; }
+
+ .callout {
+ border-left: 6px solid #14b8a6;
+ background: #f8fafc;
+ padding: 14px 16px;
+ border-radius: 14px;
+ margin: 14px 0;
+ }
+
+ .warning { border-left-color: #f97316; background: #fff7ed; }
+
+ .scratchpad {
+ display: block;
+ width: 100%;
+ min-height: 118px;
+ resize: vertical;
+ border: 1px solid #cbd5e1;
+ background: #fff;
+ border-radius: 16px;
+ padding: 12px 14px;
+ margin-top: 10px;
+ font: 16px/1.45 Arial, Helvetica, sans-serif;
+ color: #0f172a;
+ }
+
+ .scratchpad::placeholder {
+ color: #94a3b8;
+ opacity: 1;
+ }
+
+ .scratchpad:focus {
+ outline: 3px solid #bfdbfe;
+ border-color: #2563eb;
+ }
+
+ .scratch-note,
+ .instruction-text {
+ font-size: 13px;
+ color: #64748b;
+ margin-top: 8px;
+ }
+
+ .instruction-text {
+ margin-bottom: 14px;
+ }
+
+ .storage-warning {
+ display: none;
+ border-left: 6px solid #f97316;
+ background: #fff7ed;
+ padding: 12px 14px;
+ border-radius: 14px;
+ margin: 12px 0;
+ color: #7c2d12;
+ }
+
+ button, select, input {
+ font: 15px Arial, Helvetica, sans-serif;
+ }
+
+ button {
+ border: 1px solid #94a3b8;
+ background: #fff;
+ border-radius: 999px;
+ padding: 8px 12px;
+ cursor: pointer;
+ font-weight: bold;
+ }
+
+ button:hover, button:focus {
+ outline: none;
+ border-color: #1d4ed8;
+ background: #eff6ff;
+ }
+
+ .primary-button {
+ background: #1d4ed8;
+ color: #fff;
+ border-color: #1d4ed8;
+ }
+
+ .primary-button:hover, .primary-button:focus {
+ background: #1e40af;
+ color: #fff;
+ }
+
+ .subtle-button {
+ background: #f8fafc;
+ color: #334155;
+ border-color: #cbd5e1;
+ }
+
+ .equation-stack {
+ font-family: "Courier New", Courier, monospace;
+ background: #f8fafc;
+ border: 1px solid #cbd5e1;
+ border-radius: 16px;
+ padding: 12px 14px;
+ margin: 10px 0 14px;
+ overflow-x: auto;
+ white-space: pre-wrap;
+ }
+
+ .math-line {
+ display: inline-block;
+ font-family: "Courier New", Courier, monospace;
+ font-weight: bold;
+ background: #f8fafc;
+ border: 1px solid #cbd5e1;
+ border-radius: 999px;
+ padding: 8px 12px;
+ margin: 4px 0 10px;
+ }
+
+ .math {
+ font-family: "Courier New", Courier, monospace;
+ font-weight: bold;
+ }
+
+ .worked {
+ border: 1px solid #dbeafe;
+ background: #f8fbff;
+ border-radius: 20px;
+ padding: 20px 22px;
+ margin: 18px 0;
+ }
+
+ .method-tag {
+ display: inline-block;
+ font-size: 13px;
+ color: #fff;
+ background: var(--purple);
+ border-radius: 999px;
+ padding: 4px 9px;
+ margin-right: 6px;
+ vertical-align: middle;
+ }
+
+ .method-tag.green { background: var(--green); }
+ .method-tag.orange { background: var(--orange); }
+ .method-tag.blue { background: var(--blue); }
+
+ .step-label {
+ font-weight: bold;
+ color: #1d4ed8;
+ }
+
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 12px 0 18px;
+ }
+
+ th, td {
+ border: 1px solid #cbd5e1;
+ padding: 10px 12px;
+ text-align: left;
+ vertical-align: top;
+ }
+
+ th { background: #f1f5f9; }
+
+ details {
+ border: 1px solid #cbd5e1;
+ border-radius: 16px;
+ padding: 12px 14px;
+ background: #fff;
+ margin-top: 12px;
+ }
+
+ summary {
+ cursor: pointer;
+ font-weight: bold;
+ }
+
+ .small {
+ font-size: 14px;
+ color: var(--muted);
+ }
+
+ .button-row {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+ align-items: center;
+ margin: 10px 0 12px;
+ }
+
+ .control-row {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 10px;
+ align-items: center;
+ margin: 10px 0 12px;
+ }
+
+ .control-row label {
+ font-weight: bold;
+ color: #334155;
+ }
+
+ .control-row select {
+ border: 1px solid #cbd5e1;
+ border-radius: 999px;
+ background: #fff;
+ padding: 8px 11px;
+ color: #0f172a;
+ }
+
+ .problem-list {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 14px;
+ }
+
+ .problem {
+ border: 1px solid #d1d5db;
+ border-radius: 18px;
+ padding: 16px;
+ background: #fff;
+ break-inside: avoid;
+ page-break-inside: avoid;
+ }
+
+ .problem h4 {
+ margin: 0 0 8px;
+ font-size: 17px;
+ color: #1e3a8a;
+ }
+
+ .word-card {
+ border: 1px solid #d1d5db;
+ border-radius: 18px;
+ padding: 16px;
+ background: #fff;
+ margin-bottom: 14px;
+ break-inside: avoid;
+ page-break-inside: avoid;
+ }
+
+ .word-card h4 {
+ margin: 0 0 8px;
+ font-size: 17px;
+ color: #1e3a8a;
+ }
+
+ .answer-list {
+ margin: 0;
+ padding-left: 18px;
+ }
+
+ .answer-list li { margin-bottom: 10px; }
+
+ .checklist {
+ list-style: none;
+ margin: 8px 0;
+ padding: 0;
+ }
+
+ .checklist li {
+ display: flex;
+ gap: 9px;
+ align-items: flex-start;
+ margin: 8px 0;
+ }
+
+ .task-checkbox {
+ width: 18px;
+ height: 18px;
+ flex: 0 0 auto;
+ margin-top: 3px;
+ accent-color: #1d4ed8;
+ cursor: pointer;
+ }
+
+ .box {
+ width: 18px;
+ height: 18px;
+ border: 2px solid #94a3b8;
+ border-radius: 4px;
+ flex: 0 0 auto;
+ margin-top: 3px;
+ background: #fff;
+ }
+
+ .working-space {
+ min-height: 92px;
+ border: 1px dashed #cbd5e1;
+ border-radius: 14px;
+ background: #fcfdff;
+ margin-top: 10px;
+ }
+
+ .large-space { min-height: 150px; }
+
+ .footer {
+ text-align: center;
+ padding: 16px 0 0;
+ }
+
+ .footer-topic {
+ color: #475569;
+ font-size: 13px;
+ }
+
+ .footer-credit {
+ margin-top: 2px;
+ color: #94a3b8;
+ font-size: 11px;
+ font-weight: 400;
+ letter-spacing: 0.035em;
+ }
+
+ @media (max-width: 860px) {
+ h1 { font-size: 31px; }
+ .hero-top, .hero-bottom { padding-left: 22px; padding-right: 22px; }
+ .grid-2, .grid-3, .problem-list { grid-template-columns: 1fr; }
+ .nav-card { position: static; }
+ }
+
+ @media print {
+ body { background: #fff; }
+ .nav-card, .button-row, .control-row, .screen-only { display: none !important; }
+ .card, .plain-card, .soft-card, .checkpoint-card, .worked, .tile, .problem, .word-card {
+ box-shadow: none;
+ break-inside: avoid;
+ page-break-inside: avoid;
+ }
+ .hero-top {
+ background: #fff !important;
+ color: #000;
+ border-bottom: 1px solid #999;
+ }
+ .hero-bottom, .tile-blue, .tile-green, .tile-purple, .tile-amber, .tile-red, .callout, .warning {
+ background: #fff !important;
+ }
+ .scratchpad { min-height: 100px; }
+ details { break-inside: avoid; }
+ }
+ </style>
+</head>
+
+<body>
+ <main class="page">
+ <header class="hero">
+ <div class="hero-top">
+ <p class="eyebrow">Year 11 General Mathematics</p>
+ <h1>Simultaneous Equations: Word Problems</h1>
+ <p class="hero-subtitle">Today is about turning a story into two equations, then solving them using substitution or elimination.</p>
+ </div>
+ <div class="hero-bottom">
+ Do the sections in order. Show working. Your final answer should make sense in the original problem, not just on the algebra line.
+ </div>
+ </header>
+
+ <nav class="nav-card screen-only" aria-label="Worksheet navigation">
+ <div class="nav-pills">
+ <a href="#start">Start</a>
+ <a href="#worked">Worked example</a>
+ <a href="#translate">A: Write equations</a>
+ <a href="#solve">B: Solve equations</a>
+ <a href="#word-practice">C: Word problems</a>
+ <a href="#renewable">Renewable questions</a>
+ <a href="#exit">Exit ticket</a>
+ <button type="button" class="subtle-button" data-reset-scratchpads>Reset all scratchpads</button>
+ </div>
+ </nav>
+
+ <section id="start" class="card">
+ <h2 class="section-title">Start here</h2>
+ <p>Word problems are not trying to hide the maths. They just make you find it first.</p>
+ <p>The goal is to pull out two unknowns and two facts. Once you have two equations, the solving part is the same as last lesson.</p>
+
+ <div class="grid-3">
+ <div class="tile tile-blue">
+ <h3 class="mini-title">Two unknowns</h3>
+ <p>Choose letters for the two things you need to find.</p>
+ <div class="math-line">a = adult ticket</div>
+ <div class="math-line">c = child ticket</div>
+ </div>
+
+ <div class="tile tile-green">
+ <h3 class="mini-title">Two equations</h3>
+ <p>Each useful fact in the problem should become one equation.</p>
+ <div class="equation-stack">2a + c = 47
+a + c = 30</div>
+ </div>
+
+ <div class="tile tile-purple">
+ <h3 class="mini-title">One answer pair</h3>
+ <p>The answer has to work in both equations and in the story.</p>
+ <div class="math-line">(a, c)</div>
+ </div>
+ </div>
+
+ <div class="callout">
+ <strong>Useful habit:</strong> write what your letters mean before you write the equations. It stops the algebra turning into alphabet soup.
+ </div>
+
+ <div id="storageWarning" class="storage-warning">This browser is blocking local storage, so scratchpad text cannot persist after the page is closed.</div>
+ </section>
+
+ <section class="card">
+ <h2 class="section-title">The word problem routine</h2>
+ <table>
+ <thead>
+ <tr>
+ <th>Step</th>
+ <th>What to write</th>
+ <th>What it does</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><strong>Define the variables</strong></td>
+ <td><span class="math">x = ...</span> and <span class="math">y = ...</span></td>
+ <td>Makes it clear what the letters stand for.</td>
+ </tr>
+ <tr>
+ <td><strong>Write two equations</strong></td>
+ <td>One equation for each useful fact.</td>
+ <td>Turns the story into algebra.</td>
+ </tr>
+ <tr>
+ <td><strong>Choose a method</strong></td>
+ <td>Substitution or elimination.</td>
+ <td>Pick the method that gives you the cleanest next line.</td>
+ </tr>
+ <tr>
+ <td><strong>Solve</strong></td>
+ <td>Find both unknowns.</td>
+ <td>Gives the ordered pair.</td>
+ </tr>
+ <tr>
+ <td><strong>Answer the question</strong></td>
+ <td>Write a sentence with units.</td>
+ <td>Makes sure the answer fits the original problem.</td>
+ </tr>
+ </tbody>
+ </table>
+ </section>
+
+ <section id="worked" class="card">
+ <h2 class="section-title">Worked example</h2>
+ <div class="worked">
+ <h3 class="mini-title"><span class="method-tag blue">Example</span> Tickets</h3>
+ <p>Two adult tickets and one child ticket cost <strong>$47</strong>. One adult ticket and one child ticket cost <strong>$30</strong>. Find the cost of each ticket.</p>
+
+ <p><span class="step-label">Define the variables:</span></p>
+ <div class="equation-stack">a = cost of one adult ticket
+c = cost of one child ticket</div>
+
+ <p><span class="step-label">Write the equations:</span></p>
+ <div class="equation-stack">2a + c = 47
+a + c = 30</div>
+
+ <p><span class="step-label">Choose a method:</span> elimination is clean here because both equations have <span class="math">+c</span>.</p>
+
+ <p><span class="step-label">Subtract the equations:</span></p>
+ <div class="equation-stack"> 2a + c = 47
+- a + c = 30
+--------------
+ a = 17</div>
+
+ <p><span class="step-label">Find the second value:</span></p>
+ <div class="equation-stack">a + c = 30
+17 + c = 30
+c = 13</div>
+
+ <p><span class="step-label">Answer:</span> one adult ticket costs <strong>$17</strong> and one child ticket costs <strong>$13</strong>.</p>
+
+ <details>
+ <summary>Check the answer</summary>
+ <div class="equation-stack">Two adult tickets and one child ticket:
+2(17) + 13 = 47
+
+One adult ticket and one child ticket:
+17 + 13 = 30</div>
+ </details>
+ </div>
+ </section>
+
+ <section id="translate" class="card">
+ <h2 class="section-title">Section A: write the equations</h2>
+ <p>Do not solve these yet. Define the variables and write two equations.</p>
+
+ <div class="word-card">
+ <h4>A1. Tickets</h4>
+ <p>Three adult tickets and two child tickets cost $82. One adult ticket and two child tickets cost $44.</p>
+ <textarea class="scratchpad" data-scratch-id="translate-a1" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check equations</summary><div class="equation-stack">a = adult ticket
+c = child ticket
+
+3a + 2c = 82
+a + 2c = 44</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>A2. Pens and notebooks</h4>
+ <p>A student buys 12 items in total. Pens cost $3 each and notebooks cost $7 each. The total cost is $60.</p>
+ <textarea class="scratchpad" data-scratch-id="translate-a2" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check equations</summary><div class="equation-stack">p = number of pens
+n = number of notebooks
+
+p + n = 12
+3p + 7n = 60</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>A3. Two numbers</h4>
+ <p>Two numbers add to 31. The first number is 7 more than the second number.</p>
+ <textarea class="scratchpad" data-scratch-id="translate-a3" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check equations</summary><div class="equation-stack">f = first number
+s = second number
+
+f + s = 31
+f = s + 7</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>A4. Tables</h4>
+ <p>A room has small tables and large tables. There are 14 tables in total. Small tables seat 4 people and large tables seat 6 people. The room seats 72 people.</p>
+ <textarea class="scratchpad" data-scratch-id="translate-a4" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check equations</summary><div class="equation-stack">s = number of small tables
+l = number of large tables
+
+s + l = 14
+4s + 6l = 72</div></details>
+ </div>
+ </section>
+
+ <section id="solve" class="card">
+ <h2 class="section-title">Section B: solve the equations</h2>
+ <p>The equations have already been written. Choose substitution or elimination and solve.</p>
+
+ <div class="problem-list">
+ <div class="problem">
+ <h4>B1</h4>
+ <div class="equation-stack">x + y = 18
+x - y = 4</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b1" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+
+ <div class="problem">
+ <h4>B2</h4>
+ <div class="equation-stack">y = 2x + 1
+x + y = 16</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b2" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+
+ <div class="problem">
+ <h4>B3</h4>
+ <div class="equation-stack">2x + y = 19
+2x - y = 7</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b3" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+
+ <div class="problem">
+ <h4>B4</h4>
+ <div class="equation-stack">x = y + 5
+x + 2y = 26</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b4" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+
+ <div class="problem">
+ <h4>B5</h4>
+ <div class="equation-stack">3x + y = 31
+x + y = 17</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b5" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+
+ <div class="problem">
+ <h4>B6</h4>
+ <div class="equation-stack">2x + y = 17
+3x + 2y = 31</div>
+ <textarea class="scratchpad" data-scratch-id="solve-b6" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ </div>
+ </div>
+
+ <details>
+ <summary>Section B answers</summary>
+ <ul class="answer-list">
+ <li>B1: <strong>(11, 7)</strong></li>
+ <li>B2: <strong>(5, 11)</strong></li>
+ <li>B3: <strong>(6.5, 6)</strong>. This one has a decimal x-value, so take care.</li>
+ <li>B4: <strong>(12, 7)</strong></li>
+ <li>B5: <strong>(7, 10)</strong></li>
+ <li>B6: <strong>(3, 11)</strong></li>
+ </ul>
+ </details>
+ </section>
+
+ <section id="word-practice" class="card">
+ <h2 class="section-title">Section C: word problem practice</h2>
+ <p>For each problem, define the variables, write two equations, solve, then answer in a sentence.</p>
+
+ <ul class="checklist">
+ <li><input class="task-checkbox" type="checkbox" data-check-id="static-define-variables"><span>Define the variables.</span></li>
+ <li><input class="task-checkbox" type="checkbox" data-check-id="static-write-equations"><span>Write two equations.</span></li>
+ <li><input class="task-checkbox" type="checkbox" data-check-id="static-choose-method"><span>Choose substitution or elimination.</span></li>
+ <li><input class="task-checkbox" type="checkbox" data-check-id="static-answer-words"><span>Write the final answer in words.</span></li>
+ </ul>
+
+ <div class="word-card">
+ <h4>C1. Movie tickets</h4>
+ <p>Two adult tickets and three child tickets cost $85. Two adult tickets and one child ticket cost $51. Find the cost of one adult ticket and one child ticket.</p>
+ <textarea class="scratchpad" data-scratch-id="word-c1" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check answer</summary><div class="equation-stack">a = adult ticket
+c = child ticket
+
+2a + 3c = 85
+2a + c = 51
+
+Subtract:
+2c = 34
+c = 17
+
+2a + 17 = 51
+2a = 34
+a = 17
+
+Adult ticket = $17
+Child ticket = $17</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>C2. Stationery</h4>
+ <p>A student buys 15 pens and notebooks altogether. Pens cost $2 each and notebooks cost $6 each. The total cost is $58. How many pens and notebooks did the student buy?</p>
+ <textarea class="scratchpad" data-scratch-id="word-c2" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check answer</summary><div class="equation-stack">p = number of pens
+n = number of notebooks
+
+p + n = 15
+2p + 6n = 58
+
+p = 15 - n
+
+2(15 - n) + 6n = 58
+30 - 2n + 6n = 58
+4n = 28
+n = 7
+
+p = 8
+
+Pens = 8
+Notebooks = 7</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>C3. Tables</h4>
+ <p>A hall has 18 tables. Small tables seat 4 people and large tables seat 6 people. Altogether, the tables seat 88 people. How many of each table are there?</p>
+ <textarea class="scratchpad" data-scratch-id="word-c3" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check answer</summary><div class="equation-stack">s = small tables
+l = large tables
+
+s + l = 18
+4s + 6l = 88
+
+s = 18 - l
+
+4(18 - l) + 6l = 88
+72 - 4l + 6l = 88
+2l = 16
+l = 8
+
+s = 10
+
+Small tables = 10
+Large tables = 8</div></details>
+ </div>
+
+ <div class="word-card">
+ <h4>C4. Sandwiches and drinks</h4>
+ <p>Three sandwiches and two drinks cost $39. One sandwich and two drinks cost $21. Find the cost of one sandwich and one drink.</p>
+ <textarea class="scratchpad" data-scratch-id="word-c4" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details><summary>Check answer</summary><div class="equation-stack">s = sandwich
+d = drink
+
+3s + 2d = 39
+s + 2d = 21
+
+Subtract:
+2s = 18
+s = 9
+
+9 + 2d = 21
+2d = 12
+d = 6
+
+Sandwich = $9
+Drink = $6</div></details>
+ </div>
+ </section>
+
+ <section id="renewable" class="card">
+ <h2 class="section-title">Practice simultaneous word problems</h2>
+ <p class="instruction-text">Change the options below to get a fresh set. Your working is saved only on this device.</p>
+
+ <div class="control-row">
+ <label for="difficultySelect">Question type</label>
+ <select id="difficultySelect">
+ <option value="core">Core</option>
+ <option value="mixed" selected>Mixed</option>
+ <option value="challenge">Challenge</option>
+ </select>
+
+ <label for="countSelect">Number of questions</label>
+ <select id="countSelect">
+ <option value="4">4</option>
+ <option value="6" selected>6</option>
+ <option value="8">8</option>
+ </select>
+ </div>
+
+ <div class="button-row">
+ <button type="button" class="primary-button" id="newWordQuestionsButton">New questions</button>
+ <button type="button" class="subtle-button" id="clearGeneratedWorkButton">Clear this section</button>
+ </div>
+
+ <div id="generatedWordProblems" class="problem-list"></div>
+
+ <details>
+ <summary>Check answers for this set</summary>
+ <ul id="generatedWordAnswers" class="answer-list"></ul>
+ </details>
+ </section>
+
+ <section id="exit" class="card">
+ <h2 class="section-title">Exit ticket</h2>
+ <p>Complete this before the end of the lesson.</p>
+ <div class="checkpoint-card">
+ <h3 class="mini-title">Write, solve and check</h3>
+ <p>A school sells raffle tickets and drink vouchers. Four raffle tickets and one drink voucher cost $23. Two raffle tickets and one drink voucher cost $13. Find the cost of one raffle ticket and one drink voucher.</p>
+ <textarea class="scratchpad" data-scratch-id="exit-ticket" autocomplete="off" spellcheck="false" placeholder="Text typed here is saved only on this device."></textarea>
+ <details>
+ <summary>Exit ticket answer</summary>
+ <div class="equation-stack">r = raffle ticket
+d = drink voucher
+
+4r + d = 23
+2r + d = 13
+
+Subtract:
+2r = 10
+r = 5
+
+2(5) + d = 13
+10 + d = 13
+d = 3
+
+Raffle ticket = $5
+Drink voucher = $3</div>
+ </details>
+ </div>
+
+ <div class="callout">
+ <strong>Last check:</strong> put your answer back into the original story. If the costs, totals or numbers do not match, go hunting for the line where the error crept in.
+ </div>
+ </section>
+
+ <div class="footer">
+ <div class="footer-topic">Year 11 General Mathematics | Simultaneous equations | Word problems</div>
+ <div class="footer-credit">Mr. B &middot; 2026</div>
+ </div>
+ </main>
+
+ <script>
+ (function () {
+ const storageKeyBase = "year11-general-maths-word-problems-simultaneous-equations-v1";
+ const scratchPrefix = storageKeyBase + ":scratch";
+ const checkPrefix = storageKeyBase + ":check";
+ const currentQuestionsKey = storageKeyBase + ":current-questions";
+ const historyKey = storageKeyBase + ":history";
+ const settingsKey = storageKeyBase + ":settings";
+
+ const generatedList = document.getElementById("generatedWordProblems");
+ const generatedAnswers = document.getElementById("generatedWordAnswers");
+ const difficultySelect = document.getElementById("difficultySelect");
+ const countSelect = document.getElementById("countSelect");
+ const newButton = document.getElementById("newWordQuestionsButton");
+ const clearButton = document.getElementById("clearGeneratedWorkButton");
+
+ let storageWorks = false;
+ let currentQuestions = [];
+ let questionHistory = [];
+
+ function canUseLocalStorage() {
+ try {
+ const testKey = storageKeyBase + ":test";
+ window.localStorage.setItem(testKey, "1");
+ window.localStorage.removeItem(testKey);
+ return true;
+ } catch (error) {
+ return false;
+ }
+ }
+
+ function storageGet(key, fallback) {
+ if (!storageWorks) return fallback;
+ try {
+ const value = window.localStorage.getItem(key);
+ return value === null ? fallback : JSON.parse(value);
+ } catch (error) {
+ return fallback;
+ }
+ }
+
+ function storageSet(key, value) {
+ if (!storageWorks) return;
+ try {
+ window.localStorage.setItem(key, JSON.stringify(value));
+ } catch (error) {}
+ }
+
+ function storageRemove(key) {
+ if (!storageWorks) return;
+ try {
+ window.localStorage.removeItem(key);
+ } catch (error) {}
+ }
+
+ function clearStoredKeysWithPrefix(prefix) {
+ if (!storageWorks) return;
+ try {
+ const keys = [];
+ for (let i = 0; i < window.localStorage.length; i++) {
+ const key = window.localStorage.key(i);
+ if (key && key.indexOf(prefix) === 0) keys.push(key);
+ }
+ keys.forEach(key => window.localStorage.removeItem(key));
+ } catch (error) {}
+ }
+
+ function randInt(min, max) {
+ return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
+
+ function pick(list) {
+ return list[randInt(0, list.length - 1)];
+ }
+
+ function hashString(text) {
+ let hash = 2166136261;
+ for (let i = 0; i < text.length; i++) {
+ hash ^= text.charCodeAt(i);
+ hash = Math.imul(hash, 16777619);
+ }
+ return (hash >>> 0).toString(36);
+ }
+
+ function coefficientText(coef, variable, first) {
+ const abs = Math.abs(coef);
+ const body = abs === 1 ? variable : abs + variable;
+ if (first) return coef < 0 ? "-" + body : body;
+ return coef < 0 ? " - " + body : " + " + body;
+ }
+
+ function equationText(a, xName, b, yName, total) {
+ return coefficientText(a, xName, true) + coefficientText(b, yName, false) + " = " + total;
+ }
+
+ function simpleEquationText(left, right) {
+ return left + " = " + right;
+ }
+
+ function fingerprintQuestion(q) {
+ return hashString(q.text + "|" + q.variables.join("|") + "|" + q.equations.join("|") + "|" + q.answer);
+ }
+
+ function makeQuestion(code, text, variables, equations, answer, working) {
+ const q = { code, text, variables, equations, answer, working };
+ q.fingerprint = fingerprintQuestion(q);
+ return q;
+ }
+
+ function pricePairContext() {
+ return pick([
+ {x: "a", y: "c", xThing: "adult ticket", yThing: "child ticket", unit: "$", scene: "Tickets"},
+ {x: "s", y: "d", xThing: "sandwich", yThing: "drink", unit: "$", scene: "Food"},
+ {x: "p", y: "b", xThing: "parking pass", yThing: "bus pass", unit: "$", scene: "Passes"},
+ {x: "r", y: "v", xThing: "raffle ticket", yThing: "drink voucher", unit: "$", scene: "Fundraiser"}
+ ]);
+ }
+
+ function pluralThing(thing, n) {
+ if (n === 1) return "one " + thing;
+ if (thing.endsWith("ch") || thing.endsWith("s")) return n + " " + thing + "es";
+ return n + " " + thing + "s";
+ }
+
+ function sentenceForPriceProblem(ctx, a1, b1, total1, a2, b2, total2) {
+ const first = pluralThing(ctx.xThing, a1) + " and " + pluralThing(ctx.yThing, b1) + " cost $" + total1 + ".";
+ const second = pluralThing(ctx.xThing, a2) + " and " + pluralThing(ctx.yThing, b2) + " cost $" + total2 + ".";
+ return first.charAt(0).toUpperCase() + first.slice(1) + " " + second.charAt(0).toUpperCase() + second.slice(1) + " Find the cost of one " + ctx.xThing + " and one " + ctx.yThing + ".";
+ }
+
+ function makeCoreQuestion(code) {
+ const kind = pick(["priceCancel", "counts", "numbers", "seating"]);
+ if (kind === "priceCancel") {
+ const ctx = pricePairContext();
+ const xVal = randInt(5, 24);
+ const yVal = randInt(3, 16);
+ const variant = pick([
+ {a1: 2, b1: 1, a2: 1, b2: 1},
+ {a1: 3, b1: 2, a2: 1, b2: 2},
+ {a1: 2, b1: 3, a2: 2, b2: 1}
+ ]);
+ const total1 = variant.a1 * xVal + variant.b1 * yVal;
+ const total2 = variant.a2 * xVal + variant.b2 * yVal;
+ const eq1 = equationText(variant.a1, ctx.x, variant.b1, ctx.y, total1);
+ const eq2 = equationText(variant.a2, ctx.x, variant.b2, ctx.y, total2);
+ const text = sentenceForPriceProblem(ctx, variant.a1, variant.b1, total1, variant.a2, variant.b2, total2);
+ const variables = [ctx.x + " = cost of one " + ctx.xThing, ctx.y + " = cost of one " + ctx.yThing];
+ const answer = "one " + ctx.xThing + " = $" + xVal + ", one " + ctx.yThing + " = $" + yVal;
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ if (kind === "counts") {
+ const pens = randInt(4, 16);
+ const books = randInt(3, 12);
+ const totalItems = pens + books;
+ const penCost = pick([2, 3, 4]);
+ const bookCost = pick([5, 6, 7, 8]);
+ if (penCost === bookCost) return makeCoreQuestion(code);
+ const totalCost = penCost * pens + bookCost * books;
+ const text = "A student buys pens and notebooks. They buy " + totalItems + " items in total. Pens cost $" + penCost + " each and notebooks cost $" + bookCost + " each. The total cost is $" + totalCost + ". How many pens and notebooks did they buy?";
+ const variables = ["p = number of pens", "n = number of notebooks"];
+ const eq1 = "p + n = " + totalItems;
+ const eq2 = penCost + "p + " + bookCost + "n = " + totalCost;
+ const answer = pens + " pens and " + books + " notebooks";
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ if (kind === "seating") {
+ const small = randInt(5, 15);
+ const large = randInt(3, 12);
+ const totalTables = small + large;
+ const totalSeats = 4 * small + 6 * large;
+ const text = "A room has small tables and large tables. There are " + totalTables + " tables in total. Small tables seat 4 people and large tables seat 6 people. Altogether, the room seats " + totalSeats + " people. How many of each table are there?";
+ const variables = ["s = number of small tables", "l = number of large tables"];
+ const eq1 = "s + l = " + totalTables;
+ const eq2 = "4s + 6l = " + totalSeats;
+ const answer = small + " small tables and " + large + " large tables";
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ const second = randInt(4, 22);
+ const difference = randInt(3, 14);
+ const first = second + difference;
+ const sum = first + second;
+ const text = "Two numbers add to " + sum + ". The first number is " + difference + " more than the second number. Find the two numbers.";
+ const variables = ["f = first number", "s = second number"];
+ const eq1 = "f + s = " + sum;
+ const eq2 = "f = s + " + difference;
+ const answer = "first number = " + first + ", second number = " + second;
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ function makeMixedQuestion(code) {
+ const kind = pick(["core", "linearPrice", "tokenValue", "pizzas"]);
+ if (kind === "core") return makeCoreQuestion(code);
+
+ if (kind === "linearPrice") {
+ const ctx = pricePairContext();
+ const xVal = randInt(6, 28);
+ const yVal = randInt(4, 18);
+ const pairs = pick([
+ [[2, 3], [4, 1]],
+ [[3, 2], [1, 4]],
+ [[2, 1], [3, 4]],
+ [[1, 3], [4, 2]]
+ ]);
+ const a1 = pairs[0][0], b1 = pairs[0][1], a2 = pairs[1][0], b2 = pairs[1][1];
+ const total1 = a1 * xVal + b1 * yVal;
+ const total2 = a2 * xVal + b2 * yVal;
+ const text = sentenceForPriceProblem(ctx, a1, b1, total1, a2, b2, total2);
+ const variables = [ctx.x + " = cost of one " + ctx.xThing, ctx.y + " = cost of one " + ctx.yThing];
+ const eq1 = equationText(a1, ctx.x, b1, ctx.y, total1);
+ const eq2 = equationText(a2, ctx.x, b2, ctx.y, total2);
+ const answer = "one " + ctx.xThing + " = $" + xVal + ", one " + ctx.yThing + " = $" + yVal;
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ if (kind === "tokenValue") {
+ const gold = randInt(3, 15);
+ const silver = randInt(4, 18);
+ const totalTokens = gold + silver;
+ const goldValue = pick([5, 6, 8, 10]);
+ const silverValue = pick([2, 3, 4]);
+ const totalValue = goldValue * gold + silverValue * silver;
+ const text = "A game uses gold tokens and silver tokens. There are " + totalTokens + " tokens altogether. Gold tokens are worth " + goldValue + " points each and silver tokens are worth " + silverValue + " points each. The total value is " + totalValue + " points. How many gold and silver tokens are there?";
+ const variables = ["g = number of gold tokens", "s = number of silver tokens"];
+ const eq1 = "g + s = " + totalTokens;
+ const eq2 = goldValue + "g + " + silverValue + "s = " + totalValue;
+ const answer = gold + " gold tokens and " + silver + " silver tokens";
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ const regular = randInt(3, 12);
+ const large = randInt(3, 10);
+ const totalPizzas = regular + large;
+ const feeds = 8 * regular + 12 * large;
+ const text = "A group orders regular pizzas and large pizzas. They order " + totalPizzas + " pizzas in total. A regular pizza feeds 8 people and a large pizza feeds 12 people. Altogether, the pizzas feed " + feeds + " people. How many regular and large pizzas were ordered?";
+ const variables = ["r = number of regular pizzas", "l = number of large pizzas"];
+ const eq1 = "r + l = " + totalPizzas;
+ const eq2 = "8r + 12l = " + feeds;
+ const answer = regular + " regular pizzas and " + large + " large pizzas";
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ function makeChallengeQuestion(code) {
+ const ctx = pricePairContext();
+ const xVal = randInt(8, 30);
+ const yVal = randInt(4, 20);
+ const pairs = pick([
+ [[2, 3], [5, 2]],
+ [[3, 4], [5, 1]],
+ [[4, 1], [2, 5]],
+ [[3, 2], [4, 5]]
+ ]);
+ const a1 = pairs[0][0], b1 = pairs[0][1], a2 = pairs[1][0], b2 = pairs[1][1];
+ const total1 = a1 * xVal + b1 * yVal;
+ const total2 = a2 * xVal + b2 * yVal;
+ const text = sentenceForPriceProblem(ctx, a1, b1, total1, a2, b2, total2);
+ const variables = [ctx.x + " = cost of one " + ctx.xThing, ctx.y + " = cost of one " + ctx.yThing];
+ const eq1 = equationText(a1, ctx.x, b1, ctx.y, total1);
+ const eq2 = equationText(a2, ctx.x, b2, ctx.y, total2);
+ const answer = "one " + ctx.xThing + " = $" + xVal + ", one " + ctx.yThing + " = $" + yVal;
+ const working = variables.join("\n") + "\n\n" + eq1 + "\n" + eq2 + "\n\nAnswer: " + answer;
+ return makeQuestion(code, text, variables, [eq1, eq2], answer, working);
+ }
+
+ function makeQuestionByDifficulty(code, difficulty) {
+ if (difficulty === "core") return makeCoreQuestion(code);
+ if (difficulty === "challenge") return makeChallengeQuestion(code);
+ return makeMixedQuestion(code);
+ }
+
+ function generateUniqueQuestion(code, difficulty) {
+ for (let attempt = 0; attempt < 600; attempt++) {
+ const q = makeQuestionByDifficulty(code, difficulty);
+ if (questionHistory.indexOf(q.fingerprint) === -1) {
+ questionHistory.push(q.fingerprint);
+ if (questionHistory.length > 800) questionHistory.splice(0, questionHistory.length - 800);
+ return q;
+ }
+ }
+ const q = makeQuestionByDifficulty(code, difficulty);
+ questionHistory.push(q.fingerprint);
+ return q;
+ }
+
+ function generateQuestions() {
+ const difficulty = difficultySelect.value;
+ const count = Number(countSelect.value);
+ currentQuestions = [];
+ for (let i = 1; i <= count; i++) {
+ currentQuestions.push(generateUniqueQuestion("R" + i, difficulty));
+ }
+ storageSet(currentQuestionsKey, currentQuestions);
+ storageSet(historyKey, questionHistory);
+ storageSet(settingsKey, {difficulty, count});
+ clearGeneratedScratchpads();
+ renderQuestions();
+ setupScratchpads(document.getElementById("renewable"));
+ setupCheckboxes(document.getElementById("renewable"));
+ }
+
+ function renderQuestions() {
+ generatedList.innerHTML = "";
+ generatedAnswers.innerHTML = "";
+
+ currentQuestions.forEach(function (q) {
+ const card = document.createElement("div");
+ card.className = "problem";
+
+ const heading = document.createElement("h4");
+ heading.textContent = "Question " + q.code;
+ card.appendChild(heading);
+
+ const text = document.createElement("p");
+ text.textContent = q.text;
+ card.appendChild(text);
+
+ const checklist = document.createElement("ul");
+ checklist.className = "checklist";
+ ["Define variables", "Write two equations", "Solve", "Answer in a sentence"].forEach(function (item, index) {
+ const li = document.createElement("li");
+ const box = document.createElement("input");
+ box.className = "task-checkbox";
+ box.type = "checkbox";
+ box.setAttribute("data-check-id", "renewable-" + q.fingerprint + "-step-" + index);
+ const label = document.createElement("span");
+ label.textContent = item;
+ li.appendChild(box);
+ li.appendChild(label);
+ checklist.appendChild(li);
+ });
+ card.appendChild(checklist);
+
+ const scratch = document.createElement("textarea");
+ scratch.className = "scratchpad";
+ scratch.setAttribute("autocomplete", "off");
+ scratch.setAttribute("spellcheck", "false");
+ scratch.setAttribute("placeholder", "Text typed here is saved only on this device.");
+ scratch.setAttribute("data-scratch-id", "renewable-" + q.fingerprint);
+ card.appendChild(scratch);
+
+ generatedList.appendChild(card);
+
+ const answer = document.createElement("li");
+ answer.innerHTML = "<strong>" + q.code + ":</strong> " + q.answer + "<div class=\"equation-stack\">" + escapeHtml(q.working) + "</div>";
+ generatedAnswers.appendChild(answer);
+ });
+ }
+
+ function escapeHtml(text) {
+ return String(text)
+ .replace(/&/g, "&amp;")
+ .replace(/</g, "&lt;")
+ .replace(/>/g, "&gt;");
+ }
+
+ function setupScratchpads(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("textarea.scratchpad"));
+ boxes.forEach(function (box, index) {
+ if (!box.getAttribute("data-scratch-id")) {
+ box.setAttribute("data-scratch-id", "scratch-" + String(index + 1));
+ }
+ box.setAttribute("placeholder", "Text typed here is saved only on this device.");
+ if (box.getAttribute("data-scratch-ready") === "true") return;
+ box.setAttribute("data-scratch-ready", "true");
+
+ const key = scratchPrefix + ":" + box.getAttribute("data-scratch-id");
+ if (storageWorks) {
+ const saved = window.localStorage.getItem(key);
+ if (saved !== null) box.value = saved;
+ box.addEventListener("input", function () {
+ try {
+ window.localStorage.setItem(key, box.value);
+ } catch (error) {}
+ });
+ }
+ });
+ }
+
+ function setupCheckboxes(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("input.task-checkbox"));
+ boxes.forEach(function (box, index) {
+ if (!box.getAttribute("data-check-id")) {
+ box.setAttribute("data-check-id", "check-" + String(index + 1));
+ }
+ if (box.getAttribute("data-check-ready") === "true") return;
+ box.setAttribute("data-check-ready", "true");
+
+ const key = checkPrefix + ":" + box.getAttribute("data-check-id");
+ if (storageWorks) {
+ const saved = window.localStorage.getItem(key);
+ if (saved !== null) box.checked = saved === "true";
+ box.addEventListener("change", function () {
+ try {
+ window.localStorage.setItem(key, box.checked ? "true" : "false");
+ } catch (error) {}
+ });
+ }
+ });
+ }
+
+ function clearCheckboxes(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("input.task-checkbox"));
+ boxes.forEach(function (box) {
+ box.checked = false;
+ const id = box.getAttribute("data-check-id");
+ if (id) storageRemove(checkPrefix + ":" + id);
+ });
+ }
+
+
+ function clearScratchpads(root) {
+ const area = root || document;
+ const boxes = Array.from(area.querySelectorAll("textarea.scratchpad"));
+ boxes.forEach(function (box) {
+ box.value = "";
+ const id = box.getAttribute("data-scratch-id");
+ if (id) storageRemove(scratchPrefix + ":" + id);
+ });
+ }
+
+ function clearGeneratedScratchpads() {
+ const renewable = document.getElementById("renewable");
+ clearScratchpads(renewable);
+ clearCheckboxes(renewable);
+ clearStoredKeysWithPrefix(scratchPrefix + ":renewable-");
+ clearStoredKeysWithPrefix(checkPrefix + ":renewable-");
+ }
+
+ function resetAllScratchpads() {
+ clearScratchpads(document);
+ clearCheckboxes(document);
+ clearStoredKeysWithPrefix(scratchPrefix + ":");
+ clearStoredKeysWithPrefix(checkPrefix + ":");
+ }
+
+ function runSecretResetIfNeeded() {
+ if (window.location.hash !== "#resetall") return;
+ clearStoredKeysWithPrefix(storageKeyBase + ":");
+ currentQuestions = [];
+ questionHistory = [];
+ if (history.replaceState) {
+ history.replaceState(null, document.title, window.location.pathname + window.location.search);
+ }
+ }
+
+ function initialiseGeneratedQuestions() {
+ const savedSettings = storageGet(settingsKey, null);
+ if (savedSettings) {
+ if (savedSettings.difficulty) difficultySelect.value = savedSettings.difficulty;
+ if (savedSettings.count) countSelect.value = String(savedSettings.count);
+ }
+
+ questionHistory = storageGet(historyKey, []);
+ currentQuestions = storageGet(currentQuestionsKey, []);
+
+ if (!Array.isArray(currentQuestions) || currentQuestions.length === 0) {
+ generateQuestions();
+ } else {
+ renderQuestions();
+ }
+ }
+
+ storageWorks = canUseLocalStorage();
+ const warning = document.getElementById("storageWarning");
+ if (warning && !storageWorks) warning.style.display = "block";
+
+ runSecretResetIfNeeded();
+ initialiseGeneratedQuestions();
+ setupScratchpads(document);
+ setupCheckboxes(document);
+
+ newButton.addEventListener("click", generateQuestions);
+ difficultySelect.addEventListener("change", generateQuestions);
+ countSelect.addEventListener("change", generateQuestions);
+ clearButton.addEventListener("click", clearGeneratedScratchpads);
+
+ document.querySelectorAll("[data-reset-scratchpads]").forEach(function (button) {
+ button.addEventListener("click", resetAllScratchpads);
+ });
+ })();
+ </script>
+</body>
+</html>

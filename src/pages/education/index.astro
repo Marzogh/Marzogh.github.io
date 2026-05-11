@@ -4,30 +4,15 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
-import { toTagSlug } from '../../utils/tags';
 
-const education = (await getCollection('education', ({ data }) => !data.draft && data.showInIndex !== false)).sort(
+const educationEntries = (await getCollection('education', ({ data }) => !data.draft && data.showInIndex !== false)).sort(
   (a, b) =>
     (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER) ||
     (b.data.pubDate?.valueOf() ?? 0) - (a.data.pubDate?.valueOf() ?? 0)
 );
-const educationSubjects = [...new Set(education.map((item) => item.data.subject).filter(Boolean))];
 
-const featuredEducation = education.filter((item) => item.data.featured);
-const leadItem = featuredEducation[0] ?? education[0] ?? null;
-const shelfItems = education.filter((item) => item.id !== leadItem?.id);
-const supportItems = shelfItems.slice(0, 2);
-const archiveItems = shelfItems.slice(2);
-const availableTagSlugs = new Set(
-  education.flatMap((item) => (Array.isArray(item.data.tags) ? item.data.tags : [])).map((tag) => toTagSlug(tag))
-);
-
-function pickThumb(data: any) {
-  return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? data.image ?? null;
-}
-
-function formatTaxonomyLabel(value?: string | null) {
-  if (!value) return null;
+function formatLabel(value?: string | null) {
+  if (!value) return '';
   return value
     .split('-')
     .filter(Boolean)
@@ -35,11 +20,67 @@ function formatTaxonomyLabel(value?: string | null) {
     .join(' ');
 }
 
-function getTagHref(value?: string | null) {
-  if (!value) return null;
-  const slug = toTagSlug(value);
-  return availableTagSlugs.has(slug) ? `/tags/${slug}` : null;
+function inferUse(type?: string | null) {
+  const v = (type ?? '').toLowerCase();
+  if (v.includes('unit hub') || v.includes('chapter hub') || v.includes('project hub') || v.includes('resource pack')) return 'Plan';
+  if (v.includes('worksheet')) return 'Practice';
+  if (v.includes('lab') || v.includes('interactive')) return 'Run';
+  if (v.includes('setup')) return 'Prepare';
+  if (v.includes('reference')) return 'Reference';
+  return 'Teach';
 }
+
+function inferStatus(title: string) {
+  return title.toLowerCase().includes('draft') ? 'Draft' : 'Ready';
+}
+
+function inferAudience(type?: string | null) {
+  const v = (type ?? '').toLowerCase();
+  if (v.includes('unit hub') || v.includes('resource pack')) return 'Teacher';
+  return 'Student';
+}
+
+const resources = educationEntries.map((entry) => {
+  const type = entry.data.type ? formatLabel(entry.data.type) : 'Lesson';
+  const use = inferUse(type);
+  const status = inferStatus(entry.data.title);
+  const audience = inferAudience(type);
+  return {
+    id: entry.id,
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    subject: formatLabel(entry.data.subject) || 'General',
+    year: formatLabel(entry.data.level) || 'Senior Secondary',
+    type,
+    use,
+    status,
+    audience,
+  };
+});
+
+const subjects = [...new Set(resources.map((r) => r.subject))].sort();
+const years = [...new Set(resources.map((r) => r.year))].sort();
+const types = [...new Set(resources.map((r) => r.type))].sort();
+const uses = [...new Set(resources.map((r) => r.use))].sort();
+const statuses = [...new Set(resources.map((r) => r.status))].sort();
+
+const grouped = subjects.map((subject) => ({
+  subject,
+  rows: resources.filter((r) => r.subject === subject).sort((a, b) => a.title.localeCompare(b.title)),
+}));
+
+const pathwayNodes = [
+  { label: '01 Setup', href: '/education/install-python-with-thonny' },
+  { label: '02 Output', href: '/education/python-basics-hub/chapter-2-printing-and-running-code' },
+  { label: '03 Variables', href: '/education/python-basics-hub/chapter-3-variables' },
+  { label: '04 Input', href: '/education/python-basics-hub/chapter-5-input' },
+  { label: '05 Logic', href: '/education/python-basics-hub/chapter-6-if-statements' },
+  { label: '06 Loops', href: '/education/python-basics-hub/chapter-7-loops' },
+  { label: '07 Lists', href: '/education/python-basics-hub/chapter-8-lists' },
+  { label: '08 Functions', href: '/education/python-basics-hub/chapter-9-functions' },
+  { label: '09 Debugging', href: '/education/python-basics-hub/chapter-10-debugging-and-errors' },
+  { label: '10 Pet Services Project', href: '/education/pet-services-project' },
+];
 ---
 
 <!doctype html>
@@ -57,475 +98,342 @@ function getTagHref(value?: string | null) {
       <IndexHeader
         eyebrow="Education"
         title="Education"
-        lede="Teaching resources, lesson structures, curriculum design, and classroom experiments — written clearly, with just enough personality."
+        lede="Teaching resources, lesson structures, curriculum design, classroom tools, and student-facing activities."
         terminalTitle="education.index"
         statusLines={[
-          { label: 'resources', value: education.length },
-          { label: 'featured_items', value: education.filter((item) => item.data.featured).length },
-          { label: 'subjects', value: educationSubjects.length },
+          { label: 'resources', value: resources.length },
+          { label: 'subjects', value: subjects.length },
+          { label: 'year_levels', value: years.length },
         ]}
       />
 
-      {education.length === 0 ? (
-        <div class="panel panel--soft empty">
-          <p class="empty-title">Education resources coming soon.</p>
-          <p class="empty-sub">
-            Add entries to your <code>education</code> collection and they’ll appear here automatically.
-          </p>
+      <section class="finder" aria-label="Resource finder">
+        <div class="finder__searchWrap panel panel--soft">
+          <label for="finder-search" class="finder__label">Search resources</label>
+          <input id="finder-search" type="search" placeholder="Search title, subject, year, type, use, description" data-filter-search />
+          <div class="finder__quick" role="group" aria-label="Quick filters">
+            <button type="button" data-quick="year:Year 9">Year 9</button>
+            <button type="button" data-quick="year:Year 11">Year 11</button>
+            <button type="button" data-quick="year:Year 12">Year 12</button>
+            <button type="button" data-quick="subject:Biology">Biology</button>
+            <button type="button" data-quick="subject:Digital Technologies">Digital Technologies</button>
+            <button type="button" data-quick="subject:Mathematics">Mathematics</button>
+            <button type="button" data-quick="type:Interactive">Interactives</button>
+            <button type="button" data-quick="type:Worksheet">Worksheets</button>
+          </div>
         </div>
-      ) : (
-        <>
-          {leadItem ? (
-            <section class="edu-featureBand" aria-labelledby="education-featured-heading">
-              <div class="section-head">
-                <div>
-                  <p class="eyebrow eyebrow--accent">Teaching Shelf</p>
-                  <h2 id="education-featured-heading">Featured resource</h2>
-                </div>
-              </div>
+      </section>
 
-              <div class="edu-featureBand__grid">
-                <article class:list={['edu-lead panel', !pickThumb(leadItem.data) && 'edu-lead--textOnly']}>
-                  {pickThumb(leadItem.data) ? (
-                    <a class="edu-lead__media" href={`/education/${leadItem.id}`} aria-label={`Open education resource: ${leadItem.data.title}`}>
-                      <img
-                        src={typeof pickThumb(leadItem.data) === 'string' ? pickThumb(leadItem.data) : pickThumb(leadItem.data).src ?? pickThumb(leadItem.data)}
-                        alt=""
-                        loading="eager"
-                        decoding="async"
-                      />
+      <section class="start-here" aria-labelledby="start-here-heading">
+        <h2 id="start-here-heading">Start here</h2>
+        <div class="start-here__actions" role="group" aria-label="Use case actions">
+          <button type="button" data-action="plan">Plan a lesson</button>
+          <button type="button" data-action="sequence">Teach a sequence</button>
+          <button type="button" data-action="run">Run an activity</button>
+          <button type="button" data-action="reference">Find a reference</button>
+        </div>
+      </section>
+
+      <section class="pathway" aria-labelledby="pathway-heading">
+        <div class="pathway__head">
+          <h2 id="pathway-heading">Featured pathway</h2>
+          <p>Year 9 Python Foundations · Digital Technologies · Year 9 · Unit sequence</p>
+        </div>
+        <ol class="pathway__nodes">
+          {pathwayNodes.map((node) => (
+            <li><a href={node.href}>{node.label}</a></li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="library" aria-labelledby="library-heading">
+        <div class="library__top">
+          <h2 id="library-heading">Resource library</h2>
+          <div class="library__count" data-results-summary>{resources.length} resources</div>
+        </div>
+
+        <div class="library__filters" role="group" aria-label="Library filters">
+          <select data-filter-subject>
+            <option value="">All subjects</option>
+            {subjects.map((value) => <option value={value}>{value}</option>)}
+          </select>
+          <select data-filter-year>
+            <option value="">All year levels</option>
+            {years.map((value) => <option value={value}>{value}</option>)}
+          </select>
+          <select data-filter-type>
+            <option value="">All resource types</option>
+            {types.map((value) => <option value={value}>{value}</option>)}
+          </select>
+          <select data-filter-use>
+            <option value="">All use cases</option>
+            {uses.map((value) => <option value={value}>{value}</option>)}
+          </select>
+          <select data-filter-status>
+            <option value="">All status</option>
+            {statuses.map((value) => <option value={value}>{value}</option>)}
+          </select>
+          <button type="button" data-clear>Clear filters</button>
+        </div>
+
+        <div class="library__groups" data-library>
+          {grouped.map((group) => (
+            <section class="subject-block" data-subject-block={group.subject}>
+              <header class="subject-block__head">
+                <h3>{group.subject}</h3>
+                <p><span data-subject-count={group.subject}>{group.rows.length}</span> resources</p>
+              </header>
+
+              <div class="resource-table">
+                <div class="resource-table__head">
+                  <span>Resource</span>
+                  <span>Year</span>
+                  <span>Type</span>
+                  <span>Use</span>
+                  <span>Status</span>
+                </div>
+
+                <div class="resource-table__rows">
+                  {group.rows.map((row) => (
+                    <a
+                      class="resource-row"
+                      href={`/education/${row.id}`}
+                      data-title={row.title.toLowerCase()}
+                      data-description={row.description.toLowerCase()}
+                      data-subject={row.subject}
+                      data-year={row.year}
+                      data-type={row.type}
+                      data-use={row.use}
+                      data-status={row.status}
+                    >
+                      <span class="resource-row__resource">
+                        <strong>{row.title}</strong>
+                        <small>{row.description}</small>
+                      </span>
+                      <span>{row.year}</span>
+                      <span>{row.type}</span>
+                      <span>{row.use}</span>
+                      <span class:list={[row.status === 'Draft' ? 'status-draft' : 'status-ready']}>{row.status}</span>
                     </a>
-                  ) : null}
-
-                  <div class="edu-lead__copy">
-                    <div class="edu-lead__meta">
-                      <span class="pill">{leadItem.data.featured ? 'Lead resource' : 'Latest resource'}</span>
-                      {leadItem.data.subject ? (
-                        getTagHref(leadItem.data.subject) ? (
-                          <a class="pill pill--soft pill--link" href={getTagHref(leadItem.data.subject)!}>
-                            {formatTaxonomyLabel(leadItem.data.subject)}
-                          </a>
-                        ) : (
-                          <span class="pill pill--soft">{formatTaxonomyLabel(leadItem.data.subject)}</span>
-                        )
-                      ) : null}
-                      {leadItem.data.level ? (
-                        getTagHref(leadItem.data.level) ? (
-                          <a class="pill pill--link" href={getTagHref(leadItem.data.level)!}>
-                            {formatTaxonomyLabel(leadItem.data.level)}
-                          </a>
-                        ) : (
-                          <span class="pill">{formatTaxonomyLabel(leadItem.data.level)}</span>
-                        )
-                      ) : null}
-                    </div>
-
-                    <h3 class="edu-lead__title">
-                      <a href={`/education/${leadItem.id}`}>{leadItem.data.title}</a>
-                    </h3>
-
-                    {leadItem.data.description ? <p class="edu-lead__desc">{leadItem.data.description}</p> : null}
-                  </div>
-                </article>
-
-                {supportItems.length ? (
-                  <div class="edu-supportRail" aria-label="Supporting resources">
-                    {supportItems.map((item) => {
-                      const thumb = pickThumb(item.data);
-                      return (
-                        <article class:list={['edu-support panel panel--soft', !thumb && 'edu-support--textOnly']}>
-                          {thumb ? (
-                            <a class="edu-support__media" href={`/education/${item.id}`} aria-label={`Open education resource: ${item.data.title}`}>
-                              <img
-                                src={typeof thumb === 'string' ? thumb : thumb.src ?? thumb}
-                                alt=""
-                                loading="lazy"
-                                decoding="async"
-                              />
-                            </a>
-                          ) : null}
-
-                          <div class="edu-support__copy">
-                            <div class="edu-support__meta">
-                              {item.data.subject ? (
-                                getTagHref(item.data.subject) ? (
-                                  <a class="pill pill--link" href={getTagHref(item.data.subject)!}>
-                                    {formatTaxonomyLabel(item.data.subject)}
-                                  </a>
-                                ) : (
-                                  <span class="pill">{formatTaxonomyLabel(item.data.subject)}</span>
-                                )
-                              ) : (
-                                <span class="pill">Resource</span>
-                              )}
-                              {item.data.level ? (
-                                getTagHref(item.data.level) ? (
-                                  <a class="pill pill--soft pill--link" href={getTagHref(item.data.level)!}>
-                                    {formatTaxonomyLabel(item.data.level)}
-                                  </a>
-                                ) : (
-                                  <span class="pill pill--soft">{formatTaxonomyLabel(item.data.level)}</span>
-                                )
-                              ) : null}
-                            </div>
-                            <h3 class="edu-support__title">
-                              <a href={`/education/${item.id}`}>{item.data.title}</a>
-                            </h3>
-                            {item.data.description ? <p class="edu-support__desc">{item.data.description}</p> : null}
-                          </div>
-                        </article>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            </section>
-          ) : null}
-
-          {archiveItems.length ? (
-            <section class="edu-archive" aria-labelledby="education-archive-heading">
-              <div class="section-head section-head--archive">
-                <div>
-                  <p class="eyebrow eyebrow--muted">Archive</p>
-                  <h2 id="education-archive-heading">Everything else</h2>
+                  ))}
                 </div>
               </div>
-
-              <div class="edu-archiveGrid">
-                {archiveItems.map((item) => {
-                  const thumb = pickThumb(item.data);
-
-                  return (
-                    <article class:list={['edu-card', !thumb && 'edu-card--textOnly']}>
-                      {thumb ? (
-                        <a class="edu-card__media" href={`/education/${item.id}`} aria-label={`Open education resource: ${item.data.title}`}>
-                          <img
-                            src={typeof thumb === 'string' ? thumb : thumb.src ?? thumb}
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </a>
-                      ) : null}
-
-                      <div class="edu-card__body">
-                        <div class="edu-card__meta">
-                          <span class="pill">Resource</span>
-                          {item.data.subject ? (
-                            getTagHref(item.data.subject) ? (
-                              <a class="pill pill--soft pill--link" href={getTagHref(item.data.subject)!}>
-                                {formatTaxonomyLabel(item.data.subject)}
-                              </a>
-                            ) : (
-                              <span class="pill pill--soft">{formatTaxonomyLabel(item.data.subject)}</span>
-                            )
-                          ) : null}
-                        </div>
-
-                        <h3 class="edu-card__title">
-                          <a href={`/education/${item.id}`}>{item.data.title}</a>
-                        </h3>
-                        {item.data.description ? <p class="edu-card__desc">{item.data.description}</p> : null}
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
             </section>
-          ) : null}
-        </>
-      )}
+          ))}
+        </div>
+
+        <p class="library__empty" data-empty hidden>
+          No resources match those filters. Try clearing the year level or searching by topic instead.
+        </p>
+      </section>
     </main>
 
     <Footer />
+
+    <script is:inline>
+      (() => {
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+        const searchEl = $('[data-filter-search]');
+        const subjectEl = $('[data-filter-subject]');
+        const yearEl = $('[data-filter-year]');
+        const typeEl = $('[data-filter-type]');
+        const useEl = $('[data-filter-use]');
+        const statusEl = $('[data-filter-status]');
+        const clearEl = $('[data-clear]');
+        const quickEls = $$('[data-quick]');
+        const actionEls = $$('[data-action]');
+
+        const rows = $$('.resource-row');
+        const blocks = $$('[data-subject-block]');
+        const summary = $('[data-results-summary]');
+        const empty = $('[data-empty]');
+
+        const state = { q: '', subject: '', year: '', type: '', use: '', status: '' };
+
+        function updateUrl() {
+          const p = new URLSearchParams();
+          Object.entries(state).forEach(([k, v]) => {
+            if (v) p.set(k, v);
+          });
+          const q = p.toString();
+          history.replaceState({}, '', q ? `${location.pathname}?${q}` : location.pathname);
+        }
+
+        function parseUrl() {
+          const p = new URLSearchParams(location.search);
+          state.q = (p.get('q') || '').toLowerCase();
+          state.subject = p.get('subject') || '';
+          state.year = p.get('year') || '';
+          state.type = p.get('type') || '';
+          state.use = p.get('use') || '';
+          state.status = p.get('status') || '';
+
+          if (searchEl) searchEl.value = state.q;
+          if (subjectEl) subjectEl.value = state.subject;
+          if (yearEl) yearEl.value = state.year;
+          if (typeEl) typeEl.value = state.type;
+          if (useEl) useEl.value = state.use;
+          if (statusEl) statusEl.value = state.status;
+        }
+
+        function apply() {
+          let visible = 0;
+
+          rows.forEach((row) => {
+            const hay = `${row.dataset.title} ${row.dataset.description} ${row.dataset.subject} ${row.dataset.year} ${row.dataset.type} ${row.dataset.use} ${row.dataset.status}`;
+            const qOk = !state.q || hay.includes(state.q);
+            const subjectOk = !state.subject || row.dataset.subject === state.subject;
+            const yearOk = !state.year || row.dataset.year === state.year;
+            const typeOk = !state.type || row.dataset.type.toLowerCase().includes(state.type.toLowerCase());
+            const useOk = !state.use || row.dataset.use === state.use;
+            const statusOk = !state.status || row.dataset.status === state.status;
+            const show = qOk && subjectOk && yearOk && typeOk && useOk && statusOk;
+            row.hidden = !show;
+            if (show) visible += 1;
+          });
+
+          blocks.forEach((block) => {
+            const subject = block.dataset.subjectBlock;
+            const subjectRows = rows.filter((row) => row.dataset.subject === subject);
+            const subjectVisible = subjectRows.filter((row) => !row.hidden).length;
+            block.hidden = subjectVisible === 0;
+            const counter = document.querySelector(`[data-subject-count="${subject}"]`);
+            if (counter) counter.textContent = String(subjectVisible);
+          });
+
+          if (summary) summary.textContent = `${visible} resource${visible === 1 ? '' : 's'} match`;
+          if (empty) empty.hidden = visible !== 0;
+          updateUrl();
+        }
+
+        function setState(next) {
+          Object.assign(state, next);
+          if (searchEl) searchEl.value = state.q;
+          if (subjectEl) subjectEl.value = state.subject;
+          if (yearEl) yearEl.value = state.year;
+          if (typeEl) typeEl.value = state.type;
+          if (useEl) useEl.value = state.use;
+          if (statusEl) statusEl.value = state.status;
+          apply();
+        }
+
+        searchEl?.addEventListener('input', () => setState({ q: searchEl.value.trim().toLowerCase() }));
+        subjectEl?.addEventListener('change', () => setState({ subject: subjectEl.value }));
+        yearEl?.addEventListener('change', () => setState({ year: yearEl.value }));
+        typeEl?.addEventListener('change', () => setState({ type: typeEl.value }));
+        useEl?.addEventListener('change', () => setState({ use: useEl.value }));
+        statusEl?.addEventListener('change', () => setState({ status: statusEl.value }));
+        clearEl?.addEventListener('click', () => setState({ q: '', subject: '', year: '', type: '', use: '', status: '' }));
+
+        quickEls.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const val = btn.dataset.quick || '';
+            if (val.startsWith('year:')) return setState({ q: '', subject: '', year: val.replace('year:', ''), type: '', use: '', status: '' });
+            if (val.startsWith('subject:')) return setState({ q: '', subject: val.replace('subject:', ''), year: '', type: '', use: '', status: '' });
+            if (val.startsWith('type:')) return setState({ q: '', subject: '', year: '', type: val.replace('type:', ''), use: '', status: '' });
+          });
+        });
+
+        actionEls.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            if (action === 'plan') return setState({ q: '', type: 'Hub', use: 'Plan', subject: '', year: '', status: '' });
+            if (action === 'sequence') return setState({ q: '', type: 'Hub', use: 'Teach', subject: '', year: '', status: '' });
+            if (action === 'run') return setState({ q: '', type: 'Interactive', use: '', subject: '', year: '', status: '' });
+            if (action === 'reference') return setState({ q: '', type: 'Reference', use: 'Reference', subject: '', year: '', status: '' });
+          });
+        });
+
+        parseUrl();
+        apply();
+      })();
+    </script>
   </body>
 </html>
 
 <style>
-  .education-index {
-    max-width: min(1320px, calc(100% - 2 * var(--space-5)));
-  }
+  .education-index { max-width: min(1320px, calc(100% - 2 * var(--space-5))); }
+  .finder__searchWrap { display: grid; gap: 0.7rem; margin-bottom: var(--space-5); }
+  .finder__label { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+  #finder-search { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 0.8rem 0.92rem; background: var(--surface-raised); color: var(--text); }
 
-  .empty {
-    padding: var(--space-6);
-  }
-
-  .empty-title {
-    margin: 0 0 0.4rem 0;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .empty-sub {
-    margin: 0;
+  .finder__quick, .start-here__actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .finder__quick button, .start-here__actions button, .library__filters button {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.42rem 0.78rem;
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent 8%);
     color: var(--text-2);
-    max-width: 80ch;
+    cursor: pointer;
+  }
+  .finder__quick button:hover, .start-here__actions button:hover, .library__filters button:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 35%, var(--border) 65%); }
+
+  .start-here { margin-bottom: var(--space-6); }
+  .start-here h2 { margin: 0 0 0.7rem; font-size: clamp(1.35rem, 1.8vw, 1.9rem); }
+
+  .pathway { margin-bottom: var(--space-6); padding: var(--space-4) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .pathway__head h2 { margin: 0; }
+  .pathway__head p { margin: 0.3rem 0 0; color: var(--text-2); }
+  .pathway__nodes { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.55rem; }
+  .pathway__nodes li a { display: block; text-decoration: none; border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.62rem; color: var(--text); background: color-mix(in srgb, var(--surface-raised) 95%, transparent 5%); font-size: 0.9rem; }
+  .pathway__nodes li a:hover { border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%); }
+
+  .library__top { display: flex; justify-content: space-between; align-items: end; gap: var(--space-4); margin-bottom: var(--space-3); }
+  .library__top h2 { margin: 0; font-size: clamp(1.35rem, 1.8vw, 1.9rem); }
+  .library__count { color: var(--text-2); }
+
+  .library__filters { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: var(--space-4); }
+  .library__filters select { border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 0.55rem; background: var(--surface-raised); color: var(--text); }
+
+  .subject-block { margin-bottom: var(--space-4); border-top: 1px solid var(--border); }
+  .subject-block__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding: 0.7rem 0; }
+  .subject-block__head h3 { margin: 0; font-size: 1.1rem; }
+  .subject-block__head p { margin: 0; color: var(--text-2); font-size: 0.9rem; }
+
+  .resource-table__head, .resource-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.9fr) minmax(90px, 0.6fr) minmax(150px, 0.9fr) minmax(95px, 0.55fr) minmax(90px, 0.5fr);
+    gap: 0.8rem;
+    align-items: start;
   }
 
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
-  }
-
-  .section-head h2 {
-    margin: 0;
-  }
-
-  .eyebrow--accent,
-  .eyebrow--muted {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
+  .resource-table__head {
+    font-size: 0.76rem;
     text-transform: uppercase;
-  }
-
-  .eyebrow--accent {
-    color: color-mix(in srgb, var(--accent) 54%, var(--text) 46%);
-  }
-
-  .eyebrow--muted {
+    letter-spacing: 0.08em;
     color: var(--muted);
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--border);
   }
 
-  .edu-featureBand {
-    display: grid;
-    gap: var(--space-5);
-    margin-bottom: var(--space-7);
-  }
-
-  .edu-featureBand__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .edu-lead {
-    display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(280px, 0.96fr);
-    gap: var(--space-5);
-    background:
-      radial-gradient(680px 220px at top left, rgba(20, 184, 166, 0.08), transparent 68%),
-      radial-gradient(480px 180px at bottom right, rgba(37, 99, 235, 0.06), transparent 72%),
-      var(--surface-raised);
-  }
-
-  .edu-lead--textOnly {
-    grid-template-columns: 1fr;
-  }
-
-  .edu-lead__media,
-  .edu-support__media,
-  .edu-card__media {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    background: var(--surface);
-  }
-
-  .edu-lead__media {
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .edu-lead__media img,
-  .edu-support__media img,
-  .edu-card__media img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-
-  .edu-lead__copy,
-  .edu-support__copy,
-  .edu-card__body {
-    min-width: 0;
-  }
-
-  .edu-lead__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    justify-content: center;
-  }
-
-  .edu-lead__meta,
-  .edu-support__meta,
-  .edu-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .education-index .pill {
-    background: color-mix(in srgb, var(--surface-raised) 72%, var(--text) 28%);
-    color: var(--text);
-    border: 1px solid color-mix(in srgb, var(--border) 58%, var(--text) 42%);
-  }
-
-  .pill--soft {
-    background: color-mix(in srgb, var(--surface) 86%, var(--accent) 14%);
-    color: var(--text);
-    border-color: color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
-  }
-
-  .pill--link {
-    text-decoration: none;
-    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-  }
-
-  .pill--link:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
-  }
-
-  .edu-lead__title,
-  .edu-lead__desc,
-  .edu-support__title,
-  .edu-support__desc,
-  .edu-card__title,
-  .edu-card__desc {
-    margin: 0;
-  }
-
-  .edu-lead__title {
-    font-size: clamp(2rem, 2.8vw, 3.2rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-
-  .edu-lead__title a,
-  .edu-support__title a,
-  .edu-card__title a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .edu-lead__desc {
-    max-width: 40ch;
-    color: var(--text-2);
-    font-size: clamp(1rem, 1.1vw, 1.15rem);
-  }
-
-  .edu-supportRail {
-    display: grid;
-    gap: var(--space-4);
-    align-content: start;
-  }
-
-  .edu-support {
-    display: grid;
-    grid-template-columns: minmax(160px, 0.78fr) minmax(0, 1.22fr);
-    gap: var(--space-4);
+  .resource-row {
     text-decoration: none;
     color: inherit;
-    align-self: start;
+    padding: 0.72rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 75%, transparent 25%);
   }
+  .resource-row:hover { background: color-mix(in srgb, var(--accent) 8%, transparent 92%); }
+  .resource-row__resource strong { display: block; line-height: 1.25; }
+  .resource-row__resource small { display: block; margin-top: 0.22rem; color: var(--text-2); line-height: 1.33; }
+  .status-ready { color: #7ee787; }
+  .status-draft { color: #ffd580; }
 
-  .edu-support--textOnly {
-    grid-template-columns: 1fr;
-  }
-
-  .edu-support__media {
-    aspect-ratio: 16 / 11;
-    border-radius: 14px;
-  }
-
-  .edu-support__copy {
-    display: grid;
-    gap: var(--space-3);
-    align-content: center;
-  }
-
-  .edu-support--textOnly .edu-support__copy {
-    align-content: start;
-  }
-
-  .edu-support__title,
-  .edu-card__title {
-    font-size: clamp(1.2rem, 1.35vw, 1.55rem);
-    line-height: 1.14;
-    text-wrap: balance;
-  }
-
-  .edu-support__desc,
-  .edu-card__desc {
-    color: var(--text-2);
-  }
-
-  .edu-archive {
-    display: grid;
-    gap: var(--space-5);
-  }
-
-  .edu-archiveGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .edu-card {
-    display: flex;
-    flex-direction: column;
-    align-self: start;
-    text-decoration: none;
-    color: inherit;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--paper);
-    box-shadow: var(--shadow-sm);
-    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-  }
-
-  .edu-card--textOnly {
-    background:
-      radial-gradient(480px 160px at top left, rgba(20, 184, 166, 0.06), transparent 72%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.96));
-  }
-
-  .edu-card:hover,
-  .edu-support:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
-  }
-
-  .edu-card__media {
-    aspect-ratio: 16 / 9;
-  }
-
-  .edu-card__body {
-    padding: var(--space-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
+  .library__empty { color: var(--text-2); margin: 0.9rem 0 0; }
 
   @media (max-width: 980px) {
-    .edu-featureBand__grid,
-    .edu-lead {
-      grid-template-columns: 1fr;
-    }
+    .library__filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pathway__nodes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 780px) {
-    .education-index {
-      max-width: calc(100% - 2 * var(--space-4));
-    }
-
-    .edu-support {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width: 760px) {
+    .education-index { max-width: calc(100% - 2 * var(--space-4)); }
+    .library__top { flex-direction: column; align-items: start; }
+    .library__filters { grid-template-columns: 1fr 1fr; }
+    .resource-table__head { display: none; }
+    .resource-row { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.66rem 0; }
+    .resource-row span:not(.resource-row__resource) { color: var(--text-2); font-size: 0.82rem; }
+    .pathway__nodes { grid-template-columns: 1fr; }
   }
 </style>

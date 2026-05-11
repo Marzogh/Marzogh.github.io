@@ -11,13 +11,12 @@ import { toTagSlug } from '../../utils/tags';
 const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b) => {
   const aSection = getDocSectionMeta(a.data.section);
   const bSection = getDocSectionMeta(b.data.section);
-
-  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  const aIsSiteMeta = aSection.label === 'Site Meta';
+  const bIsSiteMeta = bSection.label === 'Site Meta';
+  if (aIsSiteMeta !== bIsSiteMeta) return aIsSiteMeta ? 1 : -1;
   if (aSection.rank !== bSection.rank) return aSection.rank - bSection.rank;
-
   const orderCompare = (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER);
   if (orderCompare !== 0) return orderCompare;
-
   return a.data.title.localeCompare(b.data.title);
 });
 
@@ -43,54 +42,45 @@ function getDocKind(doc: (typeof docs)[number]) {
   return 'Guide';
 }
 
-function uniqueDocs(items: typeof docs) {
-  const seen = new Set<string>();
-  return items.filter((doc) => {
-    if (seen.has(doc.id)) return false;
-    seen.add(doc.id);
-    return true;
-  });
-}
-
 const docsByFresh = [...docs].sort((a, b) => toDateValue(b) - toDateValue(a));
-const latestDocs = docsByFresh.slice(0, 4);
 const latestDocUpdated = docsByFresh[0] ? toDateValue(docsByFresh[0]) : 0;
-const practicalDocs = uniqueDocs([
+const latestDocs = docsByFresh.slice(0, 3);
+
+const usefulNow = [
   ...docs.filter((doc) => doc.data.featured),
-  ...docs.filter((doc) => ['Reference', 'Setup guide', 'Protocol reference', 'Hardware note'].includes(getDocKind(doc))),
-  ...docsByFresh,
-]).slice(0, 4);
+  ...docs.filter((doc) => ['Reference', 'Setup guide', 'Protocol reference'].includes(getDocKind(doc))),
+].filter((doc, idx, arr) => arr.findIndex((d) => d.id === doc.id) === idx).slice(0, 3);
 
 const quickPaths = [
   {
     label: 'Field references',
     description: 'Bench and field lookups: radios, pinouts, menus, and compact tables.',
-    query: 'kind:reference',
-    docs: docs.filter((doc) => getDocKind(doc) === 'Reference').slice(0, 3),
+    preset: 'kind:reference',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Reference').slice(0, 2),
   },
   {
     label: 'Setup guides',
     description: 'Procedural notes for getting machines, networks, and tools behaving.',
-    query: 'kind:setup',
-    docs: docs.filter((doc) => getDocKind(doc) === 'Setup guide').slice(0, 3),
+    preset: 'kind:setup',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Setup guide').slice(0, 2),
   },
   {
     label: 'Hardware notes',
     description: 'Electronics-facing notes for boards, wiring, storage, and bench work.',
-    query: 'kind:hardware',
-    docs: docs.filter((doc) => getDocKind(doc) === 'Hardware note').slice(0, 3),
+    preset: 'kind:hardware',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Hardware note').slice(0, 2),
   },
   {
     label: 'Protocol references',
     description: 'Wire-level notes, packet formats, and implementation details.',
-    query: 'kind:protocol',
-    docs: docs.filter((doc) => getDocKind(doc) === 'Protocol reference').slice(0, 3),
+    preset: 'kind:protocol',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Protocol reference').slice(0, 2),
   },
   {
     label: 'Site notes',
     description: 'Architecture, design language, and maintenance notes for this site.',
-    query: 'kind:site',
-    docs: docs.filter((doc) => getDocKind(doc) === 'Site meta').slice(0, 3),
+    preset: 'kind:site',
+    docs: docs.filter((doc) => getDocKind(doc) === 'Site meta').slice(0, 2),
   },
 ].filter((path) => path.docs.length > 0);
 
@@ -135,9 +125,7 @@ const docKindCounts = docs.reduce<Map<string, number>>((map, doc) => {
 
 const docKindFilters = [
   { label: 'All', value: 'all', count: docs.length },
-  ...[...docKindCounts.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([label, count]) => ({ label, value: label, count })),
+  ...[...docKindCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([label, count]) => ({ label, value: label, count })),
 ];
 
 const cliEntries = docs.map((doc) => ({
@@ -152,107 +140,22 @@ const cliEntries = docs.map((doc) => ({
 }));
 
 const cliManual = {
-  stat: {
-    name: 'stat',
-    synopsis: 'stat',
-    description: 'Show top-level index stats for this documentation set.',
-    examples: ['stat'],
-    seeAlso: ['help', 'ls', 'man'],
-  },
-  help: {
-    name: 'help',
-    synopsis: 'help [command]',
-    description: 'Display command list or brief command help.',
-    examples: ['help', 'help ls', 'man ls'],
-    seeAlso: ['man', 'ls', 'grep'],
-  },
-  ls: {
-    name: 'ls',
-    synopsis: 'ls [section]',
-    description: 'List sections or list docs in a section.',
-    examples: ['ls', 'ls "Platform Guides"', 'ls reference'],
-    seeAlso: ['cd', 'pwd', 'grep'],
-  },
-  cd: {
-    name: 'cd',
-    synopsis: 'cd <section> | cd /',
-    description: 'Change the virtual section context.',
-    examples: ['cd "Site Meta"', 'cd /', 'pwd'],
-    seeAlso: ['pwd', 'ls'],
-  },
-  pwd: {
-    name: 'pwd',
-    synopsis: 'pwd',
-    description: 'Print the current virtual docs path.',
-    examples: ['pwd'],
-    seeAlso: ['cd', 'ls'],
-  },
-  cat: {
-    name: 'cat',
-    synopsis: 'cat <doc-id|title>',
-    description: 'Show summary details for a doc entry.',
-    examples: ['cat eduroam-on-the-rpi', 'cat "ASCII DIP Pinout Cheatsheet"'],
-    seeAlso: ['open', 'man', 'grep'],
-  },
-  open: {
-    name: 'open',
-    synopsis: 'open <doc-id|title>',
-    description: 'Open a document page.',
-    examples: ['open site-architecture-and-design-language'],
-    seeAlso: ['cat', 'man'],
-  },
-  grep: {
-    name: 'grep',
-    synopsis: 'grep <query>',
-    description: 'Search title, description, section, and tags.',
-    examples: ['grep terminal', 'grep setup', 'grep arduino'],
-    seeAlso: ['find', 'tag', 'ls'],
-  },
-  find: {
-    name: 'find',
-    synopsis: 'find <query>',
-    description: 'Alias for grep.',
-    examples: ['find tutorial'],
-    seeAlso: ['grep', 'tag'],
-  },
-  tag: {
-    name: 'tag',
-    synopsis: 'tag <name>',
-    description: 'List docs by tag match.',
-    examples: ['tag tutorial', 'tag website'],
-    seeAlso: ['grep', 'ls'],
-  },
-  man: {
-    name: 'man',
-    synopsis: 'man [command|topic]',
-    description: 'Open manual pages for commands or docs topics.',
-    examples: ['man', 'man ls', 'man setup'],
-    seeAlso: ['help', 'cat', 'open'],
-  },
-  history: {
-    name: 'history',
-    synopsis: 'history',
-    description: 'Print shell command history.',
-    examples: ['history'],
-    seeAlso: ['clear'],
-  },
-  clear: {
-    name: 'clear',
-    synopsis: 'clear',
-    description: 'Clear terminal output.',
-    examples: ['clear'],
-    seeAlso: ['history'],
-  },
+  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level index stats.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
+  help: { name: 'help', synopsis: 'help [command]', description: 'Display command list or help.', examples: ['help', 'help ls'], seeAlso: ['man', 'ls', 'grep'] },
+  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List sections or docs in a section.', examples: ['ls', 'ls "Reference"'], seeAlso: ['cd', 'pwd', 'grep'] },
+  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd "Site Meta"', 'cd /'], seeAlso: ['pwd', 'ls'] },
+  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search title, description, section, and tags.', examples: ['grep terminal'], seeAlso: ['find', 'tag', 'ls'] },
+  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find setup'], seeAlso: ['grep', 'tag'] },
+  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List docs by tag match.', examples: ['tag tutorial'], seeAlso: ['grep', 'ls'] },
+  open: { name: 'open', synopsis: 'open <doc-id|title>', description: 'Open a document page.', examples: ['open eduroam-on-the-rpi'], seeAlso: ['cat', 'man'] },
+  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open manual pages.', examples: ['man', 'man ls'], seeAlso: ['help', 'cat', 'open'] },
 };
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead
-      title="Documentation — Chips’nCode"
-      description="Structured guides, technical documentation, and deep dives."
-    />
+    <BaseHead title="Documentation — Chips’nCode" description="Structured guides, reference notes, and practical technical manuals." />
   </head>
   <body>
     <Header />
@@ -260,108 +163,51 @@ const cliManual = {
       {docs.length === 0 ? (
         <div class="panel panel--soft empty">
           <p class="empty-title">Documentation coming soon.</p>
-          <p class="empty-sub">
-            Publish docs entries with a <code>section</code> and optional <code>order</code> field to keep this page structured as the collection grows.
-          </p>
+          <p class="empty-sub">Publish docs entries with a <code>section</code> field to keep this page structured.</p>
         </div>
       ) : (
         <>
-          <section class="docs-top">
-            <div class="docs-top__main">
-              <IndexHeader
-                eyebrow="Documentation"
-                title="Documentation"
-                lede="Structured guides, reference notes, and practical technical manuals."
-                terminalTitle="docs.shell"
-              />
+          <IndexHeader eyebrow="Documentation" title="Documentation" lede="Structured guides, reference notes, and practical technical manuals." terminalTitle="docs.index" />
 
-              <section class="docs-search-panel panel panel--soft" aria-labelledby="docs-search-heading">
-                <div>
-                  <h2 id="docs-search-heading">Find a document</h2>
-                  <p>{docs.length} published notes across {sectionBuckets.length} sections.</p>
-                </div>
-                <label class="docs-search">
-                  <span>Search docs</span>
-                  <input type="search" data-docs-search placeholder="FT-857D, eduroam, pinout, protocol..." autocomplete="off" />
-                </label>
-              </section>
-
-              <section class="quick-paths" aria-labelledby="quick-paths-heading">
-                <div class="section-heading">
-                  <h2 id="quick-paths-heading">Quick paths</h2>
-                  <p>Start from the kind of thing you are trying to find.</p>
-                </div>
-                <div class="quick-path-grid">
-                  {quickPaths.map((path) => (
-                    <article class="quick-path panel panel--soft">
-                      <div class="quick-path__head">
-                        <div>
-                          <h3>{path.label}</h3>
-                          <p>{path.description}</p>
-                        </div>
-                        <a href="#directory" data-docs-preset={path.query}>Show</a>
-                      </div>
-                      <ul>
-                        {path.docs.map((doc) => (
-                          <li>
-                            <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              <div class="quick-panels">
-                <section class="quick-panel panel panel--soft" aria-labelledby="practical-docs-heading">
-                  <div class="quick-panel__head">
-                    <h2 id="practical-docs-heading">Useful now</h2>
-                  </div>
-                  <ul>
-                    {practicalDocs.map((doc) => (
-                      <li>
-                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-
-                <section class="quick-panel panel panel--soft" aria-labelledby="latest-docs-heading">
-                  <div class="quick-panel__head">
-                    <h2 id="latest-docs-heading">Recently updated</h2>
-                  </div>
-                  <ul>
-                    {latestDocs.map((doc) => (
-                      <li>
-                        <a href={`/docs/${doc.id}`}>{doc.data.title}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-
-                <section class="quick-panel panel panel--soft" aria-labelledby="popular-tags-heading">
-                  <div class="quick-panel__head">
-                    <h2 id="popular-tags-heading">Popular tags</h2>
-                  </div>
-                  <div class="quick-tags">
-                    {popularTags.map((tag) => (
-                      <a class="quick-tag" href={`/tags/${tag.slug}`}>#{tag.label} <span>{tag.count}</span></a>
-                    ))}
-                  </div>
-                </section>
-              </div>
+          <section class="docs-search-row panel panel--soft" aria-labelledby="docs-search-heading">
+            <div class="docs-search-row__head">
+              <h2 id="docs-search-heading">Find a document</h2>
+              <p>{docs.length} published notes across {sectionBuckets.length} sections.</p>
             </div>
-
+            <label class="docs-search-field">
+              <span>Search docs</span>
+              <input type="search" data-docs-search placeholder="Search FT-857D, eduroam, pinout, protocol..." autocomplete="off" />
+            </label>
+            <div class="docs-inline-meta">
+              <span><strong>Recommended reads:</strong> {usefulNow.map((doc, i) => <><a href={`/docs/${doc.id}`}>{doc.data.title}</a>{i < usefulNow.length - 1 ? ' · ' : ''}</>)}</span>
+              <span><strong>Recently updated:</strong> {latestDocs.map((doc, i) => <><a href={`/docs/${doc.id}`}>{doc.data.title}</a>{i < latestDocs.length - 1 ? ' · ' : ''}</>)}</span>
+              <span><strong>Popular tags:</strong> {popularTags.slice(0, 5).map((tag, i) => <><a href={`/tags/${tag.slug}`}>#{tag.label}</a>{i < Math.min(popularTags.length, 5) - 1 ? ' · ' : ''}</>)}</span>
+            </div>
           </section>
 
-          <section class="docs-directory" aria-labelledby="directory-heading">
+          <section class="quick-paths" aria-labelledby="quick-paths-heading">
+            <div class="section-heading">
+              <h2 id="quick-paths-heading">Quick paths</h2>
+              <p>Start from the kind of thing you need.</p>
+            </div>
+            <div class="quick-path-grid">
+              {quickPaths.map((path) => (
+                <button type="button" class="quick-path" data-docs-preset={path.preset} data-path-tone={path.preset}>
+                  <h3>{path.label}</h3>
+                  <p>{path.description}</p>
+                  <small>{path.docs.map((doc) => doc.data.title).join(' · ')}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section class="docs-directory" id="directory" aria-labelledby="directory-heading">
             <div class="docs-directory__head">
               <h2 id="directory-heading">Browse the library</h2>
-              <p>Browse by section, then drill into each document.</p>
+              <p>Filter quickly, then scan compact rows.</p>
             </div>
 
-            <div class="docs-filterbar" id="directory" aria-label="Filter documentation directory">
+            <div class="docs-filterbar" aria-label="Filter documentation directory">
               {docKindFilters.map((filter, index) => (
                 <button class:list={[index === 0 && 'is-active']} type="button" data-doc-kind-filter={filter.value}>
                   {filter.label} <span>{filter.count}</span>
@@ -373,41 +219,37 @@ const cliManual = {
 
             <div class="docs-sections">
               {sectionBuckets.map((group) => (
-                <section class="doc-section panel panel--soft" aria-label={group.section} data-doc-section>
+                <section class="doc-section" aria-label={group.section} data-doc-section>
                   <header class="doc-section__head">
                     <div>
                       <h3>{group.section}</h3>
                       <p>{group.description}</p>
                     </div>
-                    <span class="pill">{group.items.length} item{group.items.length === 1 ? '' : 's'}</span>
+                    <span>{group.items.length} docs</span>
                   </header>
 
-                  <ul class="doc-rows">
+                  <div class="doc-rows">
                     {group.items.map((doc) => (
-                      <li
+                      <a
                         class="doc-row"
+                        href={`/docs/${doc.id}`}
                         data-doc-row
                         data-doc-kind={getDocKind(doc)}
                         data-doc-terms={`${doc.data.title} ${doc.data.description} ${getDocSectionMeta(doc.data.section).label} ${getDocKind(doc)} ${(doc.data.tags ?? []).join(' ')}`.toLowerCase()}
                       >
-                        <div class="doc-row__main">
-                          <a class="doc-row__title" href={`/docs/${doc.id}`}>{doc.data.title}</a>
-                          <p class="doc-row__desc">{doc.data.description}</p>
-                        </div>
-                        <div class="doc-row__meta">
-                          <span class="pill">{getDocKind(doc)}</span>
-                          {doc.data.tags?.slice(0, 2).map((tag) => (
-                            <a class="pill pill--link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                          ))}
-                        </div>
-                      </li>
+                        <span class="doc-row__title">{doc.data.title}</span>
+                        <span class:list={['doc-row__kind', `doc-row__kind--${getDocKind(doc).toLowerCase().replace(/\s+/g, '-')}`]}>{getDocKind(doc)}</span>
+                        <span class="doc-row__tags">{(doc.data.tags ?? []).slice(0, 2).map((t) => `#${t}`).join(' · ')}</span>
+                      </a>
                     ))}
-                  </ul>
+                  </div>
                 </section>
               ))}
             </div>
 
-            <p class="docs-empty-results" data-docs-empty-results hidden>No matching documents.</p>
+            <p class="docs-empty-results" data-docs-empty-results hidden>
+              No resources match those filters. Try clearing the filter or search by broader topic.
+            </p>
           </section>
         </>
       )}
@@ -417,14 +259,7 @@ const cliManual = {
 
     <div class="edge-drawer-instance">
       <input id="docs-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
-      <label
-        for="docs-query-toggle"
-        class="edge-drawer-tab"
-        data-drawer-name="Docs Query"
-        aria-label="Open docs query drawer"
-      >
-        Docs Query
-      </label>
+      <label for="docs-query-toggle" class="edge-drawer-tab" data-drawer-name="Docs Query" aria-label="Open docs query drawer">Docs Query</label>
 
       <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="docs-query-toggle">
         <label for="docs-query-toggle" class="edge-drawer-backdrop" aria-label="Close docs query drawer"></label>
@@ -460,6 +295,7 @@ const cliManual = {
     const presets = Array.from(document.querySelectorAll('[data-docs-preset]'));
     const count = document.querySelector('[data-docs-result-count]');
     const empty = document.querySelector('[data-docs-empty-results]');
+    const drawerToggle = document.getElementById('docs-query-toggle');
     let activeKind = 'all';
 
     if (!rows.length) return;
@@ -474,9 +310,7 @@ const cliManual = {
 
     const setActiveFilter = (kind) => {
       activeKind = kind;
-      filters.forEach((filter) => {
-        filter.classList.toggle('is-active', filter.getAttribute('data-doc-kind-filter') === kind);
-      });
+      filters.forEach((filter) => filter.classList.toggle('is-active', filter.getAttribute('data-doc-kind-filter') === kind));
     };
 
     const update = () => {
@@ -511,12 +345,25 @@ const cliManual = {
 
     search?.addEventListener('input', update);
 
+    const jumpToResults = () => {
+      const libraryHeading = document.getElementById('directory-heading');
+      libraryHeading?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      const firstVisibleSection = sections.find((section) => !section.hidden);
+      if (firstVisibleSection) {
+        setTimeout(() => {
+          firstVisibleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      }
+    };
+
     presets.forEach((preset) => {
       preset.addEventListener('click', () => {
         const target = aliases[preset.getAttribute('data-docs-preset') || ''] || 'all';
         setActiveFilter(target);
         if (search) search.value = '';
         update();
+        jumpToResults();
       });
     });
 
@@ -525,496 +372,127 @@ const cliManual = {
 </script>
 
 <style>
-  .docs-index {
-    max-width: min(1260px, calc(100% - 2 * var(--space-5)));
-    display: grid;
-    gap: var(--space-6);
-  }
+  .docs-index { max-width: min(1180px, calc(100% - 2 * var(--space-5))); display: grid; gap: var(--space-5); }
+  .empty { padding: var(--space-6); }
+  .empty-title { margin: 0 0 0.4rem; font-weight: 700; color: var(--text); }
+  .empty-sub { margin: 0; color: var(--text-2); max-width: 80ch; }
 
-  .empty {
-    padding: var(--space-6);
-  }
-
-  .empty-title {
-    margin: 0 0 0.4rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .empty-sub {
-    margin: 0;
-    color: var(--text-2);
-    max-width: 80ch;
-  }
-
-  .docs-top {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .docs-top__main {
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  .docs-top__main :global(.index-hero) {
-    margin-bottom: 0;
-  }
-
-  .docs-search-panel {
-    display: grid;
-    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
-    gap: 1rem;
-    align-items: end;
-    padding: 1rem;
-  }
-
-  .docs-search-panel h2,
-  .docs-search-panel p {
-    margin: 0;
-  }
-
-  .docs-search-panel h2 {
-    font-size: 1rem;
-  }
-
-  .docs-search-panel p {
-    margin-top: 0.28rem;
-    color: var(--text-2);
-    font-size: 0.9rem;
-  }
-
-  .docs-search {
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .docs-search span {
-    color: var(--muted);
+  .docs-search-row { display: grid; gap: 0.9rem; padding: 1rem 1.1rem; }
+  .docs-search-row__head h2, .docs-search-row__head p { margin: 0; }
+  .docs-search-row__head p { color: var(--text-2); font-size: 0.92rem; margin-top: 0.28rem; }
+  .docs-search-field { display: grid; gap: 0.34rem; }
+  .docs-search-field span {
     font-size: 0.76rem;
     font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .docs-search input {
-    width: 100%;
-    min-height: 48px;
-    padding: 0.72rem 0.82rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface-raised);
-    color: var(--text);
-    font: inherit;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .docs-search input:focus {
-    outline: 2px solid color-mix(in srgb, var(--accent) 34%, transparent 66%);
-    outline-offset: 2px;
-    border-color: color-mix(in srgb, var(--accent) 44%, var(--border) 56%);
-  }
-
-  .section-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .section-heading h2,
-  .section-heading p {
-    margin: 0;
-  }
-
-  .section-heading h2 {
-    font-size: 1.05rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .section-heading p {
-    color: var(--text-2);
-    font-size: 0.9rem;
-  }
-
-  .quick-paths {
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .quick-path-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem;
-  }
-
-  .quick-path {
-    display: grid;
-    gap: 0.75rem;
-    padding: 0.95rem;
-  }
-
-  .quick-path__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    gap: 0.8rem;
-  }
-
-  .quick-path h3,
-  .quick-path p,
-  .quick-path ul,
-  .quick-path li {
-    margin: 0;
-  }
-
-  .quick-path h3 {
-    font-size: 1rem;
-    line-height: 1.2;
-  }
-
-  .quick-path p {
-    margin-top: 0.28rem;
-    color: var(--text-2);
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-
-  .quick-path__head a {
-    flex: 0 0 auto;
-    min-height: 32px;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.3rem 0.62rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text);
-    background: var(--surface-glass);
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-decoration: none;
-  }
-
-  .quick-path__head a:hover {
-    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    color: var(--accent);
-  }
-
-  .quick-path ul {
-    list-style: none;
-    display: grid;
-    gap: 0.42rem;
-    padding: 0;
-  }
-
-  .quick-path li a {
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.92rem;
-    line-height: 1.35;
-  }
-
-  .quick-path li a:hover {
-    color: var(--accent);
-  }
-
-  .quick-panels {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.8rem;
-  }
-
-  .quick-panel {
-    padding: 0.9rem;
-    display: grid;
-    gap: 0.7rem;
-  }
-
-  .quick-panel__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-
-  .quick-panel__head h2,
-  .quick-panel__head a,
-  .quick-panel ul,
-  .quick-panel li {
-    margin: 0;
-  }
-
-  .quick-panel__head h2 {
-    font-size: 0.86rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  .quick-panel__head a {
-    font-size: 0.78rem;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .quick-panel ul {
-    list-style: none;
-    display: grid;
-    gap: 0.45rem;
-    padding: 0;
-  }
-
-  .quick-panel li a {
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.92rem;
-    line-height: 1.35;
-  }
-
-  .quick-panel li a:hover {
-    color: var(--accent);
-  }
-
-  .quick-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .quick-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.32rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.2rem 0.52rem;
-    text-decoration: none;
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    background: var(--surface-glass);
-  }
-
-  .quick-tag span {
-    color: var(--text-2);
-    font-weight: 700;
-  }
-
-  .docs-directory {
-    display: grid;
-    gap: 0.9rem;
-  }
-
-  .docs-directory__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .docs-directory__head h2,
-  .docs-directory__head p {
-    margin: 0;
-  }
-
-  .docs-directory__head h2 {
-    font-size: 1.2rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .docs-directory__head p {
-    color: var(--text-2);
-    font-size: 0.92rem;
-  }
-
-  .docs-filterbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .docs-filterbar button {
-    min-height: 36px;
-    padding: 0.42rem 0.66rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-raised);
-    color: var(--text-2);
-    cursor: pointer;
-    font: inherit;
-    font-size: 0.86rem;
-    font-weight: 800;
-  }
-
-  .docs-filterbar button:hover,
-  .docs-filterbar button.is-active {
-    border-color: color-mix(in srgb, var(--accent) 44%, var(--border) 56%);
-    background: color-mix(in srgb, var(--surface-raised) 80%, var(--accent) 20%);
-    color: var(--text);
-  }
-
-  .docs-filterbar span {
     color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.78em;
+  }
+  .docs-search-field input {
+    min-height: 52px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border) 72%);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface-raised) 96%, white 4%);
+    color: var(--text);
+    padding: 0.72rem 0.86rem;
+    font-size: 1.02rem;
+  }
+  .docs-search-field input:focus {
+    outline: 2px solid color-mix(in srgb, var(--accent) 34%, transparent 66%);
+    outline-offset: 2px;
   }
 
-  .docs-result-count,
-  .docs-empty-results {
-    margin: -0.35rem 0 0;
-    color: var(--text-2);
-    font-size: 0.9rem;
-  }
+  .docs-inline-meta { display: grid; gap: 0.24rem; font-size: 0.88rem; color: var(--text-2); }
+  .docs-inline-meta a { color: var(--link); text-decoration: none; }
 
-  .docs-sections {
-    display: grid;
-    gap: 0.9rem;
-  }
+  .section-heading { display: grid; gap: 0.2rem; margin-bottom: 0.15rem; }
+  .section-heading h2, .section-heading p { margin: 0; }
+  .section-heading h2 { font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .section-heading p { color: var(--text-2); font-size: 0.9rem; }
 
-  .doc-section {
-    padding: 0.95rem;
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .doc-section__head {
+  .quick-path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.58rem; align-items: stretch; }
+  .quick-path {
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--path-accent, var(--accent)) 12%, var(--surface-raised) 88%), var(--surface-raised));
+    color: var(--text);
+    padding: 0.75rem 0.9rem;
     display: flex;
-    justify-content: space-between;
-    align-items: start;
-    gap: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    cursor: pointer;
+    min-height: 0;
+    width: 100%;
   }
-
-  .doc-section__head h3,
-  .doc-section__head p {
-    margin: 0;
+  .quick-path h3, .quick-path p, .quick-path small { margin: 0; }
+  .quick-path > * { width: 100%; }
+  .quick-path h3 { font-size: 1rem; line-height: 1.2; font-weight: 780; text-align: left; color: color-mix(in srgb, var(--path-accent, var(--accent)) 62%, var(--text) 38%); }
+  .quick-path p { color: var(--text-2); font-size: 0.88rem; line-height: 1.32; text-align: left; }
+  .quick-path small { color: var(--muted); font-size: 0.8rem; line-height: 1.24; text-align: left; }
+  .quick-path:hover {
+    border-color: color-mix(in srgb, var(--path-accent, var(--accent)) 38%, var(--border) 62%);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--path-accent, var(--accent)) 22%, var(--surface-raised) 78%), var(--surface-raised));
   }
+  .quick-path:hover h3 { color: var(--path-accent, var(--accent)); }
+  .quick-path[data-path-tone="kind:reference"] { --path-accent: #14b8a6; }
+  .quick-path[data-path-tone="kind:setup"] { --path-accent: #3b82f6; }
+  .quick-path[data-path-tone="kind:hardware"] { --path-accent: #f97316; }
+  .quick-path[data-path-tone="kind:protocol"] { --path-accent: #a855f7; }
+  .quick-path[data-path-tone="kind:site"] { --path-accent: #22c55e; }
+  .quick-path-grid .quick-path:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
-  .doc-section__head h3 {
-    font-size: 1.1rem;
-    line-height: 1.2;
-  }
+  .docs-directory { display: grid; gap: 0.8rem; }
+  .docs-directory__head h2, .docs-directory__head p { margin: 0; }
+  .docs-directory__head p { color: var(--text-2); margin-top: 0.25rem; }
 
-  .doc-section__head p {
-    margin-top: 0.25rem;
-    color: var(--text-2);
-    font-size: 0.9rem;
-  }
+  .docs-filterbar { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .docs-filterbar button { border: 1px solid var(--border); border-radius: 999px; background: var(--surface-raised); color: var(--text-2); padding: 0.34rem 0.72rem; cursor: pointer; }
+  .docs-filterbar button.is-active, .docs-filterbar button:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 38%, var(--border) 62%); }
 
-  .doc-rows {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--border);
-  }
+  .docs-result-count { margin: 0; color: var(--text-2); font-size: 0.9rem; }
 
+  .doc-section { border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.35rem; }
+  .doc-section__head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .doc-section__head h3, .doc-section__head p { margin: 0; }
+  .doc-section__head p { color: var(--text-2); font-size: 0.9rem; margin-top: 0.22rem; }
+  .doc-section__head > span { color: var(--muted); font-size: 0.85rem; }
+
+  .doc-rows { margin-top: 0.5rem; }
   .doc-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.7rem;
-    align-items: start;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .doc-row:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .doc-row[hidden],
-  .doc-section[hidden],
-  .docs-empty-results[hidden] {
-    display: none;
-  }
-
-  .doc-row__main,
-  .doc-row__meta {
-    min-width: 0;
-  }
-
-  .doc-row__title,
-  .doc-row__desc {
-    margin: 0;
-  }
-
-  .doc-row__title {
-    color: var(--text);
+    grid-template-columns: minmax(0, 1.4fr) minmax(120px, 0.6fr) minmax(0, 1fr);
+    gap: 0.8rem;
     text-decoration: none;
-    font-weight: 650;
-    line-height: 1.25;
+    color: inherit;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent 30%);
   }
+  .doc-row:hover { background: color-mix(in srgb, var(--accent) 10%, transparent 90%); }
+  .doc-row__title { font-weight: 700; line-height: 1.24; }
+  .doc-row__kind { color: color-mix(in srgb, var(--accent) 44%, var(--text-2) 56%); font-size: 0.9rem; }
+  .doc-row__kind--reference { color: #0f766e; }
+  .doc-row__kind--setup-guide { color: #2563eb; }
+  .doc-row__kind--hardware-note { color: #c2410c; }
+  .doc-row__kind--protocol-reference { color: #7e22ce; }
+  .doc-row__kind--site-meta { color: #15803d; }
+  .doc-row__tags { color: var(--muted); font-size: 0.88rem; }
 
-  .doc-row__title:hover {
-    color: var(--accent);
-  }
+  .docs-empty-results { margin: 0.5rem 0 0; color: var(--text-2); }
 
-  .doc-row__desc {
-    margin-top: 0.22rem;
-    color: var(--text-2);
-    font-size: 0.9rem;
-    line-height: 1.45;
-    max-width: 72ch;
-  }
+  .edge-drawer-tab { opacity: 0.78; }
+  .edge-drawer-tab:hover { opacity: 1; }
 
-  .doc-row__meta {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.45rem;
-  }
-
-  .pill--link {
-    text-decoration: none;
-    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-  }
-
-  .pill--link:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
-  }
-
-  @media (max-width: 1080px) {
-    .docs-top {
-      grid-template-columns: 1fr;
-    }
-
-    .docs-search-panel,
-    .quick-path-grid,
-    .quick-panels {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 820px) {
-    .docs-index {
-      max-width: calc(100% - 2 * var(--space-4));
-    }
-
-    .docs-search-panel,
-    .quick-path,
-    .quick-panel,
-    .doc-section {
-      padding: 0.85rem;
-    }
-
-    .section-heading,
-    .docs-directory__head,
-    .quick-path__head {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
-    .doc-row {
-      grid-template-columns: 1fr;
-      gap: 0.45rem;
-    }
-
-    .doc-row__meta {
-      justify-content: flex-start;
-    }
+  @media (max-width: 860px) {
+    .docs-index { max-width: calc(100% - 2 * var(--space-4)); }
+    .quick-path-grid { grid-template-columns: 1fr; }
+    .quick-path-grid .quick-path:last-child:nth-child(odd) { grid-column: auto; }
+    .quick-path { min-height: 0; }
+    .doc-row { grid-template-columns: 1fr; gap: 0.24rem; }
+    .doc-row__kind, .doc-row__tags { font-size: 0.84rem; }
   }
 </style>
