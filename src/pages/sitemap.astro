@@ -1,0 +1,158 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { getCollection } from 'astro:content';
+import { poetry } from '../data/poetry';
+
+const blog = await getCollection('blog', ({ data }) => !data.draft);
+const docs = await getCollection('docs', ({ data }) => !data.draft);
+const projects = await getCollection('projects', ({ data }) => !data.draft);
+const tools = await getCollection('tools', ({ data }) => !data.draft);
+const education = await getCollection('education', ({ data }) => !data.draft);
+const astrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
+
+const byTitle = (a, b) => a.data.title.localeCompare(b.data.title);
+
+const staticLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about/', label: 'About' },
+  { href: '/notebook/', label: 'Notebook' },
+  { href: '/blog/', label: 'Blog Index' },
+  { href: '/projects/', label: 'Projects Index' },
+  { href: '/tools/', label: 'Tools Index' },
+  { href: '/docs/', label: 'Docs Index' },
+  { href: '/education/', label: 'Education Index' },
+  { href: '/astrophotography/', label: 'Astrophotography Index' },
+  { href: '/poetry/', label: 'Poetry Index' },
+  { href: '/poetry/curators-note/', label: 'Poetry Curator Note' },
+  { href: '/rss.xml', label: 'RSS Feed (XML)' },
+  { href: '/sitemap-index.xml', label: 'Search Sitemap (XML)' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Sitemap — ChipsnCode"
+      description="Human-friendly site map for navigating ChipsnCode content."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main class="sitemap-page">
+      <h1>Sitemap</h1>
+      <p class="lede">A human-friendly navigation page. The XML sitemap for search engines is <a href="/sitemap-index.xml">here</a>.</p>
+
+      <section>
+        <h2>Core Pages</h2>
+        <ul>
+          {staticLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Notebook Posts</h2>
+        <ul>
+          {blog.sort(byTitle).map((entry) => (
+            <li><a href={`/notebook/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Projects</h2>
+        <ul>
+          {projects.sort(byTitle).map((entry) => (
+            <li><a href={`/projects/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Tools</h2>
+        <ul>
+          {tools.sort(byTitle).map((entry) => (
+            <li><a href={`/tools/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Docs</h2>
+        <ul>
+          {docs.sort(byTitle).map((entry) => (
+            <li><a href={`/docs/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        <ul>
+          {education.sort(byTitle).map((entry) => (
+            <li><a href={`/education/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Astrophotography</h2>
+        <ul>
+          {astrophotography.sort(byTitle).map((entry) => (
+            <li><a href={`/astrophotography/${entry.slug}/`}>{entry.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Poetry</h2>
+        <ul>
+          {poetry.map((entry) => (
+            <li><a href={`/poetry/${entry.slug}/`}>{entry.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .sitemap-page {
+    width: min(1000px, calc(100vw - 2rem));
+    margin: 2rem auto;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .sitemap-page h1,
+  .sitemap-page h2,
+  .sitemap-page p {
+    margin: 0;
+  }
+
+  .sitemap-page section {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+
+  .sitemap-page ul {
+    margin: 0.75rem 0 0;
+  }
+
+  .sitemap-page li + li {
+    margin-top: 0.2rem;
+  }
+
+  .lede {
+    color: var(--muted);
+  }
+</style>
