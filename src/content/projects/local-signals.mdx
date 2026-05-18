@@ -1,0 +1,111 @@
+---
+title: "Local Signals"
+description: "A live-ish backyard dashboard for weather and bird activity, sourced directly from Raspberry Pi public data feeds."
+pubDate: 2026-05-18
+draft: false
+featured: false
+type: Monitoring
+tags: [live-data, weather, birds, raspberry-pi, dashboard]
+demo: /live
+demoLabel: Open Live Dashboard
+---
+
+# Local Signals: Weather, Birds, and Raspberry Pi Field Notes
+
+This project is a small live-ish data pipeline that connects my local backyard instruments to this website.
+
+It brings together two separate Raspberry Pi systems: one running WeeWX for weather station data, and another running BirdNET-PiPy for local bird detection. Both systems run privately on my home network, process their own data locally, and periodically publish carefully filtered JSON summaries to a small VPS. This website then fetches those summaries in the browser and displays them without needing the whole site to rebuild.
+
+The idea is simple: collect local environmental data, keep the private systems private, and share the interesting bits publicly.
+
+## Weather pipeline
+
+The weather side is handled by WeeWX, which records data from my local weather station.
+
+It tracks values such as temperature, humidity, pressure, wind speed, wind gusts, wind direction, rainfall, rain rate, and other available sensor readings. WeeWX stores its archive data locally in a SQLite database on the Raspberry Pi.
+
+A custom exporter script reads the most recent archive record, converts the raw WeeWX values into friendly metric units, calculates daily rainfall, and writes a compact `weather.json` file. That file is then uploaded to the VPS on a schedule.
+
+## Bird pipeline
+
+The bird side is handled by BirdNET-PiPy, which listens for bird calls using a local microphone and identifies likely species using BirdNET-based acoustic analysis.
+
+Its detections are also stored locally in a SQLite database. A custom exporter script reads the detection database and creates a public `birds.json` summary showing the day’s total detections, number of species detected, top species for the day, the strongest detection, and a short list of recent detections. Each detection includes species names, confidence scores, timestamps, and microphone/source labels where available.
+
+## Privacy by design
+
+Because this project involves real-world sensors at a real-world location, privacy is built into the design.
+
+The raw BirdNET-PiPy database contains coordinates, but the public exporter deliberately does not publish exact latitude and longitude. Instead, it rounds the location to one decimal place and labels it only as an approximate Brisbane southside location.
+
+This allows the website to show a broad map context without turning the page into a “find the microphone” treasure hunt. Internal file paths, raw system details, usernames, private network information, and exact coordinates are also excluded from the public display.
+
+## Publishing architecture
+
+The publishing architecture is intentionally boring, which is one of its strengths.
+
+The Raspberry Pis do not accept inbound internet connections. Nothing on the home network is exposed to the public web. Instead, each Pi pushes a small JSON file out to the VPS using SSH and `rsync`.
+
+The VPS runs nginx, serves the JSON files over HTTPS at `data.chipsncode.com`, and adds the necessary CORS headers so the main website can fetch the data safely. The website itself stays static, fast, and GitHub-hosted. It does not rebuild every time a bird chirps or the rain gauge ticks over.
+
+## Why this split matters
+
+Static sites are brilliant for reliability, speed, and low maintenance, but they are not designed to rebuild every few minutes just because a sensor value changed.
+
+Rather than hammering GitHub Actions or filling a repository with automated data commits, this project treats the live data as a separate public data layer. The Astro site simply asks for the current JSON when a visitor loads the page. If the data updates, the next visitor sees the updated values. No rebuild required.
+
+## Public endpoints and cadence
+
+The system currently publishes two public endpoints:
+
+- `weather.json`, generated from the WeeWX Raspberry Pi.
+- `birds.json`, generated from the BirdNET-PiPy Raspberry Pi.
+
+Each exporter is scheduled with cron. The weather data updates roughly every 15 minutes, while the bird detection data updates roughly every 30 minutes.
+
+The website treats this data as “live-ish” rather than truly live. It also checks how old the latest update is, so stale or unavailable data can be shown honestly instead of pretending everything is perfectly fresh. If the weather feed fails, the bird feed can still display. If the bird feed fails, the weather feed can still display. The page is designed to degrade gracefully rather than collapse in a heap because one Raspberry Pi had a sulk.
+
+## Technical flow
+
+```text
+WeeWX Raspberry Pi
+  → reads local WeeWX SQLite database
+  → exports weather.json
+  → uploads to VPS using rsync over SSH
+
+BirdNET-PiPy Raspberry Pi
+  → reads local BirdNET-PiPy SQLite database
+  → exports birds.json
+  → uploads to VPS using rsync over SSH
+
+VPS
+  → runs nginx
+  → serves JSON over HTTPS from data.chipsncode.com
+
+chipsncode.com
+  → static Astro site
+  → fetches JSON client-side
+  → displays recent weather and bird activity
+```
+
+## What this produces
+
+The result is a tiny home-grown environmental dashboard: part weather station, part acoustic ecology recorder, part Raspberry Pi plumbing experiment.
+
+It gives a public window into the small, constantly changing signals around my home: rainfall accumulating through the day, pressure shifting, wind nudging through, and local birds making their presence known in the soundscape.
+
+It is not a commercial monitoring platform. It is not a scientific-grade public dataset. It is a practical, playful, locally hosted system that turns backyard observations into a small public artefact.
+
+The fun is in the connection: physical sensors, local databases, Linux scripts, scheduled uploads, a VPS, and a static website all quietly passing notes to each other.
+
+## Future direction
+
+This project leaves room to grow. Future improvements could include historical graphs, daily weather summaries, bird activity trends, species pages, seasonal comparisons, rainfall charts, local soundscape visualisations, or a more detailed map using only approximate public location data.
+
+The current version is deliberately modest: get the data flowing safely first, then let the dashboard evolve.
+
+## In one line
+
+At its heart, Local Signals is about making local environmental data visible without making the local network vulnerable.
+
+The Pis stay tucked away at home, the VPS acts as a small public shelf, and the website displays only the polished, privacy-safe summaries: a little weather, a few birds, some JSON, and a pleasing amount of Linux glue.

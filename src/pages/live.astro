@@ -17,7 +17,7 @@ import LiveSignals from '../components/LiveSignals';
     <Header />
 
     <main class="live-page">
-      <section class="panel live-hero">
+      <section class="live-hero">
         <p class="live-kicker">Field telemetry</p>
         <h1>Local Signals</h1>
         <p>A live-ish look at what the weather and birds are doing here today.</p>
@@ -91,47 +91,46 @@ import LiveSignals from '../components/LiveSignals';
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :global(.live-signals__card) {
+  :global(.live-signals__section) {
     display: grid;
-    gap: var(--space-3);
-    background: linear-gradient(165deg, #ffffff 4%, var(--live-shell) 100%);
-    border: 1px solid color-mix(in srgb, var(--live-blue) 18%, var(--border) 82%);
-    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.06);
-    padding: clamp(1rem, 1.8vw, 1.4rem);
+    gap: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.5));
+    border-top: 2px solid color-mix(in srgb, var(--live-blue) 30%, var(--border) 70%);
+    padding: 0.9rem 0.2rem 0.2rem;
     grid-column: span 12;
   }
 
-  :global(.live-signals__card--weather) {
-    grid-column: span 6;
-    border-left: 6px solid color-mix(in srgb, var(--live-blue) 68%, #fff 32%);
-  }
-
-  :global(.live-signals__card--birds) {
-    grid-column: span 6;
-    border-left: 6px solid color-mix(in srgb, var(--live-cyan) 72%, #fff 28%);
-  }
-
-  :global(.live-signals__card--species),
-  :global(.live-signals__card--detections) {
+  :global(.live-signals__section--weather) {
     grid-column: span 6;
   }
 
-  :global(.live-signals__card--location) {
+  :global(.live-signals__section--birds) {
+    grid-column: span 6;
+    border-top-color: color-mix(in srgb, var(--live-cyan) 36%, var(--border) 64%);
+  }
+
+  :global(.live-signals__section--species),
+  :global(.live-signals__section--detections) {
+    grid-column: span 6;
+  }
+
+  :global(.live-signals__section--location) {
     grid-column: span 12;
   }
 
   :global(.live-signals__card-header) {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-end;
     gap: var(--space-3);
     flex-wrap: wrap;
+    padding: 0 0.35rem;
   }
 
   :global(.live-signals__card-header h2) {
     margin: 0;
-    font-size: clamp(1.5rem, 2.6vw, 2.3rem);
-    line-height: 1.02;
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    line-height: 1.05;
     letter-spacing: -0.02em;
     color: var(--live-ink);
   }
@@ -144,6 +143,11 @@ import LiveSignals from '../components/LiveSignals';
     font-size: 0.82rem;
     font-weight: 700;
     border: 1px solid;
+  }
+  :global(.live-signals__stamp) {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--muted);
   }
 
   :global(.live-signals__status--ok) {
@@ -164,15 +168,17 @@ import LiveSignals from '../components/LiveSignals';
   :global(.live-signals__stats) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 1px;
     margin: 0;
+    border: 1px solid color-mix(in srgb, var(--live-blue) 20%, var(--border) 80%);
+    border-radius: 10px;
+    overflow: hidden;
   }
 
   :global(.live-signals__stats div) {
-    border: 1px solid color-mix(in srgb, var(--live-blue) 14%, var(--border) 86%);
-    border-radius: var(--radius-md);
+    border: 0;
     padding: 12px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
+    background: rgba(255, 255, 255, 0.88);
   }
 
   :global(.live-signals__stats dt) {
@@ -192,6 +198,7 @@ import LiveSignals from '../components/LiveSignals';
 
   :global(.live-signals__updated) {
     margin: 0;
+    padding: 0 0.35rem;
     color: var(--muted);
     font-size: 0.93rem;
   }
@@ -201,14 +208,28 @@ import LiveSignals from '../components/LiveSignals';
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 12px;
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, var(--live-cyan) 26%, var(--border) 74%);
   }
 
   :global(.live-signals__species-item) {
-    border: 1px solid color-mix(in srgb, var(--live-cyan) 16%, var(--border) 84%);
-    border-radius: var(--radius-md);
+    border-bottom: 1px solid color-mix(in srgb, var(--live-cyan) 20%, var(--border) 80%);
     padding: 12px;
-    background: linear-gradient(160deg, #ffffff, #f5fbff);
+    background: rgba(255, 255, 255, 0.7);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    column-gap: 12px;
+    row-gap: 6px;
+    align-items: start;
+  }
+
+  :global(.live-signals__species-image) {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--live-blue) 20%, var(--border) 80%);
+    background: #eef3fb;
   }
 
   :global(.live-signals__species-head) {
@@ -227,6 +248,7 @@ import LiveSignals from '../components/LiveSignals';
   :global(.live-signals__species-item p) {
     margin: 0;
     color: var(--text-2);
+    grid-column: 2;
   }
 
   :global(.live-signals__meter) {
@@ -256,16 +278,17 @@ import LiveSignals from '../components/LiveSignals';
     padding: 0;
     list-style: none;
     display: grid;
-    gap: 10px;
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, var(--live-cyan) 22%, var(--border) 78%);
   }
 
   :global(.live-signals__detections li) {
     display: grid;
     gap: 4px;
-    border-left: 3px solid color-mix(in srgb, var(--live-cyan) 40%, var(--border) 60%);
-    padding: 9px 11px;
-    background: linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(241, 252, 252, 0.95));
-    border-radius: 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--live-cyan) 18%, var(--border) 82%);
+    border-left: 0;
+    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.7);
   }
 
   :global(.live-signals__source) {
@@ -282,11 +305,18 @@ import LiveSignals from '../components/LiveSignals';
     font-weight: 700;
   }
 
+  :global(.live-signals__map) {
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid color-mix(in srgb, var(--live-blue) 18%, var(--border) 82%);
+    border-radius: 8px;
+  }
+
   @media (max-width: 980px) {
-    :global(.live-signals__card--weather),
-    :global(.live-signals__card--birds),
-    :global(.live-signals__card--species),
-    :global(.live-signals__card--detections) {
+    :global(.live-signals__section--weather),
+    :global(.live-signals__section--birds),
+    :global(.live-signals__section--species),
+    :global(.live-signals__section--detections) {
       grid-column: span 12;
     }
   }
@@ -303,6 +333,22 @@ import LiveSignals from '../components/LiveSignals';
 
     :global(.live-signals__card-header h2) {
       font-size: clamp(1.4rem, 7vw, 2rem);
+    }
+
+    :global(.live-signals__species-item) {
+      grid-template-columns: 1fr;
+    }
+
+    :global(.live-signals__species-image),
+    :global(.live-signals__species-head),
+    :global(.live-signals__species-head span),
+    :global(.live-signals__meter-label),
+    :global(.live-signals__species-item p) {
+      grid-column: 1;
+    }
+
+    :global(.live-signals__map) {
+      min-height: 220px;
     }
   }
 </style>

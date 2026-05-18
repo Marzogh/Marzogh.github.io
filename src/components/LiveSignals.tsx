@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type WeatherData = {
   updated?: string;
@@ -57,6 +57,20 @@ type Freshness = 'Live-ish' | 'Stale' | 'Unavailable';
 
 const WEATHER_URL = 'https://data.chipsncode.com/weather.json';
 const BIRDS_URL = 'https://data.chipsncode.com/birds.json';
+const IMAGE_CACHE_KEY = 'live-signals-species-image-cache-v1';
+const IMAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const IMAGE_TIMEOUT_MS = 2800;
+const PLACEHOLDER_IMAGE =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120">
+      <rect width="160" height="120" fill="#eef3fb"/>
+      <circle cx="62" cy="58" r="20" fill="#8ea6c8"/>
+      <circle cx="92" cy="54" r="11" fill="#8ea6c8"/>
+      <polygon points="104,54 116,58 104,62" fill="#6f87aa"/>
+      <rect x="36" y="80" width="84" height="8" rx="4" fill="#c8d5e8"/>
+    </svg>`
+  );
 
 function getUnavailableMessage(kind: 'weather' | 'birds'): string {
   const base =
@@ -147,6 +161,70 @@ function confidencePercent(value?: number | null): number {
   return Math.max(0, Math.min(100, value));
 }
 
+type ImageCache = Record<string, { url: string; ts: number }>;
+
+function readImageCache(): ImageCache {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(IMAGE_CACHE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as ImageCache;
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeImageCache(cache: ImageCache): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // ignore storage failures
+  }
+}
+
+function getCachedImage(speciesKey: string): string | null {
+  const cache = readImageCache();
+  const entry = cache[speciesKey];
+  if (!entry) return null;
+  if (Date.now() - entry.ts > IMAGE_CACHE_TTL_MS) return null;
+  return entry.url;
+}
+
+function setCachedImage(speciesKey: string, url: string): void {
+  const cache = readImageCache();
+  cache[speciesKey] = { url, ts: Date.now() };
+  writeImageCache(cache);
+}
+
+async function fetchJsonWithTimeout<T>(url: string, timeoutMs: number): Promise<T> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Fetch failed (${response.status})`);
+    return (await response.json()) as T;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+async function fetchWikimediaImage(query: string): Promise<string | null> {
+  const wikiUrl =
+    'https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=320&titles=' +
+    encodeURIComponent(query);
+  const wikiData = await fetchJsonWithTimeout<{
+    query?: { pages?: Record<string, { thumbnail?: { source?: string } }> };
+  }>(wikiUrl, IMAGE_TIMEOUT_MS);
+  const pages = wikiData.query?.pages ?? {};
+  for (const page of Object.values(pages)) {
+    const image = page.thumbnail?.source;
+    if (image) return image;
+  }
+  return null;
+}
+
 export default function LiveSignals() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [birds, setBirds] = useState<BirdData | null>(null);
@@ -154,6 +232,7 @@ export default function LiveSignals() {
   const [birdLoading, setBirdLoading] = useState(true);
   const [weatherError, setWeatherError] = useState<string | null>(null);
   const [birdError, setBirdError] = useState<string | null>(null);
+  const [speciesImages, setSpeciesImages] = useState<Record<string, string>>({});
 
   useEffect(() => {
     let active = true;
@@ -193,25 +272,79 @@ export default function LiveSignals() {
 
   const weatherFreshness = weatherError ? 'Unavailable' : getFreshness(weather?.updated, 45);
   const birdFreshness = birdError ? 'Unavailable' : getFreshness(birds?.updated, 90);
+  const weatherIsStale = weatherFreshness === 'Stale';
+  const birdsAreStale = birdFreshness === 'Stale';
 
   const mapPoint = birds?.location?.map_point;
   const lat = mapPoint?.latitude;
   const lon = mapPoint?.longitude;
   const hasMapPoint = Number.isFinite(lat) && Number.isFinite(lon);
 
-  const statusClass = (freshness: Freshness) =>
-    freshness === 'Live-ish'
-      ? 'live-signals__status live-signals__status--ok'
-      : freshness === 'Stale'
-        ? 'live-signals__status live-signals__status--stale'
-        : 'live-signals__status live-signals__status--bad';
+  useEffect(() => {
+    const speciesList = birds?.top_species_today;
+    if (!speciesList?.length) return;
+
+    let cancelled = false;
+
+    const loadImages = async () => {
+      for (const species of speciesList) {
+        const common = species.common_name?.trim();
+        const scientific = species.scientific_name?.trim();
+        const key = (scientific || common || '').toLowerCase();
+        if (!key || speciesImages[key]) continue;
+
+        const cached = getCachedImage(key);
+        if (cached) {
+          if (!cancelled) {
+            setSpeciesImages((prev) => ({ ...prev, [key]: cached }));
+          }
+          continue;
+        }
+
+        const queries = [scientific, common].filter(Boolean) as string[];
+        let resolved: string | null = null;
+
+        for (const q of queries) {
+          try {
+            resolved = await fetchWikimediaImage(q);
+            if (resolved) break;
+          } catch {
+            // try next query / keep placeholder
+          }
+        }
+
+        if (resolved) {
+          setCachedImage(key, resolved);
+          if (!cancelled) {
+            setSpeciesImages((prev) => ({ ...prev, [key]: resolved }));
+          }
+        }
+      }
+    };
+
+    void loadImages();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [birds?.top_species_today, speciesImages]);
+
+  const weatherUpdatedLabel = useMemo(
+    () => (weather?.updated ? `Updated ${formatDateTime(weather.updated)}` : 'Updated time unavailable'),
+    [weather?.updated]
+  );
+
+  const birdsUpdatedLabel = useMemo(
+    () => (birds?.updated ? `Updated ${formatDateTime(birds.updated)}` : 'Updated time unavailable'),
+    [birds?.updated]
+  );
 
   return (
     <div className="live-signals">
-      <section className="panel live-signals__card live-signals__card--weather">
+      <section className="live-signals__section live-signals__section--weather">
         <div className="live-signals__card-header">
           <h2>Backyard weather</h2>
-          <span className={statusClass(weatherFreshness)}>{weatherFreshness}</span>
+          <p className="live-signals__stamp">{weatherUpdatedLabel}</p>
         </div>
 
         {weatherLoading ? (
@@ -230,15 +363,18 @@ export default function LiveSignals() {
               <div><dt>Rain today</dt><dd>{formatOptional(weather?.rain_today_mm, ' mm', 1)}</dd></div>
               <div><dt>Rain rate</dt><dd>{formatOptional(weather?.rain_rate_mm_per_hour, ' mm/h', 1)}</dd></div>
             </dl>
-            <p className="live-signals__updated">Last updated: {formatDateTime(weather?.updated)}</p>
+            <p className="live-signals__updated">
+              {weatherUpdatedLabel}
+              {weatherIsStale ? ' (older than expected)' : ''}
+            </p>
           </>
         )}
       </section>
 
-      <section className="panel live-signals__card live-signals__card--birds">
+      <section className="live-signals__section live-signals__section--birds">
         <div className="live-signals__card-header">
           <h2>Bird activity</h2>
-          <span className={statusClass(birdFreshness)}>{birdFreshness}</span>
+          <p className="live-signals__stamp">{birdsUpdatedLabel}</p>
         </div>
 
         {birdLoading ? (
@@ -262,13 +398,16 @@ export default function LiveSignals() {
               </div>
               <div><dt>Latest detection time</dt><dd>{formatTime(birds?.latest_detection_time)}</dd></div>
             </dl>
-            <p className="live-signals__updated">Last updated: {formatDateTime(birds?.updated)}</p>
+            <p className="live-signals__updated">
+              {birdsUpdatedLabel}
+              {birdsAreStale ? ' (older than expected)' : ''}
+            </p>
           </>
         )}
       </section>
 
       {!birdLoading && !birdError && (
-        <section className="panel live-signals__card live-signals__card--species">
+        <section className="live-signals__section live-signals__section--species">
           <h2>Top species today</h2>
           {birds?.top_species_today?.length ? (
             <ul className="live-signals__species-list">
@@ -276,6 +415,21 @@ export default function LiveSignals() {
                 const score = confidencePercent(species.max_confidence_percent);
                 return (
                   <li key={`${species.common_name ?? 'species'}-${idx}`} className="live-signals__species-item">
+                    <img
+                      className="live-signals__species-image"
+                      src={
+                        speciesImages[(species.scientific_name?.trim() || species.common_name?.trim() || '').toLowerCase()] ||
+                        PLACEHOLDER_IMAGE
+                      }
+                      alt={species.common_name ? `${species.common_name} reference` : 'Bird reference'}
+                      loading="lazy"
+                      width={80}
+                      height={60}
+                      onError={(event) => {
+                        const target = event.currentTarget;
+                        target.src = PLACEHOLDER_IMAGE;
+                      }}
+                    />
                     <div className="live-signals__species-head">
                       <strong>{species.common_name ?? 'Unknown'}</strong>
                       <span>{formatWhole(species.count)} detections</span>
@@ -296,7 +450,7 @@ export default function LiveSignals() {
       )}
 
       {!birdLoading && !birdError && (
-        <section className="panel live-signals__card live-signals__card--detections">
+        <section className="live-signals__section live-signals__section--detections">
           <h2>Latest detections</h2>
           {birds?.latest_detections?.length ? (
             <ul className="live-signals__detections">
@@ -316,23 +470,17 @@ export default function LiveSignals() {
       )}
 
       {!birdLoading && !birdError && (
-        <section className="panel live-signals__card live-signals__card--location live-signals__location">
+        <section className="live-signals__section live-signals__section--location live-signals__location">
           <h2>Approximate location</h2>
           <p>{birds?.location?.display_name ?? 'Location unavailable'}</p>
           {hasMapPoint ? (
-            <p>
-              <a
-                href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=11/${lat}/${lon}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View approximate map point on OpenStreetMap
-              </a>
-            </p>
+            <iframe
+              className="live-signals__map"
+              title="Approximate location map"
+              loading="lazy"
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.18}%2C${lat - 0.12}%2C${lon + 0.18}%2C${lat + 0.12}&layer=mapnik&marker=${lat}%2C${lon}`}
+            />
           ) : null}
-          <p className="live-signals__privacy">
-            {birds?.location?.public_safety_note ?? birds?.privacy_note ?? 'Location is intentionally blurred for privacy.'}
-          </p>
         </section>
       )}
     </div>
