@@ -1,0 +1,308 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import LiveSignals from '../components/LiveSignals';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Local Signals — Chips’nCode"
+      description="Weather and bird activity from my local Raspberry Pi ecosystem."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main class="live-page">
+      <section class="panel live-hero">
+        <p class="live-kicker">Field telemetry</p>
+        <h1>Local Signals</h1>
+        <p>A live-ish look at what the weather and birds are doing here today.</p>
+      </section>
+
+      <LiveSignals client:load />
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .live-page {
+    --live-ink: #0f1b3d;
+    --live-slate: #44506c;
+    --live-blue: #2553cc;
+    --live-cyan: #0c7a86;
+    --live-amber: #a76511;
+    --live-rose: #b9234a;
+    --live-shell: #f7f9ff;
+    max-width: min(1180px, calc(100% - 2 * var(--space-5)));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .live-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: clamp(1.6rem, 2.5vw, 2.4rem);
+    background:
+      radial-gradient(900px 280px at 5% -15%, rgba(37, 83, 204, 0.26), transparent 62%),
+      radial-gradient(800px 300px at 105% 120%, rgba(12, 122, 134, 0.22), transparent 58%),
+      linear-gradient(135deg, #ffffff, #f4f8ff 58%, #eef6ff);
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+  }
+
+  .live-kicker {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--live-ink) 62%, #fff 38%);
+    font-weight: 700;
+  }
+
+  .live-hero h1 {
+    margin: 0;
+    max-width: 13ch;
+    color: var(--live-ink);
+    font-size: clamp(2.2rem, 6.4vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+
+  .live-hero p {
+    margin: 0;
+    color: var(--live-slate);
+    max-width: 56ch;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+  }
+
+  :global(.live-signals) {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  :global(.live-signals__card) {
+    display: grid;
+    gap: var(--space-3);
+    background: linear-gradient(165deg, #ffffff 4%, var(--live-shell) 100%);
+    border: 1px solid color-mix(in srgb, var(--live-blue) 18%, var(--border) 82%);
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.06);
+    padding: clamp(1rem, 1.8vw, 1.4rem);
+    grid-column: span 12;
+  }
+
+  :global(.live-signals__card--weather) {
+    grid-column: span 6;
+    border-left: 6px solid color-mix(in srgb, var(--live-blue) 68%, #fff 32%);
+  }
+
+  :global(.live-signals__card--birds) {
+    grid-column: span 6;
+    border-left: 6px solid color-mix(in srgb, var(--live-cyan) 72%, #fff 28%);
+  }
+
+  :global(.live-signals__card--species),
+  :global(.live-signals__card--detections) {
+    grid-column: span 6;
+  }
+
+  :global(.live-signals__card--location) {
+    grid-column: span 12;
+  }
+
+  :global(.live-signals__card-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  :global(.live-signals__card-header h2) {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.6vw, 2.3rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--live-ink);
+  }
+
+  :global(.live-signals__status) {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: 1px solid;
+  }
+
+  :global(.live-signals__status--ok) {
+    background: color-mix(in srgb, var(--live-cyan) 13%, #fff 87%);
+    border-color: color-mix(in srgb, var(--live-cyan) 38%, var(--border) 62%);
+  }
+
+  :global(.live-signals__status--stale) {
+    background: color-mix(in srgb, var(--live-amber) 16%, var(--surface) 84%);
+    border-color: color-mix(in srgb, var(--live-amber) 40%, var(--border) 60%);
+  }
+
+  :global(.live-signals__status--bad) {
+    background: color-mix(in srgb, var(--live-rose) 14%, var(--surface) 86%);
+    border-color: color-mix(in srgb, var(--live-rose) 40%, var(--border) 60%);
+  }
+
+  :global(.live-signals__stats) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+  }
+
+  :global(.live-signals__stats div) {
+    border: 1px solid color-mix(in srgb, var(--live-blue) 14%, var(--border) 86%);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
+  }
+
+  :global(.live-signals__stats dt) {
+    margin: 0;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  :global(.live-signals__stats dd) {
+    margin: 6px 0 0;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--live-ink);
+    font-weight: 700;
+  }
+
+  :global(.live-signals__updated) {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.93rem;
+  }
+
+  :global(.live-signals__species-list) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  :global(.live-signals__species-item) {
+    border: 1px solid color-mix(in srgb, var(--live-cyan) 16%, var(--border) 84%);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    background: linear-gradient(160deg, #ffffff, #f5fbff);
+  }
+
+  :global(.live-signals__species-head) {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  :global(.live-signals__species-head strong) {
+    color: var(--text);
+  }
+
+  :global(.live-signals__species-head span),
+  :global(.live-signals__meter-label),
+  :global(.live-signals__species-item p) {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  :global(.live-signals__meter) {
+    width: 100%;
+    height: 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--live-blue) 9%, #fff 91%);
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  :global(.live-signals__meter span) {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--live-blue), var(--live-teal));
+    transition: width 400ms ease;
+  }
+
+  :global(.live-signals__meter-label) {
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
+
+  :global(.live-signals__detections) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  :global(.live-signals__detections li) {
+    display: grid;
+    gap: 4px;
+    border-left: 3px solid color-mix(in srgb, var(--live-cyan) 40%, var(--border) 60%);
+    padding: 9px 11px;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(241, 252, 252, 0.95));
+    border-radius: 10px;
+  }
+
+  :global(.live-signals__source) {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  :global(.live-signals__privacy) {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  :global(.live-signals__location a) {
+    font-weight: 700;
+  }
+
+  @media (max-width: 980px) {
+    :global(.live-signals__card--weather),
+    :global(.live-signals__card--birds),
+    :global(.live-signals__card--species),
+    :global(.live-signals__card--detections) {
+      grid-column: span 12;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .live-page {
+      max-width: min(1100px, calc(100% - 1.4rem));
+      gap: var(--space-5);
+    }
+
+    :global(.live-signals__stats) {
+      grid-template-columns: 1fr;
+    }
+
+    :global(.live-signals__card-header h2) {
+      font-size: clamp(1.4rem, 7vw, 2rem);
+    }
+  }
+</style>
