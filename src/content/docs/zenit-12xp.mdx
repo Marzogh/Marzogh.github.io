@@ -1,0 +1,885 @@
+---
+title: "Zenit-12XP / Zenit-12SD Documentation"
+description: "Restored English documentation for the Zenit-12XP / Zenit-12SD 35 mm SLR camera, including repair manual, user manual, parts catalogue, and complete source archive."
+pubDate: 2026-05-25
+updatedDate: 2026-05-25
+draft: false
+section: Reference
+order: 35
+tags: [camera-repair, film-photography, zenit, zenit-12xp, zenit-12sd, manuals, archive]
+type: docs
+featured: true
+headerStyle: plain
+---
+
+<div class="zenit-shell" data-zenit-app>
+  <blockquote class="zenit-pullquote">
+    Film. Mirror. Shutter. Aperture ring. Focus ring. Wind lever. The whole thing.
+  </blockquote>
+
+  <section class="zenit-banner" aria-label="Zenit-12XP hero image">
+    <div class="zenit-banner__filmline"></div>
+  </section>
+
+  <section class="zenit-utility" aria-label="Manual utilities">
+    <p class="zenit-photo-credit">
+      Photo credit: Adam Sondel via Pexels, as used in Lomography’s Zenit-12XP article.
+      <a href="https://www.lomography.com/magazine/145339-the-russian-tank-zenit-12xp">View source</a>.
+    </p>
+
+    <section class="zenit-console" aria-label="Manual launcher">
+      <div class="zenit-console__row">
+        <label class="zenit-console__label" for="zenit-launcher">Manual launcher</label>
+        <input id="zenit-launcher" class="zenit-console__input" type="text" placeholder="Try: repair, user, parts, zip, toolkit, sources" autocomplete="off" />
+        <button type="button" class="zenit-btn zenit-btn--solid" data-zenit-run>Open</button>
+      </div>
+    </section>
+
+    <p class="zenit-drawer-cta">
+      Need the full internals (markdown, glossary, manifests, toolkit, Russian source pages)?
+      <button type="button" class="zenit-linkbtn" data-zenit-drawer-open>Open archive details</button>.
+    </p>
+  </section>
+
+  <section class="zenit-provenance" aria-label="Provenance and restoration note">
+    <h3>Provenance and restoration note</h3>
+    <p>
+      Rebuilt from original Russian Zenitcamera.com material for the Zenit-12XP / Zenit-12SD, with technical English
+      translation and original figure/part-reference structure preserved for bench use.
+    </p>
+  </section>
+
+  <section data-zenit-story>
+    <h2>Zenit-12XP / Zenit-12SD manuals</h2>
+    <aside class="zenit-specplate zenit-specplate--aside" aria-label="Zenit-12XP at a glance">
+      <h3>Zenit-12XP at a glance</h3>
+      <dl>
+        <div><dt>Type</dt><dd>35 mm SLR</dd></div>
+        <div><dt>Production</dt><dd>1983 to 1994</dd></div>
+        <div><dt>Lens mount</dt><dd>M42 screw mount</dd></div>
+        <div><dt>Typical lens</dt><dd>Helios 58 mm f/2</dd></div>
+        <div><dt>Meter</dt><dd>Dual LED XP indicator</dd></div>
+        <div><dt>Weight</dt><dd>Approx. 0.95 kg</dd></div>
+        <div><dt>Shutter</dt><dd>1/30 to 1/500, Bulb</dd></div>
+        <div><dt>Film speed</dt><dd>ISO 16 to 500</dd></div>
+      </dl>
+      <p class="zenit-specplate__note">From Lomography review context, aligned with this archive.</p>
+    </aside>
+
+    <p>
+      This one is a bit personal. The Zenit-12XP I own came into the family from Moscow in the 1980s and eventually
+      landed with me, wearing a HELIOS-44M-4. It is the camera that taught me proper SLR photography: film, mirror,
+      shutter, aperture ring, focus ring, wind lever, and no safety net. You could not spray and pray; you had to pick
+      the shutter speed, pick the aperture, nail focus, and live with what came back from the roll. I took some really
+      lovely photos with it, and I still have a soft spot for that thunk-and-whirr.
+    </p>
+
+    <p>
+      The camera now needs work, which sent me looking for repair documentation worth trusting at the bench. A lot of
+      English material I found was incomplete, weakly translated, or missing key diagrams. The useful source set turned
+      out to be the original Russian Zenitcamera material: repair manual, user manual, and parts catalogue. That kicked
+      this from “find a better manual” into a proper preservation job.
+    </p>
+
+    <p>
+      We archived the source pages directly with a script, saved raw HTML snapshots, extracted structured content, and
+      pulled both inline images and higher-resolution linked assets when they existed. Many of the most useful plates sit
+      behind smaller preview images, so that step mattered. We also generated manifests and an image placement map so
+      every figure, schematic, and catalogue plate traces back to source and reconnects to the right section.
+    </p>
+
+    <p>
+      The first scrape missed key text because old character-encoding quirks distorted extraction, so we revisited the
+      archived HTML, repaired Cyrillic extraction, rebuilt the Russian markdown, and remapped images carefully. In technical
+      manuals, figure placement is not decoration; if diagrams drift away from the instructions that reference them, the
+      manual becomes guesswork.
+    </p>
+
+    <p>
+      The final set keeps the originals intact in structure while providing usable English technical translations:
+      repair manual, user manual, parts catalogue, rebuilt Russian source markdown, manifests, glossary, notes, and
+      complete archive packages. The PDFs are the easiest day-to-day bench references; the archive keeps the source
+      chain verifiable and prevents it from disappearing behind broken links.
+    </p>
+
+    <p>
+      Partly I did this because I want to fix my camera. Mostly I did it because old practical knowledge deserves better than
+      link rot: workshop logic, exploded diagrams, parts references, and repair know-how should stay accessible, checkable,
+      and usable.
+    </p>
+  </section>
+
+  <dialog class="zenit-drawer-dialog" data-zenit-drawer aria-labelledby="zenit-drawer-title">
+    <article class="zenit-drawer-sheet">
+      <header class="zenit-drawer__head">
+        <h3 id="zenit-drawer-title">Archive browser</h3>
+        <form method="dialog" class="zenit-drawer__dismiss">
+          <button type="submit" class="zenit-btn zenit-btn--x" aria-label="Dismiss archive browser">×</button>
+        </form>
+      </header>
+
+      <details open>
+        <summary>English manuals</summary>
+        <ul>
+          <li><a href="/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_repair-manual_en.pdf">Repair Manual PDF</a></li>
+          <li><a href="/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_user-manual_en.pdf">User Manual PDF</a></li>
+          <li><a href="/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_parts-catalogue_en.pdf">Parts Catalogue PDF</a></li>
+          <li><a href="/docs/zenit-12xp/zenit-12xp_12sd_english_manual_archive.zip">Complete archive ZIP</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Source markdown</summary>
+        <ul>
+          <li><a href="/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_repair-manual_en.md">English repair manual markdown</a></li>
+          <li><a href="/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_user-manual_en.md">English user manual markdown</a></li>
+          <li><a href="/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_parts-catalogue_en.md">English parts catalogue markdown</a></li>
+          <li><a href="/docs/zenit-12xp/source/zenit-12xp_zenit-12sd_russian_with_image_placements.md">Russian source with image placements</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Mappings and references</summary>
+        <ul>
+          <li><a href="/docs/zenit-12xp/source/zenit-12xp_image_placement_map.csv">Image placement map (CSV)</a></li>
+          <li><a href="/docs/zenit-12xp/source/source_manifest.csv">Source manifest (CSV)</a></li>
+          <li><a href="/docs/zenit-12xp/source/original_url_index.md">Original URL index</a></li>
+          <li><a href="/docs/zenit-12xp/glossary/zenit-12xp_12sd_glossary_ru-en.md">Russian-English glossary</a></li>
+          <li><a href="/docs/zenit-12xp/translation_notes/translator_notes.md">Translation notes</a></li>
+          <li><a href="/docs/zenit-12xp/manuals_pdf/PDF_VERIFICATION_SUMMARY.txt">PDF verification summary</a></li>
+          <li><a href="/docs/zenit-12xp/zenit-12xp_zenitcamera_archiver_toolkit.zip">Zenitcamera archiver toolkit ZIP</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Original Russian sources</summary>
+        <ul>
+          <li><a href="https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp-repair.html">zenit-12xp-repair.html</a></li>
+          <li><a href="https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp.html">zenit-12xp.html</a></li>
+          <li><a href="https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp-catalog.html">zenit-12xp-catalog.html</a></li>
+        </ul>
+      </details>
+    </article>
+  </dialog>
+
+  <dialog class="zenit-modal" data-zenit-modal-dialog>
+    <article>
+      <header class="zenit-modal__head">
+        <h3 data-zenit-modal-title>Manual</h3>
+        <form method="dialog" class="zenit-modal__dismiss">
+          <button type="submit" class="zenit-btn zenit-btn--x" aria-label="Dismiss viewer">×</button>
+        </form>
+      </header>
+      <nav class="zenit-modal__nav" aria-label="Switch manual">
+        <button type="button" class="zenit-btn" data-zenit-switch="repair">Repair</button>
+        <button type="button" class="zenit-btn" data-zenit-switch="user">User</button>
+        <button type="button" class="zenit-btn" data-zenit-switch="parts">Parts</button>
+      </nav>
+      <p data-zenit-modal-desc></p>
+      <p><a data-zenit-modal-link href="#">Download / open file</a></p>
+      <div class="zenit-modal__viewer" data-zenit-viewer-wrap>
+        <iframe data-zenit-modal-frame title="Zenit manual viewer" loading="lazy"></iframe>
+      </div>
+    </article>
+  </dialog>
+</div>
+
+<script is:inline>{`
+  (() => {
+    const root = document.querySelector('[data-zenit-app]');
+    if (!(root instanceof HTMLElement)) return;
+
+    const docs = {
+      repair: {
+        title: 'Repair Manual (PDF)',
+        desc: 'English technical translation with original figure placement and repair references preserved.',
+        href: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_repair-manual_en.pdf',
+        preview: true,
+      },
+      user: {
+        title: 'User Manual (PDF)',
+        desc: 'English user guide for operation, metering, loading, shooting, rewinding, and care.',
+        href: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_user-manual_en.pdf',
+        preview: true,
+      },
+      parts: {
+        title: 'Parts Catalogue (PDF)',
+        desc: 'Parts and assembly catalogue with high-resolution diagram plates as authority.',
+        href: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_parts-catalogue_en.pdf',
+        preview: true,
+      },
+      zip: {
+        title: 'Complete Archive (ZIP)',
+        desc: 'Full package including PDFs, markdown, source mappings, glossary, and notes.',
+        href: '/docs/zenit-12xp/zenit-12xp_12sd_english_manual_archive.zip',
+        preview: false,
+      },
+      toolkit: {
+        title: 'Archiver Toolkit (ZIP)',
+        desc: 'Toolkit archive containing the script package used for scraping and source archiving.',
+        href: '/docs/zenit-12xp/zenit-12xp_zenitcamera_archiver_toolkit.zip',
+        preview: false,
+      },
+    };
+
+    const launcher = root.querySelector('#zenit-launcher');
+    const runBtn = root.querySelector('[data-zenit-run]');
+    const modal = root.querySelector('[data-zenit-modal-dialog]');
+    const modalTitle = root.querySelector('[data-zenit-modal-title]');
+    const modalDesc = root.querySelector('[data-zenit-modal-desc]');
+    const modalLink = root.querySelector('[data-zenit-modal-link]');
+    const modalFrame = root.querySelector('[data-zenit-modal-frame]');
+    const modalViewerWrap = root.querySelector('[data-zenit-viewer-wrap]');
+    const drawer = root.querySelector('[data-zenit-drawer]');
+
+    const openModal = (key) => {
+      if (!(modal instanceof HTMLDialogElement)) return;
+      const item = docs[key];
+      if (!item) return;
+      if (modalTitle instanceof HTMLElement) modalTitle.textContent = item.title;
+      if (modalDesc instanceof HTMLElement) modalDesc.textContent = item.desc;
+      if (modalLink instanceof HTMLAnchorElement) {
+        modalLink.href = item.href;
+        modalLink.textContent = item.preview ? 'Download / open file' : 'Open source';
+      }
+      if (modalViewerWrap instanceof HTMLElement) {
+        modalViewerWrap.hidden = !item.preview;
+      }
+      if (modalFrame instanceof HTMLIFrameElement) {
+        modalFrame.src = item.preview ? item.href : 'about:blank';
+      }
+      modal.showModal();
+    };
+
+    const runCommand = (raw) => {
+      const cmd = raw.trim().toLowerCase();
+      if (!cmd) return;
+      if (cmd === 'sources' || cmd === 'archive') {
+        if (drawer instanceof HTMLDialogElement) drawer.showModal();
+        return;
+      }
+      const item = docs[cmd];
+      if (!item) {
+        if (launcher instanceof HTMLInputElement) {
+          launcher.value = 'Unknown command. Try: repair, user, parts, zip, toolkit, sources';
+          launcher.select();
+        }
+        return;
+      }
+      if (item.preview) {
+        openModal(cmd);
+      } else {
+        window.location.href = item.href;
+      }
+    };
+
+    if (runBtn instanceof HTMLButtonElement && launcher instanceof HTMLInputElement) {
+      runBtn.addEventListener('click', () => runCommand(launcher.value));
+      launcher.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          runCommand(launcher.value);
+        }
+      });
+    }
+
+
+    root.querySelectorAll('[data-zenit-modal]').forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      btn.addEventListener('click', () => openModal(btn.dataset.zenitModal ?? ''));
+    });
+
+    root.querySelectorAll('[data-zenit-switch]').forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      btn.addEventListener('click', () => openModal(btn.dataset.zenitSwitch ?? 'repair'));
+    });
+
+    root.querySelectorAll('[data-zenit-drawer-open]').forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      btn.addEventListener('click', () => {
+        if (drawer instanceof HTMLDialogElement) drawer.showModal();
+      });
+    });
+
+  })();
+`}</script>
+
+<style>{`
+  .zenit-shell {
+    display: grid;
+    gap: 0.28rem;
+  }
+
+  .zenit-shell > :where(section, p, blockquote) {
+    margin-block: 0 !important;
+  }
+
+  :global(.prose--docs p:empty) {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .zenit-utility {
+    display: grid;
+    gap: 0.22rem;
+    margin-top: 0.06rem;
+    margin-bottom: 0;
+  }
+
+  .zenit-utility > :where(p, section) {
+    margin: 0 !important;
+  }
+
+  :global(.docs-hero),
+  :global(.docs-hero .docs-title),
+  :global(.docs-hero .docs-description),
+  :global(.docs-hero .docs-meta),
+  :global(.docs-hero .docs-tags),
+  :global(.docs-hero .pill) {
+    color: #0f172a;
+    position: relative;
+    z-index: 3;
+    opacity: 1;
+    visibility: visible;
+    mix-blend-mode: normal;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  :global(.docs-entry > .docs-hero) {
+    min-height: 0 !important;
+    padding-bottom: 0.55rem !important;
+  }
+
+  :global(.docs-hero .docs-title) {
+    display: block !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    text-shadow: none !important;
+  }
+
+  :global(.docs-hero .docs-description),
+  :global(.docs-hero .docs-meta),
+  :global(.docs-hero .docs-tags),
+  :global(.docs-hero .pill),
+  :global(.docs-back) {
+    color: #334155 !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .zenit-intro {
+    margin: 0;
+    max-width: 72ch;
+  }
+
+  .zenit-banner {
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 14px;
+    overflow: clip;
+    min-height: 460px;
+    background:
+      linear-gradient(180deg, rgba(8, 22, 44, 0.12), rgba(8, 22, 44, 0.22)),
+      url('/docs/zenit-12xp/images/zenit-12xp-lomography.jpg') center center / cover no-repeat,
+      #15263d;
+    position: relative;
+  }
+
+  .zenit-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(9, 20, 44, 0.18)),
+      radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.18), transparent 42%);
+    pointer-events: none;
+  }
+
+  .zenit-banner__filmline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 24px;
+    background:
+      repeating-linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.14) 0,
+        rgba(255, 255, 255, 0.14) 18px,
+        transparent 18px,
+        transparent 34px
+      );
+    opacity: 0.7;
+  }
+
+  .zenit-photo-credit {
+    margin: 0 !important;
+    font-size: 0.84rem;
+    color: #334155;
+  }
+
+  .zenit-specplate {
+    margin: 0.15rem 0 0.75rem;
+    padding: 0.68rem 0.78rem 0.6rem;
+    border: 1px solid rgba(71, 85, 105, 0.34);
+    border-radius: 12px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 250, 255, 0.62)),
+      repeating-linear-gradient(
+        to right,
+        rgba(59, 130, 246, 0.08) 0,
+        rgba(59, 130, 246, 0.08) 1px,
+        transparent 1px,
+        transparent 20px
+      );
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  .zenit-specplate--aside {
+    float: right;
+    width: clamp(20rem, 37%, 26rem);
+    margin: 0 0 0.95rem 1.15rem;
+  }
+
+  .zenit-specplate h3 {
+    margin: 0 0 0.42rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .zenit-specplate dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.28rem 0.62rem;
+  }
+
+  .zenit-specplate dl div {
+    display: grid;
+    grid-template-columns: 5.8rem 1fr;
+    gap: 0.28rem;
+    border-bottom: 1px dashed rgba(100, 116, 139, 0.28);
+    padding-bottom: 0.14rem;
+  }
+
+  .zenit-specplate dt {
+    margin: 0;
+    font-size: 0.69rem;
+    color: #475569;
+    letter-spacing: 0.03em;
+  }
+
+  .zenit-specplate dd {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #0f172a;
+    font-weight: 500;
+  }
+
+  .zenit-specplate__note {
+    margin: 0.4rem 0 0;
+    font-size: 0.64rem;
+    color: #64748b;
+  }
+
+
+  .zenit-sourcebar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .zenit-sourcebar a {
+    border: 1px solid rgba(71, 85, 105, 0.45);
+    border-radius: 999px;
+    padding: 0.38rem 0.7rem;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.7);
+    color: #0f172a;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  .zenit-btn {
+    border: 1px solid rgba(71, 85, 105, 0.5);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.74);
+    color: #0f172a;
+    padding: 0.45rem 0.68rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .zenit-console {
+    margin: 0 !important;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 12px;
+    padding: 0.85rem;
+    background: rgba(255, 255, 255, 0.62);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.11);
+    backdrop-filter: blur(10px) saturate(120%);
+  }
+
+  .zenit-console__row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .zenit-console__label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #1f2a44;
+  }
+
+  .zenit-console__input {
+    min-width: 0;
+    border: 1px solid rgba(71, 85, 105, 0.45);
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+    font: inherit;
+    background: rgba(255, 255, 255, 0.82);
+    color: #0f172a;
+  }
+
+  .zenit-btn--x {
+    min-width: 2.1rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .zenit-btn--solid {
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+    border-color: #1d4ed8;
+    color: #f8fbff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .zenit-btn:hover,
+  .zenit-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0b1220;
+    border-color: rgba(37, 99, 235, 0.55);
+    outline: none;
+  }
+
+  .zenit-btn--solid:hover,
+  .zenit-btn--solid:focus-visible {
+    background: linear-gradient(180deg, #1d4ed8, #1e40af);
+    color: #ffffff;
+    border-color: #1d4ed8;
+  }
+
+  .zenit-pullquote {
+    margin: 0.08rem 0 0.06rem !important;
+    padding: 0.8rem 1rem;
+    border-left: 4px solid rgba(37, 99, 235, 0.72);
+    background: linear-gradient(90deg, rgba(219, 234, 254, 0.55), rgba(219, 234, 254, 0.1));
+    font-size: 1.08rem;
+    font-style: italic;
+    color: #14213d;
+  }
+
+  .zenit-provenance {
+    margin: 0.08rem 0 0.02rem !important;
+    padding: 0.15rem 0 0.1rem;
+    border: 0;
+    background: transparent;
+  }
+
+  .zenit-provenance h3 {
+    margin: 0 0 0.2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(15, 23, 42, 0.45);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55), 0 -1px 0 rgba(15, 23, 42, 0.1);
+  }
+
+  .zenit-provenance p {
+    margin: 0;
+    max-width: 92ch;
+    font-size: 0.73rem;
+    line-height: 1.55;
+    letter-spacing: 0.03em;
+    color: rgba(15, 23, 42, 0.42);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45), 0 -1px 0 rgba(15, 23, 42, 0.09);
+  }
+
+  :global(.docs-body) {
+    padding-top: 0;
+  }
+
+  :global(.prose--docs)::before {
+    display: none;
+  }
+
+  .zenit-list-tight {
+    padding-left: 1.1rem;
+  }
+
+  .zenit-list-tight li {
+    margin-bottom: 0.45rem;
+  }
+
+  .zenit-linkbtn {
+    border: 0;
+    background: none;
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+  }
+
+  .zenit-drawer-cta {
+    margin: 0 !important;
+    color: #334155;
+    line-height: 1.35;
+  }
+
+  .zenit-drawer-dialog {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+  }
+
+  .zenit-drawer-dialog::backdrop {
+    background: rgba(7, 12, 24, 0.52);
+    backdrop-filter: blur(6px) saturate(105%);
+  }
+
+  .zenit-drawer-sheet {
+    position: fixed;
+    top: max(64px, env(safe-area-inset-top));
+    right: max(14px, env(safe-area-inset-right));
+    width: clamp(340px, 34vw, 520px);
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - max(80px, env(safe-area-inset-top)) - 16px);
+    overflow: auto;
+    padding: 0.95rem;
+    border: 1px solid rgba(125, 157, 194, 0.45);
+    border-radius: 16px;
+    color: #e8f0ff;
+    background:
+      linear-gradient(180deg, rgba(13, 21, 37, 0.84), rgba(10, 18, 33, 0.9)),
+      repeating-linear-gradient(
+        to right,
+        rgba(129, 161, 201, 0.09) 0,
+        rgba(129, 161, 201, 0.09) 1px,
+        transparent 1px,
+        transparent 18px
+      );
+    box-shadow: 0 24px 60px rgba(2, 6, 16, 0.58);
+    backdrop-filter: blur(16px) saturate(120%);
+  }
+
+  .zenit-drawer__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.72rem;
+  }
+
+  .zenit-drawer__head h3 {
+    color: #f2f7ff;
+    font-size: 1.12rem;
+  }
+
+  .zenit-drawer__dismiss {
+    margin: 0;
+  }
+
+  .zenit-drawer-dialog .zenit-btn--x {
+    border-color: rgba(148, 173, 211, 0.52);
+    background: rgba(18, 29, 48, 0.66);
+    color: #eff6ff;
+  }
+
+  .zenit-drawer-dialog details {
+    border: 1px solid rgba(125, 157, 194, 0.34);
+    border-radius: 10px;
+    padding: 0.48rem 0.6rem;
+    margin-bottom: 0.46rem;
+    background: rgba(16, 25, 42, 0.48);
+  }
+
+  .zenit-drawer-dialog summary {
+    cursor: pointer;
+    font-weight: 650;
+    color: #e6efff;
+    letter-spacing: 0.01em;
+  }
+
+  .zenit-drawer-dialog ul {
+    margin: 0.45rem 0 0.2rem;
+    padding-left: 1rem;
+  }
+
+  .zenit-drawer-dialog li {
+    margin: 0.24rem 0;
+  }
+
+  .zenit-drawer-dialog a {
+    color: #9ed0ff;
+  }
+
+  :global(html:not(.dark)) .zenit-drawer-sheet,
+  :global(html[data-theme='light']) .zenit-drawer-sheet {
+    color: #0f172a;
+    background:
+      linear-gradient(180deg, rgba(238, 246, 255, 0.88), rgba(230, 240, 253, 0.82)),
+      repeating-linear-gradient(
+        to right,
+        rgba(96, 129, 173, 0.11) 0,
+        rgba(96, 129, 173, 0.11) 1px,
+        transparent 1px,
+        transparent 18px
+      );
+    border-color: rgba(115, 142, 182, 0.42);
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.3);
+  }
+
+  :global(html:not(.dark)) .zenit-drawer__head h3,
+  :global(html[data-theme='light']) .zenit-drawer__head h3 {
+    color: #0f172a;
+  }
+
+  :global(html:not(.dark)) .zenit-drawer-dialog details,
+  :global(html[data-theme='light']) .zenit-drawer-dialog details {
+    background: rgba(255, 255, 255, 0.52);
+    border-color: rgba(100, 116, 139, 0.34);
+  }
+
+  :global(html:not(.dark)) .zenit-drawer-dialog summary,
+  :global(html[data-theme='light']) .zenit-drawer-dialog summary {
+    color: #0f172a;
+  }
+
+  :global(html:not(.dark)) .zenit-drawer-dialog .zenit-btn--x,
+  :global(html[data-theme='light']) .zenit-drawer-dialog .zenit-btn--x {
+    background: rgba(255, 255, 255, 0.78);
+    color: #0f172a;
+    border-color: rgba(100, 116, 139, 0.42);
+  }
+
+  :global(html:not(.dark)) .zenit-drawer-dialog a,
+  :global(html[data-theme='light']) .zenit-drawer-dialog a {
+    color: #1d4ed8;
+  }
+
+  .zenit-modal {
+    border: 1px solid rgba(100, 116, 139, 0.45);
+    border-radius: 12px;
+    width: min(1100px, calc(100% - 2rem));
+    max-width: min(1100px, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    background: rgba(248, 250, 252, 0.68);
+    color: #0f172a;
+    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28);
+    backdrop-filter: blur(14px) saturate(128%);
+  }
+
+  .zenit-modal::backdrop {
+    background: rgba(15, 23, 42, 0.32);
+    backdrop-filter: blur(6px);
+  }
+
+  .zenit-modal article {
+    padding: 1rem;
+    display: grid;
+    gap: 0.72rem;
+  }
+
+  .zenit-modal h3 {
+    margin: 0;
+  }
+
+  .zenit-modal__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .zenit-modal__dismiss {
+    margin: 0;
+  }
+
+  .zenit-modal__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .zenit-modal__viewer {
+    border: 1px solid rgba(71, 85, 105, 0.45);
+    border-radius: 10px;
+    overflow: clip;
+    background: rgba(255, 255, 255, 0.82);
+    min-height: min(72dvh, 760px);
+  }
+
+  .zenit-modal__viewer iframe {
+    display: block;
+    width: 100%;
+    height: min(72dvh, 760px);
+    border: 0;
+  }
+
+  [data-zenit-story] {
+    line-height: 1.75;
+    max-width: none;
+  }
+
+  @media (max-width: 860px) {
+    .zenit-console__row {
+      grid-template-columns: 1fr;
+    }
+
+    .zenit-drawer-sheet {
+      top: auto;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      width: auto;
+      max-width: none;
+      max-height: min(70dvh, 620px);
+      border-radius: 14px 14px 12px 12px;
+    }
+
+    .zenit-banner,
+    .zenit-banner {
+      min-height: 220px;
+    }
+
+    .zenit-specplate--aside {
+      float: none;
+      width: 100%;
+      margin: 0.2rem 0 0.75rem;
+    }
+
+    .zenit-specplate dl {
+      grid-template-columns: 1fr;
+    }
+
+    .zenit-specplate dl div {
+      grid-template-columns: 7rem 1fr;
+      gap: 0.2rem;
+    }
+  }
+`}</style>

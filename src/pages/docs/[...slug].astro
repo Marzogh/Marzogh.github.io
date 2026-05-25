@@ -37,8 +37,8 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
   </head>
   <body>
     <Header />
-    <main class="docs-page">
-      <article class="docs-entry">
+    <main class:list={['docs-page', slug === 'zenit-12xp' && 'docs-page--zenit']}>
+      <article class:list={['docs-entry', slug === 'zenit-12xp' && 'docs-entry--zenit']}>
         <a href="/docs" class="docs-back">
           ← Back to Docs
         </a>
@@ -90,13 +90,100 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
 
 <style>
   .docs-page {
-    max-width: min(920px, calc(100% - 2 * var(--space-5)));
+    max-width: min(1360px, calc(100% - 2 * var(--space-5)));
+  }
+
+  .docs-page--zenit {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .docs-page--zenit::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(22, 117, 224, 0.22), rgba(12, 86, 190, 0.18)),
+      url('/docs/zenit-12xp/blueprints/zenit-blueprint-exploded-p6.webp') center top / cover no-repeat,
+      #cfe1f8;
+    filter: saturate(118%) contrast(104%);
+  }
+
+  .docs-page--zenit::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(246, 250, 255, 0.9) 0%,
+        rgba(247, 251, 255, 0.9) 26%,
+        rgba(247, 251, 255, 0.88) 58%,
+        rgba(246, 250, 255, 0.9) 100%
+      );
+  }
+
+  .docs-page--zenit > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(html.dark) .docs-page--zenit::after,
+  :global(html[data-theme='dark']) .docs-page--zenit::after,
+  :global(body.dark) .docs-page--zenit::after {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 11, 22, 0.78) 0%,
+        rgba(8, 15, 30, 0.82) 45%,
+        rgba(10, 18, 34, 0.86) 100%
+      ),
+      radial-gradient(circle at 24% 14%, rgba(255, 255, 255, 0.16), transparent 48%),
+      radial-gradient(circle at 78% 28%, rgba(125, 211, 252, 0.13), transparent 52%);
+    backdrop-filter: blur(6px) saturate(98%);
   }
 
   .docs-entry {
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
+  }
+
+  .docs-entry--zenit {
+    gap: 0.65rem;
+  }
+
+  .docs-entry--zenit .docs-back {
+    margin-top: 0;
+  }
+
+  .docs-entry--zenit .docs-hero {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 0.45rem !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .docs-entry--zenit .docs-title {
+    display: block !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+  }
+
+  .docs-entry--zenit .docs-description,
+  .docs-entry--zenit .docs-meta,
+  .docs-entry--zenit .docs-tags,
+  .docs-entry--zenit .docs-hero__eyebrow {
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .docs-back {
