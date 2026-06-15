@@ -44,9 +44,16 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
         </a>
 
         <header class:list={['docs-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'docs-hero--plain', headerStyle === 'tool' && 'docs-hero--tool']}>
-          <div class="docs-hero__eyebrow">
-            {entry.data.section ? <span class="pill">{entry.data.section}</span> : null}
-            {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
+          <div class="docs-hero__eyebrow meta-row">
+            <div class="meta-cluster">
+              {entry.data.section ? <span class="meta-kicker">{entry.data.section}</span> : null}
+              {entry.data.featured ? <span class="meta-status">Featured</span> : null}
+            </div>
+            {entry.data.pubDate ? (
+              <span class="meta-date">
+                <FormattedDate date={entry.data.pubDate} />
+              </span>
+            ) : null}
           </div>
 
           <h1 class="docs-title">{entry.data.title}</h1>
@@ -56,11 +63,6 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
           ) : null}
 
           <div class="docs-meta">
-            {entry.data.pubDate ? (
-              <span class="docs-meta__item">
-                Published <FormattedDate date={entry.data.pubDate} />
-              </span>
-            ) : null}
             {entry.data.updatedDate ? (
               <span class="docs-meta__item">
                 Updated <FormattedDate date={entry.data.updatedDate} />
@@ -69,9 +71,9 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
           </div>
 
           {entry.data.tags?.length ? (
-            <div class="docs-tags" aria-label="Document tags">
+            <div class="docs-tags tag-list" aria-label="Document tags">
               {entry.data.tags.map((tag) => (
-                <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
               ))}
             </div>
           ) : null}
@@ -306,17 +308,6 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
   .docs-meta__item {
     color: var(--muted);
     font-size: 0.9rem;
-  }
-
-  .tagLink {
-    color: var(--text-2);
-    text-decoration: none;
-    font-size: 0.92rem;
-    letter-spacing: 0.01em;
-  }
-
-  .tagLink:hover {
-    color: var(--accent);
   }
 
   .docs-body {

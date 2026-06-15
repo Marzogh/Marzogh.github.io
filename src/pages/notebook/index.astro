@@ -139,11 +139,13 @@ const cliManual = {
                   ) : null}
 
                   <div class="lead__copy">
-                    <div class="lead__kickers">
-                      <span class="pill">{leadPost.data.featured ? 'Lead feature' : 'Latest post'}</span>
-                      {leadPost.data.featured ? <span class="pill pill--coral">Featured</span> : null}
+                    <div class="lead__kickers meta-row">
+                      <div class="meta-cluster">
+                        <span class="meta-kicker">Notebook</span>
+                        {leadPost.data.featured ? <span class="meta-status">Featured</span> : null}
+                      </div>
                       {leadPost.data.pubDate ? (
-                        <span class="lead__date">
+                        <span class="meta-date lead__date">
                           <FormattedDate date={leadPost.data.pubDate} />
                         </span>
                       ) : null}
@@ -156,9 +158,9 @@ const cliManual = {
                     {leadPost.data.description ? <p class="lead__desc">{leadPost.data.description}</p> : null}
 
                     {leadPost.data.tags?.length ? (
-                      <div class="tag-row">
+                      <div class="tag-row tag-list">
                         {leadPost.data.tags.slice(0, 4).map((tag) => (
-                          <a class="tagChip" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                          <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
                         ))}
                       </div>
                     ) : null}
@@ -188,10 +190,13 @@ const cliManual = {
                         ) : null}
 
                         <div class="supportCard__copy">
-                          <div class="supportCard__meta">
-                            {post.data.featured ? <span class="pill pill--coral">Featured</span> : <span class="pill">Recent</span>}
+                          <div class="supportCard__meta meta-row">
+                            <div class="meta-cluster">
+                              <span class="meta-kicker">Notebook</span>
+                              {post.data.featured ? <span class="meta-status">Featured</span> : null}
+                            </div>
                             {post.data.pubDate ? (
-                              <span class="supportCard__date">
+                              <span class="meta-date supportCard__date">
                                 <FormattedDate date={post.data.pubDate} />
                               </span>
                             ) : null}
@@ -243,13 +248,16 @@ const cliManual = {
                       ) : null}
 
                       <div class="archiveRow__copy">
-                        <div class="archiveRow__meta">
+                        <div class="archiveRow__meta meta-row">
+                          <div class="meta-cluster">
+                            <span class="meta-kicker">Notebook</span>
+                            {post.data.featured ? <span class="meta-status">Featured</span> : null}
+                          </div>
                           {post.data.pubDate ? (
-                            <span class="archiveRow__date">
+                            <span class="meta-date archiveRow__date">
                               <FormattedDate date={post.data.pubDate} />
                             </span>
                           ) : null}
-                          {post.data.featured ? <span class="pill pill--coral">Featured</span> : null}
                         </div>
 
                         <h3 class="archiveRow__title">
@@ -480,28 +488,6 @@ const cliManual = {
     max-width: 38ch;
     color: var(--text-2);
     font-size: clamp(1rem, 1.15vw, 1.15rem);
-  }
-
-  .tagChip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.34rem 0.62rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-glass);
-    color: var(--text-2);
-    font-size: 0.82rem;
-    line-height: 1;
-    text-decoration: none;
-    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-  }
-
-  .tagChip:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
-    color: var(--text);
   }
 
   .supportRail {

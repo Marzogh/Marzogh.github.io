@@ -231,7 +231,7 @@ const statusLines = [
                   .filter((itemTag) => toTagSlug(itemTag) !== tag)
                   .slice(0, 3)
                   .map((itemTag) => (
-                    <a class="pill pill--muted" href={`/tags/${toTagSlug(itemTag)}`}>
+                    <a class="tag-link" href={`/tags/${toTagSlug(itemTag)}`}>
                       #{getTagMeta(itemTag).label}
                     </a>
                   ))}
@@ -565,28 +565,7 @@ const statusLines = [
   .archive-item__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.3rem 0.55rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-raised) 84%, var(--surface) 16%);
-    color: var(--text-2);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    line-height: 1.2;
-  }
-
-  .pill--muted {
-    opacity: 0.9;
-  }
-
-  .archive-item__tags .pill {
-    text-decoration: none;
+    gap: 0.85rem;
   }
 
   .archive-item__sortdata {

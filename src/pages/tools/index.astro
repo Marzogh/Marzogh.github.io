@@ -140,13 +140,16 @@ const cliManual = {
                   </div>
 
                   <div class="tool-lead__copy">
-                    <div class="tool-lead__meta">
+                    <div class="tool-lead__meta meta-row">
+                      <div class="meta-cluster">
+                        <span class="meta-kicker">Tool</span>
+                        <span class="meta-status">Lead utility</span>
+                      </div>
                       {leadTool.data.pubDate ? (
-                        <span class="tool-lead__date">
+                        <span class="meta-date tool-lead__date">
                           <FormattedDate date={leadTool.data.pubDate} />
                         </span>
                       ) : null}
-                      <span class="pill pill--compact">Lead utility</span>
                     </div>
 
                     <h3 class="tool-lead__title">
@@ -156,9 +159,9 @@ const cliManual = {
                     <p class="tool-lead__desc">{leadTool.data.description}</p>
 
                     {leadTool.data.tags?.length ? (
-                      <div class="tool-tagRow">
+                      <div class="tool-tagRow tag-list">
                         {leadTool.data.tags.slice(0, 4).map((tag) => (
-                          <a class="tagChip" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                          <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
                         ))}
                       </div>
                     ) : null}
@@ -175,13 +178,13 @@ const cliManual = {
                             <span class="tool-card__label">{getToolIdentity(tool).label}</span>
                           </div>
 
-                          <div class="tool-card__meta">
+                          <div class="tool-card__meta meta-row">
+                            <span class="meta-kicker">Tool</span>
                             {tool.data.pubDate ? (
-                              <span class="tool-card__date">
+                              <span class="meta-date tool-card__date">
                                 <FormattedDate date={tool.data.pubDate} />
                               </span>
                             ) : null}
-                            <span class="pill pill--compact">Tool</span>
                           </div>
 
                           <h3 class="tool-card__title">{tool.data.title}</h3>
@@ -408,12 +411,6 @@ const cliManual = {
     font-size: 0.86rem;
   }
 
-  .pill--compact {
-    padding: 0.24rem 0.56rem;
-    font-size: 0.74rem;
-    line-height: 1;
-  }
-
   .tool-lead__title,
   .tool-lead__desc,
   .tool-card__title,
@@ -443,28 +440,6 @@ const cliManual = {
     max-width: 42ch;
     color: var(--text-2);
     font-size: clamp(1rem, 1.1vw, 1.15rem);
-  }
-
-  .tagChip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.34rem 0.62rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-glass);
-    color: var(--text-2);
-    font-size: 0.82rem;
-    line-height: 1;
-    text-decoration: none;
-    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-  }
-
-  .tagChip:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-    background: color-mix(in srgb, var(--surface-raised) 66%, var(--accent) 34%);
-    color: var(--text);
   }
 
   .tool-deck {

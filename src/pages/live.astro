@@ -1,6 +1,5 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import LiveSignals from '../components/LiveSignals';
 ---
@@ -12,443 +11,221 @@ import LiveSignals from '../components/LiveSignals';
       title="Local Signals — Chips’nCode"
       description="Weather and bird activity from my local Raspberry Pi ecosystem."
     />
+    <script is:inline>
+      document.documentElement.dataset.theme = 'dark';
+    </script>
   </head>
   <body>
-    <Header />
-
-    <main class="live-page">
-      <section class="live-hero">
-        <p class="live-kicker">Field telemetry</p>
-        <h1>Local Signals</h1>
-        <p>A live-ish look at what the weather and birds are doing here today.</p>
-      </section>
+    <main
+      class="live-page"
+      style="width:100vw;max-width:none;margin:0;padding:0;min-height:100vh;display:grid;grid-template-rows:auto 1fr;"
+    >
+      <Header />
 
       <LiveSignals client:load />
     </main>
-
-    <Footer />
   </body>
 </html>
 
 <style>
-  .live-page {
-    --live-ink: #0f1b3d;
-    --live-slate: #44506c;
-    --live-blue: #2553cc;
-    --live-cyan: #0c7a86;
-    --live-amber: #a76511;
-    --live-rose: #b9234a;
-    --live-shell: #f7f9ff;
-    max-width: min(1180px, calc(100% - 2 * var(--space-5)));
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+  :global(:root) {
+    --live-bg: #f5f7fb;
+    --live-ink: #1d2128;
+    --live-ink-soft: #5f6777;
+    --live-tab-active: #d7ccb2;
+    --live-tab-active-ink: #16181d;
+    --live-tab-back: #8e836e;
+    --live-tab-back-ink: #f1ece1;
+    --live-tab-back-border: #6e6659;
+    --live-stage: #181b1f;
   }
 
-  .live-hero {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding: clamp(1.6rem, 2.5vw, 2.4rem);
-    background:
-      radial-gradient(900px 280px at 5% -15%, rgba(37, 83, 204, 0.26), transparent 62%),
-      radial-gradient(800px 300px at 105% 120%, rgba(12, 122, 134, 0.22), transparent 58%),
-      linear-gradient(135deg, #ffffff, #f4f8ff 58%, #eef6ff);
-    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
-  }
-
-  .live-kicker {
+  body {
     margin: 0;
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--live-ink) 62%, #fff 38%);
-    font-weight: 700;
+    background: var(--live-bg);
   }
 
-  .live-hero h1 {
-    margin: 0;
-    max-width: 13ch;
-    color: var(--live-ink);
-    font-size: clamp(2.2rem, 6.4vw, 4rem);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
-  }
-
-  .live-hero p {
-    margin: 0;
-    color: var(--live-slate);
-    max-width: 56ch;
-    font-size: clamp(1rem, 1.6vw, 1.2rem);
-  }
-
-  :global(.live-signals) {
+  :global(.live-shell) {
+    min-height: 0;
     display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    padding: 0;
   }
 
-  :global(.live-signals__section) {
-    display: grid;
-    gap: 12px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.5));
-    border-top: 2px solid color-mix(in srgb, var(--live-blue) 30%, var(--border) 70%);
-    padding: 0.9rem 0.2rem 0.2rem;
-    grid-column: span 12;
-  }
-
-  :global(.live-signals__section--weather) {
-    grid-column: span 6;
-  }
-
-  :global(.live-signals__section--birds) {
-    grid-column: span 6;
-    border-top-color: color-mix(in srgb, var(--live-cyan) 36%, var(--border) 64%);
-  }
-
-  :global(.live-signals__section--species),
-  :global(.live-signals__section--detections) {
-    grid-column: span 6;
-  }
-
-  :global(.live-signals__section--location) {
-    grid-column: span 12;
-  }
-
-  :global(.live-signals__card-header) {
+  :global(.live-shell__tabs) {
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
-    gap: var(--space-3);
+    gap: 0.18rem;
     flex-wrap: wrap;
-    padding: 0 0.35rem;
+    padding: 0 1rem;
+    border-bottom: 0;
+    background: linear-gradient(180deg, rgba(24, 27, 31, 0) 0%, rgba(24, 27, 31, 0.42) 100%);
+    position: relative;
+    z-index: 1;
   }
 
-  :global(.live-signals__card-header h2) {
-    margin: 0;
-    font-size: clamp(1.45rem, 2.2vw, 2rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--live-ink);
+  :global(.live-shell__tabs::after) {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: rgba(236, 231, 221, 0.14);
+    z-index: 2;
   }
 
-  :global(.live-signals__status) {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 999px;
-    padding: 5px 12px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    border: 1px solid;
-  }
-  :global(.live-signals__stamp) {
-    margin: 0;
-    font-size: 0.84rem;
-    color: var(--muted);
-  }
-
-  :global(.live-signals__status--ok) {
-    background: color-mix(in srgb, var(--live-cyan) 13%, #fff 87%);
-    border-color: color-mix(in srgb, var(--live-cyan) 38%, var(--border) 62%);
-  }
-
-  :global(.live-signals__status--stale) {
-    background: color-mix(in srgb, var(--live-amber) 16%, var(--surface) 84%);
-    border-color: color-mix(in srgb, var(--live-amber) 40%, var(--border) 60%);
+  :global(.live-shell__tab) {
+    appearance: none;
+    border: 1px solid var(--live-tab-back-border);
+    border-bottom: 0;
+    border-radius: 0;
+    background: var(--live-tab-back);
+    color: var(--live-tab-back-ink);
+    padding: 0.5rem 1rem 0.42rem 1.1rem;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    position: relative;
+    top: 7px;
+    clip-path: polygon(0 100%, 0 0.78rem, 0.92rem 0, 100% 0, 100% 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 251, 241, 0.16);
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease, top 160ms ease;
+    z-index: 0;
   }
 
-  :global(.live-signals__status--bad) {
-    background: color-mix(in srgb, var(--live-rose) 14%, var(--surface) 86%);
-    border-color: color-mix(in srgb, var(--live-rose) 40%, var(--border) 60%);
+  :global(.live-shell__tab::before) {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    clip-path: polygon(0 100%, 0 0.78rem, 0.92rem 0, 100% 0, 100% 100%);
+    background: linear-gradient(180deg, rgba(255, 248, 234, 0.12), rgba(0, 0, 0, 0.06));
+    pointer-events: none;
   }
 
-  :global(.live-signals__stats) {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    margin: 0;
-    border: 1px solid color-mix(in srgb, var(--live-blue) 20%, var(--border) 80%);
-    border-radius: 10px;
-    overflow: hidden;
+  :global(.live-shell__tab[aria-selected='true']) {
+    background: var(--live-tab-active);
+    color: var(--live-tab-active-ink);
+    border-color: #c4b79a;
+    top: 1px;
+    z-index: 3;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 250, 242, 0.38),
+      0 -1px 0 rgba(255, 248, 234, 0.05);
   }
 
-  :global(.live-signals__stats div) {
+  :global(.live-shell__tab[aria-selected='true']::after) {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--live-tab-active);
+    z-index: 4;
+  }
+
+  :global(.live-shell__tab[aria-selected='false']) {
+    filter: saturate(0.82) brightness(0.92);
+    z-index: 1;
+  }
+
+  :global(.live-shell__tab:hover[aria-selected='false']) {
+    top: 5px;
+    filter: saturate(0.9) brightness(0.98);
+  }
+
+  :global(.live-shell__stage) {
+    min-height: 0;
+    background: var(--live-stage);
+    position: relative;
+    z-index: 2;
+  }
+
+  :global(.live-shell__frame) {
+    width: 100%;
+    height: calc(100vh - 5.9rem);
     border: 0;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.88);
-  }
-
-  :global(.live-signals__stats dt) {
-    margin: 0;
-    font-size: 0.76rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-  }
-
-  :global(.live-signals__stats dd) {
-    margin: 6px 0 0;
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    color: var(--live-ink);
-    font-weight: 700;
-  }
-
-  :global(.live-signals__updated) {
-    margin: 0;
-    padding: 0 0.35rem;
-    color: var(--muted);
-    font-size: 0.93rem;
-  }
-
-  :global(.live-signals__species-list) {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0;
-    border-top: 1px solid color-mix(in srgb, var(--live-cyan) 26%, var(--border) 74%);
-  }
-
-  :global(.live-signals__species-item) {
-    border-bottom: 1px solid color-mix(in srgb, var(--live-cyan) 20%, var(--border) 80%);
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.7);
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    column-gap: 12px;
-    row-gap: 6px;
-    align-items: start;
-  }
-
-  :global(.live-signals__species-image) {
-    width: 80px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid color-mix(in srgb, var(--live-blue) 20%, var(--border) 80%);
-    background: #eef3fb;
-  }
-
-  :global(.live-signals__species-head) {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  :global(.live-signals__species-head strong) {
-    color: var(--text);
-  }
-
-  :global(.live-signals__species-head span),
-  :global(.live-signals__meter-label),
-  :global(.live-signals__species-item p) {
-    margin: 0;
-    color: var(--text-2);
-    grid-column: 2;
-  }
-
-  :global(.live-signals__meter) {
-    width: 100%;
-    height: 9px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--live-blue) 9%, #fff 91%);
-    margin-top: 8px;
-    overflow: hidden;
-  }
-
-  :global(.live-signals__meter span) {
     display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--live-blue), var(--live-teal));
-    transition: width 400ms ease;
+    background: var(--live-stage);
   }
 
-  :global(.live-signals__meter-label) {
-    margin-top: 8px;
-    font-size: 0.9rem;
+  :global(:root[data-theme='dark']) {
+    --live-bg: #181b1f;
+    --live-ink: #ebe5d6;
+    --live-ink-soft: #ada493;
+    --live-tab-active: #d7ccb2;
+    --live-tab-active-ink: #17191d;
+    --live-tab-back: #8f846f;
+    --live-tab-back-ink: #efe8dc;
+    --live-tab-back-border: #6b6358;
+    --live-stage: #181b1f;
+    --text: #ebe5d6;
+    --text-2: #b6ae9d;
+    --muted: #968d7d;
+    --accent: #d7ccb2;
+    --link: #d7ccb2;
+    --link-hover: #f0e7d2;
+    --header-bg:
+      linear-gradient(180deg, rgba(24, 27, 31, 0.96) 0%, rgba(24, 27, 31, 0.94) 100%),
+      rgba(24, 27, 31, 0.96);
+    --header-border: rgba(236, 231, 221, 0.1);
+    --header-chip-bg: rgba(31, 35, 40, 0.88);
+    --header-chip-border: rgba(236, 231, 221, 0.12);
+    --shadow-sm: none;
   }
 
-  :global(.live-signals__detections) {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: 0;
-    border-top: 1px solid color-mix(in srgb, var(--live-cyan) 22%, var(--border) 78%);
+  :global(:root[data-theme='dark'] .live-shell__stage) {
+    background: var(--live-stage);
   }
 
-  :global(.live-signals__detections li) {
-    display: grid;
-    gap: 4px;
-    border-bottom: 1px solid color-mix(in srgb, var(--live-cyan) 18%, var(--border) 82%);
-    border-left: 0;
-    padding: 10px 6px;
-    background: rgba(255, 255, 255, 0.7);
+  :global(:root[data-theme='dark'] .live-shell__frame) {
+    background: var(--live-stage);
   }
 
-  :global(.live-signals__source) {
-    color: var(--muted);
-    font-size: 0.9rem;
+  :global(:root[data-theme='dark'] body) {
+    background: var(--live-bg);
   }
 
-  :global(.live-signals__privacy) {
-    color: var(--muted);
-    margin: 0;
+  :global(:root[data-theme='dark'] .site-header) {
+    backdrop-filter: none;
   }
 
-  :global(.live-signals__location a) {
-    font-weight: 700;
-  }
-
-  :global(.live-signals__map) {
-    width: 100%;
-    min-height: 300px;
-    border: 1px solid color-mix(in srgb, var(--live-blue) 18%, var(--border) 82%);
-    border-radius: 8px;
-  }
-
-  :global(:root[data-theme="dark"] .live-hero) {
-    background:
-      radial-gradient(900px 280px at 5% -15%, rgba(56, 189, 248, 0.22), transparent 62%),
-      radial-gradient(800px 300px at 105% 120%, rgba(45, 212, 191, 0.18), transparent 58%),
-      linear-gradient(135deg, #091327, #0b1a35 58%, #102345);
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
-  }
-
-  :global(:root[data-theme="dark"] .live-kicker) {
-    color: #9db3d9;
-  }
-
-  :global(:root[data-theme="dark"] .live-hero h1) {
-    color: #e7efff;
-  }
-
-  :global(:root[data-theme="dark"] .live-hero p) {
-    color: #bdd0ee;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__section) {
-    background: linear-gradient(180deg, rgba(10, 19, 38, 0.8), rgba(11, 24, 45, 0.75));
-    border-top-color: rgba(118, 156, 221, 0.55);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__section--birds) {
-    border-top-color: rgba(94, 197, 188, 0.55);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__card-header h2) {
-    color: #e5eeff;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__stamp),
-  :global(:root[data-theme="dark"] .live-signals__updated),
-  :global(:root[data-theme="dark"] .live-signals__source) {
-    color: #9fb4d8;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__stats) {
-    border-color: rgba(93, 126, 180, 0.55);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__stats div) {
-    background: rgba(11, 24, 46, 0.88);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__stats dt) {
-    color: #8ea3c8;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__stats dd) {
-    color: #edf3ff;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__species-list) {
-    border-top-color: rgba(93, 177, 172, 0.5);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__species-item) {
-    border-bottom-color: rgba(86, 145, 171, 0.5);
-    background: rgba(9, 22, 43, 0.7);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__species-image) {
-    border-color: rgba(90, 123, 178, 0.55);
-    background: #10243f;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__species-head strong),
-  :global(:root[data-theme="dark"] .live-signals__detections li strong),
-  :global(:root[data-theme="dark"] .live-signals__location h2) {
-    color: #e7efff;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__species-head span),
-  :global(:root[data-theme="dark"] .live-signals__meter-label),
-  :global(:root[data-theme="dark"] .live-signals__species-item p),
-  :global(:root[data-theme="dark"] .live-signals__detections li span),
-  :global(:root[data-theme="dark"] .live-signals__location p) {
-    color: #bfd0ea;
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__meter) {
-    background: rgba(68, 96, 143, 0.4);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__detections) {
-    border-top-color: rgba(93, 177, 172, 0.5);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__detections li) {
-    border-bottom-color: rgba(90, 123, 178, 0.4);
-    background: rgba(9, 22, 43, 0.72);
-  }
-
-  :global(:root[data-theme="dark"] .live-signals__map) {
-    border-color: rgba(90, 123, 178, 0.6);
-  }
-
-  @media (max-width: 980px) {
-    :global(.live-signals__section--weather),
-    :global(.live-signals__section--birds),
-    :global(.live-signals__section--species),
-    :global(.live-signals__section--detections) {
-      grid-column: span 12;
-    }
+  :global(:root[data-theme='dark'] .main-nav a.active) {
+    border-bottom-color: #d7ccb2;
   }
 
   @media (max-width: 760px) {
-    .live-page {
-      max-width: min(1100px, calc(100% - 1.4rem));
-      gap: var(--space-5);
+    :global(.live-shell) {
+      padding: 0;
     }
 
-    :global(.live-signals__stats) {
-      grid-template-columns: 1fr;
+    :global(.live-shell__tabs) {
+      gap: 0.22rem;
+      padding: 0 0.75rem;
     }
 
-    :global(.live-signals__card-header h2) {
-      font-size: clamp(1.4rem, 7vw, 2rem);
+    :global(.live-shell__tab) {
+      padding: 0.45rem 0.82rem 0.4rem 0.94rem;
+      font-size: 0.84rem;
+      top: 5px;
+      clip-path: polygon(0 100%, 0 0.64rem, 0.72rem 0, 100% 0, 100% 100%);
     }
 
-    :global(.live-signals__species-item) {
-      grid-template-columns: 1fr;
+    :global(.live-shell__tab::before) {
+      clip-path: polygon(0 100%, 0 0.64rem, 0.72rem 0, 100% 0, 100% 100%);
     }
 
-    :global(.live-signals__species-image),
-    :global(.live-signals__species-head),
-    :global(.live-signals__species-head span),
-    :global(.live-signals__meter-label),
-    :global(.live-signals__species-item p) {
-      grid-column: 1;
+    :global(.live-shell__tab[aria-selected='true']) {
+      top: 1px;
     }
 
-    :global(.live-signals__map) {
-      min-height: 220px;
+    :global(.live-shell__frame) {
+      height: calc(100vh - 5.7rem);
     }
   }
 </style>

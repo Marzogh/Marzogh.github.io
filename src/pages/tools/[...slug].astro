@@ -48,9 +48,16 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
         </a>
 
         <header class:list={['tools-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'tools-hero--plain']}>
-          <div class="tools-hero__eyebrow">
-            <span class="pill">Tool</span>
-            {entry.data.tags?.[0] ? <span class="pill pill--coral">#{entry.data.tags[0]}</span> : null}
+          <div class="tools-hero__eyebrow meta-row">
+            <div class="meta-cluster">
+              <span class="meta-kicker">Tool</span>
+              {entry.data.featured ? <span class="meta-status">Featured</span> : null}
+            </div>
+            {entry.data.pubDate ? (
+              <span class="meta-date">
+                <FormattedDate date={entry.data.pubDate} />
+              </span>
+            ) : null}
           </div>
 
           <h1 class="tools-title">{entry.data.title}</h1>
@@ -58,11 +65,6 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
           {entry.data.description ? <p class="tools-description">{entry.data.description}</p> : null}
 
           <div class="tools-meta">
-            {entry.data.pubDate ? (
-              <span class="tools-meta__item">
-                Published <FormattedDate date={entry.data.pubDate} />
-              </span>
-            ) : null}
             {entry.data.updatedDate ? (
               <span class="tools-meta__item">
                 Updated <FormattedDate date={entry.data.updatedDate} />
@@ -71,9 +73,9 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
           </div>
 
           {entry.data.tags?.length ? (
-            <div class="tools-tags" aria-label="Tool tags">
+            <div class="tools-tags tag-list" aria-label="Tool tags">
               {entry.data.tags.map((tag) => (
-                <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
               ))}
             </div>
           ) : null}
@@ -178,17 +180,6 @@ const headerStyle = entry.data.headerStyle ?? 'plain';
   .tools-meta__item {
     color: var(--muted);
     font-size: 0.95rem;
-  }
-
-  .tagLink {
-    color: var(--text-2);
-    text-decoration: none;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-  }
-
-  .tagLink:hover {
-    color: var(--accent);
   }
 
   .tools-body {

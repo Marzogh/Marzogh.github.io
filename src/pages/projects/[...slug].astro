@@ -44,20 +44,22 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
           ]}
         >
           <div class="project-copy">
-            <div class="project-kickers">
-              <span class="pill">Project</span>
-              {entry.data.featured ? <span class="pill pill--coral">Featured</span> : null}
+            <div class="project-kickers meta-row">
+              <div class="meta-cluster">
+                <span class="meta-kicker">Project</span>
+                {entry.data.featured ? <span class="meta-status">Featured</span> : null}
+              </div>
+              {entry.data.pubDate ? (
+                <span class="meta-date">
+                  <FormattedDate date={entry.data.pubDate} />
+                </span>
+              ) : null}
             </div>
 
             <h1 class="project-title">{entry.data.title}</h1>
             <p class="project-description">{entry.data.description}</p>
 
             <div class="project-meta">
-              {entry.data.pubDate ? (
-                <span class="project-meta__item">
-                  Published <FormattedDate date={entry.data.pubDate} />
-                </span>
-              ) : null}
               {entry.data.updatedDate ? (
                 <span class="project-meta__item">
                   Updated <FormattedDate date={entry.data.updatedDate} />
@@ -66,9 +68,9 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
             </div>
 
             {entry.data.tags?.length ? (
-              <div class="project-tags">
+              <div class="project-tags tag-list">
                 {entry.data.tags.map((tag) => (
-                  <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                  <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
                 ))}
               </div>
             ) : null}
@@ -211,17 +213,6 @@ const headerStyle = entry.data.headerStyle ?? 'panel';
   .project-meta__item {
     color: var(--muted);
     font-size: 0.95rem;
-  }
-
-  .tagLink {
-    color: var(--text-2);
-    text-decoration: none;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-  }
-
-  .tagLink:hover {
-    color: var(--accent);
   }
 
   .project-hero__media {
