@@ -1,0 +1,197 @@
+---
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { EDUCATION_QLEARN_ROUTE_MAP } from '../../data/educationYear9DigitalTechnologies';
+
+interface Props {
+  source: string;
+  sourceKind?: 'qlearn-year9' | 'public-html';
+}
+
+const { source, sourceKind = 'qlearn-year9' } = Astro.props;
+
+const QLEARN_SOURCE_DIR = resolve(process.cwd(), 'scripts/year9-digitech-source/site/pages');
+const PUBLIC_DIR = resolve(process.cwd(), 'public');
+const QLEARN_ASSET_PREFIX = '/education/student-resources/digital-technologies-year-9-2026/assets/';
+const PUBLIC_HTML_SCOPE = '.edu-imported-content--public-html';
+
+function readSource() {
+  if (sourceKind === 'qlearn-year9') {
+    return readFileSync(resolve(QLEARN_SOURCE_DIR, source), 'utf-8');
+  }
+  return readFileSync(resolve(PUBLIC_DIR, source.replace(/^\//, '')), 'utf-8');
+}
+
+function extractBody(text: string) {
+  if (sourceKind === 'qlearn-year9') {
+    const qlearn = text.match(/<div class="site-qlearn-content">([\s\S]*)<\/div><\/article>/i);
+    if (qlearn) return qlearn[1].trim();
+  }
+  const match = text.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  return match ? match[1].trim() : text.trim();
+}
+
+function extractHeadStyles(text: string) {
+  return [...text.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
+    .map((match) => match[1].trim())
+    .filter(Boolean);
+}
+
+function scopeCssSelectors(selectors: string, scope: string) {
+  return selectors
+    .split(',')
+    .map((selector) => selector.trim())
+    .filter(Boolean)
+    .map((selector) => {
+      if (selector.startsWith(scope)) return selector;
+      if (selector === ':root') return scope;
+      if (selector === 'html' || selector === 'body') return scope;
+      if (selector === '*') return `${scope} *`;
+      if (selector.startsWith('html ')) return `${scope} ${selector.slice(5).trim()}`;
+      if (selector.startsWith('body ')) return `${scope} ${selector.slice(5).trim()}`;
+      if (selector.startsWith(':root ')) return `${scope} ${selector.slice(6).trim()}`;
+      if (selector.startsWith('::') || selector.startsWith(':')) return `${scope}${selector}`;
+      return `${scope} ${selector}`;
+    })
+    .join(', ');
+}
+
+function scopeCss(css: string, scope: string): string {
+  let output = '';
+  let cursor = 0;
+
+  while (cursor < css.length) {
+    const nextOpen = css.indexOf('{', cursor);
+    if (nextOpen === -1) {
+      output += css.slice(cursor);
+      break;
+    }
+
+    const header = css.slice(cursor, nextOpen).trim();
+    let depth = 1;
+    let bodyStart = nextOpen + 1;
+    let bodyEnd = bodyStart;
+
+    while (bodyEnd < css.length && depth > 0) {
+      const char = css[bodyEnd];
+      if (char === '{') depth += 1;
+      if (char === '}') depth -= 1;
+      bodyEnd += 1;
+    }
+
+    const body = css.slice(bodyStart, bodyEnd - 1);
+
+    if (header.startsWith('@media') || header.startsWith('@supports')) {
+      output += `${header} {\n${scopeCss(body, scope)}\n}\n`;
+    } else if (
+      header.startsWith('@keyframes') ||
+      header.startsWith('@font-face') ||
+      header.startsWith('@property')
+    ) {
+      output += `${header} {\n${body}\n}\n`;
+    } else {
+      output += `${scopeCssSelectors(header, scope)} {\n${body}\n}\n`;
+    }
+
+    cursor = bodyEnd;
+  }
+
+  return output;
+}
+
+function rewriteShared(body: string) {
+  let output = body;
+  output = output.replace(/\sdata-course-type="[^"]*"/g, '');
+  output = output.replace(/\sdata-published="[^"]*"/g, '');
+  output = output.replace(/href="https:\/\/thonny\.org\/"/g, 'href="https://thonny.org/" rel="noopener noreferrer"');
+  return output;
+}
+
+function rewriteQlearn(body: string) {
+  let output = rewriteShared(body);
+  output = output.replace(/(href|src)="\.\.\/assets\/([^\"]+)"/g, (_m, attr, path) => `${attr}="${QLEARN_ASSET_PREFIX}${path}"`);
+  output = output.replace(/href="\.\.\/(?:index|unit1|unit2)\.html"/g, (match) => {
+    if (match.includes('unit1.html')) return 'href="/education/digital-technologies/year-9/unit-1"';
+    if (match.includes('unit2.html')) return 'href="/education/digital-technologies/year-9/unit-2"';
+    return 'href="/education/digital-technologies/year-9"';
+  });
+  for (const [filename, route] of Object.entries(EDUCATION_QLEARN_ROUTE_MAP).sort((a, b) => b[0].length - a[0].length)) {
+    output = output.replaceAll(`href="${filename}"`, `href="${route}"`);
+  }
+  output = output.replace(/href="#"/g, 'href="javascript:void(0)" aria-disabled="true"');
+  return output;
+}
+
+function rewritePublicHtml(body: string) {
+  return rewriteShared(body);
+}
+
+const sourceText = readSource();
+const publicHtmlStyles = sourceKind === 'public-html'
+  ? extractHeadStyles(sourceText).map((style) => scopeCss(style, PUBLIC_HTML_SCOPE)).join('\n')
+  : '';
+const html = sourceKind === 'qlearn-year9'
+  ? rewriteQlearn(extractBody(sourceText))
+  : `${publicHtmlStyles ? `<style>${publicHtmlStyles}</style>` : ''}${rewritePublicHtml(extractBody(sourceText))}`;
+---
+
+<div class:list={['edu-imported-content', sourceKind === 'qlearn-year9' && 'edu-imported-content--qlearn', sourceKind === 'public-html' && 'edu-imported-content--public-html']} set:html={html} />
+
+<style>
+  .edu-imported-content :global(img),
+  .edu-imported-content :global(video),
+  .edu-imported-content :global(iframe),
+  .edu-imported-content :global(svg) {
+    max-width: 100%;
+  }
+
+  .edu-imported-content :global(pre) {
+    overflow-x: auto;
+  }
+
+  .edu-imported-content--qlearn :global(*) {
+    max-width: 100%;
+  }
+
+  /* Let the imported QLearn shell use its own inline visual language
+     instead of inheriting Chips'nCode's heading/link system. */
+  .edu-imported-content--qlearn :global(h1),
+  .edu-imported-content--qlearn :global(h2),
+  .edu-imported-content--qlearn :global(h3),
+  .edu-imported-content--qlearn :global(h4),
+  .edu-imported-content--qlearn :global(h5),
+  .edu-imported-content--qlearn :global(h6),
+  .edu-imported-content--qlearn :global(p),
+  .edu-imported-content--qlearn :global(li),
+  .edu-imported-content--qlearn :global(strong),
+  .edu-imported-content--qlearn :global(summary),
+  .edu-imported-content--qlearn :global(span),
+  .edu-imported-content--qlearn :global(div),
+  .edu-imported-content--qlearn :global(ul),
+  .edu-imported-content--qlearn :global(ol) {
+    color: inherit;
+  }
+
+  .edu-imported-content--qlearn :global(a),
+  .edu-imported-content--qlearn :global(a:hover),
+  .edu-imported-content--qlearn :global(a:visited) {
+    color: inherit;
+  }
+
+  .edu-imported-content--public-html {
+    width: 100%;
+  }
+
+  .edu-imported-content--public-html :global(*) {
+    max-width: 100%;
+  }
+
+  .edu-imported-content--public-html :global(a),
+  .edu-imported-content--public-html :global(a:visited) {
+    color: var(--blue, #1d4ed8);
+  }
+
+  .edu-imported-content--public-html :global(a:hover) {
+    color: color-mix(in srgb, var(--blue, #1d4ed8) 80%, #000 20%);
+  }
+</style>
