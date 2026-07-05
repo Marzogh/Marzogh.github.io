@@ -8,8 +8,9 @@ import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
 import CliShell from '../../components/CliShell.astro';
 import { toTagSlug } from '../../utils/tags';
+import { isPublishedEntryData } from '../../utils/publishing';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => {
+const posts = (await getCollection('blog', ({ data }) => isPublishedEntryData(data))).sort((a, b) => {
   const aTime = a.data.pubDate ? a.data.pubDate.getTime() : 0;
   const bTime = b.data.pubDate ? b.data.pubDate.getTime() : 0;
   if (bTime !== aTime) return bTime - aTime;

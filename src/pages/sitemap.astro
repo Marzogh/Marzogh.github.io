@@ -4,8 +4,9 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { getCollection } from 'astro:content';
 import { poetry } from '../data/poetry';
+import { isPublishedEntryData } from '../utils/publishing';
 
-const blog = await getCollection('blog', ({ data }) => !data.draft);
+const blog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
 const docs = await getCollection('docs', ({ data }) => !data.draft);
 const projects = await getCollection('projects', ({ data }) => !data.draft);
 const tools = await getCollection('tools', ({ data }) => !data.draft);

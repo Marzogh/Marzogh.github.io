@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+import { isPublishedEntryData } from '../../utils/publishing';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
   return posts.map((post) => ({
     params: { slug: post.id },
   }));

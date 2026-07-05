@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
+import { isPublishedEntryData } from '../../utils/publishing';
 
 const COLLECTION_CONFIG = [
   { name: 'blog', label: 'Notebook', basePath: '/notebook' },
@@ -66,7 +67,10 @@ export async function getStaticPaths() {
   ] as const;
 
   for (const config of collectionConfig) {
-    const entries = await getCollection(config.name, ({ data }) => !data.draft);
+    const entries = await getCollection(
+      config.name,
+      ({ data }) => config.name === 'blog' ? isPublishedEntryData(data) : !data.draft,
+    );
     for (const entry of entries) {
       const tags = Array.isArray(entry.data.tags) ? entry.data.tags : [];
       for (const tag of tags) {
@@ -92,7 +96,10 @@ if (!tag) {
 const allItems = [];
 
 for (const config of COLLECTION_CONFIG) {
-  const entries = await getCollection(config.name, ({ data }) => !data.draft);
+  const entries = await getCollection(
+    config.name,
+    ({ data }) => config.name === 'blog' ? isPublishedEntryData(data) : !data.draft,
+  );
   for (const entry of entries) {
     const tags = Array.isArray(entry.data.tags) ? entry.data.tags : [];
     if (!tags.some((item) => toTagSlug(item) === tag)) continue;

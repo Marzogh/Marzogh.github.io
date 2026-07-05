@@ -1,9 +1,10 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { isPublishedEntryData } from '../../utils/publishing';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	const posts = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
 	return posts.map((post) => ({
 		// For a `[...slug]` route, `params.slug` should be a single string (may contain `/`).
 		params: { slug: post.id },
@@ -18,6 +19,10 @@ if (!slug) {
 const post = await getEntry('blog', slug);
 if (!post) {
 	throw new Error(`Notebook entry not found: ${slug}`);
+}
+
+if (!isPublishedEntryData(post.data)) {
+	throw new Error(`Notebook entry is not published yet: ${slug}`);
 }
 
 const { Content } = await render(post);

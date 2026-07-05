@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { getCollection } from 'astro:content';
 import { poetry } from '../data/poetry';
+import { isPublishedEntryData } from '../utils/publishing';
 
 const title = 'Chips’nCode';
 const description = 'A living technical playground — projects, tools, documentation, and education.';
@@ -13,7 +14,7 @@ const entryDateValue = (entry) =>
   new Date(entry?.data?.pubDate ?? entry?.data?.updatedDate ?? 0).valueOf();
 
 // Latest content (update collection names here if yours differ)
-const allBlog = await getCollection('blog', ({ data }) => !data.draft);
+const allBlog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
 const latestBlog = [...allBlog]
   .sort((a, b) => entryDateValue(b) - entryDateValue(a))
   .slice(0, 5);
