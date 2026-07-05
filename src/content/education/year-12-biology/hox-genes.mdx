@@ -5,22 +5,17 @@ pubDate: 2026-05-11
 draft: false
 level: "year-12"
 subject: "biology"
-type: "interactive-lesson"
-homeCategory: "student-resources"
 tags: ["student-resources", "biology", "year-12", "hox-genes", "development"]
 featured: false
+resourceType: "lesson"
+audience: "both"
+renderMode: "document"
+downloadable: true
+downloadTargets:
+  - label: "Open standalone HTML"
+    url: "/education/student-resources/year-12-biology/hox-genes.html"
 ---
 
-import EmbeddedResource from '../../../components/education/EmbeddedResource.astro';
+import EducationImportedContent from '../../../components/education/EducationImportedContent.astro';
 
-This one is always a favourite because it shows students how a small set of genes can have a huge impact on body plan and development. HOX genes give us a way to talk about patterning in a concrete, memorable way, and students quickly see why regulatory genes are such an important part of modern biology.
-
-The resource invites students to think beyond gene equals trait and into timing, position, and control. They can explore how developmental instructions are coordinated, and what happens when those instructions shift. It naturally opens discussion around variation, evolution, and why related organisms can still end up with very different structures.
-
-Use this when you want rich class discussion without losing scientific rigour. It supports content understanding and the bigger idea that biology is organised, dynamic, and interconnected.
-
-<EmbeddedResource
-  src="/education/student-resources/year-12-biology/hox-genes.html"
-  title="HOX Genes"
-  minHeight="1900px"
-/>
+<EducationImportedContent source="/education/student-resources/year-12-biology/hox-genes.html" sourceKind="public-html" />

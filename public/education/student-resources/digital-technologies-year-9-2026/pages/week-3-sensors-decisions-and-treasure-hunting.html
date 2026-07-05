@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Week 3 - Sensors, Decisions, and Treasure Hunting</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link active" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="week-2-autonomous-movement-and-control.html">← Week 2: Autonomous Movement and Control</a><a href="../unit2.html">Back to Unit 2</a><a href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-radius: 18px; padding: 22px 24px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 10px; border-radius: 999px; background: #2563eb; color: #ffffff; font-size: 12px; margin-bottom: 10px;">YEAR 9 DIGITAL TECHNOLOGIES • WEEK 3</div>
+<h2 style="margin: 0 0 8px 0; font-size: 28px;">Sensors, Decisions, and Treasure Hunting</h2>
+<p style="margin: 0 0 10px 0;">This week your robot begins to react to the world around it. You will use the Optical Sensor so your Simple Clawbot can detect cube colour, make decisions, and collect only the red Treasure Cube.</p>
+<p style="margin: 0;"><strong>Used each lesson:</strong> Simple Clawbot with Optical Sensor, battery, controller, device with VEXcode IQ, field tiles, IQ cubes, and your engineering notebook.</p>
+</div>
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px; margin-bottom: 18px;">
+<div style="color: #3730a3; margin-bottom: 10px;">💻 VEXCODE HELP</div>
+<p style="margin: 0 0 10px 0;"><strong>If you need help installing VEXcode, connecting your robot, configuring devices, downloading a project, configuring the Optical Sensor, or finding the Help tools inside VEXcode, use the internal VEXcode reference page first.</strong></p>
+<a href="using-vexcode.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #4338ca; color: #ffffff; text-decoration: none; font-size: 14px;" title="Using VEXcode"><strong>Open the VEXcode setup and help page</strong></a></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #a7f3d0; background: #ecfdf5; border-radius: 18px; padding: 20px;">
+<div style="color: #065f46; margin-bottom: 10px;">🎯 THIS WEEK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>add and configure the Optical Sensor</li>
+<li>use intermediate blocks such as <strong>[If then]</strong> and <strong>[Repeat]</strong></li>
+<li>make the robot decide what to do based on cube colour</li>
+<li>complete the Eye Spy Treasure practice activity</li>
+<li>attempt the Treasure Mover Challenge</li>
+<li>use Python as an extension pathway after your block logic is working</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 440px;">
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px;">
+<div style="color: #3730a3; margin-bottom: 10px;">📘 ENGINEERING NOTEBOOK</div>
+<p style="margin: 0 0 10px 0;"><strong>Your engineering notebook is required in every lesson.</strong></p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>record sensor setup, path plans, tests, fixes, and results</li>
+<li>show how your robot used colour information to make decisions</li>
+<li>keep adding to your table of useful robot commands</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fde68a; background: #fffbeb; border-radius: 18px; padding: 20px;">
+<div style="color: #92400e; margin-bottom: 10px;">✅ BY THE END OF WEEK 3</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your robot should be able to use Optical Sensor feedback</li>
+<li>your code should include decision logic, not only fixed movement</li>
+<li>your notebook should show testing with different cube positions</li>
+<li>you should be able to explain how a block decision connects to Python <strong>if</strong> logic</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 18px; padding: 20px;">
+<div style="color: #991b1b; margin-bottom: 10px;">📌 IMPORTANT</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Do not test the full challenge before the sensor test works.</li>
+<li>Do not change cube position, speed, path, and claw timing all at once.</li>
+<li>Start the robot from the same position every time when testing.</li>
+<li>Make sure the Optical Sensor is configured before using sensor blocks.</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 18px; padding: 20px; margin-bottom: 18px;">
+<div style="color: #5b21b6; margin-bottom: 10px;">🐍 PYTHON EXTENSION PATHWAY</div>
+<p style="margin: 0 0 10px 0;">Most students will complete the main tasks using intermediate blocks. If your block project is working reliably, you may move into Python as an extension.</p>
+<p style="margin: 0;">Your Python goal is not to start again from zero. Your goal is to translate a working block decision into Python and explain how the logic matches.</p>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 1: Learn the Optical Sensor</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Optical Sensor Overview Lesson Summary_1-1.pdf"><strong>Optical Sensor Overview</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Optical Sensor Lesson Summary - Blocks_1-1.pdf"><strong>Optical Sensor - VEXcode IQ Blocks</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [If then] Lesson Summary - Blocks-1.pdf"><strong>[If then] block</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [Repeat] Lesson Summary - Blocks-2.pdf"><strong>[Repeat] block</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L3 - Learn CYU-1.pdf"><strong>Lesson 3 Learn Check Your Understanding</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record what the Optical Sensor can detect, how it is configured, and one example of how sensor information can control a robot decision.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the Lesson 3 Introduction so you understand this week’s Treasure Hunt problem.</li>
+<li>Open the Optical Sensor Overview and identify the three things the sensor can report.</li>
+<li>Add the Optical Sensor to your Simple Clawbot if it is not already attached.</li>
+<li>Open the correct Simple Clawbot template in VEXcode IQ.</li>
+<li>Configure the Optical Sensor in the correct port.</li>
+<li>Use the Brain Dashboard or VEXcode tools to check whether the sensor can detect a cube.</li>
+<li>Test the sensor with a red cube and with a non-red cube.</li>
+<li>Open the [If then] block resource and identify what happens when a condition is TRUE or FALSE.</li>
+<li>Open the [Repeat] block resource and identify how repeated actions can make code more efficient.</li>
+<li>Complete the Learn Check Your Understanding questions if your teacher asks you to.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 1 - Learn the Optical Sensor</strong>.</li>
+<li>Write what the Optical Sensor can detect.</li>
+<li>Record the port used for the Optical Sensor.</li>
+<li>Record what happened when the sensor checked a red cube.</li>
+<li>Record what happened when the sensor checked a non-red cube.</li>
+<li>Write one sentence explaining how a sensor condition works like an <strong>if</strong> statement.</li>
+<li>Add Optical Sensor, [If then], and [Repeat] entries to your <strong>Robot commands this week</strong> table.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Optical Sensor attached and configured</li>
+<li>sensor detects cube colour</li>
+<li>you can explain TRUE and FALSE</li>
+<li>notebook entry complete</li>
+<li>teacher check of robot and notebook</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Check the Optical Sensor is plugged into the expected port.</li>
+<li>Check that the Optical Sensor is configured in VEXcode IQ.</li>
+<li>Make sure the cube is close enough for the sensor to detect.</li>
+<li>Check the lighting if colour detection seems unreliable.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>compare red, green, and blue cube readings</li>
+<li>look at the Python Optical Sensor summary</li>
+<li>write the Python-style version of one sensor decision</li>
+<li>add Python command notes to your Robot commands table</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 2: Eye Spy Treasure practice</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L3 - Eye Spy Treasure Practice Activity.pdf"><strong>Eye Spy Treasure Practice Activity</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Optical Sensor Lesson Summary - Blocks_1-1.pdf"><strong>Optical Sensor - VEXcode IQ Blocks</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [If then] Lesson Summary - Blocks-1.pdf"><strong>[If then] block</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [Repeat] Lesson Summary - Blocks-2.pdf"><strong>[Repeat] block</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Optical Sensor Lesson Summary - Python_1-1.pdf"><strong>Optical Sensor - VEXcode IQ Python</strong> </a><span style="color: #6b7280;">(extension)</span></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record your field setup, your planned path to each cube, the condition your code checks, and what happened when the cube positions changed.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the Eye Spy Treasure Practice Activity.</li>
+<li>Set up the field exactly as shown in the activity.</li>
+<li>Place two cubes on the first two lines on the left side of the field. One must be red.</li>
+<li>Start the Simple Clawbot in the required starting position.</li>
+<li>Before coding, sketch the field and draw the planned path in your notebook.</li>
+<li>Create a movement-only test so the robot can drive to the first cube position.</li>
+<li>Add the Optical Sensor decision: if the cube is red, the robot should collect it.</li>
+<li>Test whether the robot can detect the colour correctly before trying the full routine.</li>
+<li>Complete a full Eye Spy Treasure attempt.</li>
+<li>Reset the field, swap the cube positions, and test again.</li>
+<li>Change one thing at a time until the robot is more reliable.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 2 - Eye Spy Treasure practice</strong>.</li>
+<li>Sketch the field setup with the red cube and non-red cube.</li>
+<li>Draw the robot’s planned path.</li>
+<li>Write the condition your code checks.</li>
+<li>Record what happened when the red cube was first.</li>
+<li>Record what happened when the red cube was second.</li>
+<li>Write one change you made to improve the project.</li>
+<li>Add any new blocks or Python-style commands to your <strong>Robot commands this week</strong> table.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>field setup correct</li>
+<li>robot checks cube colour</li>
+<li>robot attempts to collect the red cube</li>
+<li>two cube positions tested</li>
+<li>notebook shows testing and improvement</li>
+<li>teacher check of robot and notebook</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Check the movement path before checking the claw.</li>
+<li>Check the sensor reading before testing the full routine.</li>
+<li>Keep the robot start position the same every time.</li>
+<li>If the robot collects the wrong cube, check the condition inside your [If then] block.</li>
+<li>If the robot misses the cube, fix the driving distance before changing the sensor logic.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>make the robot succeed two times in a row</li>
+<li>reduce wasted movement</li>
+<li>use [Repeat] to make repeated movement more efficient</li>
+<li>translate one working block decision into Python</li>
+<li>explain how your Python condition matches the block condition</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 3: Treasure Mover Challenge</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><strong>Treasure Hunt Lesson 3: Compete</strong></li>
+<li><strong>Treasure Mover Challenge Activity</strong></li>
+<li><strong>Lesson 3 Challenge Check Your Understanding</strong></li>
+<li><strong>[Repeat] block</strong></li>
+<li><strong>Optical Sensor - VEXcode IQ Python</strong> <span style="color: #6b7280;">(extension)</span></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">🎯 TODAY'S CHALLENGE</div>
+<p style="margin: 0;">Today your robot must check five cubes, identify the red Treasure Cube, and move only the red cube into the Home Zone as fast as possible.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the Treasure Mover Challenge Activity.</li>
+<li>Set up the field exactly as shown in the challenge resource.</li>
+<li>Place five cubes in random order along the left wall. One cube must be red.</li>
+<li>Before coding, plan how the robot will check each cube.</li>
+<li>Start from your best Eye Spy Treasure project if it is working.</li>
+<li>Modify your code so the robot can check more than two cube positions.</li>
+<li>Use repeated movement patterns where this makes your code clearer or more efficient.</li>
+<li>Run one timed attempt.</li>
+<li>Record the result in your notebook.</li>
+<li>Make one improvement to the code, path, speed, or claw timing.</li>
+<li>Run the challenge again and compare the new result.</li>
+<li>Complete the Challenge Check Your Understanding questions if your teacher tells you to.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 3 - Treasure Mover Challenge</strong>.</li>
+<li>Sketch the five-cube field setup.</li>
+<li>Draw or write the algorithm your robot will follow.</li>
+<li>Record your first timed result.</li>
+<li>Record whether the robot checked all five cubes.</li>
+<li>Record whether the robot moved only the red cube to the Home Zone.</li>
+<li>Write one change you made between runs.</li>
+<li>Write whether that change helped.</li>
+<li>Add useful sensor, decision, repeat, and Python-style commands to your <strong>Robot commands this week</strong> table.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>challenge attempted seriously</li>
+<li>robot checks multiple cube positions</li>
+<li>at least two runs completed</li>
+<li>notebook includes evidence from multiple runs</li>
+<li>teacher sign-off complete</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Go back to the last Eye Spy Treasure version that worked.</li>
+<li>Check one cube position before checking all five.</li>
+<li>Check whether the problem is path, sensor detection, claw timing, or speed.</li>
+<li>Do not optimise speed until the robot is accurate.</li>
+<li>Keep your starting position and field setup consistent while troubleshooting.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>optimise for speed without losing accuracy</li>
+<li>compare two different checking patterns</li>
+<li>use velocity blocks carefully and test whether speed helps or hurts</li>
+<li>translate your sensor decision logic into Python</li>
+<li>explain the block and Python versions side by side</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="border: 1px solid #c7d2fe; border-radius: 14px; padding: 18px; background: #eef2ff; margin-bottom: 20px;">
+<h3 style="margin-top: 0;">📍 Looking ahead</h3>
+<p style="margin: 0 0 10px 0;">Next week we move into <strong>Loop, There It Is!</strong>. You will use the completed Clawbot IQ build and focus more strongly on loops, repeated behaviour, and making robot actions efficient.</p>
+<p style="margin: 0;">Keep your robot working, your best Week 3 code saved properly, and your notebook up to date. The sensor decisions and repeated actions from this week will help you when we start building stronger loop-based programs.</p>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="week-2-autonomous-movement-and-control.html">← Week 2: Autonomous Movement and Control</a><a href="../unit2.html">Back to Unit 2</a><a href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot →</a></nav></main></div><footer class="site-footer"></footer></body></html>

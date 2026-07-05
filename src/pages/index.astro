@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { getCollection } from 'astro:content';
 import { poetry } from '../data/poetry';
+import { YEAR9_DIGITECH_RESOURCES } from '../data/educationYear9DigitalTechnologies';
 import { isPublishedEntryData } from '../utils/publishing';
 
 const title = 'Chips’nCode';
@@ -37,29 +38,14 @@ const allAstrophotography = await getCollection('astrophotography', ({ data }) =
 
 const allEducation = await getCollection('education', ({ data }) => !data.draft);
 const EDUCATION_HOME_GROUPS = [
-  {
-    slug: 'student-resources',
-    label: 'For students',
-    linkLabel: 'Scaffolded lessons & exemplars',
-    note: 'Clear steps, checkpoints, and clean UI.',
-  },
-  {
-    slug: 'teaching-resources',
-    label: 'For teachers',
-    linkLabel: 'Planning resources & templates',
-    note: 'Reusable structures, rubrics, and workflows.',
-  },
-  {
-    slug: 'interactive-utilities',
-    label: 'Tools',
-    linkLabel: 'Interactive utilities',
-    note: 'Small helpers that save time and reduce friction.',
-  },
+  { slug: 'digital-technologies', label: 'Digital Technologies', linkLabel: 'Course pathways & references', note: 'Year 9 programming, projects, robotics, and physical computing.' },
+  { slug: 'biology', label: 'Biology', linkLabel: 'Resource packs & lesson material', note: 'Senior biology packs, lessons, and classroom notes.' },
+  { slug: 'mathematics', label: 'Mathematics', linkLabel: 'Interactive worksheets & worked examples', note: 'Interactive documents, practice material, and classroom support.' },
 ] as const;
 const educationByHomeCategory = Object.fromEntries(
   EDUCATION_HOME_GROUPS.map((group) => [
     group.slug,
-    allEducation.filter((entry) => entry.data.homeCategory === group.slug),
+    group.slug === 'digital-technologies' ? [...allEducation.filter((entry) => entry.data.subject === group.slug), ...YEAR9_DIGITECH_RESOURCES] : allEducation.filter((entry) => entry.data.subject === group.slug),
   ])
 );
 
@@ -97,7 +83,7 @@ const normalize = (entry, kind) => {
     kind === 'projects' ? `/projects/${slug}` :
     kind === 'tools' ? `/tools/${slug}` :
     kind === 'docs' ? `/docs/${slug}` :
-    kind === 'education' ? `/education/${slug}` :
+    kind === 'education' ? `/education/${slug.replace(/\/index$/, '')}` :
     kind === 'poetry' ? `/poetry/${slug}` :
     kind === 'astrophotography' ? `/astrophotography/${slug}` :
     `/${slug}`;
@@ -300,7 +286,7 @@ const rest = (pill) => byPill[pill].slice(3);
                 <div class="edu__block">
                   <div class="edu__label">{group.label}</div>
                   {count > 0 ? (
-                    <a class="edu__link" href={`/tags/${group.slug}`}>{group.linkLabel}</a>
+                    <a class="edu__link" href={`/education/${group.slug}`}>{group.linkLabel}</a>
                   ) : (
                     <span class="edu__link edu__link--muted">{group.linkLabel}</span>
                   )}

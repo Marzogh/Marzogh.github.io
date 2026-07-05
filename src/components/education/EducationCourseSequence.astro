@@ -1,0 +1,75 @@
+---
+interface SequenceItem {
+  href: string;
+  label: string;
+  note?: string;
+}
+
+interface Section {
+  title: string;
+  items: SequenceItem[];
+}
+
+interface Props {
+  sections: Section[];
+}
+
+const { sections = [] } = Astro.props;
+---
+
+<div class="edu-course-sequence">
+  {sections.map((section) => (
+    <section>
+      <h2>{section.title}</h2>
+      <ol>
+        {section.items.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+            {item.note ? <span>{item.note}</span> : null}
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</div>
+
+<style>
+  .edu-course-sequence {
+    display: grid;
+    gap: 1.8rem;
+  }
+
+  .edu-course-sequence h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.2rem;
+  }
+
+  .edu-course-sequence ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .edu-course-sequence li {
+    padding-left: 0.1rem;
+    color: var(--text-2);
+  }
+
+  .edu-course-sequence a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .edu-course-sequence a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .edu-course-sequence span {
+    margin-left: 0.45rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+</style>

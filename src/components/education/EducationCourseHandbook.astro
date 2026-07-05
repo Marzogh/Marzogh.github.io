@@ -1,0 +1,166 @@
+---
+interface HandbookItem {
+  href: string;
+  label: string;
+  marker?: string;
+}
+
+interface HandbookGroup {
+  title: string;
+  items: HandbookItem[];
+}
+
+interface HandbookSection {
+  title: string;
+  href?: string;
+  note?: string;
+  groups: HandbookGroup[];
+}
+
+interface Props {
+  sections: HandbookSection[];
+}
+
+const { sections = [] } = Astro.props;
+---
+
+<div class="edu-handbook">
+  {sections.map((section) => (
+    <section class="edu-handbook__section">
+      <div class="edu-handbook__sectionHead">
+        <h2>{section.href ? <a href={section.href}>{section.title}</a> : section.title}</h2>
+        {section.note ? <p>{section.note}</p> : null}
+      </div>
+
+      <div class="edu-handbook__groups">
+        {section.groups.map((group) => (
+          <section class="edu-handbook__group">
+            <h3>{group.title}</h3>
+            <ul>
+              {group.items.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                  {item.marker ? <span>{item.marker}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </section>
+  ))}
+</div>
+
+<style>
+  .edu-handbook {
+    display: grid;
+    gap: 1.8rem;
+  }
+
+  .edu-handbook__section {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.05rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
+
+  .edu-handbook__sectionHead {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .edu-handbook__sectionHead h2,
+  .edu-handbook__sectionHead p,
+  .edu-handbook__group h3 {
+    margin: 0;
+  }
+
+  .edu-handbook__sectionHead h2 {
+    font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+
+  .edu-handbook__sectionHead h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .edu-handbook__sectionHead h2 a:hover {
+    color: var(--link-hover);
+  }
+
+  .edu-handbook__sectionHead p {
+    color: var(--text-2);
+    max-width: 62ch;
+    line-height: 1.45;
+  }
+
+  .edu-handbook__groups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem 1.6rem;
+  }
+
+  .edu-handbook__group {
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+  }
+
+  .edu-handbook__group h3 {
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .edu-handbook__group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .edu-handbook__group li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0;
+    border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent 42%);
+  }
+
+  .edu-handbook__group li:first-child {
+    border-top-color: color-mix(in srgb, var(--border) 74%, transparent 26%);
+  }
+
+  .edu-handbook__group a {
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.35;
+  }
+
+  .edu-handbook__group a:hover {
+    color: var(--link-hover);
+  }
+
+  .edu-handbook__group span {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 1120px) {
+    .edu-handbook__groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 860px) {
+    .edu-handbook__groups {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Week 1 - Meet the Robot</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link active" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">← Welcome to Unit 2</a><a href="../unit2.html">Back to Unit 2</a><a href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-radius: 18px; padding: 22px 24px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 10px; border-radius: 999px; background: #2563eb; color: #ffffff; font-size: 12px; margin-bottom: 10px;">YEAR 9 DIGITAL TECHNOLOGIES • WEEK 1</div>
+<h2 style="margin: 0 0 8px 0; font-size: 28px;">Meet the Robot</h2>
+<p style="margin: 0 0 10px 0;">This week you will sort and check the VEX IQ kit, build the BaseBot and Simple Clawbot, and complete a short manual driving checkpoint.</p>
+<p style="margin: 0;"><strong>Used each lesson:</strong> VEX IQ kit, battery and controller. <strong>You must also bring your engineering notebook </strong>and a device to write code on.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #a7f3d0; background: #ecfdf5; border-radius: 18px; padding: 20px;">
+<div style="color: #065f46; margin-bottom: 10px;">🎯 THIS WEEK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>identify important VEX IQ parts</li>
+<li>prepare the kit and electronics for building</li>
+<li>build the BaseBot and convert it into a Simple Clawbot</li>
+<li>control the robot safely and accurately</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 440px;">
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px;">
+<div style="color: #3730a3; margin-bottom: 10px;">📘 ENGINEERING NOTEBOOK</div>
+<p style="margin: 0 0 10px 0;"><strong>You will need an engineering notebook for this term.</strong></p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>It will be checked during lessons.</li>
+<li>It will be used for teacher feedback.</li>
+<li>It will be used later as part of your assessment evidence.</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fde68a; background: #fffbeb; border-radius: 18px; padding: 20px;">
+<div style="color: #92400e; margin-bottom: 10px;">✅ BY THE END OF WEEK 1</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your group should have a working robot</li>
+<li>your battery and controller should be sorted</li>
+<li>your notebook should be set up and in use</li>
+<li>you should be ready to begin coding next week</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 18px; padding: 20px;">
+<div style="color: #991b1b; margin-bottom: 10px;">📌 IMPORTANT</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Do not rush the build.</li>
+<li>Do not skip steps in the instructions.</li>
+<li>Do not say “done” until the robot has been checked properly.</li>
+<li>Keep parts organised as you work.</li>
+</ul>
+</div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 1: Robot systems and parts</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="inline_disabled" href="https://www.vexrobotics.com/parts/228-7755" target="_blank"><strong>VEX Gen 2 Kit Contents Poster</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ Activity - Scavenger Hunt.pdf"><strong>VEX Scavenger Hunt PDF</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record today’s work in your engineering notebook if you have one already. Ask your teacher what to do if you don't have one already.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open your kit carefully.</li>
+<li>If you have an already assembled robot, disassemble it and place parts separately to ensure you have all of them.</li>
+<li>Put similar parts together so your group can see what is in the box.</li>
+<li>Find the battery, controller, brain, motors, and any sensors you can see.</li>
+<li>Open the kit contents poster.</li>
+<li>Open the <a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="true" href="#" id="18658697" target="_blank">VEX Scavenger Hunt PDF</a>.</li>
+<li>Work through the clues one at a time.</li>
+<li>For each clue, find the matching part <a class="inline_disabled" href="https://www.vexrobotics.com/parts/228-7755" target="_blank" title="Link">in the poster</a> and then find it in your kit.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE DOWN</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>the clue number</li>
+<li>the part name, if you know it</li>
+<li>or a clear description of the part</li>
+<li>whether your group found it in the actual kit</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>all scavenger hunt clues attempted</li>
+<li>answers written down</li>
+<li>your group can show at least 3 matching parts to the teacher</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Start with the electronics first.</li>
+<li>Use the picture on the poster before worrying about the exact part name.</li>
+<li>Ask one group member to search while another records answers.</li>
+<li>If the kit is messy, sort it before continuing.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<p style="margin: 0 0 8px 0;"><strong>Level Up task:</strong> complete the extension task from the Scavenger Hunt PDF.</p>
+<p style="margin: 0 0 8px 0;"><strong>Optional extra:</strong> use the Advanced Scavenger Hunt only if your teacher tells you to.</p>
+<p style="margin: 0;"><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ Activity - Advanced Scavenger Hunt.pdf"><strong>Advanced Scavenger Hunt PDF</strong></a></p>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 2: Build day</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="inline_disabled" href="https://education.vex.com/stemlabs/iq/treasure-hunt/lesson-1-introduction/getting-ready-to-build" target="_blank"><strong>Treasure Hunt: Getting Ready to Build</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="iq-2nd-gen-basebot-rev12.pdf"><strong>BaseBot Build Instructions</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="simple-clawbot-rev2.pdf"><strong>Simple Clawbot Build Instructions</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 16px; padding: 18px;">
+<div style="color: #991b1b; margin-bottom: 8px;">📘 ENGINEERING NOTEBOOK REQUIRED</div>
+<p style="margin: 0 0 8px 0;">From today onward, bring your engineering notebook to every lesson.</p>
+<p style="margin: 0;">Your notebook will be checked during class and used later as part of your assessment evidence.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO FIRST</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Find your battery and check whether it needs charging.</li>
+<li>Find the controller.</li>
+<li>Find the main electronic parts needed for the build.</li>
+<li>Make space on the table so your group can build properly.</li>
+</ol>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🏗️ MAIN TASK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the <a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="true" href="#" id="18658797" target="_blank">BaseBot build instructions</a>.</li>
+<li>Build the robot carefully, one step at a time.</li>
+<li>Work together with your partner or group and do not skip steps.</li>
+<li>Pause often to compare your robot to the instructions.</li>
+<li>Check that moving parts can actually move.</li>
+<li>Once the <a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="true" href="#" id="18658797" target="_blank">BaseBot</a> is complete, <a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="true" href="#" id="18658798" target="_blank">convert it into the Simple Clawbot</a>.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 2 - Build day</strong>.</li>
+<li>Write the names of the people in your group.</li>
+<li>Write whether your group built:
+<ul style="margin: 8px 0 0 18px; padding: 0;">
+<li>BaseBot only</li>
+<li>BaseBot and Simple Clawbot</li>
+<li>part of the build only</li>
+</ul>
+</li>
+<li>Write down the step or stage your group reached.</li>
+<li>Write down any missing or damaged parts.</li>
+<li>Write down one build problem your group had.</li>
+<li>Write down how your group fixed it, or what still needs fixing.</li>
+<li>Add <strong>one sketch</strong> of your robot build.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fde68a; background: #fffbeb; border-radius: 16px; padding: 18px; height: 100%;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT MUST BE SHOWN TO THE TEACHER</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your robot build</li>
+<li>your notebook entry for today</li>
+<li>your sketch</li>
+</ul>
+<div style="margin-top: 12px; padding: 12px; border-radius: 12px; background: #fef3c7;"><strong>Important:</strong><br/>A notebook entry with only one line is not enough. You need a clear record of what your group did.</div>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Go back to the last step where your build definitely matched the instructions.</li>
+<li>Fix one problem at a time.</li>
+<li>Check whether the problem is caused by a wrong part, a backwards part, or a missing connector.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>check another group’s robot against the instructions</li>
+<li>make a list of the 3 most important build checks</li>
+<li>if your teacher allows it, begin a short manual control test</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 3: Driver readiness checkpoint</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">🎯 TODAY'S CHECKPOINT</div>
+<p style="margin: 0;">Your group will finish the robot if needed and then complete 3 short manual control tasks in order.</p>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 16px; padding: 18px;">
+<div style="color: #991b1b; margin-bottom: 8px;">📘 ENGINEERING NOTEBOOK REQUIRED</div>
+<p style="margin: 0;">You must complete today’s checkpoint record in your engineering notebook. This is part of your evidence for the unit.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">📍 CHECKPOINT ORDER</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li><strong>Path drive</strong> - drive through the marked route</li>
+<li><strong>Precision park</strong> - stop the robot in the target area</li>
+<li><strong>Pick up and move</strong> - move one object with the claw</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 240px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;"><strong>1. Path drive</strong></div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>drive slowly</li>
+<li>stay on the route as much as possible</li>
+<li>do not rush</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 240px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;"><strong>2. Precision park</strong></div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>approach carefully</li>
+<li>stop inside the marked area</li>
+<li>adjust if needed</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 240px;">
+<div style="border: 1px solid #e9d5ff; background: #faf5ff; border-radius: 16px; padding: 18px;">
+<div style="color: #6b21a8; margin-bottom: 8px;"><strong>3. Pick up and move</strong></div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>line up first</li>
+<li>use the claw carefully</li>
+<li>place the object in the target area</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Check that your robot is ready before starting.</li>
+<li>Complete the path drive.</li>
+<li>Complete the precision park.</li>
+<li>Complete the pick up and move task.</li>
+<li>After each task, decide whether your group is ready to continue or needs another attempt.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 3 - Driver readiness checkpoint</strong>.</li>
+<li>Write whether your robot was fully ready at the start:
+<ul style="margin: 8px 0 0 18px; padding: 0;">
+<li>yes</li>
+<li>almost</li>
+<li>no</li>
+</ul>
+</li>
+<li>Copy these checkpoint statements into your engineering notebook and tick the ones that are true:
+<ul style="margin: 8px 0 0 18px; padding: 0; list-style-type: none;">
+<li>☐ We completed the path drive.</li>
+<li>☐ We completed the precision park.</li>
+<li>☐ We completed the pick up and move task.</li>
+<li>☐ Our robot stayed connected and working.</li>
+<li>☐ Our group worked safely.</li>
+</ul>
+</li>
+<li>Write one sentence: <strong>The hardest part for our group was...</strong></li>
+<li>Write one sentence: <strong>The thing we need to fix before coding is...</strong></li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px; height: 100%;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your group attempted all 3 checkpoint tasks</li>
+<li>your robot stayed working</li>
+<li>your notebook entry for today is complete</li>
+</ul>
+<div style="margin-top: 12px; padding: 12px; border-radius: 12px; background: #fef3c7;"><strong>Teacher check:</strong><br/>Be ready to show both your robot and your notebook entry.</div>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>slow the robot down</li>
+<li>swap jobs between driver and spotter if needed</li>
+<li>check whether the problem is driving, build quality, or claw control</li>
+<li>ask the teacher before changing the robot build</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>repeat the checkpoint and try to be smoother</li>
+<li>swap drivers and decide:
+<ul style="margin: 8px 0 0 18px; padding: 0;">
+<li>who could drive straighter</li>
+<li>who could stop more accurately</li>
+<li>who could line up the claw better</li>
+</ul>
+</li>
+<li>improve one stage without changing the task rules</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details></div>
+</div></article><nav class="site-page-actions"><a href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">← Welcome to Unit 2</a><a href="../unit2.html">Back to Unit 2</a><a href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control →</a></nav></main></div><footer class="site-footer"></footer></body></html>

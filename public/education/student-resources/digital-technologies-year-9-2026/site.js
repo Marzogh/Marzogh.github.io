@@ -1,0 +1,1 @@
+function filterNav(){const q=document.getElementById('siteSearch').value.toLowerCase();document.querySelectorAll('.site-nav-link').forEach(a=>a.style.display=a.textContent.toLowerCase().includes(q)?'block':'none');}

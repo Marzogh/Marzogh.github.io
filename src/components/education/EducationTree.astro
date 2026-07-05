@@ -1,0 +1,284 @@
+---
+export interface EducationTreeNode {
+  id: string;
+  label: string;
+  href?: string;
+  meta?: string;
+  description?: string;
+  tags?: string[];
+  kind: 'subject' | 'course' | 'unit' | 'group' | 'resource';
+  children?: EducationTreeNode[];
+  open?: boolean;
+  subject?: string;
+  level?: string;
+  resourceType?: string;
+  audience?: string;
+  searchText?: string;
+}
+
+interface Props {
+  nodes: EducationTreeNode[];
+}
+
+const { nodes = [] } = Astro.props;
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const renderNode = (node: EducationTreeNode, depth = 0): string => {
+  if (node.kind === 'resource') {
+    const meta = node.meta ? `<p class="edu-tree-resource__meta">${escapeHtml(node.meta)}</p>` : '';
+    const description = node.description ? `<p class="edu-tree-resource__description">${escapeHtml(node.description)}</p>` : '';
+    const tags = node.tags?.length
+      ? `<p class="edu-tree-resource__tags">${escapeHtml(node.tags.slice(0, 4).map((tag) => `#${tag}`).join('  '))}</p>`
+      : '';
+
+    return `
+      <li
+        class="edu-tree-resource-row"
+        data-edu-row
+        data-subject="${escapeHtml(node.subject ?? '')}"
+        data-level="${escapeHtml(node.level ?? '')}"
+        data-resource-type="${escapeHtml(node.resourceType ?? '')}"
+        data-audience="${escapeHtml(node.audience ?? '')}"
+        data-search="${escapeHtml((node.searchText ?? '').toLowerCase())}"
+      >
+        <a class="edu-tree-resource" href="${escapeHtml(node.href ?? '#')}">
+          <h4>${escapeHtml(node.label)}</h4>
+          ${meta}
+          ${description}
+          ${tags}
+        </a>
+      </li>
+    `;
+  }
+
+  const children = (node.children ?? []).map((child) => renderNode(child, depth + 1)).join('');
+  const childList = depth === 0
+    ? `<div class="edu-tree-branch__body"><ul class="edu-tree-children">${children}</ul></div>`
+    : `<div class="edu-tree-branch__body"><ul class="edu-tree-children edu-tree-children--nested">${children}</ul></div>`;
+
+  const href = node.href
+    ? `<a class="edu-tree-branch__link" href="${escapeHtml(node.href)}">${escapeHtml(node.label)}</a>`
+    : `<span>${escapeHtml(node.label)}</span>`;
+  const meta = node.meta ? `<span class="edu-tree-branch__meta">${escapeHtml(node.meta)}</span>` : '';
+  const description = node.description ? `<p class="edu-tree-branch__description">${escapeHtml(node.description)}</p>` : '';
+
+  return `
+    <li class="edu-tree-branch-wrap">
+      <details
+        class="edu-tree-branch edu-tree-branch--${escapeHtml(node.kind)}"
+        data-edu-group="${escapeHtml(node.id)}"
+        data-edu-default-open="${node.open ? 'true' : 'false'}"
+        ${node.open ? 'open' : ''}
+      >
+        <summary>
+          <span class="edu-tree-branch__lead">
+            <span class="edu-tree-branch__marker" aria-hidden="true"></span>
+            <span class="edu-tree-branch__title">${href}</span>
+          </span>
+          <span class="edu-tree-branch__tail">${meta}</span>
+        </summary>
+        ${description}
+        ${childList}
+      </details>
+    </li>
+  `;
+};
+
+const html = `<ul class="edu-tree-root">${nodes.map((node) => renderNode(node)).join('')}</ul>`;
+---
+
+<div class="edu-tree" set:html={html} />
+
+<style>
+  .edu-tree,
+  .edu-tree-root,
+  .edu-tree-children {
+    display: grid;
+    gap: 0;
+  }
+
+  .edu-tree-root,
+  .edu-tree-children {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .edu-tree-children--nested {
+    padding-left: 1.4rem;
+  }
+
+  .edu-tree-branch-wrap,
+  .edu-tree-resource-row {
+    margin: 0;
+  }
+
+  .edu-tree-branch {
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+    padding: 0;
+  }
+
+  .edu-tree-branch summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+    padding: 0.95rem 0;
+  }
+
+  .edu-tree-branch summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .edu-tree-branch__lead {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    min-width: 0;
+  }
+
+  .edu-tree-branch__marker {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 1px solid var(--muted);
+    border-bottom: 1px solid var(--muted);
+    transform: translateY(-0.08rem) rotate(-45deg);
+    transform-origin: 60% 60%;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease;
+    flex: 0 0 auto;
+  }
+
+  .edu-tree-branch[open] > summary .edu-tree-branch__marker {
+    transform: translateY(-0.02rem) rotate(45deg);
+    border-color: var(--accent);
+  }
+
+  .edu-tree-branch__title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    min-width: 0;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .edu-tree-branch__title span,
+  .edu-tree-branch__link {
+    color: inherit;
+    text-decoration: none !important;
+  }
+
+  .edu-tree-branch__link:hover {
+    color: var(--link-hover);
+  }
+
+  .edu-tree-branch__tail {
+    display: inline-flex;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
+  .edu-tree-branch__meta {
+    color: var(--muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .edu-tree-branch__description {
+    margin: -0.1rem 0 0.65rem;
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+
+  .edu-tree-branch__body {
+    padding: 0 0 0.45rem 0;
+  }
+
+  .edu-tree-branch--subject > summary {
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+  }
+
+  .edu-tree-branch--subject .edu-tree-branch__title {
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .edu-tree-branch--course .edu-tree-branch__title,
+  .edu-tree-branch--unit .edu-tree-branch__title {
+    font-size: 1rem;
+  }
+
+  .edu-tree-branch--group .edu-tree-branch__title {
+    font-size: 0.98rem;
+    font-weight: 650;
+  }
+
+  .edu-tree-resource {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.74rem 0 0.78rem;
+    text-decoration: none;
+    color: inherit;
+    border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent 42%);
+  }
+
+  .edu-tree-resource h4,
+  .edu-tree-resource__meta,
+  .edu-tree-resource__description,
+  .edu-tree-resource__tags {
+    margin: 0;
+  }
+
+  .edu-tree-resource h4 {
+    font-size: 1rem;
+    line-height: 1.22;
+  }
+
+  .edu-tree-resource:hover h4 {
+    color: var(--link-hover);
+  }
+
+  .edu-tree-resource__meta,
+  .edu-tree-resource__description,
+  .edu-tree-resource__tags {
+    color: var(--text-2);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .edu-tree-resource__tags {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  @media (max-width: 720px) {
+    .edu-tree-branch summary {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+
+    .edu-tree-branch__lead {
+      gap: 0.65rem;
+    }
+
+    .edu-tree-branch__tail {
+      justify-content: flex-start;
+    }
+
+    .edu-tree-children--nested {
+      padding-left: 0.65rem;
+    }
+  }
+</style>

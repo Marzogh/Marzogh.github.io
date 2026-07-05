@@ -1,0 +1,105 @@
+---
+interface FilterOption {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  subjects: FilterOption[];
+  levels: FilterOption[];
+  types: FilterOption[];
+  audiences: FilterOption[];
+}
+
+const { subjects = [], levels = [], types = [], audiences = [] } = Astro.props;
+---
+
+<section class="edu-search-rail" aria-label="Search the education catalogue">
+  <div class="edu-search-rail__topline">
+    <input type="search" placeholder="Search lessons, topics, courses, and resources" data-edu-search />
+    <button type="button" class="edu-search-rail__clear" data-edu-clear-filters>Clear</button>
+  </div>
+  <div class="edu-search-rail__filters">
+    <select data-edu-filter="subject">
+      <option value="">All subjects</option>
+      {subjects.map((item) => <option value={item.value}>{item.label}</option>)}
+    </select>
+    <select data-edu-filter="level">
+      <option value="">All year levels</option>
+      {levels.map((item) => <option value={item.value}>{item.label}</option>)}
+    </select>
+    <select data-edu-filter="resourceType">
+      <option value="">All resource types</option>
+      {types.map((item) => <option value={item.value}>{item.label}</option>)}
+    </select>
+    <select data-edu-filter="audience">
+      <option value="">All audiences</option>
+      {audiences.map((item) => <option value={item.value}>{item.label}</option>)}
+    </select>
+  </div>
+</section>
+
+<style>
+  .edu-search-rail {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .edu-search-rail__topline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .edu-search-rail input,
+  .edu-search-rail select {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 0.72rem 0.82rem;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+  }
+
+  .edu-search-rail__clear {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-2);
+    padding: 0.72rem 0.95rem;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      color 160ms ease,
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .edu-search-rail__clear:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--surface-raised) 84%, transparent 16%);
+  }
+
+  .edu-search-rail__filters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  @media (max-width: 860px) {
+    .edu-search-rail__topline {
+      grid-template-columns: 1fr;
+    }
+
+    .edu-search-rail__filters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .edu-search-rail__filters {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Week 5: Build, Drive, and Test the Cube Collector Clawbot</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link active" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">← Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a href="../unit2.html">Back to Unit 2</a><a href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-radius: 18px; padding: 22px 24px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 10px; border-radius: 999px; background: #2563eb; color: #ffffff; font-size: 12px; margin-bottom: 10px;">YEAR 9 DIGITAL TECHNOLOGIES • WEEK 5</div>
+<h2 style="margin: 0 0 8px 0; font-size: 28px;">Finish, Stack, Engineer, and Code the Cube Collector</h2>
+<p style="margin: 0 0 10px 0;">This week starts with a practical catch-up and testing lesson. Some groups still need to finish the Cube Collector Clawbot, while others are ready to begin Stack and Score. Once the robot is working, you will investigate the tipping problem and engineer a more reliable solution.</p>
+<p style="margin: 0;">After the robot is physically more reliable, you will move into autonomous coding for cube collection and scoring.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 330px;">
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px;">
+<div style="color: #3730a3; margin-bottom: 10px;">💻 VEXCODE HELP</div>
+<p style="margin: 0 0 10px 0;">Use this if you need help opening VEXcode, connecting your robot, configuring devices, downloading a project, or checking robot setup.</p>
+<a href="using-vexcode.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #4338ca; color: #ffffff; text-decoration: none; font-size: 14px;" title="Using VEXcode"><strong>Open VEXcode help</strong></a></div>
+</div>
+<div style="flex: 1 1 330px;">
+<div style="border: 1px solid #fcd34d; background: #fffbeb; border-radius: 18px; padding: 20px;">
+<div style="color: #92400e; margin-bottom: 10px;">📘 NOTEBOOK GUIDE</div>
+<p style="margin: 0 0 10px 0;">Use this if you need a reminder about how to record build progress, testing, changes, evidence, and reflection properly.</p>
+<a href="how-to-use-your-engineering-notebook.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #92400e; color: #ffffff; text-decoration: none; font-size: 14px;" title="How to Use Your Engineering Notebook"><strong>Open notebook guide</strong></a></div>
+</div>
+<div style="flex: 1 1 330px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 18px; padding: 20px;">
+<div style="color: #5b21b6; margin-bottom: 10px;">🐍 PYTHON API</div>
+<p style="margin: 0 0 10px 0;">Use this if you are checking Python-style function calls or building an extension version of your autonomous code.</p>
+<a href="python-api.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #5b21b6; color: #ffffff; text-decoration: none; font-size: 14px;" title="Python API"><strong>Open Python API</strong></a></div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #a7f3d0; background: #ecfdf5; border-radius: 18px; padding: 20px;">
+<div style="color: #065f46; margin-bottom: 10px;">🎯 THIS WEEK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>finish building or checking the Cube Collector Clawbot</li>
+<li>start or revisit Stack and Score using driver control</li>
+<li>observe when the arm, claw, or stacked cubes make the robot unstable</li>
+<li>engineer and test one improvement to reduce tipping, wobbling, or dropping</li>
+<li>prepare for autonomous cube collection using path planning</li>
+<li>test movement, arm, and claw actions separately before combining them</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 440px;">
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px;">
+<div style="color: #3730a3; margin-bottom: 10px;">📘 ENGINEERING NOTEBOOK</div>
+<p style="margin: 0 0 10px 0;"><strong>Your notebook is evidence this week.</strong> It should show both engineering design and coding progress.</p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>build progress or build checks</li>
+<li>Stack and Score test results</li>
+<li>the tipping or dropping problem you observed</li>
+<li>your suspected cause</li>
+<li>the change your group tested</li>
+<li>path plans and autonomous code testing</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fde68a; background: #fffbeb; border-radius: 18px; padding: 20px;">
+<div style="color: #92400e; margin-bottom: 10px;">✅ BY THE END OF WEEK 5</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your Cube Collector Clawbot should be built or checked</li>
+<li>your group should have attempted Stack and Score</li>
+<li>your group should have recorded the arm/claw stability problem</li>
+<li>your group should have tested one engineering improvement</li>
+<li>your group should have started autonomous movement planning or coding</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 18px; padding: 20px;">
+<div style="color: #991b1b; margin-bottom: 10px;">📌 IMPORTANT</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Do not add random parts without a reason.</li>
+<li>Do not change lots of things at once.</li>
+<li>Do not optimise speed before the robot is reliable.</li>
+<li>Do not start full autonomous coding until movement, arm, and claw tests work separately.</li>
+</ul>
+</div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 1: Catch up, Stack and Score, then observe the problem</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="iq-2nd-gen-basebot-rev12-1.pdf"><strong>BaseBot Build Instructions</strong></a><span style="color: #6b7280;"> (catch-up)</span></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="clawbot-rev4.pdf"><strong>Clawbot Build Instructions</strong></a><span style="color: #6b7280;"> (catch-up)</span><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L2 - Stack and Score Practice Activity.pdf"><strong></strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Driver Control Program Lesson Summary.pdf"><strong>Driver Control Program Lesson Summary</strong></a><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L2 - Speed Stack Challenge Activity.pdf"><strong></strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L2 - Stack and Score Practice Activity.pdf"><strong>Stack and Score Practice Activity</strong></a></li>
+<li><a class="inline_disabled" href="#" target="_blank"><strong>Speed Stack Challenge Activity</strong></a> <span style="color: #6b7280;">(if ready)</span></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record where your group started, what you completed, how Stack and Score went, and what physical problem you noticed when using the arm and claw.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="color: #92400e; margin-bottom: 8px;">🧭 CHOOSE YOUR STARTING POINT</div>
+<p style="margin: 0 0 10px 0;">Different groups are at different stages. Start in the section that matches your group.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1 1 250px; border: 1px solid #fde68a; background: #ffffff; border-radius: 12px; padding: 12px;"><strong>Still building?</strong><br/>Finish the Clawbot build and get a teacher build check before driving.</div>
+<div style="flex: 1 1 250px; border: 1px solid #fde68a; background: #ffffff; border-radius: 12px; padding: 12px;"><strong>Built but not tested?</strong><br/>Start Driver Control and practise drive, arm, and claw movement.</div>
+<div style="flex: 1 1 250px; border: 1px solid #fde68a; background: #ffffff; border-radius: 12px; padding: 12px;"><strong>Already driving?</strong><br/>Begin Stack and Score, then record the arm/claw stability problem.</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>If your robot is unfinished, complete the Cube Collector Clawbot build first.</li>
+<li>Check the arm and claw move freely before driving.</li>
+<li>Start the Driver Control program on the Brain.</li>
+<li>Practise driving, turning, lifting the arm, lowering the arm, opening the claw, and closing the claw.</li>
+<li>Set up the Stack and Score practice activity.</li>
+<li>Use driver control to pick up and move one cube.</li>
+<li>Try to stack or score cubes carefully.</li>
+<li>After your first serious Stack and Score attempt, test what happens when the robot lifts or carries stacked cubes.</li>
+<li>Watch for tipping, wobbling, dropping, arm strain, or unstable driving.</li>
+<li>Record the engineering problem and one possible cause in your notebook.</li>
+</ol>
+</div>
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="color: #991b1b; margin-bottom: 8px;">⚠️ ENGINEERING PROBLEM TO NOTICE AFTER STACK AND SCORE</div>
+<p style="margin: 0 0 10px 0;">When the Clawbot lifts or carries stacked cubes, it may tip forward, wobble, or drop the cubes. This is not just a driving problem. It is a design and strategy problem.</p>
+<p style="margin: 0;">Try to figure out why this is happening. And then plan (in your engineering notebook) and execute an engineered solution that might solve the problem.</p>
+<p style="margin: 0;"> </p>
+<p style="margin: 0;">First, collect good evidence: <strong>when does it happen, what changes it, and what might be causing it?</strong></p>
+<p style="margin: 0;">Second,<strong> note it down in your engineering notebook and try to plan a solution</strong></p>
+<p style="margin: 0;">Third,<strong> build that solution into your bot</strong></p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 1 - Catch up, Stack and Score, then observe the problem</strong>.</li>
+<li>Record your starting point: still building, built but not tested, or ready for Stack and Score.</li>
+<li>Record what your group completed today.</li>
+<li>Record one Driver Control result.</li>
+<li>Record one Stack and Score result.</li>
+<li>Describe what happened when the robot lifted, carried, or stacked cubes.</li>
+<li>Write any possible causes of tipping, wobbling, or dropping.</li>
+<li>Write one idea your group might test next lesson.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>build progress or build check completed</li>
+<li>Driver Control tested</li>
+<li>Stack and Score attempted if robot is ready</li>
+<li>arm/claw stability problem observed</li>
+<li>possible cause recorded</li>
+<li>teacher notebook check completed</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>If the build is unfinished, do not skip to scoring.</li>
+<li>If the robot does not drive, check battery, Controller pairing, and motor ports.</li>
+<li>If the arm jams, check the build before forcing it.</li>
+<li>If the cube drops, check claw grip and arm height.</li>
+<li>If the robot tips, slow down and observe exactly when it happens.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>attempt Speed Stack</li>
+<li>compare two driver strategies</li>
+<li>test whether lower arm height improves stability</li>
+<li>sketch one possible engineering modification for next lesson</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 2: Engineer a better solution and re-test</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="iq-2nd-gen-basebot-rev12-1.pdf"><strong>BaseBot Build Instructions</strong></a><span style="color: #6b7280;"> (if you need a build check)</span></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="clawbot-rev4.pdf"><strong>Clawbot Build Instructions</strong></a><span style="color: #6b7280;"> </span><span style="color: #6b7280;">(if you need a build check)</span></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L2 - Stack and Score Practice Activity-1.pdf"><strong>Stack and Score Practice Activity</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L2 - Speed Stack Challenge Activity-2.pdf"><strong>Speed Stack Challenge Activity</strong></a></li>
+<li><strong><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Cube Collector - L3 - Preparing for Autonomous Challenges Lesson Summary.pdf">Preparing for Autonomous Challenges</a> </strong><span style="color: #6b7280;">(next lesson)</span></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">🎯 TODAY'S CHALLENGE</div>
+<p style="margin: 0;">Use yesterday's evidence to engineer a better way to lift, carry, stack, or score cubes. Your solution must be tested, not just guessed.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Start with your Lesson 1 observation notes.</li>
+<li>Choose one cause your group thinks is most important.</li>
+<li>Choose one engineering improvement to test.</li>
+<li>Change only one main thing at a time.</li>
+<li>Test the robot again using the same cube setup.</li>
+<li>Record whether the change helped, made no difference, or made the robot worse.</li>
+<li>Run Stack and Score again using the improved robot or strategy.</li>
+<li>Decide whether to keep, change, or reject your idea.</li>
+<li>If your robot is now reliable enough, open the autonomous preparation resource.</li>
+<li>Begin planning how the robot could complete part of the task without driver control.</li>
+</ol>
+</div>
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">💡 POSSIBLE SOLUTION TYPES</div>
+<p style="margin: 0 0 10px 0;">There is not one correct answer. Your group must choose an idea, test it, and use evidence.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Lower the arm height when carrying cubes</div>
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Slow the arm or drivetrain movement</div>
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Change how the claw grips the cube</div>
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Reduce sudden turns while carrying cubes</div>
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Add support or stabilising structure</div>
+<div style="flex: 1 1 220px; border: 1px solid #ddd6fe; background: #ffffff; border-radius: 12px; padding: 12px;">Change the strategy so cubes are pushed or carried lower</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 2 - Engineer a better solution and re-test</strong>.</li>
+<li>Describe the problem your group is trying to fix.</li>
+<li>Write your suspected cause.</li>
+<li>Sketch or describe your proposed improvement.</li>
+<li>Record the test setup.</li>
+<li>Record the test result.</li>
+<li>Write whether the change helped.</li>
+<li>Write whether your group will keep, change, or reject the idea.</li>
+<li>Start an autonomous path plan if your robot is ready.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>one suspected cause selected</li>
+<li>one improvement tested</li>
+<li>before-and-after evidence recorded</li>
+<li>Stack and Score re-tested if robot is ready</li>
+<li>autonomous planning started if robot is ready</li>
+<li>teacher notebook check completed</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Check whether the robot tips because the arm is too high.</li>
+<li>Check whether the cube is held too far forward.</li>
+<li>Check whether speed or sudden turning makes the problem worse.</li>
+<li>Check whether the build is loose or uneven.</li>
+<li>Ask for a build check before adding new parts.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>test your improvement twice in a row</li>
+<li>compare two improvement ideas</li>
+<li>measure whether the robot succeeds more reliably</li>
+<li>start the autonomous path plan for Coding for Cubes</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 3: Autonomous coding for cubes</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><strong>Cube Collector Lesson 3: Coding for Autonomous Movements Introduction</strong></li>
+<li><strong>Cube Collector Lesson 3: Coding for Autonomous Movements Learn</strong></li>
+<li><strong>Cube Collector Lesson 3: Coding for Autonomous Movements Practice</strong></li>
+<li><strong>Preparing for Autonomous Challenges Lesson Summary</strong></li>
+<li><strong>Path Planning Lesson Summary</strong></li>
+<li><strong>[Spin for] Lesson Summary - Blocks</strong></li>
+<li><strong>Coding for Cubes Challenge Activity</strong></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">🎯 TODAY'S CHALLENGE</div>
+<p style="margin: 0;">Move from driver control to autonomous coding. Your robot should complete a planned sequence using code, not controller driving.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the Coding for Autonomous Movements resources.</li>
+<li>Start from your path plan, not from random blocks.</li>
+<li>Create a movement-only test first.</li>
+<li>Test one drive or turn section from the same starting position each time.</li>
+<li>Add an arm-only or claw-only test.</li>
+<li>Combine the first working movement with the first working arm or claw action.</li>
+<li>Record the result.</li>
+<li>Make one change only, then test again.</li>
+<li>When your smaller sections work, attempt the Coding for Cubes challenge.</li>
+<li>If your block code is reliable, use the Python API reference as an extension.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 3 - Autonomous coding for cubes</strong>.</li>
+<li>Draw or update your autonomous path plan.</li>
+<li>Write your movement-only test.</li>
+<li>Record whether the robot moved correctly.</li>
+<li>Write your arm or claw test.</li>
+<li>Record whether the arm or claw action worked.</li>
+<li>Record the first combined test.</li>
+<li>Write one change you made after testing.</li>
+<li>Record whether the change helped.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>path plan used before coding</li>
+<li>movement-only test completed</li>
+<li>arm or claw test completed</li>
+<li>combined routine attempted</li>
+<li>testing evidence recorded</li>
+<li>teacher check completed</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Go back to the last section that worked.</li>
+<li>Test movement without the arm first.</li>
+<li>Test the arm or claw without driving first.</li>
+<li>Check whether the problem is path, turn amount, arm height, claw timing, or robot stability.</li>
+<li>Do not change speed, distance, turn angle, and arm timing all at once.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>improve your path so the robot wastes less movement</li>
+<li>make the robot succeed twice in a row</li>
+<li>add a repeated section where appropriate</li>
+<li>translate one working block sequence into Python</li>
+<li>compare your block logic with the Python function calls</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="border: 1px solid #c7d2fe; border-radius: 14px; padding: 18px; background: #eef2ff; margin-bottom: 20px;">
+<h3 style="margin-top: 0;">📍 Looking ahead</h3>
+<p style="margin: 0 0 10px 0;">Next, we will keep building autonomous routines as we work on your assessment. The key idea is that reliable robotics needs both good code and a physical robot that can actually perform the task.</p>
+<p style="margin: 0;">Keep your improved Cube Collector Clawbot assembled, save your best code file, and make sure your notebook clearly shows your build, engineering, and coding evidence.</p>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">← Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a href="../unit2.html">Back to Unit 2</a><a href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design →</a></nav></main></div><footer class="site-footer"></footer></body></html>

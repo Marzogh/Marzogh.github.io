@@ -130,10 +130,9 @@ body {
   line-height: 1.7;
 }
 
-/* Main content width: keep readable by default */
+/* Main content shell: page templates set their own measure when needed */
 main {
   width: 100%;
-  max-width: min(var(--container-narrow), calc(100% - 2 * var(--space-5)));
   margin: 0 auto;
   padding: var(--space-7) var(--space-5);
 }
@@ -846,23 +845,21 @@ body.theme-photo {
 }
 
 /* ------------------------------------------------------------
-   Education theme (A + E): calmer, more academic, less "glow".
-   Apply by adding class="theme-edu" to <body>.
+   Education theme: warm paper in light mode, graphite study desk in dark mode.
 ------------------------------------------------------------ */
 
 .theme-edu {
-  --accent: #2563eb; /* calmer blue */
-  --link: var(--accent);
-  --link-hover: #1d4ed8;
-  --focus: rgba(37, 99, 235, 0.32);
-
-  /* Slightly flatter surfaces */
-  --surface: #f8fafc;
-  --surface-2: #eef2ff;
+  --accent: #7b5f2a;
+  --link: #6d5326;
+  --link-hover: #8b6a2e;
+  --focus: rgba(123, 95, 42, 0.24);
 }
 
 body.theme-edu {
-  background: linear-gradient(180deg, rgba(2, 6, 23, 0.03) 0%, rgba(2, 6, 23, 0) 280px), var(--paper);
+  background:
+    radial-gradient(760px 220px at 18% 0%, rgba(157, 133, 79, 0.08), transparent 58%),
+    linear-gradient(180deg, rgba(99, 79, 38, 0.035) 0%, rgba(99, 79, 38, 0) 260px),
+    var(--paper);
 }
 
 /* ------------------------------------------------------------
@@ -1072,16 +1069,19 @@ body.theme-edu {
   border-color: color-mix(in srgb, var(--accent) 82%, #000 18%);
 }
 
-/* Education theme tweaks in dark mode (still calm/academic) */
+/* Education theme only adjusts the atmosphere, not the global theme engine. */
 @media (prefers-color-scheme: dark) {
-  .theme-edu {
-    --accent: #60a5fa;
-    --link: #93c5fd;
-    --link-hover: #bfdbfe;
-    --focus: rgba(147, 197, 253, 0.35);
+  :root:not([data-theme="light"]) body.theme-edu {
+    background:
+      radial-gradient(880px 240px at 18% 0%, rgba(208, 196, 171, 0.08), transparent 56%),
+      linear-gradient(180deg, rgba(255, 244, 220, 0.02) 0%, rgba(255, 244, 220, 0) 260px),
+      var(--paper);
   }
+}
 
-  body.theme-edu {
-    background: radial-gradient(900px 280px at 20% 0%, rgba(96, 165, 250, 0.12), transparent 55%), var(--paper);
-  }
+:root[data-theme="dark"] body.theme-edu {
+  background:
+    radial-gradient(880px 240px at 18% 0%, rgba(208, 196, 171, 0.08), transparent 56%),
+    linear-gradient(180deg, rgba(255, 244, 220, 0.02) 0%, rgba(255, 244, 220, 0) 260px),
+    var(--paper);
 }

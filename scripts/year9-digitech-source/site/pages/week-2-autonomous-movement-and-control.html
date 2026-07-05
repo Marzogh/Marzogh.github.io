@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Week 2 – Autonomous Movement and Control</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link active" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="week-1-meet-the-robot.html">← Week 1: Meet the Robot</a><a href="../unit2.html">Back to Unit 2</a><a href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 20px 16px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-radius: 18px; padding: 22px 24px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 10px; border-radius: 999px; background: #2563eb; color: #ffffff; font-size: 12px; margin-bottom: 10px;">YEAR 9 DIGITAL TECHNOLOGIES • WEEK 2</div>
+<h2 style="margin: 0 0 8px 0; font-size: 28px;">Autonomous Movement and Control</h2>
+<p style="margin: 0 0 10px 0;">This week you will move from manual driving to autonomous behaviour. You will code the Simple Clawbot to move with purpose, collect cubes, return to a target zone, and improve performance through testing.</p>
+<p style="margin: 0;"><strong>Used each lesson:</strong> Simple Clawbot, battery, controller, device with VEXcode IQ, and your engineering notebook.</p>
+</div>
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px; margin-bottom: 18px;">
+<div style="color: #3730a3; margin-bottom: 10px;">💻 VEXCODE HELP</div>
+<p style="margin: 0 0 10px 0;"><strong>If you need help installing VEXcode, connecting your robot, configuring devices, downloading a project, or finding the Help tools inside VEXcode, use the internal VEXcode reference page first.</strong></p>
+<a href="using-vexcode.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #4338ca; color: #ffffff; text-decoration: none; font-size: 14px;" title="Using VEXcode"><strong>Open the VEXcode setup and help page</strong></a></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #a7f3d0; background: #ecfdf5; border-radius: 18px; padding: 20px;">
+<div style="color: #065f46; margin-bottom: 10px;">🎯 THIS WEEK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>configure and test the drivetrain and claw properly</li>
+<li>use path planning before writing code</li>
+<li>complete the Capture the Cube task autonomously</li>
+<li>move into the Clawbot Collector challenge</li>
+<li>start building a table of useful VEX Python-style function calls</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 440px;">
+<div style="border: 1px solid #c7d2fe; background: #eef2ff; border-radius: 18px; padding: 20px;">
+<div style="color: #3730a3; margin-bottom: 10px;">📘 ENGINEERING NOTEBOOK</div>
+<p style="margin: 0 0 10px 0;"><strong>Your engineering notebook is required in every lesson.</strong></p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>record path plans, tests, fixes, and results</li>
+<li>show what changed between runs</li>
+<li>keep a running record of useful robot commands</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fde68a; background: #fffbeb; border-radius: 18px; padding: 20px;">
+<div style="color: #92400e; margin-bottom: 10px;">✅ BY THE END OF WEEK 2</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>your robot should complete at least one autonomous collection task</li>
+<li>your code should be tested and improved, not just written once</li>
+<li>your notebook should show path planning and iteration</li>
+<li>you should have started building a table of useful VEX Python-style commands</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #fecaca; background: #fef2f2; border-radius: 18px; padding: 20px;">
+<div style="color: #991b1b; margin-bottom: 10px;">📌 IMPORTANT</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Do not guess distances blindly.</li>
+<li>Do not change lots of things at once.</li>
+<li>Do not move on until the earlier step works.</li>
+<li>Start the robot from the same position every time when testing.</li>
+</ul>
+</div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 1: Learn the autonomous routine</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Coding the Drivetrain Lesson Summary.pdf"><strong>Coding the Drivetrain</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [Spin for] Lesson Summary - Blocks.pdf"><strong>[Spin for] blocks</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Path Planning Lesson Summary.pdf"><strong>Path Planning</strong></a></li>
+<li><a class="instructure_file_link inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="VEX IQ - Treasure Hunt - Lesson 2_ Claw No Sensor - Introduction.mhtml"><strong>Treasure Hunt Lesson 2: Introduction</strong></a></li>
+<li><a class="instructure_file_link inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="VEX IQ - Treasure Hunt - Lesson 2_ Claw No Sensor - Learn.mhtml"><strong>Treasure Hunt Lesson 2: Learn</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L2 - Capture the Cube Practice Activity.pdf"><strong>Capture the Cube practice activity</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record your first path plan, the first working movement test, the first working claw test, and the result of your first full run attempt.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Open the L2 Introduction and Learn material first so you understand the week’s task.</li>
+<li>Open the drivetrain, spin-for, and path planning resources.</li>
+<li>Configure the drivetrain correctly in VEXcode IQ.</li>
+<li>Configure the claw motor correctly.</li>
+<li>Open the Capture the Cube field setup and copy a simple path plan into your notebook before coding.</li>
+<li>Create a <strong>movement-only test</strong>: drive forward to the cube area without using the claw yet.</li>
+<li>Adjust the drive distance until the robot stops in the right place.</li>
+<li>Create a <strong>claw-only test</strong>: open and close the claw while the robot is stationary.</li>
+<li>Combine the working movement and claw actions into one full autonomous sequence.</li>
+<li>Test the full routine from the same starting position each time.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 1 - Learn the autonomous routine</strong>.</li>
+<li>Sketch the field and planned path.</li>
+<li>Write the sequence of actions in order.</li>
+<li>Record the result of your movement-only test.</li>
+<li>Record the result of your claw-only test.</li>
+<li>Record the result of your first full routine attempt.</li>
+<li>Start a table called <strong>Robot commands this week</strong> and add the drivetrain and claw commands used today.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>drivetrain test works</li>
+<li>claw test works</li>
+<li>full routine attempted</li>
+<li>notebook entry complete</li>
+<li>teacher check of robot and notebook</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Check drivetrain configuration again.</li>
+<li>Do not test the full routine until the movement-only test works.</li>
+<li>Do not test the full routine until the claw-only test works.</li>
+<li>Check whether the problem is driving, turning, or claw movement.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>improve the accuracy of the stopping point</li>
+<li>time your run and try to beat it</li>
+<li>reduce extra turning or wasted movement</li>
+<li>add Python-style command names to your Robot commands table</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 2: Practice and improve the routine</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="instructure_file_link inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="VEX IQ - Treasure Hunt - Lesson 2_ Claw No Sensor - Practice.mhtml"><strong>Treasure Hunt Lesson 2: Practice</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Path Planning Lesson Summary-1.pdf"><strong>Path Planning</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L2 - Capture the Cube Practice Activity-1.pdf"><strong>Capture the Cube practice activity</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L2 - Clawbot Collector Challenge Activity.pdf"><strong>Clawbot Collector challenge activity</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">📝 TODAY'S RECORDING</div>
+<p style="margin: 0;">Record your revised path, each change you make, and what happened after each test. This lesson is about controlled improvement, not guessing.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Start with yesterday’s best working project.</li>
+<li>Run Capture the Cube once and compare the real path to your notebook path plan.</li>
+<li>Change <strong>one thing only</strong>: drive distance, turn amount, or claw timing.</li>
+<li>Run the project again and record the result.</li>
+<li>Repeat until your Capture the Cube routine is more reliable.</li>
+<li>When your teacher says to move on, open the Clawbot Collector challenge.</li>
+<li>Plan how your robot will collect all 3 cubes into the Starting Zone.</li>
+<li>Create or modify your code for the Clawbot Collector challenge.</li>
+<li>Run the challenge from the same starting position and same field setup each time.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 2 - Practice and improve the routine</strong>.</li>
+<li>Draw your revised path plan.</li>
+<li>Record at least two separate code changes.</li>
+<li>Write what happened after each change.</li>
+<li>Write whether your Capture the Cube routine became more reliable.</li>
+<li>Write the first plan for the Clawbot Collector challenge.</li>
+<li>Add at least two more entries to your <strong>Robot commands this week</strong> table.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Capture the Cube re-tested and improved</li>
+<li>Clawbot Collector attempted</li>
+<li>notebook shows revision and testing</li>
+<li>teacher check of robot and notebook</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Break the task into smaller parts and test each part.</li>
+<li>Keep the field setup the same while troubleshooting.</li>
+<li>Start from your last working version.</li>
+<li>Do not change speed, path, and claw timing all at once.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>try to complete the challenge faster</li>
+<li>make your robot succeed two times in a row</li>
+<li>compare two different path strategies</li>
+<li>add parameter notes to your Robot commands table</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px 20px; font-size: 20px;"><strong>Lesson 3: Compete, review, and extend</strong></summary>
+<div style="padding: 0 20px 20px 20px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 520px;">
+<div style="border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 16px; padding: 18px;">
+<div style="color: #1e40af; margin-bottom: 8px;">🧰 USE THESE RESOURCES</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li><a class="inline_disabled" href="https://education.vex.com/stemlabs/iq/treasure-hunt/lesson-2-claw-no-sensor/compete" target="_blank"><strong>Treasure Hunt Lesson 2: Compete</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L2 - Clawbot Collector Challenge Activity-1.pdf"><strong>Clawbot Collector challenge activity</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - Treasure Hunt - L2 - Challenge CYU.pdf"><strong>Lesson 2 challenge questions</strong></a></li>
+<li><a class="instructure_file_link instructure_scribd_file inline_disabled" data-canvas-previewable="false" href="#" target="_blank" title="IQ - [Repeat] Lesson Summary - Blocks.pdf"><strong>[Repeat] block extension</strong></a></li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<div style="color: #5b21b6; margin-bottom: 8px;">🎯 TODAY'S CHALLENGE</div>
+<p style="margin: 0;">Today you will run the Week 2 competition task, compare results, and begin noticing where repeated code could be made more efficient later.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+<div style="margin-bottom: 10px;">🔧 WHAT TO DO</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Set up for the Clawbot Collector challenge exactly as shown in the challenge resource.</li>
+<li>Use your best working project from Lesson 2 as your starting point.</li>
+<li>Run one timed attempt.</li>
+<li>Record the result in your notebook.</li>
+<li>Make one improvement to the code or path strategy.</li>
+<li>Run the challenge again and compare the new result.</li>
+<li>Complete the Lesson 2 challenge questions if your teacher tells you to.</li>
+<li>If your main project is working well, open the [Repeat] block extension and look for one part of your code that could be repeated more efficiently.</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+<div style="flex: 1 1 500px;">
+<div style="border: 1px solid #d1fae5; background: #f0fdf4; border-radius: 16px; padding: 18px;">
+<div style="color: #166534; margin-bottom: 8px;">✍️ WHAT TO WRITE IN YOUR ENGINEERING NOTEBOOK</div>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Write the date and lesson title: <strong>Lesson 3 - Compete, review, and extend</strong>.</li>
+<li>Record your first timed result.</li>
+<li>Record your best timed result.</li>
+<li>Write one change you made between runs.</li>
+<li>Write whether that change helped.</li>
+<li>Write one repeated action or repeated code pattern you noticed.</li>
+<li>Add more entries to your <strong>Robot commands this week</strong> table and include notes about any Python-style function calls you now recognise.</li>
+</ol>
+</div>
+</div>
+<div style="flex: 1 1 360px;">
+<div style="border: 1px solid #fef3c7; background: #fffbeb; border-radius: 16px; padding: 18px;">
+<div style="color: #92400e; margin-bottom: 8px;">✅ WHAT COUNTS AS FINISHED</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>challenge attempted seriously</li>
+<li>at least two runs completed</li>
+<li>notebook includes evidence from multiple runs</li>
+<li>teacher sign-off complete</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px;">
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🛟 IF YOU GET STUCK</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Go back to the last version that definitely worked.</li>
+<li>Check whether the problem is path, timing, or claw use.</li>
+<li>Simplify before adding more complexity.</li>
+<li>Keep your starting position and field setup consistent.</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 420px;">
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px;">
+<div style="margin-bottom: 8px;">🚀 IF YOU FINISH EARLY</div>
+<ul style="margin: 0; padding-left: 20px;">
+<li>optimise for speed without losing accuracy</li>
+<li>use the repeat resource to shorten one part of your code</li>
+<li>compare your block actions with Python-style function names</li>
+<li>organise your Robot commands table into sections such as drivetrain, claw, and later sensing</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #fcfcfc; margin-bottom: 20px;">
+<h3 style="margin-top: 0;">📍 Looking ahead</h3>
+<p style="margin: 0;">Next week the robot begins to react to its environment using sensor input. Keep your robot working, your notebook up to date, and your best code file saved properly.</p>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="week-1-meet-the-robot.html">← Week 1: Meet the Robot</a><a href="../unit2.html">Back to Unit 2</a><a href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting →</a></nav></main></div><footer class="site-footer"></footer></body></html>

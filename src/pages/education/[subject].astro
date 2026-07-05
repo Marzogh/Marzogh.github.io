@@ -1,0 +1,222 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import EducationHeaderMinimal from '../../components/education/EducationHeaderMinimal.astro';
+import EducationSubjectNav from '../../components/education/EducationSubjectNav.astro';
+import {
+  buildEducationSubjectNavItems,
+  educationPathFromId,
+  getEducationLevelLabel,
+  getEducationSubjectLabel,
+} from '../../utils/education';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('education', ({ data }) => !data.draft);
+  const subjects = new Set(entries.map((entry) => entry.data.subject).filter(Boolean));
+  subjects.add('digital-technologies');
+  return [...subjects].map((subject) => ({ params: { subject } }));
+}
+
+const { subject } = Astro.params;
+if (!subject) throw new Error('Missing subject parameter');
+const isDigitalTechnologies = subject === 'digital-technologies';
+
+const allEntries = await getCollection('education', ({ data }) => !data.draft);
+const navItems = buildEducationSubjectNavItems([...new Set(allEntries.map((entry) => entry.data.subject).filter(Boolean).concat('digital-technologies'))]);
+
+const subjectEntries = allEntries
+  .filter((entry) => entry.data.subject === subject)
+  .map((entry) => ({
+    href: educationPathFromId(entry.id),
+    title: entry.data.title,
+    description: entry.data.description,
+    level: entry.data.level ?? '',
+    order: entry.data.sequence ?? entry.data.order ?? Number.MAX_SAFE_INTEGER,
+  }))
+  .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+
+const levelMap = new Map<string, typeof subjectEntries>();
+for (const entry of subjectEntries) {
+  const key = entry.level || 'general';
+  if (!levelMap.has(key)) levelMap.set(key, []);
+  levelMap.get(key)?.push(entry);
+}
+
+const levelSections = [...levelMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${getEducationSubjectLabel(subject)} — Education — Chips’nCode`} description={getEducationSubjectLabel(subject)} />
+  </head>
+  <body class="theme-edu">
+    <Header />
+    <main class="edu-subject-page">
+      <EducationHeaderMinimal backHref="/education" backLabel="Back to Education" title={getEducationSubjectLabel(subject)} />
+      <EducationSubjectNav items={navItems.map((item) => ({ ...item, active: item.href === `/education/${subject}` }))} />
+
+      {isDigitalTechnologies ? (
+        <section class="edu-subject-gateway">
+          <details class="edu-year-toggle" open>
+            <summary>
+              <span class="edu-year-toggle__label">Year 9</span>
+            </summary>
+            <nav class="edu-year-toggle__units" aria-label="Year 9 units">
+              <a href="/education/digital-technologies/year-9/unit-1">Unit 1: All About Python</a>
+              <a href="/education/digital-technologies/year-9/unit-2">Unit 2: Making Python Interact with the Real World</a>
+            </nav>
+          </details>
+        </section>
+      ) : (
+        <section class="edu-levels">
+          {levelSections.map(([level, rows]) => (
+            <section class="edu-level" id={level}>
+              <div class="edu-level__head">
+                <h2>{getEducationLevelLabel(level)}</h2>
+              </div>
+              <ul class="edu-level__list">
+                {rows.map((row) => (
+                  <li>
+                    <a href={row.href}>{row.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </section>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .edu-subject-page {
+    width: min(1320px, calc(100% - 4rem));
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  .edu-subject-gateway,
+  .edu-levels {
+    display: grid;
+    gap: 0;
+  }
+
+  .edu-year-toggle {
+    border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+    padding: 1rem 0 0;
+  }
+
+  .edu-year-toggle summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0 1rem;
+  }
+
+  .edu-year-toggle summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .edu-year-toggle summary::before {
+    content: "▸";
+    color: var(--muted);
+    font-size: 0.95rem;
+    transform: translateY(-1px);
+    transition: transform 160ms ease;
+  }
+
+  .edu-year-toggle[open] summary::before {
+    transform: rotate(90deg) translateX(1px);
+  }
+
+  .edu-year-toggle__label {
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  .edu-year-toggle__units {
+    display: grid;
+    margin-left: 1.7rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent 42%);
+  }
+
+  .edu-year-toggle__units a,
+  .edu-year-toggle__units span {
+    display: block;
+    padding: 0.8rem 0;
+    color: var(--text);
+    text-decoration: none;
+    border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent 42%);
+    line-height: 1.35;
+  }
+
+  .edu-year-toggle__units > :first-child {
+    border-top: 0;
+  }
+
+  .edu-year-toggle__units a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent 45%);
+  }
+
+  .edu-level {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.1rem 0 1.2rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+  }
+
+  .edu-level__head h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .edu-level__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .edu-level__list li {
+    border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent 42%);
+  }
+
+  .edu-level__list a {
+    display: block;
+    padding: 0.72rem 0;
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  .edu-level__list a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent 45%);
+  }
+
+  @media (max-width: 720px) {
+    .edu-subject-page {
+      width: min(100% - 1.5rem, 1320px);
+      padding-top: 2.2rem;
+    }
+  }
+</style>

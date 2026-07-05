@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Pet Services Program: Making and Reading Lists</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link active" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">← Refactoring using functions</a><a href="../unit1.html">Back to Unit 1</a><a href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 18px 14px; font-family: Arial,Helvetica,sans-serif; line-height: 1.55; color: #1f2937;">
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; background: #ffffff; margin-bottom: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 280px; flex: 1;">
+<div style="display: inline-block; padding: 4px 10px; border-radius: 999px; background: #111827; color: #ffffff; font-size: 12px;">LESSON • LISTS + TUPLES</div>
+<div style="font-size: 24px; margin: 10px 0 6px 0;">🐾 Pet Services Program: Making and Reading Lists</div>
+<div style="font-size: 14px; color: #4b5563;">So far, your <strong>Pet Services Program</strong> has used decisions, loops and functions. Today you will learn how Python stores <strong>groups of values</strong> using lists and tuples, using the same program you already know.</div>
+</div>
+<div style="min-width: 280px; flex: 1; border: 1px solid #dbeafe; background: #eff6ff; border-radius: 14px; padding: 12px;">
+<div style="margin-bottom: 6px;">✅ Today you will learn to…</div>
+<div style="font-size: 13px; color: #374151;">• Spot lists that already exist in the program<br/>• Explain what a <strong>list</strong> is and what a <strong>tuple</strong> is<br/>• Read values from a list using a loop or <code>in</code><br/>• Decide when data should stay as a list and when it could be a tuple</div>
+</div>
+</div>
+<div style="margin-top: 12px; border-top: 1px dashed #d1d5db; padding-top: 12px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 260px; border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 14px; padding: 10px 12px;">
+<div style="margin-bottom: 4px;">🎯 Success criteria</div>
+<div style="font-size: 13px; color: #374151;">You can point to the lists in the Pet Services Program, explain what they do, modify one safely, and convert one suitable example into a tuple.</div>
+</div>
+<div style="flex: 1; min-width: 260px; border: 1px solid #fed7aa; background: #fff7ed; border-radius: 14px; padding: 10px 12px;">
+<div style="margin-bottom: 4px;">⚠️ One rule</div>
+<div style="font-size: 13px; color: #374151;">No random feature creep. Today is about <strong>data structures</strong>, not inventing new services, prices or rules.</div>
+</div>
+</div>
+</div>
+</div>
+<details style="border: 1px solid #c7d2fe; border-radius: 16px; padding: 16px; background: #eef2ff; margin-bottom: 14px;">
+<summary style="cursor: pointer; font-size: 18px;">📌 Reminder: why we keep returning to the same program</summary>
+<div style="margin-top: 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 8px;"><strong>Good programmers don’t learn ideas in isolation.</strong> They learn new ideas by adding them to programs they already understand.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 260px;">
+<div style="margin-bottom: 6px;">What you already know</div>
+<div style="font-size: 14px; color: #374151;">The program asks questions, validates inputs, uses decisions to price services, and prints a booking summary.</div>
+</div>
+<div style="flex: 1; min-width: 260px;">
+<div style="margin-bottom: 6px;">What is new today</div>
+<div style="font-size: 14px; color: #374151;">We are looking at how the program stores <strong>groups of related values</strong> like sizes, services and summary lines.</div>
+</div>
+</div>
+<div style="margin-top: 10px; border-left: 4px solid #6366f1; background: #eef2ff; padding: 10px 12px; border-radius: 10px;"><strong>Today’s goal:</strong> same familiar program, deeper understanding of how it stores data.</div>
+</div>
+</details>
+<div style="border: 1px solid #bae6fd; border-radius: 16px; padding: 16px; background: #ecfeff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">1️⃣ What we are starting with (the worked program)</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">This is the Pet Services Program you already know. Today you are reading it with a new question in mind: <strong>where is the program storing groups of values?</strong></div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Show the Pet Services Program</summary>
+<div style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code># ------------------------------------------
+# Pet Service Booking System
+# ------------------------------------------
+# This program collects dog information,
+# calculates grooming cost based on size and service,
+# applies age-based modifiers,
+# and prints a clear booking summary.
+# ------------------------------------------
+
+# ---- Chunk A: Welcome and Instructions ----
+
+print("Welcome to the Dog Grooming Booking System.")
+print("This program is for DOGS only.")
+print("Size categories: small (0–10kg), medium (10–25kg), large (25kg+).")
+print("Services available: bath, haircut, full.")
+print("--------------------------------------------")
+
+# ---- Chunk B: Collect Basic Inputs ----
+
+dog_name = input("Enter your dog's name: ")
+dog_breed = input("Enter your dog's breed: ")
+
+# ---- Chunk C: Validate Age Input Using a While Loop ----
+
+# We keep asking until the user gives a sensible number.
+
+while True:
+dog_age_input = input("Enter your dog's age in years: ")
+
+```
+# Check if the input is a number
+if dog_age_input.isdigit():
+    dog_age = int(dog_age_input)
+
+    # Age cannot be negative
+    if dog_age &gt;= 0:
+        break
+    else:
+        print("Age cannot be negative. Try again.")
+else:
+    print("Please enter a valid whole number for age.")
+```
+
+# ---- Validate Dog Size ----
+
+# This while loop ensures size is one of the allowed options.
+
+valid_sizes = ["small", "medium", "large"]
+
+while True:
+dog_size = input("Enter dog size (small / medium / large): ").lower()
+
+```
+if dog_size in valid_sizes:
+    break
+else:
+    print("Invalid size. Please type small, medium, or large.")
+```
+
+# ---- Display Services Using a For Loop ----
+
+# Instead of writing 3 separate print statements,
+
+# we loop through a list.
+
+services = ["bath", "haircut", "full"]
+
+print("\nAvailable services:")
+for service_option in services:
+print("-", service_option)
+
+# ---- Validate Service Choice ----
+
+while True:
+service = input("Choose a service: ").lower()
+
+```
+if service in services:
+    break
+else:
+    print("Invalid service. Please choose from the list above.")
+```
+
+# ---- Chunk D: Calculate Base Cost ----
+
+# Base cost depends on BOTH service and size.
+
+if service == "bath":
+if dog_size == "small":
+base_cost = 20
+elif dog_size == "medium":
+base_cost = 25
+else:
+base_cost = 30
+
+elif service == "haircut":
+if dog_size == "small":
+base_cost = 30
+elif dog_size == "medium":
+base_cost = 35
+else:
+base_cost = 40
+
+else:  # full grooming
+if dog_size == "small":
+base_cost = 45
+elif dog_size == "medium":
+base_cost = 50
+else:
+base_cost = 60
+
+# ---- Chunk E: Apply Age Modifiers ----
+
+total_cost = base_cost  # Start with base cost
+
+# Puppy discount
+
+if dog_age &lt; 1:
+total_cost = total_cost * 0.9  # Reduce by 10%
+
+# Senior dog fee
+
+if dog_age &gt;= 10:
+total_cost = total_cost + 5
+
+# ---- Chunk F: Output Booking Summary ----
+
+# We store summary lines in a list and print them using a for loop.
+
+summary_lines = [
+"\n----- Booking Summary -----",
+f"Dog name: {dog_name}",
+f"Breed: {dog_breed}",
+f"Age: {dog_age} years",
+f"Size category: {dog_size}",
+f"Service selected: {service}",
+f"Base cost: ${base_cost:.2f}",
+f"Final total cost: ${total_cost:.2f}"
+]
+
+for line in summary_lines:
+print(line)
+
+print("----------------------------")</code></pre>
+</div>
+</details></div>
+<div style="border: 1px solid #bbf7d0; border-radius: 16px; padding: 16px; background: #f0fdf4; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">2️⃣ What is a list?</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">The idea</div>
+<div style="font-size: 14px; color: #374151;">A <strong>list</strong> stores multiple values in one variable, in order. Lists use <code>[ ]</code> brackets and commas between items.</div>
+<div style="margin-top: 10px; border-left: 4px solid #22c55e; background: #f0fdf4; padding: 10px 12px; border-radius: 10px;">Example: <code>services = ["bath", "haircut", "full"]</code></div>
+</div>
+<div style="flex: 1; min-width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">Why this helps</div>
+<div style="font-size: 14px; color: #374151;">Instead of making separate variables like <code>service1</code>, <code>service2</code>, <code>service3</code>, the program stores them together and can loop through them or check if a value is inside them.</div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e9d5ff; border-radius: 16px; padding: 16px; background: #faf5ff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">3️⃣ Spot the lists in the Pet Services Program</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">There are three important lists already in the program. Your first job is to find them and explain what each one is doing.</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Task A — Find the list names</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Search the code and find the variable names for:
+<div style="margin-top: 8px;">• the list of valid size categories<br/>• the list of service options<br/>• the list of lines used in the booking summary</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Checkpoint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">You should find:
+<div style="margin-top: 8px;">• <code>valid_sizes</code><br/>• <code>services</code><br/>• <code>summary_lines</code></div>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Task B — Explain what each list does</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Write a short explanation for each one:
+<div style="margin-top: 8px;">• What values are stored inside it?<br/>• Why did the programmer choose a list here?<br/>• How does the rest of the program use it?</div>
+</div>
+<details style="margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Hint</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Look for places where the list is used with:
+<div style="margin-top: 8px;">• <code>in</code> to check membership<br/>• <code>for</code> to loop through items</div>
+</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 6px;">Task C — Worked example: <code>services</code></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Read this example carefully. Use it as your model for writing about the other lists.</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>services = ["bath", "haircut", "full"]</code></pre>
+</div>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">This list stores the available service options. The program uses it twice:
+<div style="margin-top: 8px;">• first, a <code>for</code> loop prints each service for the user<br/>• second, the program checks whether the user’s choice is <strong>in</strong> the list</div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #fed7aa; border-radius: 16px; padding: 16px; background: #fff7ed; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">4️⃣ Make and change a list safely</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Now you will edit an existing list in the program and observe what changes. This is a safe way to see why lists are powerful.</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step A — Add one new service</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Change this line:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>services = ["bath", "haircut", "full"]</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151;">Add one more service option to the end of the list. For example, you might test <code>"nail trim"</code>.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Step B — Run the program and observe</div>
+<div style="font-size: 14px; color: #374151;">After you edit the list, run the program and answer:
+<div style="margin-top: 8px;">• Does the new service print in the menu?<br/>• Can the user choose it?<br/>• Does the program still price it correctly?</div>
+</div>
+<div style="margin-top: 10px; border-left: 4px solid #f59e0b; background: #fff7ed; padding: 10px 12px; border-radius: 10px;"><strong>Notice:</strong> the menu and the validation will update, but the pricing section will not magically know the cost. That part still depends on your decision code.</div>
+</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Why this matters</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">A single list can affect multiple parts of the program. That is useful because the data is stored in one place. But it also means you need to think carefully about which rules depend on that data.</div>
+</details></div>
+<div style="border: 1px solid #dbeafe; border-radius: 16px; padding: 16px; background: #eff6ff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">5️⃣ How lists are read</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">In this program, Python reads lists in two main ways: by checking whether a value is inside a list, and by looping through all the items.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+<div style="flex: 1; min-width: 300px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">Using <code>in</code></div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>if dog_size in valid_sizes:</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151;">This checks whether the user typed one of the allowed size categories.</div>
+</div>
+<div style="flex: 1; min-width: 300px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="margin-bottom: 6px;">Using a <code>for</code> loop</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>for service_option in services:
+print("-", service_option)</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151;">This goes through the list one item at a time and prints each service on its own line.</div>
+</div>
+</div>
+<div style="border: 1px solid #93c5fd; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Worked example from the program</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Here is the exact service list from the Pet Services Program:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>services = ["bath", "haircut", "full"]</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">If the program runs this loop:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>for service_option in services:
+print("-", service_option)</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">the output will be:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>- bath
+
+* haircut
+* full</code></pre>
+</div>
+</div>
+<div style="border-left: 4px solid #0ea5e9; background: #e0f2fe; padding: 10px 12px; border-radius: 10px;"><strong>Key idea:</strong> a list stores the values, and the program can then read those values one at a time or check whether something belongs in the list.</div>
+</div>
+<div style="border: 1px solid #e9d5ff; border-radius: 16px; padding: 16px; background: #faf5ff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">6️⃣ What is a tuple?</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">A <strong>tuple</strong> is very similar to a list, but it is meant for values that should not change. Tuples use <code>( )</code> brackets instead of <code>[ ]</code>.</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">List vs tuple</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 280px;">
+<div style="margin-bottom: 6px;">List</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>valid_sizes = ["small", "medium", "large"]</code></pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px;">
+<div style="margin-bottom: 6px;">Tuple</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>valid_sizes = ("small", "medium", "large")</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #d8b4fe; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Worked example</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">The size categories in the Pet Services Program are a good tuple candidate because they are meant to stay fixed:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>valid_sizes = ("small", "medium", "large")
+
+if dog_size in valid_sizes:
+print("Valid size entered")</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151;">Even though it is a tuple, the program can still check membership using <code>in</code>.</div>
+</div>
+<div style="border-left: 4px solid #8b5cf6; background: #f3e8ff; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px;"><strong>Simple way to think about it:</strong> a list says “these values might change”, while a tuple says “these values are fixed for this program”.</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #ffffff;">
+<summary style="cursor: pointer;">Good tuple examples</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Program categories that are meant to stay fixed are often good tuple candidates. In this lesson, <code>valid_sizes</code> is a reasonable example to test as a tuple.</div>
+</details></div>
+<div style="border: 1px solid #fed7aa; border-radius: 16px; padding: 16px; background: #fff7ed; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">7️⃣ Adding to a list vs trying to add to a tuple</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">This is the big practical difference. Lists are designed to be changed. Tuples are not.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+<div style="flex: 1; min-width: 300px; border: 1px solid #bbf7d0; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 6px;">Worked example: adding to a list</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Start with the service list from the program:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>services = ["bath", "haircut", "full"]</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">You can add a new service using <code>append()</code>:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>services = ["bath", "haircut", "full"]
+services.append("nail trim")
+
+print(services)</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Output:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>['bath', 'haircut', 'full', 'nail trim']</code></pre>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px; border: 1px solid #f5c2c7; border-radius: 12px; background: #ffffff; padding: 12px;">
+<div style="margin-bottom: 6px;">Worked example: trying to add to a tuple</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">Now try the same idea with a tuple:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>valid_sizes = ("small", "medium", "large")
+valid_sizes.append("giant")</code></pre>
+</div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 8px;">This will fail because tuples do not have <code>append()</code>. You will get an error like this:</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45; font-family: Consolas,'Courier New',monospace; white-space: pre;"><code>AttributeError: 'tuple' object has no attribute 'append'</code></pre>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; padding: 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Your turn</div>
+<div style="font-size: 14px; color: #374151;">Try both of these in Thonny:
+<div style="margin-top: 8px;">• add a new service to the <code>services</code> list<br/>• try to add a new size to the <code>valid_sizes</code> tuple</div>
+</div>
+</div>
+<div style="border-left: 4px solid #f59e0b; background: #fff7ed; padding: 10px 12px; border-radius: 10px;"><strong>Important idea:</strong> choose a list when the data may need to grow or change. Choose a tuple when the data should stay locked.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; background: #ffffff; margin-bottom: 14px;">
+<div style="font-size: 18px; margin-bottom: 8px;">🛠 Troubleshooting (read this if you get stuck)</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; margin-bottom: 10px;">
+<summary style="cursor: pointer;">My program says there is a syntax error after I changed the list</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Check your brackets carefully. Lists use <code>[ ]</code>. Tuples use <code>( )</code>. Make sure you didn’t mix them.</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; margin-bottom: 10px;">
+<summary style="cursor: pointer;">I added a service and now the program doesn’t price it properly</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">That is expected unless you also add new pricing logic. The list controls what gets shown and validated. The <code>if / elif / else</code> pricing section still controls the actual cost.</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; margin-bottom: 10px;">
+<summary style="cursor: pointer;">I tried <code>append()</code> on a tuple and got an error</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">That is normal. Tuples are not designed to grow using <code>append()</code>. That is one of the reasons tuples are useful for fixed data.</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa;">
+<summary style="cursor: pointer;">I can see the list, but I can’t explain why it exists</summary>
+<div style="margin-top: 10px; font-size: 14px; color: #374151;">Ask yourself: what would the code look like without the list? Usually the answer is “longer, messier, and more repetitive.”</div>
+</details></div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; background: #ffffff;">
+<div style="font-size: 18px; margin-bottom: 8px;">✅ Exit check (before you finish up)</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 300px; border: 1px solid #fed7aa; background: #fff7ed; border-radius: 12px; padding: 12px;">
+<div style="margin-bottom: 6px;">Answer these clearly</div>
+<div style="font-size: 14px; color: #374151;">1) What is a list?<br/>2) What is a tuple?<br/>3) Why can you use <code>append()</code> with a list but not with a tuple?</div>
+</div>
+<div style="flex: 1; min-width: 300px; border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 12px; padding: 12px;">
+<div style="margin-bottom: 6px;">Quick self-check</div>
+<div style="font-size: 14px; color: #374151;">You can point to your program and show:
+<div style="margin-top: 8px;">• one list used with <code>in</code><br/>• one list used with a <code>for</code> loop<br/>• one example of adding to a list<br/>• one example of why a tuple stays fixed</div>
+</div>
+</div>
+</div>
+<div style="margin-top: 12px; border-left: 4px solid #6366f1; background: #eef2ff; padding: 10px 12px; border-radius: 10px;">Programs don’t just store lots and lots of individual values. Good programs organise related values together.</div>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">← Refactoring using functions</a><a href="../unit1.html">Back to Unit 1</a><a href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features →</a></nav></main></div><footer class="site-footer"></footer></body></html>

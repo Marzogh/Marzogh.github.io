@@ -1,0 +1,52 @@
+---
+interface UtilityLink {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  links?: UtilityLink[];
+}
+
+const { links = [] } = Astro.props;
+const visible = links.filter((link) => link?.label && link?.url);
+---
+
+{visible.length ? (
+  <nav class="edu-utility-bar" aria-label="Resource actions">
+    {visible.map((link) => (
+      <a class="edu-utility-bar__action" href={link.url} target={link.url.startsWith('http') ? '_blank' : undefined} rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}>{link.label}</a>
+    ))}
+  </nav>
+) : null}
+
+<style>
+  .edu-utility-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    justify-content: flex-end;
+  }
+
+  .edu-utility-bar__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.44rem 0.72rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-raised) 94%, transparent 6%);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .edu-utility-bar__action:hover {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised) 92%);
+  }
+</style>

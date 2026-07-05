@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Images are text?!</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link active" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="level-1-writing-code-from-zero.html">← Level 1: Writing code from zero</a><a href="../unit1.html">Back to Unit 1</a><a href="images-are-text-2.html">Images are text?! 2 →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content"><div style="max-width: 1040px; margin: 0 auto; padding: 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #dbeafe; border-radius: 18px; padding: 20px; background: #f8fbff;  margin-bottom: 16px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px;">
+<div style="display: inline-block; background: #1d4ed8; color: #ffffff; border-radius: 999px; padding: 5px 12px; font-size: 12px; ">YEAR 9 DIGITAL TECHNOLOGIES</div>
+<div style="display: inline-block; background: #0f766e; color: #ffffff; border-radius: 999px; padding: 5px 12px; font-size: 12px; ">DATA REPRESENTATION</div>
+<div style="display: inline-block; background: #7c3aed; color: #ffffff; border-radius: 999px; padding: 5px 12px; font-size: 12px; ">PYTHON + FILES + BASE64</div>
+</div>
+<div style="font-size: 28px;  margin-bottom: 8px;">How can a computer show an image?</div>
+<div style="font-size: 16px; color: #475569; max-width: 900px;">In this lesson, you will move from <strong>simple text pictures</strong> to <strong>image files</strong>, then into a much stranger question: <strong>What if you needed to keep everything in just one file?</strong></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+<div style="flex: 1 1 320px; border: 1px solid #c7d2fe; border-radius: 16px; padding: 16px; background: #eef2ff; ">
+<div style="display: inline-block; background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 8px;">LEARNING INTENTION</div>
+<div style=" margin-bottom: 8px; font-size: 18px;">We are learning to...</div>
+<div>understand different ways that images can be represented, stored, loaded, and displayed by a computer.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #bbf7d0; border-radius: 16px; padding: 16px; background: #f0fdf4; ">
+<div style="display: inline-block; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 8px;">SUCCESS CRITERIA</div>
+<div style=" margin-bottom: 8px; font-size: 18px;">By the end, you should be able to...</div>
+<div>explain how file paths work, use Python to load an image, convert an image into base64 text, and use that text to display the image again.</div>
+</div>
+</div>
+<div style="border: 1px solid #fde68a; border-radius: 16px; padding: 18px; background: #fffbeb;  margin-bottom: 16px;">
+<div style="display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">CHALLENGE QUESTION</div>
+<div style="font-size: 22px;  margin-bottom: 10px;">How would you show an image in a game or webpage?</div>
+<div style="margin-bottom: 12px;">Think about the simplest possible answer first.</div>
+<div style="border: 1px solid #fcd34d; border-radius: 14px; padding: 14px; background: #fffdf5;">
+<div style="margin-bottom: 6px;"><strong>Prompt 1:</strong> Where would the image file need to be stored?</div>
+<div style="margin-bottom: 6px;"><strong>Prompt 2:</strong> How would your Python program find it?</div>
+<div><strong>Prompt 3:</strong> What would happen if the image was moved into another folder?</div>
+</div>
+</div>
+<details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">1. Warm-up: images made from text (ASCII art)</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bfdbfe; border-radius: 14px; background: #eff6ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">What is the big idea here?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">KEY IDEA</div>
+<div style="margin-bottom: 10px;">An image does not always need to be stored as an image file. Sometimes, text alone can create something your brain still recognises as a picture.</div>
+<div style="border: 1px solid #c7d2fe; border-radius: 12px; padding: 12px; background: #f8fbff;"><strong>Think:</strong> If this is just text, why does your brain still see an image?</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Simple ASCII example</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.45;"><code>   /\_/\\
+  ( o.o )
+   &gt; ^ &lt;</code></pre>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Richer ASCII example</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 14px; font-size: 12px; line-height: 1.35;"><code>            /\                 /\
+           / \'.__   (\_/)   __.\' \
+          /_.''.__'--('.')--'__.''._\
+          | \_ / `;=/ " \=;` \ _/ |
+           \/ `\__|`\___/`|__/`  \/
+                   \(/|\)/
+                _.-" ` "`-._
+              .'   \___/    '.
+             /     (o o)      \
+            |       \_/        |
+            |  \           /   |
+             \  '.       .'   /
+              '.  `'---'`   .'
+                '-._____.-'</code></pre>
+</div>
+</details><details style="border: 1px solid #fecaca; border-radius: 14px; background: #fef2f2; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Try this</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">TRY THIS</div>
+<div>Change <strong>one character only</strong> in the simple example. What changes in the “image”?</div>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">2. Project setup: where should the image files live?</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bfdbfe; border-radius: 14px; background: #eff6ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Why does folder structure matter?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">IMPORTANT</div>
+<div>Python can only load a file if it knows <strong>where the file is</strong>. That means your folder structure and your filenames matter.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Use this folder structure</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0 0 12px 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.45;"><code>image_project/
+│
+├── main.py
+├── digitech_banner.png
+└── images/
+    └── pirate_chicken.png</code></pre>
+<div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #f8fafc;">
+<div style="margin-bottom: 6px;"><strong>main.py</strong> = your Python program</div>
+<div style="margin-bottom: 6px;"><strong>digitech_banner.png</strong> = image in the same folder as the Python file</div>
+<div><strong>images/pirate_chicken.png</strong> = image inside a subfolder called <strong>images</strong></div>
+</div>
+</div>
+</details><details style="border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Path example: same folder</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">SAME FOLDER</div>
+<div style="margin-bottom: 10px;">To load the banner image, use:</div>
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 12px; font-size: 14px;"><code>digitech_banner.png</code></pre>
+</div>
+</details><details style="border: 1px solid #ddd6fe; border-radius: 14px; background: #f5f3ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Path example: subfolder</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">SUBFOLDER</div>
+<div style="margin-bottom: 10px;">To load the pirate image, use:</div>
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 12px; font-size: 14px;"><code>images/pirate_chicken.png</code></pre>
+</div>
+</details><details style="border: 1px solid #fecaca; border-radius: 14px; background: #fef2f2; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Common mistakes</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">COMMON MISTAKES</div>
+<div>Spelling matters. Capitals matter. File extensions matter. <strong>.png</strong> is not the same as <strong>.jpg</strong>. A missing folder name will also break the path.</div>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">3. First solution: open an image directly from Python</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bfdbfe; border-radius: 14px; background: #eff6ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">What is this approach doing?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">IDEA</div>
+<div style="margin-bottom: 10px;">If the image file already exists on the computer, one simple option is to tell the operating system to open it.</div>
+<div style="border: 1px solid #c7d2fe; border-radius: 12px; padding: 12px; background: #f8fbff;">This does not put the image inside your Python file. It just opens the existing file.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Worked example: image in the same folder</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code># ============================================================
+# OPEN AN IMAGE FILE DIRECTLY
+# ============================================================
+# This program opens an image that already exists in the same
+# folder as the Python file.
+#
+# IMPORTANT:
+# • The image must already exist
+# • The filename must be spelled exactly correctly
+# ============================================================
+
+import webbrowser  # Used to open files using the default app
+
+# This image is in the SAME folder as the Python file
+image_file = "digitech_banner.png"
+
+# Open the image using the operating system's default program
+webbrowser.open(image_file)
+
+print("If the path is correct, the image should now open.")</code></pre>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Worked example: image in a subfolder</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code># ============================================================
+# OPEN AN IMAGE FROM A SUBFOLDER
+# ============================================================
+# This program opens an image stored inside a folder called
+# "images".
+#
+# IMPORTANT:
+# • The folder name must be correct
+# • The filename must be correct
+# • The slash is part of the file path
+# ============================================================
+
+import webbrowser  # Used to open files using the default app
+
+# This image is inside the "images" subfolder
+image_file = "images/pirate_chicken.png"
+
+# Open the image using the operating system's default program
+webbrowser.open(image_file)
+
+print("If the path is correct, the image should now open.")</code></pre>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">4. Another solution: show an image in a temporary webpage</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #ddd6fe; border-radius: 14px; background: #f5f3ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Why would we use a webpage?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">WEB IDEA</div>
+<div>A webpage can also display an image by pointing to its file path. This is closer to how websites often work.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Worked example: temporary webpage</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code># ============================================================
+# SHOW AN IMAGE IN A TEMPORARY WEBPAGE
+# ============================================================
+# This program creates a simple HTML page and opens it in a
+# browser. The image file must already exist.
+#
+# IMPORTANT:
+# • The image path must be correct
+# • This example uses an image from a subfolder
+# ============================================================
+
+import tempfile   # Used to create a temporary HTML file
+import webbrowser # Used to open the HTML file in the browser
+
+# The image file we want the webpage to display
+image_path = "images/pirate_chicken.png"
+
+# Build a simple HTML page as a multi-line string
+html = f"""</code></pre>
+<h2>Pirate Chicken</h2>
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code>
+        <img src="#" style="max-width: 90%;"/>
+    
+
+"""
+
+# Save the HTML into a temporary file
+with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w") as f:
+    f.write(html)
+    path = f.name
+
+# Open the temporary webpage in the browser
+webbrowser.open(path)
+
+print("If the image path is correct, it should appear in the browser.")</code></pre>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">5. Constraint twist: what if you are only allowed one file?</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #fde68a; border-radius: 14px; background: #fffbeb; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">The problem</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">PROBLEM</div>
+<div>Your earlier solutions depended on the image existing as a separate file. But what if you had to submit <strong>just one file</strong>?</div>
+</div>
+</details><details style="border: 1px solid #fecaca; border-radius: 14px; background: #fef2f2; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">What stops working?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div>You can no longer rely on:</div>
+<div style="margin-top: 8px;">• an extra image file</div>
+<div>• an <strong>images/</strong> folder</div>
+<div>• a normal file path</div>
+</div>
+</details><details style="border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">New direction</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div>Could you turn the image into <strong>text</strong> and keep that text inside the program?</div>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">6. New idea: base64 turns image data into text</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bfdbfe; border-radius: 14px; background: #eff6ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">What is base64?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">BASE64</div>
+<div>Base64 is a way of representing binary data as text characters. That means an image can be converted into a long string of letters, numbers, and symbols.</div>
+</div>
+</details><details style="border: 1px solid #ddd6fe; border-radius: 14px; background: #f5f3ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Why does that matter?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">WHY THIS MATTERS</div>
+<div>If the image becomes text, you can keep that text inside a Python program or inside a webpage.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">What does base64 look like?</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.45;"><code>/9j/4AAQSkZJRgABAQAAAQABAAD...lots more text here...</code></pre>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">7. Task 1: convert an image into base64 text and save it</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Task goal</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">TASK 1 GOAL</div>
+<div>Take an existing image file, convert it into base64 text, save the text into a new file, and optionally open that text file to inspect it.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Task 1 code</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code># ============================================================
+# TASK 1: IMAGE → BASE64 (SAVE + OPTIONAL VIEW)
+# ============================================================
+# This program will:
+# 1. Take an image file (JPG or PNG)
+# 2. Convert it into base64 (text version of the image)
+# 3. Save that text into a .txt file
+# 4. Give you the OPTION to open the text file
+#
+# ------------------------------------------------------------
+# ⚠️ BEFORE YOU START:
+# ------------------------------------------------------------
+# • Your image MUST be in the SAME folder as this Python file
+# • You MUST type the filename EXACTLY (including extension)
+# • Example: digitech_banner.png
+# ============================================================
+
+import base64
+import os
+import webbrowser   # Used to open the file if the user chooses
+
+
+# ------------------------------------------------------------
+# STEP 1: Get the image file name
+# ------------------------------------------------------------
+image_file = input("Enter the image file name (e.g. digitech_banner.png): ")
+
+# Python will look for this file in the SAME folder as this script
+
+
+# ------------------------------------------------------------
+# STEP 2: Open the image in binary mode
+# ------------------------------------------------------------
+# "rb" = read binary (images are NOT text files)
+try:
+    with open(image_file, "rb") as img:
+        image_data = img.read()
+except FileNotFoundError:
+    print("❌ ERROR: File not found.")
+    print("Check that:")
+    print("• The image is in the SAME folder")
+    print("• The filename is correct (including .png or .jpg)")
+    exit()
+
+
+# ------------------------------------------------------------
+# STEP 3: Convert binary → base64
+# ------------------------------------------------------------
+encoded_data = base64.b64encode(image_data)
+
+
+# ------------------------------------------------------------
+# STEP 4: Convert bytes → string
+# ------------------------------------------------------------
+encoded_string = encoded_data.decode("utf-8")
+
+
+# ------------------------------------------------------------
+# STEP 5: Generate output file name
+# ------------------------------------------------------------
+# Example:
+# digitech_banner.png → digitech_banner_base64.txt
+name, extension = os.path.splitext(image_file)
+output_file = f"{name}_base64.txt"
+
+
+# ------------------------------------------------------------
+# STEP 6: Save base64 string to file
+# ------------------------------------------------------------
+with open(output_file, "w") as f:
+    f.write(encoded_string)
+
+
+# ------------------------------------------------------------
+# STEP 7: Confirm success
+# ------------------------------------------------------------
+print(f"\\n✅ Base64 successfully saved to '{output_file}'")
+
+
+# ------------------------------------------------------------
+# STEP 8: Give user the OPTION to open the file
+# ------------------------------------------------------------
+choice = input("\\nDo you want to open the text file? (y/n): ").lower()
+
+if choice == "y":
+    # This will open the file in the default program
+    webbrowser.open(output_file)
+    print("📄 Opening file...")
+else:
+    print("👍 You can open it later if you want.")</code></pre>
+</div>
+</details><details style="border: 1px solid #fde68a; border-radius: 14px; background: #fffbeb; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Checkpoint</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">CHECKPOINT</div>
+<div>Did your program create a new file ending in <strong>_base64.txt</strong>?</div>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">8. Task 2: paste base64 text into Python and display the image in a webpage</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #ddd6fe; border-radius: 14px; background: #f5f3ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Task goal</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">TASK 2 GOAL</div>
+<div>Copy the base64 text from your saved file, paste it into a Python program, and use it to rebuild the image inside a temporary webpage.</div>
+</div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 14px; background: #ffffff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Task 2 code</summary>
+<div style="padding: 0 16px 16px 16px;">
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code># ============================================================
+# TASK 2: BASE64 → IMAGE VIEWER (PASTE VERSION)
+# ============================================================
+# This program will:
+# 1. Let you paste base64 data (text version of an image)
+# 2. Ask what type of image it is
+# 3. Display the image in a browser
+#
+# ------------------------------------------------------------
+# ⚠️ BEFORE YOU START:
+# ------------------------------------------------------------
+# • Paste ONLY the base64 string (NOT "data:image/..." part)
+# • Your string should look like: /9j/4AAQSkZJRgABAQAAAQABAAD...
+# • Press ENTER twice when finished pasting
+# ============================================================
+
+import tempfile
+import webbrowser
+
+
+# ------------------------------------------------------------
+# STEP 1: Paste base64 data
+# ------------------------------------------------------------
+print("Paste your base64 string below.")
+print("Press ENTER twice when you are done.\\n")
+
+lines = []
+
+while True:
+    line = input()
+
+    # An empty line means the user has finished pasting
+    if line == "":
+        break
+
+    lines.append(line)
+
+# Join all lines into one continuous string
+base64_string = "".join(lines)
+
+
+# ------------------------------------------------------------
+# STEP 2: Ask for image type
+# ------------------------------------------------------------
+print("\\nWhat type of image is this?")
+print("1. JPG / JPEG")
+print("2. PNG")
+
+choice = input("Enter 1 or 2: ")
+
+if choice == "1":
+    mime_type = "image/jpeg"
+elif choice == "2":
+    mime_type = "image/png"
+else:
+    print("⚠️ Invalid choice — defaulting to JPEG")
+    mime_type = "image/jpeg"
+
+
+# ------------------------------------------------------------
+# STEP 3: Create HTML using pasted base64
+# ------------------------------------------------------------
+html = f"""</code></pre>
+<h2>Decoded Image</h2>
+<pre style="margin: 0; white-space: pre-wrap; overflow-x: auto; background: #0f172a; color: #e5e7eb; border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.5;"><code>
+
+        <img style="max-width: 90%;"/>
+
+    
+
+"""
+
+
+# ------------------------------------------------------------
+# STEP 4: Save HTML + open in browser
+# ------------------------------------------------------------
+with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w") as f:
+    f.write(html)
+    path = f.name
+
+webbrowser.open(path)
+
+print("\\n🌐 Webpage opened!")</code></pre>
+</div>
+</details><details style="border: 1px solid #bfdbfe; border-radius: 14px; background: #eff6ff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Checkpoint</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">CHECKPOINT</div>
+<div>If your image does not appear, check the image type and make sure you pasted only the base64 text.</div>
+</div>
+</details></div>
+</details><details style="border: 1px solid #e5e7eb; border-radius: 16px; background: #ffffff; margin-bottom: 14px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 16px 18px;  font-size: 19px; background: #f8fafc; border-bottom: 1px solid #e5e7eb;">9. Discussion and reflection</summary>
+<div style="padding: 18px;"><details style="border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Discuss</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">DISCUSS</div>
+<div>What is the difference between loading an image by file path and embedding it as base64 text?</div>
+</div>
+</details><details style="border: 1px solid #ddd6fe; border-radius: 14px; background: #f5f3ff; margin-bottom: 12px; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Reflect</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">REFLECT</div>
+<div>Why might a programmer choose the simpler file-path method most of the time?</div>
+</div>
+</details><details style="border: 1px solid #fde68a; border-radius: 14px; background: #fffbeb; overflow: hidden;">
+<summary style="cursor: pointer; padding: 14px 16px;  font-size: 17px;">Submit</summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; border-radius: 999px; padding: 4px 10px; font-size: 12px;  margin-bottom: 10px;">SUBMIT</div>
+<div>Post a short response explaining how this lesson connects ASCII art, file paths, and base64.</div>
+</div>
+</details></div>
+</details>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; background: #ffffff; ">
+<div style=" margin-bottom: 8px; font-size: 18px;">Big idea</div>
+<div>Computers do not “see” an image the way humans do. They work with <strong>representations</strong>: sometimes a file path, sometimes binary data, sometimes plain text.</div>
+</div>
+</div></div></article><nav class="site-page-actions"><a href="level-1-writing-code-from-zero.html">← Level 1: Writing code from zero</a><a href="../unit1.html">Back to Unit 1</a><a href="images-are-text-2.html">Images are text?! 2 →</a></nav></main></div><footer class="site-footer"></footer></body></html>

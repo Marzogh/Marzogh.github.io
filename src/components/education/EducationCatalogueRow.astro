@@ -1,0 +1,69 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description?: string;
+  meta?: string[];
+  tags?: string[];
+}
+
+const { href, title, description = '', meta = [], tags = [] } = Astro.props;
+const visibleMeta = meta.filter(Boolean);
+const visibleTags = tags.filter(Boolean).slice(0, 4);
+---
+
+<a class="edu-catalogue-row" href={href}>
+  <div class="edu-catalogue-row__head">
+    <h3>{title}</h3>
+    {visibleMeta.length ? <p>{visibleMeta.join(' · ')}</p> : null}
+  </div>
+  {description ? <p class="edu-catalogue-row__description">{description}</p> : null}
+  {visibleTags.length ? (
+    <p class="edu-catalogue-row__tags">{visibleTags.map((tag) => `#${tag}`).join('  ')}</p>
+  ) : null}
+</a>
+
+<style>
+  .edu-catalogue-row {
+    display: grid;
+    gap: 0.45rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 78%, transparent 22%);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .edu-catalogue-row:hover h3 {
+    color: var(--link-hover);
+  }
+
+  .edu-catalogue-row__head {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .edu-catalogue-row__head h3,
+  .edu-catalogue-row__head p,
+  .edu-catalogue-row__description,
+  .edu-catalogue-row__tags {
+    margin: 0;
+  }
+
+  .edu-catalogue-row__head h3 {
+    font-size: 1.08rem;
+    line-height: 1.2;
+  }
+
+  .edu-catalogue-row__head p,
+  .edu-catalogue-row__description,
+  .edu-catalogue-row__tags {
+    color: var(--text-2);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .edu-catalogue-row__tags {
+    font-size: 0.87rem;
+    color: var(--muted);
+  }
+</style>

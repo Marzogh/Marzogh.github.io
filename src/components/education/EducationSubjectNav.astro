@@ -1,0 +1,45 @@
+---
+interface SubjectItem {
+  href: string;
+  label: string;
+  active?: boolean;
+}
+
+interface Props {
+  items: SubjectItem[];
+}
+
+const { items = [] } = Astro.props;
+---
+
+<nav class="edu-subject-nav" aria-label="Education subjects">
+  {items.map((item) => (
+    <a class:list={[item.active && 'is-active']} href={item.href}>{item.label}</a>
+  ))}
+</nav>
+
+<style>
+  .edu-subject-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .edu-subject-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.98rem;
+  }
+
+  .edu-subject-nav a:hover,
+  .edu-subject-nav a.is-active {
+    color: var(--text);
+  }
+
+  .edu-subject-nav a.is-active {
+    text-decoration: underline;
+    text-underline-offset: 0.28em;
+  }
+</style>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Writing Good Code - An Introduction</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link active" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="2-1-get-python-ready-install-thonny.html">← Get Python Ready: Install Thonny</a><a href="../unit1.html">Back to Unit 1</a><a href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<p> </p>
+<div id="top" style="margin: 0 0 16px 0;">
+<div style="border: 1px solid #d0d7de; border-radius: 18px; overflow: hidden; background: linear-gradient(135deg, #0b1220 0%, #122a4a 100%);">
+<div style="padding: 26px 28px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+<div style="min-width: 86px; height: 86px; border-radius: 16px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 40px; color: #ffffff;">🎮</div>
+<div style="flex: 1 1 360px;">
+<div style="font-size: 2rem; color: #eaf0ff; line-height: 1.15;">Writing Good Code - An Introduction</div>
+<div style="margin-top: 10px; font-size: 1.05rem; color: #b8c4e6; max-width: 80ch;">Year 9 Digital Technologies • Think first, code second • Learn the brain-tools coders use</div>
+</div>
+<div style="border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; color: #ffffff; background: rgba(255,255,255,0.08); white-space: nowrap;">🧠 Computational Thinking</div>
+</div>
+</div>
+</div>
+<div style="max-width: 1040px; margin: 0 auto; padding: 12px 0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif; color: #222; line-height: 1.55;">
+<div style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; padding: 14px 16px;">
+<div style="font-size: 1.1rem;">Quick Nav</div>
+<div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;"><a href="#what" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🎯 What is coding?</a> <a href="#ipo" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🔁 IPO</a> <a href="#decomp" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🧩 Decomposition</a> <a href="#patterns" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🔎 Patterns</a> <a href="#abstraction" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🧠 Abstraction</a> <a href="#algo" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🪜 Algorithms</a> <a href="#systems" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🕸️ Systems</a> <a href="#bank" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 999px; border: 1px solid #d0d7de; background: #ffffff; text-decoration: none; color: #0b1220;">🧪 Practice bank</a></div>
+<div style="margin-top: 10px; color: #46556e; font-size: 0.95rem;">Tip: Click any card title to expand/collapse. Most activities include a folded <strong>Possible solution</strong>.</div>
+</div>
+<details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="what" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🎯 What is coding (and what isn’t it)? <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;"><strong>Coding</strong> is writing instructions that a computer can follow <strong>exactly</strong>. Computers don’t “guess what you meant” — they do what you wrote.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>So what do coders actually do?</div>
+<ul style="margin: 8px 0 0; padding-left: 18px; color: #333;">
+<li><strong>Plan</strong> the solution (what should happen?)</li>
+<li><strong>Write</strong> the instructions (code)</li>
+<li><strong>Test</strong> it (does it work?)</li>
+<li><strong>Debug</strong> it (why is it broken?)</li>
+<li><strong>Improve</strong> it (make it clearer/faster/easier to use)</li>
+</ul>
+</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Coding is NOT</div>
+<ul style="margin: 8px 0 0; padding-left: 18px; color: #333;">
+<li>“just typing fast”</li>
+<li>“memorising everything”</li>
+<li>“being a maths genius”</li>
+</ul>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Coding IS</div>
+<ul style="margin: 8px 0 0; padding-left: 18px; color: #333;">
+<li>clear thinking</li>
+<li>trial + error (normal!)</li>
+<li>patterns and reusable ideas</li>
+</ul>
+</div>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: “Robot-proof” instructions (2–3 minutes)</div>
+<div style="margin-top: 6px;">Write instructions for a robot to complete this task: <strong>“Open a browser and get to the Thonny download page.”</strong></div>
+<div style="margin-top: 6px; color: #2b3a2f;">Your instructions must include:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>What to click (and where)</li>
+<li>What to type</li>
+<li>What to do if a pop-up appears</li>
+<li>What “success” looks like at the end</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<ol style="margin: 10px 0 0; padding-left: 20px;">
+<li>Click the <strong>Start</strong> button.</li>
+<li>Type <strong>Chrome</strong> (or your browser name) and press <strong>Enter</strong>.</li>
+<li>Click the address bar at the top of the browser.</li>
+<li>Type <strong>thonny.org</strong> and press <strong>Enter</strong>.</li>
+<li>When the page loads, find the section that says <strong>Download</strong>.</li>
+<li>Click the <strong>Windows</strong> or <strong>macOS</strong> download link that matches your computer.</li>
+<li>Success looks like: the download starts OR you can see the correct download option on-screen.</li>
+</ol>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this (solo or pairs): The “too vague” detector</div>
+<div style="margin-top: 6px;">Below are three instructions. For each one, rewrite it so it is <strong>robot-proof</strong>.</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>“Open the file.”</li>
+<li>“Run the program.”</li>
+<li>“Save your work.”</li>
+</ul>
+<div style="margin-top: 6px; color: #2b3a2f;">Hint: include <strong>where</strong> the file is, <strong>what it’s called</strong>, and <strong>what you expect to see</strong> afterwards.</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="ipo" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🔁 IPO: Input → Process → Output <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;">The IPO model is a simple way to describe what a program does: <strong>Input</strong> = what goes in, <strong>Process</strong> = what happens, <strong>Output</strong> = what comes out.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>A super simple IPO example</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; overflow: hidden;">
+<div style="background: #0b1220; color: #eaf0ff; padding: 12px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;">INPUT: your name<br/>PROCESS: add "Hello " to the front of it<br/>OUTPUT: "Hello Prajwal" (or whatever name you typed)</div>
+</div>
+<div style="margin-top: 10px; color: #46556e;">IPO helps you plan BEFORE coding. If you can’t describe your Input/Process/Output, your code will be chaos.</div>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: IPO for a mini-game scoreboard (3–5 minutes)</div>
+<div style="margin-top: 6px;">You’re designing a scoreboard for a simple class tournament game (e.g., Rocket League, FIFA, Valorant, Mario Kart…). The scoreboard should:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>store player/team names</li>
+<li>add points when someone scores</li>
+<li>show who is currently winning</li>
+</ul>
+</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Write IPO for the scoreboard. Make it specific:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>What EXACT inputs exist? (button press? team selected? points?)</li>
+<li>What EXACT process happens? (update totals, compare scores)</li>
+<li>What EXACT output appears? (numbers on screen, “Team A winning!”)</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; overflow: hidden;">
+<div style="background: #0b1220; color: #eaf0ff; padding: 12px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;">INPUT:<br/>- team1_name, team2_name<br/>- "score" button press for Team 1 or Team 2<br/>- points to add (usually 1)<br/><br/>PROCESS:<br/>- add points to that team’s total<br/>- compare totals to find the leader<br/><br/>OUTPUT:<br/>- display Team 1 score + Team 2 score<br/>- display "Team 1 leading" / "Team 2 leading" / "Tied"</div>
+</div>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: IPO speed-run (choose ONE)</div>
+<div style="margin-top: 6px;">Pick ONE situation and write IPO. Keep it short but specific (3 lines is fine).</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>A “mystery loot box” opener (random reward)</li>
+<li>A music “skip track” button</li>
+<li>A school canteen queue number display</li>
+<li>A “battery low” warning system</li>
+</ul>
+<div style="margin-top: 6px; color: #2b3a2f;">Minimum requirement: include <strong>at least 2 inputs</strong>, <strong>at least 2 processes</strong>, and <strong>at least 2 outputs</strong>.</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="decomp" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🧩 Decomposition: break big into small <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;"><strong>Decomposition</strong> means breaking a big problem into smaller parts that are easier to build and test. If you can’t decompose it, you can’t code it (yet).</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>How to decompose (a method that works)</div>
+<ol style="margin: 8px 0 0; padding-left: 20px; color: #333;">
+<li><strong>Describe the goal</strong> in one sentence.</li>
+<li><strong>List the features</strong> a user would want.</li>
+<li><strong>Turn features into tasks</strong> the computer must do.</li>
+<li><strong>Group tasks</strong> into chunks (input, processing, output, storage).</li>
+</ol>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: Decompose a game “NPC shop” (5–7 minutes)</div>
+<div style="margin-top: 6px;">You’re building a simple shop in a game where a player can buy items (e.g., sword, potion, shield). The player has coins. Each item has a cost.</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Decompose the shop into at least <strong>8 smaller parts</strong>. Use this structure:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li><strong>Inputs:</strong> what the player does</li>
+<li><strong>Processing:</strong> what the shop checks/updates</li>
+<li><strong>Outputs:</strong> what the player sees/hears</li>
+<li><strong>Storage:</strong> what data must be remembered (coins, inventory)</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<ul style="margin: 10px 0 0; padding-left: 18px;">
+<li><strong>Input:</strong> player opens shop</li>
+<li><strong>Output:</strong> display item list + prices</li>
+<li><strong>Input:</strong> player selects item</li>
+<li><strong>Process:</strong> check if player coins ≥ price</li>
+<li><strong>If yes:</strong> subtract coins</li>
+<li><strong>If yes:</strong> add item to inventory</li>
+<li><strong>If no:</strong> show “Not enough coins”</li>
+<li><strong>Output:</strong> update coins display</li>
+<li><strong>Storage:</strong> remember inventory + coins even after leaving shop</li>
+</ul>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: Decompose a “Daily Quest” system</div>
+<div style="margin-top: 6px;">Imagine your game gives you 3 daily quests (e.g., “Win 1 match”, “Collect 10 coins”, “Log in today”). Decompose it using these prompts:</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>How are quests created each day?</li>
+<li>How does the game check progress?</li>
+<li>How does it show progress to the player?</li>
+<li>What reward happens when a quest completes?</li>
+<li>What resets at midnight?</li>
+</ul>
+<div style="margin-top: 6px; color: #2b3a2f;">Minimum: write <strong>10 bullet points</strong> total across input/process/output/storage.</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="patterns" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🔎 Pattern recognition: spot repeats <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;"><strong>Pattern recognition</strong> is noticing repeats (in steps, data, or code) so you can reuse a solution. Patterns are how you code faster AND with fewer bugs.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>Common patterns Year 9 coders see a LOT</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li><strong>Repeating steps:</strong> “do this again and again” → loops</li>
+<li><strong>Checking rules:</strong> “if this happens…” → if/else</li>
+<li><strong>Lists of things:</strong> items, names, scores → arrays/lists</li>
+<li><strong>Same output format:</strong> templates → functions</li>
+</ul>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: Pattern hunt — “Combo Lock” mini-game (5 minutes)</div>
+<div style="margin-top: 6px;">Imagine a game lock that opens with a 4-symbol code (like 🔺🔻⬅️➡️). Players get 5 attempts. After each attempt, the game gives feedback:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li><strong>Correct</strong> = right symbol in the right place</li>
+<li><strong>Close</strong> = symbol exists but in a different place</li>
+<li><strong>Wrong</strong> = symbol not in the code</li>
+</ul>
+</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Identify at least <strong>4 patterns</strong> in how the lock works. For each pattern, write:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>What repeats?</li>
+<li>What could code reuse?</li>
+<li>What variable would track it?</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (pattern examples) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<ul style="margin: 10px 0 0; padding-left: 18px;">
+<li><strong>Repeat:</strong> each attempt follows the same steps → loop over attempts</li>
+<li><strong>Repeat:</strong> compare 4 positions each time → loop over 4 symbols</li>
+<li><strong>Rule check:</strong> correct/close/wrong → if/elif/else decisions</li>
+<li><strong>Tracking:</strong> attempts left → variable that decreases</li>
+<li><strong>Template output:</strong> show feedback in same format each time → reusable function</li>
+</ul>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: Find patterns in your own habits</div>
+<div style="margin-top: 6px;">Pick ONE of these and list the repeating steps:</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Getting ready for school</li>
+<li>Joining an online game with friends</li>
+<li>Making a snack</li>
+<li>Charging your devices overnight</li>
+</ul>
+<div style="margin-top: 6px; color: #2b3a2f;">Then answer:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Which step could fail? (edge case)</li>
+<li>Which steps repeat every time?</li>
+<li>What would you “automate” first?</li>
+</ul>
+</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="abstraction" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🧠 Abstraction: focus on what matters <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;"><strong>Abstraction</strong> means keeping the important details and ignoring the rest — especially at the start. Great coders don’t build everything at once. They build the core first.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>A simple way to do abstraction</div>
+<ol style="margin: 8px 0 0; padding-left: 20px;">
+<li>Write the <strong>core goal</strong> in one sentence.</li>
+<li>List the <strong>3 must-haves</strong> (without these, it fails).</li>
+<li>List the <strong>nice-to-haves</strong> (cool but optional).</li>
+<li>Build must-haves first.</li>
+</ol>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: Abstraction — Design a “Game Settings” menu (5 minutes)</div>
+<div style="margin-top: 6px;">Imagine you’re making a settings menu for a simple game. Your menu might include things like volume, controls, subtitles, graphics, difficulty, etc.</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Create two lists:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li><strong>Must-haves (3)</strong> — required for the game to be playable</li>
+<li><strong>Nice-to-haves (5)</strong> — optional extras</li>
+</ul>
+Then explain (1–2 sentences): <strong>why</strong> you placed each must-have in that list.</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<div style="margin-top: 10px;"><strong>Must-haves:</strong>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Volume control (so sound isn’t painful / can be muted)</li>
+<li>Control remap (accessibility + preference)</li>
+<li>Difficulty setting (so it’s playable for different skill levels)</li>
+</ul>
+<div style="margin-top: 10px;"><strong>Nice-to-haves:</strong></div>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Graphics presets</li>
+<li>Colourblind mode</li>
+<li>Subtitles style options</li>
+<li>Vibration settings</li>
+<li>Custom crosshair</li>
+</ul>
+</div>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: “Build it in layers” challenge</div>
+<div style="margin-top: 6px;">You are making a <strong>timer</strong> tool for students. Write what you would build in:</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li><strong>Version 1</strong> (minimum viable): what must it do?</li>
+<li><strong>Version 2</strong> (better): what improves it?</li>
+<li><strong>Version 3</strong> (deluxe): what’s a cool extra?</li>
+</ul>
+<div style="margin-top: 6px; color: #2b3a2f;">Hint: Version 1 should be so simple it could be coded quickly.</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="algo" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🪜 Algorithmic thinking: step-by-step instructions <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;">An <strong>algorithm</strong> is a clear, ordered set of steps that solves a problem. Good algorithms include rules (IF/ELSE) and handle “weird inputs”.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>A Year 9 algorithm checklist</div>
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Steps are in order</li>
+<li>Each step is specific (robot-proof)</li>
+<li>Includes at least one IF/ELSE decision</li>
+<li>Includes at least one edge case (“what if…?”)</li>
+</ul>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: Write an algorithm for a “respawn timer” (5–7 minutes)</div>
+<div style="margin-top: 6px;">In a game, when a player is eliminated, they respawn after a delay. Design a respawn timer that:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>counts down from 10 seconds</li>
+<li>shows the number each second</li>
+<li>respawns the player at 0</li>
+<li>has a rule: if the player quits early, stop the timer</li>
+</ul>
+</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Write the algorithm in steps (numbered list). Include:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>Inputs (what triggers respawn? what means “quit”?)</li>
+<li>Processing steps (countdown logic)</li>
+<li>Outputs (what the player sees)</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<ol style="margin: 10px 0 0; padding-left: 20px;">
+<li>When player is eliminated, set <strong>time = 10</strong>.</li>
+<li>Display “Respawning in 10…”</li>
+<li>WHILE time &gt; 0:</li>
+<li style="list-style-type: none;">
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>If player quits match, stop and exit the loop.</li>
+<li>Wait 1 second.</li>
+<li>time = time − 1</li>
+<li>Display “Respawning in time…”</li>
+</ul>
+</li>
+<li>If time == 0 and player is still in match, respawn player.</li>
+</ol>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: “Anti-rage-quit” rule</div>
+<div style="margin-top: 6px;">Add a rule to your respawn algorithm: <strong>If a player quits during the countdown, they lose 50 coins.</strong></div>
+<div style="margin-top: 6px; color: #2b3a2f;">Write:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>What variable tracks coins?</li>
+<li>Where do you subtract coins in the algorithm?</li>
+<li>What message should display?</li>
+</ul>
+</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="systems" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🕸️ Systems thinking: the big picture + connections (Advanced) <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border-left: 6px solid #1a73e8; background: #eef6ff; padding: 12px; border-radius: 12px; margin-top: 12px;">Systems thinking is about understanding how parts connect and influence each other. In digital tech, “the system” includes users, devices, networks, data, rules, and feedback.</div>
+<div style="margin-top: 12px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #f6f8fa;">
+<div>A simple systems map (text version)</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; overflow: hidden;">
+<div style="background: #0b1220; color: #eaf0ff; padding: 12px; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;">PLAYER → GAME CLIENT → INTERNET → GAME SERVER → DATABASE<br/>↑ ↓ ↓ ↓<br/>settings updates lag/errors saved data</div>
+</div>
+<div style="margin-top: 10px; color: #46556e;">If one part breaks (e.g., internet), it can affect everything else (lag, disconnects, lost progress).</div>
+</div>
+<div style="border-left: 6px solid #b86b00; background: #fff4db; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Activity: Systems thinking — “Matchmaking” (6–8 minutes)</div>
+<div style="margin-top: 6px;">Imagine a multiplayer game that tries to match players with similar skill. Your system needs to:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>collect a player’s skill rating</li>
+<li>find other players online</li>
+<li>create teams</li>
+<li>start a match</li>
+<li>update ratings after the match</li>
+</ul>
+</div>
+<div style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>Your task</div>
+Draw the system as a list of parts and arrows (text is fine). Then answer:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>What happens if the <strong>server</strong> is down?</li>
+<li>What happens if the <strong>player’s internet</strong> is unstable?</li>
+<li>What happens if the <strong>rating</strong> is wrong?</li>
+</ul>
+</div>
+<details style="margin-top: 10px; border: 1px solid #d0d7de; border-radius: 14px; background: #ffffff; overflow: hidden;">
+<summary style="cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">Possible solution (one example) <span>›</span></summary>
+<div style="padding: 0 14px 14px 14px;">
+<div style="margin-top: 10px;"><strong>Parts + connections:</strong>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Player device → game client app</li>
+<li>Game client → internet → matchmaking server</li>
+<li>Server → database (player ratings, history)</li>
+<li>Server → game server instance (actual match)</li>
+<li>Match results → database → updated ratings → next matchmaking</li>
+</ul>
+<div style="margin-top: 10px;"><strong>Failure impacts:</strong></div>
+<ul style="margin: 6px 0 0; padding-left: 18px;">
+<li>Server down → no matchmaking, no matches start</li>
+<li>Unstable internet → lag/disconnect → unfair match outcomes</li>
+<li>Wrong rating → unfair teams → frustration → players quit → fewer players online (feedback loop)</li>
+</ul>
+</div>
+</div>
+</details></div>
+<div style="border-left: 6px solid #1aa85b; background: #effaf3; padding: 12px; border-radius: 12px; margin-top: 12px;">
+<div>Try this: Find the feedback loop</div>
+<div style="margin-top: 6px;">In matchmaking, a feedback loop might be: <strong>Unfair matches → players quit → fewer players online → matchmaking gets worse → more players quit.</strong></div>
+<div style="margin-top: 6px; color: #2b3a2f;">Write ONE feedback loop for:
+<ul style="margin: 8px 0 0; padding-left: 18px;">
+<li>a school Wi-Fi system</li>
+<li>a canteen ordering system</li>
+<li>a classroom behaviour rewards system</li>
+</ul>
+</div>
+</div>
+</div>
+</details><details style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; margin: 14px 0; overflow: hidden;">
+<summary id="bank" style="cursor: pointer; padding: 14px 16px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;">🧪 Quick Practice Bank (10 scenarios - only pick any 1 at a time) <span>›</span></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="margin-top: 12px; color: #46556e;">Choose any <strong>one </strong>scenario. For each one, complete: <strong>IPO</strong> → <strong>Decomposition</strong> → <strong>Patterns</strong> → <strong>Abstraction</strong> → <strong>Algorithm</strong>. <br/><br/>To keep it manageable: aim for <strong>3–5 bullets</strong> per section.</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>1) “Loot Drop” simulator (random reward)</div>
+<div style="margin-top: 8px; color: #333;">A player opens a chest and gets a random item (common/rare/legendary). Must show what they got and update inventory.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: add “pity timer” (after 10 commons, guarantee a rare).</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>2) Friend list status tracker</div>
+<div style="margin-top: 8px; color: #333;">Shows which friends are online/offline/in-game. Updates every minute. Lets you search a name.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: show “last seen” time.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>3) “Energy bar” stamina system</div>
+<div style="margin-top: 8px; color: #333;">Sprinting drains stamina, resting regenerates it. If stamina hits 0, sprint is disabled until it recovers.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: different activities drain at different rates.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>4) Classroom tournament bracket tool</div>
+<div style="margin-top: 8px; color: #333;">Enter teams, generate matchups, record wins, move winners forward until a champion is declared.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: handle an odd number of teams (bye rounds).</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>5) “Daily login reward” system</div>
+<div style="margin-top: 8px; color: #333;">If a player logs in each day, they get a reward. Missing a day resets the streak (or reduces it).</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: reward improves with streak length.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>6) “Boss fight” health tracker</div>
+<div style="margin-top: 8px; color: #333;">Track boss HP. Different attacks deal different damage. When HP reaches 0, trigger victory message.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: phase changes at 70% and 30% HP.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>7) “Queue number” system (real world)</div>
+<div style="margin-top: 8px; color: #333;">Like at the DMV: generate a ticket number, call next, display “Now Serving”, track who is waiting.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: separate queues (priority vs normal).</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>8) “Music mood” playlist filter</div>
+<div style="margin-top: 8px; color: #333;">Choose a mood (chill/hype/focus). Filter songs with tags and generate a playlist.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: avoid repeating the same artist twice in a row.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>9) “Smart home lights” rules</div>
+<div style="margin-top: 8px; color: #333;">Lights turn on based on time + motion sensor. They turn off after 2 minutes with no motion.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: “Do not disturb” mode after 10pm.</div>
+</div>
+<div style="flex: 1 1 320px; border: 1px solid #d0d7de; border-radius: 14px; padding: 12px; background: #ffffff;">
+<div>10) “School assignment tracker”</div>
+<div style="margin-top: 8px; color: #333;">Add assignments with due dates, sort by due date, show overdue tasks, and mark completed tasks.</div>
+<div style="margin-top: 8px; color: #46556e; font-size: 0.95rem;">Stretch: send a warning 2 days before due date.</div>
+</div>
+</div>
+</div>
+</details>
+<div style="border: 1px solid #d0d7de; border-radius: 16px; background: #ffffff; padding: 14px 16px; margin-top: 14px;">
+<div>Inspired by</div>
+<div style="margin-top: 6px; color: #46556e; font-size: 0.95rem;">Coding Introduction (Digital Solutions 2025): <a href="https://damom73.github.io/digital-solutions-text-2025/intro/" style="color: #1a73e8; text-decoration: none;" target="_blank">https://damom73.github.io/digital-solutions-text-2025/intro/</a></div>
+<div style="margin-top: 10px; color: #46556e; font-size: 0.95rem;"><a href="#top" style="color: #1a73e8; text-decoration: none;">⬆️ Back to top</a></div>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="2-1-get-python-ready-install-thonny.html">← Get Python Ready: Install Thonny</a><a href="../unit1.html">Back to Unit 1</a><a href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System →</a></nav></main></div><footer class="site-footer"></footer></body></html>

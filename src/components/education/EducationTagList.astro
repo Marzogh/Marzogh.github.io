@@ -1,0 +1,39 @@
+---
+import { toEducationTagSlug } from '../../utils/education';
+
+interface Props {
+  tags?: string[];
+}
+
+const { tags = [] } = Astro.props;
+const visible = tags.filter(Boolean);
+---
+
+{visible.length ? (
+  <nav class="edu-tag-list" aria-label="Tags">
+    {visible.map((tag) => (
+      <a href={`/tags/${toEducationTagSlug(tag)}`}>#{tag}</a>
+    ))}
+  </nav>
+) : null}
+
+<style>
+  .edu-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .edu-tag-list a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+  }
+
+  .edu-tag-list a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+</style>

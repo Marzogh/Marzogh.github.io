@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Python Reference Wiki</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link active" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="end-of-term-projects.html">← End of term projects</a><a href="../unit1.html">Back to Unit 1</a><a href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div id="top" style="max-width: 1040px; margin: 0 auto; padding: 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-bottom: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start;">
+<div style="flex: 1; min-width: 260px;">
+<div style="font-size: 22px; color: #1f2a37; margin: 0 0 6px 0;">🐍 Python Reference Wiki</div>
+<div style="font-size: 14px; color: #425466; margin: 0 0 10px 0;">A single place to learn and look things up,from absolute beginner to solid intermediate. Every section includes examples, common mistakes, and <strong>two practice tasks</strong> with <strong>hints</strong> and <strong>solutions</strong> (all collapsed).</div>
+<details style="background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px; margin: 0 0 10px 0;">
+<summary style="cursor: pointer; color: #1f2a37;">✅ How to use this page (read this once)</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<ul style="margin: 0 0 10px 18px; padding: 0;">
+<li style="margin: 6px 0;">Use the <strong>Jump Menu</strong> below to find what you need fast.</li>
+<li style="margin: 6px 0;">Open the <strong>Examples</strong> dropdowns and run the code in your editor.</li>
+<li style="margin: 6px 0;">Then do the <strong>Try it</strong> tasks. They’re part of learning - not “extra work”.</li>
+<li style="margin: 6px 0;">The <strong>Try it</strong> tasks will teach you more functions - think of them as extra tips and tricks!</li>
+<li style="margin: 6px 0;">If you get an error: read the <strong>last line</strong> first. It usually tells you what went wrong.</li>
+<li style="margin: 6px 0;">Use the <strong>↑ Back to top</strong> link at the end of every section to return here.</li>
+</ul>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #7c2d12; margin-bottom: 4px;">⚠️ Important</div>
+<div style="color: #7c2d12; font-size: 14px;">Python is picky about <strong>indentation</strong>. If the spacing is wrong, your program is wrong - even if the words are correct.</div>
+</div>
+</div>
+</details>
+</div>
+<div style="width: 320px; max-width: 100%; background: #f1f5f9; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">🎯 Your job while learning Python</div>
+<ul style="margin: 0 0 8px 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">Run code. Change one thing. Run it again.</li>
+<li style="margin: 6px 0;">Predict what will happen <strong>before</strong> you run it.</li>
+<li style="margin: 6px 0;">When stuck: isolate the problem (smallest failing piece).</li>
+</ul>
+<div style="font-size: 13px; color: #475569;"><strong>Tip:</strong> If your code “doesn’t work”, copy the error message into your notes. Errors are clues.</div>
+</div>
+</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 14px 18px; margin-bottom: 16px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;">
+<div style="font-size: 16px; color: #1f2a37;">🧭 Jump Menu</div>
+<div style="font-size: 13px; color: #64748b;">Tip: use Ctrl+F / Cmd+F too</div>
+</div>
+<div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"><a href="#getting-started" style="text-decoration: none; background: #eef2ff; border: 1px solid #c7d2fe; color: #1e3a8a; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Getting started</a> <a href="#variables-types" style="text-decoration: none; background: #ecfeff; border: 1px solid #a5f3fc; color: #155e75; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Variables &amp; types</a> <a href="#input-output" style="text-decoration: none; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Input &amp; output</a> <a href="#operators" style="text-decoration: none; background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Operators</a> <a href="#conditionals" style="text-decoration: none; background: #fdf2f8; border: 1px solid #fbcfe8; color: #9d174d; padding: 7px 10px; border-radius: 999px; font-size: 13px;">If / elif / else</a> <a href="#loops" style="text-decoration: none; background: #f5f3ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Loops</a> <a href="#strings" style="text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Strings</a> <a href="#lists-tuples" style="text-decoration: none; background: #faf5ff; border: 1px solid #e9d5ff; color: #6b21a8; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Lists &amp; tuples</a> <a href="#dicts-sets" style="text-decoration: none; background: #f1f5f9; border: 1px solid #cbd5e1; color: #0f172a; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Dictionaries &amp; sets</a> <a href="#functions" style="text-decoration: none; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Functions</a> <a href="#files" style="text-decoration: none; background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Files</a> <a href="#imports" style="text-decoration: none; background: #fefce8; border: 1px solid #fde68a; color: #854d0e; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Imports</a> <a href="#debugging" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; padding: 7px 10px; border-radius: 999px; font-size: 13px;">Debugging</a></div>
+</div>
+<div id="getting-started" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">1) Getting started: running code, printing, and comments</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">This section is about the <strong>first moves</strong> in Python: writing lines that actually run, seeing output, and leaving yourself clear notes. You’ll also learn the two rules that cause most beginner problems: <strong>indentation matters</strong> and <strong>errors are clues</strong>.</div>
+</div>
+<div style="width: 320px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can run a Python file and see output.</li>
+<li style="margin: 6px 0;">You can explain what <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print()</code> does.</li>
+<li style="margin: 6px 0;">You can add comments that explain your thinking.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: Output is how you “talk” to the computer</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">When you write Python, you need a way to <strong>see what the program is doing</strong>. That’s what <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print()</code> is for.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Think of it like this:</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155;">
+<li style="margin: 6px 0;"><strong>Your code</strong> = instructions</li>
+<li style="margin: 6px 0;"><strong>Output</strong> = evidence the instructions happened</li>
+<li style="margin: 6px 0;"><strong>Print statements</strong> = your “window” into what’s happening</li>
+</ul>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">👀 Examples: print(), comments, and running code</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example A: The smallest working program</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># This is a comment. Python ignores it.
+# Comments are for humans (including future you).
+
+print("Hello, world!")
+print("If you can see this, your code is running.")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>What you should notice:</strong> Each <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print()</code> produces a new line of output.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example B: Printing values and mixing text + numbers</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = 7
+total = 10
+
+# f-strings let you embed variables inside text
+print(f"Score: {score} out of {total}")
+print(f"Percentage: {score/total * 100}%")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Why this matters:</strong> Beginners often try to “glue” text and numbers using <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">+</code> and hit type errors. f-strings are the easiest clean option.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example C: A “run-check” pattern (for bigger programs)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>print("=== Program starting ===")
+
+# Your code goes here...
+name = "Ava"
+print(f"Loaded name: {name}")
+
+print("=== Program finished ===")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Why this helps:</strong> If you don’t see “Program finished”, your code crashed before the end.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Missing quotes around text</div>
+<div style="margin-bottom: 6px;">If you want Python to print text, you must put it in quotes.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Wrong
+print(Hello)
+
+# ✅ Right
+print("Hello")</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Using smart quotes (from Google Docs / Word)</div>
+<div style="margin-bottom: 6px;">Some apps turn quotes into curly quotes like “ ”. Python usually rejects them. Use straight quotes: " "</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Might break (curly quotes)
+print(“Hello”)
+
+# ✅ Works (straight quotes)
+print("Hello")</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Expecting print() to “store” a value</div>
+<div style="margin-bottom: 6px;"><code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print()</code> shows something. It doesn’t save it. To save a value, you need a variable (next section).</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># This prints 5, but doesn't store it anywhere
+print(2 + 3)
+
+# This stores the value in a variable AND prints it
+result = 2 + 3
+print(result)</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks</summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Make a “3-line intro” program</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Write a program that prints:
+                            <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;">A title line (your choice)</li>
+<li style="margin: 4px 0;">Your name (or a nickname)</li>
+<li style="margin: 4px 0;">One fun fact (school-appropriate)</li>
+</ul>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> When you run it, you see exactly 3 lines.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use three separate <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print()</code> lines. Text must be inside quotes.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<div style="margin-top: 8px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>print("=== My Python Intro ===")
+print("Name: Sam")
+print("Fun fact: I can juggle three objects.")</code></pre>
+</div>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Print a “status report” using variables + f-strings</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create two variables:
+                            <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;"><code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">level</code> (a number)</li>
+<li style="margin: 4px 0;"><code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">nickname</code> (text)</li>
+</ul>
+                            Then print one line like:
+                            <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Nickname</strong> = CodeNinja, <strong>Level</strong> = 3</div>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> If you change the variable values, the printed line updates without changing the print text.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use an f-string: <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print(f"... {variable} ...")</code> <br/>Text needs quotes. Numbers do not.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<div style="margin-top: 8px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>level = 3
+nickname = "CodeNinja"
+
+print(f"Nickname = {nickname}, Level = {level}")</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#variables-types" style="text-decoration: none; font-size: 13px; color: #065f46; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 8px 10px; border-radius: 999px;">Next: Variables &amp; types →</a></div>
+</details>
+</div>
+</div>
+<div id="variables-types" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">2) Variables &amp; data types: storing information on purpose</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">A <strong>variable</strong> is a name that points to a value, so you can reuse it, update it, and make your code readable. A <strong>data type</strong> is the kind of value you’re storing (number, text, true/false, etc.). Getting these right early makes everything else easier: input, maths, decisions, loops - all of it.</div>
+</div>
+<div style="width: 360px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can create variables and update them.</li>
+<li style="margin: 6px 0;">You can tell the difference between <strong>int</strong>, <strong>float</strong>, <strong>str</strong>, <strong>bool</strong>.</li>
+<li style="margin: 6px 0;">You can use <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">type()</code> to check what Python thinks a value is.</li>
+<li style="margin: 6px 0;">You can convert types when you need to (especially after <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">input()</code>).</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: Variables help you avoid repeating yourself</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">Without variables, you end up copying the same values everywhere. That makes code harder to change and easier to break. Variables let you <strong>store</strong> information once, then <strong>reuse</strong> it reliably.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">A quick example of why variables matter:</div>
+<div style="color: #334155;">If you write the number <strong>25</strong> all over your code and later it needs to become <strong>30</strong>, you have to find every single 25. With a variable, you change it once.</div>
+</div>
+<div style="margin-top: 10px; background: #fefce8; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 12px; color: #854d0e;"><strong>Important:</strong> In Python, you do <strong>not</strong> have to “declare” variable types. Python figures it out from the value. But you still need to understand types, because types affect what operations are allowed.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧱 Data types you’ll use constantly</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">int</div>
+<div>Whole numbers (no decimal point)</div>
+<div style="margin-top: 6px; color: #475569;"><strong>Examples:</strong> 0, 7, -12, 2048</div>
+</div>
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">float</div>
+<div>Numbers with decimals</div>
+<div style="margin-top: 6px; color: #475569;"><strong>Examples:</strong> 3.14, 0.5, -2.0</div>
+</div>
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">str</div>
+<div>Text (characters) inside quotes</div>
+<div style="margin-top: 6px; color: #475569;"><strong>Examples:</strong> "hi", "25", "Year 9"</div>
+</div>
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">bool</div>
+<div>True/False values (used in decisions)</div>
+<div style="margin-top: 6px; color: #475569;"><strong>Examples:</strong> True, False</div>
+</div>
+</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Two very common “gotchas”</div>
+<ul style="margin: 0 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;"><strong>"25"</strong> is a <strong>string</strong> (text). <strong>25</strong> is an <strong>integer</strong> (number).</li>
+<li style="margin: 6px 0;">Python cares about this difference. It changes what <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">+</code> means (add vs join).</li>
+</ul>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">👀 Examples: variables, type(), and updating values</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example A: Variables store values and can change</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = 0
+print(f"Starting score: {score}")
+
+score = score + 1
+print(f"After +1: {score}")
+
+score = score + 5
+print(f"After +5: {score}")
+
+score = 100
+print(f"Reset score: {score}")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Notice:</strong> The variable name stays the same, but the value can be updated whenever you assign a new value.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example B: Checking types with type()</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = 15
+height = 1.72
+name = "Ravi"
+is_student = True
+
+print(type(age))
+print(type(height))
+print(type(name))
+print(type(is_student))</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>What you should see:</strong> <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">&lt;class 'int'&gt;</code>, <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">&lt;class 'float'&gt;</code>, etc.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example C: When + means different things</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>print(10 + 5)          # numbers: addition
+print("10" + "5")      # strings: joining (concatenation)
+
+# Mixing types causes errors:
+# print("Score: " + 10)  # TypeError
+
+# Use an f-string instead:
+print(f"Score: {10}")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Key idea:</strong> The operator is the same symbol, but the behavior depends on the data types.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example D: Converting types (this will save you later)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>text_number = "42"
+print(text_number)
+print(type(text_number))
+
+real_number = int(text_number)
+print(real_number)
+print(type(real_number))
+
+decimal_text = "3.5"
+real_decimal = float(decimal_text)
+print(real_decimal)
+print(type(real_decimal))
+
+print(str(999))        # convert number to text</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Important:</strong> <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">int()</code> only works if the string is a whole number like "42". For decimals like "3.5", use <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">float()</code>.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Thinking Python “knows” what you meant</div>
+<div style="margin-bottom: 6px;">Python does exactly what you write, not what you meant. If a number is inside quotes, Python treats it as text.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>apples = "5"
+more_apples = "2"
+print(apples + more_apples)  # prints "52" not 7</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> convert to a number first.</div>
+<pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>apples = int("5")
+more_apples = int("2")
+print(apples + more_apples)  # prints 7</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Variable names that cause confusion</div>
+<div style="margin-bottom: 6px;">Use names that explain the meaning. Avoid single letters (except simple loops later). Don’t use Python keywords like <strong>print</strong>, <strong>input</strong>, <strong>type</strong> as variable names.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Confusing or dangerous
+print = 10
+type = "hello"
+
+# ✅ Clear
+player_score = 10
+player_name = "hello"</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Using commas but expecting f-string formatting</div>
+<div style="margin-bottom: 6px;">This works, but it prints spaces in a specific way. f-strings give you more control.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>name = "Mina"
+age = 15
+
+print("Name:", name, "Age:", age)       # works
+print(f"Name: {name} | Age: {age}")     # clearer formatting</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Score tracker</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Make a program that:
+                            <ol style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;">Creates a variable called <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">score</code> starting at 0</li>
+<li style="margin: 6px 0;">Prints the score</li>
+<li style="margin: 6px 0;">Adds 10 to the score</li>
+<li style="margin: 6px 0;">Prints the score again</li>
+<li style="margin: 6px 0;">Adds 3 more</li>
+<li style="margin: 6px 0;">Prints the final score</li>
+</ol>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> You should see three printed values, and they should increase each time.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">You can update a variable using: <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">score = score + 10</code> <br/>Use f-strings to print nicely: <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print(f"Score: {score}")</code></div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<div style="margin-top: 8px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = 0
+print(f"Score: {score}")
+
+score = score + 10
+print(f"Score: {score}")
+
+score = score + 3
+print(f"Score: {score}")</code></pre>
+</div>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Type detective</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create four variables:
+                            <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;">One <strong>int</strong></li>
+<li style="margin: 4px 0;">One <strong>float</strong></li>
+<li style="margin: 4px 0;">One <strong>string</strong> that looks like a number (example: "12")</li>
+<li style="margin: 4px 0;">One <strong>bool</strong></li>
+</ul>
+                            Then print each variable and its type on a separate line.
+                            <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Your output shows four lines, and each line includes something like <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">&lt;class 'int'&gt;</code>.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">type(variable_name)</code>. <br/>You can print a value and its type on one line using an f-string: <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">print(f"{x} -&gt; {type(x)}")</code></div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<div style="margin-top: 8px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>whole = 15
+decimal = 2.5
+looks_like_number = "12"
+flag = True
+
+print(f"{whole} -&gt; {type(whole)}")
+print(f"{decimal} -&gt; {type(decimal)}")
+print(f"{looks_like_number} -&gt; {type(looks_like_number)}")
+print(f"{flag} -&gt; {type(flag)}")</code></pre>
+</div>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#input-output" style="text-decoration: none; font-size: 13px; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 10px; border-radius: 999px;">Next: Input &amp; output →</a></div>
+</div>
+</div>
+</div>
+<div id="input-output" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">3) Input &amp; output: talking with your program</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">So far, your programs have only <strong>talked at</strong> the user. Input lets your program <strong>listen</strong>. Almost every real program follows this loop: <strong>ask → process → respond</strong>.</div>
+</div>
+<div style="width: 360px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can use <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">input()</code> to ask questions.</li>
+<li style="margin: 6px 0;">You understand that <strong>input is always text</strong>.</li>
+<li style="margin: 6px 0;">You can convert input into numbers when needed.</li>
+<li style="margin: 6px 0;">You can format output clearly using f-strings.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: input() always returns a string</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">This is one of the <strong>most important rules</strong> in beginner Python: <br/><strong>Everything that comes from <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">input()</code> is text.</strong></p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">Even if the user types <strong>42</strong>, Python sees it as <strong>"42"</strong>. If you want to do maths, you must convert it first.</div>
+<div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 12px; color: #854d0e;"><strong>Rule of thumb:</strong> Use <code style="background: #fff; border: 1px solid #fde68a; border-radius: 6px; padding: 1px 6px;">int()</code> or <code style="background: #fff; border: 1px solid #fde68a; border-radius: 6px; padding: 1px 6px;">float()</code> immediately after <code>input()</code> if you plan to do maths.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">👀 Examples: input(), storing responses, and conversion</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example A: Asking a question and responding</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>name = input("What is your name? ")
+print(f"Hello, {name}!")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>What’s happening:</strong> The program pauses, waits for input, stores it in <code>name</code>, then prints a response.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example B: Why conversion matters</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age_text = input("How old are you? ")
+
+print(age_text + 1)      # ❌ error (string + number)</code></pre>
+<div style="margin-top: 8px; color: #475569;">This fails because <code>age_text</code> is a string.</div>
+<pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = int(input("How old are you? "))
+print(age + 1)           # ✅ works</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example C: Using input inside calculations</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>width = float(input("Enter the width (m): "))
+height = float(input("Enter the height (m): "))
+
+area = width * height
+print(f"Area = {area} square metres")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Key idea:</strong> Convert once, then treat the variable like a normal number.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Forgetting to convert input</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>number = input("Enter a number: ")
+print(number * 2)   # prints text twice, not doubled</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> convert the input.</div>
+<pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>number = int(input("Enter a number: "))
+print(number * 2)</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Messy prompts</div>
+<div style="margin-bottom: 6px;">If your prompt doesn’t include a space or punctuation, the input looks squashed.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Hard to read
+name = input("Enter your name")
+
+# ✅ Clear
+name = input("Enter your name: ")</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Expecting input() to remember answers</div>
+<div style="margin-bottom: 6px;"><code>input()</code> only returns a value once. If you want to reuse it, store it in a variable.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Asked twice
+print(input("Name: "))
+print(input("Name: "))
+
+# ✅ Asked once, reused
+name = input("Name: ")
+print(name)
+print(name)</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Age next year</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Write a program that:
+                        <ol style="margin: 6px 0 0 18px; padding: 0;">
+<li>Asks the user for their age</li>
+<li>Converts it to a number</li>
+<li>Prints how old they will be next year</li>
+</ol>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> If the user enters 14, the program prints 15.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Convert input using <code>int()</code> before adding 1.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = int(input("Enter your age: "))
+print(f"Next year you will be {age + 1}")</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Rectangle calculator</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Ask the user for the width and height of a rectangle, then calculate and print the area.
+                        <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Decimal values should work correctly.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code>float()</code> instead of <code>int()</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>width = float(input("Enter width: "))
+height = float(input("Enter height: "))
+
+area = width * height
+print(f"Area = {area}")</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#operators" style="text-decoration: none; font-size: 13px; color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; padding: 8px 10px; border-radius: 999px;">Next: Operators →</a></div>
+</div>
+</div>
+<div id="operators" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">4) Operators: doing things with values</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Operators are the symbols that <strong>do work</strong> in Python. They compare values, perform calculations, and combine conditions. Most bugs at this stage come from using the <strong>right symbol in the wrong way</strong>.</div>
+</div>
+<div style="width: 360px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can use arithmetic operators correctly.</li>
+<li style="margin: 6px 0;">You can compare values using <code>==</code>, <code>&lt;</code>, <code>&gt;</code>.</li>
+<li style="margin: 6px 0;">You understand the difference between <code>=</code> and <code>==</code>.</li>
+<li style="margin: 6px 0;">You can combine conditions using <code>and</code> / <code>or</code>.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: Operators behave differently depending on data type</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">The same symbol can mean different things depending on the data types involved. Code doesn’t guess - it follows strict rules.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example:</div>
+<ul style="margin: 0 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;"><code>+</code> adds numbers</li>
+<li style="margin: 6px 0;"><code>+</code> joins strings</li>
+<li style="margin: 6px 0;"><code>==</code> compares values</li>
+<li style="margin: 6px 0;"><code>=</code> assigns values</li>
+</ul>
+</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Golden rule:</strong> If Python throws an error, it’s usually because the operator and data types don’t match.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">➕ Arithmetic operators</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>+</strong> addition<br/><strong>-</strong> subtraction<br/><strong>*</strong> multiplication<br/><strong>/</strong> division<br/><strong>//</strong> integer division<br/><strong>%</strong> remainder (modulo)<br/><strong>**</strong> powers</div>
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>print(10 + 3)     # 13
+print(10 / 3)     # 3.333...
+print(10 // 3)    # 3
+print(10 % 3)     # 1
+print(2 ** 4)     # 16</code></pre>
+</div>
+</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Why this matters:</strong> <code>//</code> and <code>%</code> are extremely useful for checking even/odd numbers and splitting things into groups.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🔍 Comparison operators</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>==</strong> equal to<br/><strong>!=</strong> not equal to<br/><strong>&lt;</strong> less than<br/><strong>&lt;=</strong> less than or equal to<br/><strong>&gt;</strong> greater than<br/><strong>&gt;=</strong> greater than or equal to</div>
+<div style="flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>age = 15
+
+print(age == 15)   # True
+print(age &gt; 18)    # False
+print(age != 10)   # True</code></pre>
+</div>
+</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Critical distinction:</strong> <code>=</code> assigns a value. <code>==</code> compares.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧠 Logical operators</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>age = 15
+has_permission = True
+
+print(age &gt;= 13 and has_permission)   # True
+print(age &gt;= 18 or has_permission)    # True
+print(not has_permission)             # False</code></pre>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Think of it like English:</strong>
+<ul style="margin: 6px 0 0 18px;">
+<li><strong>and</strong> → both must be true</li>
+<li><strong>or</strong> → at least one must be true</li>
+<li><strong>not</strong> → flips true/false</li>
+</ul>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div>Task 1 (starter): Even or odd?</div>
+<div style="font-size: 14px; color: #334155;">Ask the user for a number and print whether it is even or odd.
+                        <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Even numbers return “even”, odd numbers return “odd”.</div>
+</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use the modulo operator <code>%</code>.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>number = int(input("Enter a number: "))
+
+if number % 2 == 0:
+    print("Even")
+else:
+    print("Odd")</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div>Task 2 (stretch): Pass check</div>
+<div style="font-size: 14px; color: #334155;">Ask for a score (0–100). Print <strong>Pass</strong> if the score is 50 or more, otherwise print <strong>Fail</strong>.</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use a comparison operator inside an <code>if</code> statement.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>score = int(input("Enter score: "))
+
+if score &gt;= 50:
+    print("Pass")
+else:
+    print("Fail")</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#conditionals" style="text-decoration: none; font-size: 13px; color: #9d174d; background: #fdf2f8; border: 1px solid #fbcfe8; padding: 8px 10px; border-radius: 999px;">Next: Conditionals →</a></div>
+</div>
+</div>
+<div id="conditionals" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">5) Conditionals: making decisions with if / elif / else</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Conditionals let your program make choices. They’re how you turn a program from “always does the same thing” into “responds differently depending on the situation”. This is the logic behind games, menus, validation, and almost everything interactive.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can write a correct <code>if</code> block with indentation.</li>
+<li style="margin: 6px 0;">You can add extra conditions using <code>elif</code>.</li>
+<li style="margin: 6px 0;">You can handle “everything else” using <code>else</code>.</li>
+<li style="margin: 6px 0;">You can explain what a condition is (a True/False question).</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: an if statement is a True/False gate</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">An <code>if</code> statement checks a condition (a question with a True/False answer). If the condition is True, the indented code runs. If it’s False, Python skips it.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">The structure matters:</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>if condition:
+    # indented block runs only when condition is True
+    do_something()</code></pre>
+</div>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Two non-negotiables:</strong>
+<ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;">The colon <code>:</code> at the end of the line</li>
+<li style="margin: 6px 0;">Indentation under the if/elif/else</li>
+</ul>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧠 How if / elif / else works together</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">The decision flow</div>
+<ol style="margin: 0 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;">Python checks the <code>if</code> condition.</li>
+<li style="margin: 6px 0;">If it’s True, Python runs that block and skips the rest.</li>
+<li style="margin: 6px 0;">If it’s False, Python checks the first <code>elif</code>.</li>
+<li style="margin: 6px 0;">It keeps checking <code>elif</code> blocks in order until one is True.</li>
+<li style="margin: 6px 0;">If none are True, Python runs the <code>else</code> block (if there is one).</li>
+</ol>
+</div>
+<div style="background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Important:</strong> Order matters. Put the most specific conditions first, and the broad “catch-all” conditions later.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">👀 Examples: simple decisions to multi-branch decisions</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example A: One decision (if)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>temperature = int(input("Temperature (°C): "))
+
+if temperature &gt;= 30:
+    print("It is hot today.")</code></pre>
+<div style="margin-top: 8px; color: #475569;">If the condition is False, nothing prints. That’s normal: there’s no <code>else</code>.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example B: Two outcomes (if/else)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>number = int(input("Enter a number: "))
+
+if number % 2 == 0:
+    print("Even")
+else:
+    print("Odd")</code></pre>
+<div style="margin-top: 8px; color: #475569;">This guarantees one result prints: even or odd.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example C: Multiple outcomes (if/elif/else)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = int(input("Score (0-100): "))
+
+if score &gt;= 85:
+    print("A")
+elif score &gt;= 70:
+    print("B")
+elif score &gt;= 50:
+    print("C")
+else:
+    print("D")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Why the order matters:</strong> If you put <code>score &gt;= 50</code> first, it would catch 85 too, and you’d never get an A.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example D: Combining conditions (and/or)</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = int(input("Age: "))
+has_ticket = input("Do you have a ticket? (yes/no): ").lower()
+
+if age &gt;= 13 and has_ticket == "yes":
+    print("You can enter.")
+else:
+    print("You cannot enter.")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Notice:</strong> We used <code>.lower()</code> so "YES", "Yes", "yes" all behave the same.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Using = instead of ==</div>
+<div style="margin-bottom: 6px;"><code>=</code> assigns. <code>==</code> compares. In an if condition, you almost always want <code>==</code>.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Wrong
+# if score = 50:
+
+# ✅ Right
+# if score == 50:</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Forgetting the colon</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Wrong
+# if age &gt;= 13
+#     print("OK")
+
+# ✅ Right
+# if age &gt;= 13:
+#     print("OK")</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Indentation errors</div>
+<div style="margin-bottom: 6px;">Everything under an if/elif/else must line up with the same indentation level.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># ❌ Wrong (mixed indentation)
+if True:
+  print("A")
+    print("B")
+
+# ✅ Right (same indentation level)
+if True:
+    print("A")
+    print("B")</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Number sign</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Ask for a number and print:
+                        <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;"><strong>Positive</strong> if it’s greater than 0</li>
+<li style="margin: 4px 0;"><strong>Zero</strong> if it’s exactly 0</li>
+<li style="margin: 4px 0;"><strong>Negative</strong> if it’s less than 0</li>
+</ul>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> The program prints exactly one of the three words.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code>if</code>, <code>elif</code>, and <code>else</code>. One of the conditions can be “everything else”.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>number = int(input("Enter a number: "))
+
+if number &gt; 0:
+    print("Positive")
+elif number == 0:
+    print("Zero")
+else:
+    print("Negative")</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Simple login check</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Set a secret password in your code (example: <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">"platypus"</code>). Ask the user to enter a password.
+                        <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;">If it matches, print <strong>Access granted</strong></li>
+<li style="margin: 4px 0;">Otherwise, print <strong>Access denied</strong></li>
+</ul>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> "Platypus" and "platypus" should be treated as the same password.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code>.lower()</code> on the user’s input before comparing it.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>secret = "platypus"
+guess = input("Enter password: ").lower()
+
+if guess == secret:
+    print("Access granted")
+else:
+    print("Access denied")</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#loops" style="text-decoration: none; font-size: 13px; color: #5b21b6; background: #f5f3ff; border: 1px solid #ddd6fe; padding: 8px 10px; border-radius: 999px;">Next: Loops →</a></div>
+</div>
+</div>
+<div id="loops" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">6) Loops: repeating actions on purpose</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Loops let your program repeat instructions without copying and pasting code. Any time you see yourself doing the same thing again and again, a loop is probably the right tool.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can use a <code>for</code> loop to repeat a fixed number of times.</li>
+<li style="margin: 6px 0;">You can use a <code>while</code> loop to repeat until a condition changes.</li>
+<li style="margin: 6px 0;">You understand what an infinite loop is — and how to avoid it.</li>
+<li style="margin: 6px 0;">You can explain what the loop variable represents.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: loops save time and reduce mistakes</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">Without loops, repeating actions means copying code. That’s slow to write, hard to change, and easy to mess up.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>Loops help you:</strong>
+<ul style="margin: 6px 0 0 18px;">
+<li>repeat actions cleanly</li>
+<li>scale your program easily</li>
+<li>change behaviour by updating one line</li>
+</ul>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🔁 for loops: repeating a known number of times</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Basic structure</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>for i in range(5):
+    print(i)</code></pre>
+<div style="margin-top: 8px; color: #475569;">This prints the numbers 0 to 4. <br/><code>i</code> is the loop variable : it changes automatically each time.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Using range()</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>for i in range(1, 6):
+    print(i)
+
+for i in range(0, 10, 2):
+    print(i)</code></pre>
+<div style="margin-top: 8px; color: #475569;"><code>range(start, stop, step)</code> lets you control where counting starts, stops, and how it steps.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">⏳ while loops: repeating until something changes</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Basic structure</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>count = 0
+
+while count &lt; 5:
+    print(count)
+    count = count + 1</code></pre>
+<div style="margin-top: 8px; color: #475569;">The condition is checked <strong>before</strong> each loop. If it never becomes False, the loop never ends.</div>
+</div>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Important:</strong> Every <code>while</code> loop must change something that affects its condition.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Infinite loops</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code># ❌ Infinite loop
+count = 0
+while count &lt; 5:
+    print(count)</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Update the variable inside the loop.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 2: Loop variable misuse</div>
+<div>Don’t manually change the loop variable in a <code>for</code> loop: Python already does that.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div>Task 1 (starter): Count down</div>
+<div style="font-size: 14px; color: #334155;">Use a <code>for</code> loop to count down from 10 to 1.</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use <code>range()</code> with a negative step.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>for i in range(10, 0, -1):
+    print(i)</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div>Task 2 (stretch): Guessing game</div>
+<div style="font-size: 14px; color: #334155;">Keep asking the user to guess a number until they type the correct one.</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use a <code>while</code> loop that runs until the guess is correct.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>secret = 7
+guess = -1
+
+while guess != secret:
+    guess = int(input("Guess the number: "))
+
+print("Correct!")</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#strings" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">Next: Strings →</a></div>
+</div>
+</div>
+<div id="strings" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">7) Strings: working with text</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Strings are how Python stores and works with text. They’re everywhere: user input, messages, file data, names, passwords. Learning to control strings properly is a huge step toward writing real programs.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can index and slice strings.</li>
+<li style="margin: 6px 0;">You can use common string methods.</li>
+<li style="margin: 6px 0;">You understand that strings are sequences.</li>
+<li style="margin: 6px 0;">You can clean and normalise user input.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: a string is a sequence of characters</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">In Python, a string is a sequence of text. That means:</p>
+<ul style="margin: 0 0 10px 18px; padding: 0;">
+<li>You can access individual characters</li>
+<li>You can loop over it</li>
+<li>You can take slices (parts of it)</li>
+</ul>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>Important:</strong> Strings are <strong>immutable</strong>. You can’t change a character inside a string — you make a new string instead.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🔎 Indexing and slicing strings</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Indexing</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>word = "python"
+
+print(word[0])   # p
+print(word[1])   # y
+print(word[-1])  # n (last character)</code></pre>
+<div style="margin-top: 8px; color: #475569;">Indexing starts at 0. Negative indexes count from the end.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Slicing</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>text = "computer science"
+
+print(text[0:8])     # computer
+print(text[9:])      # science
+print(text[:8])      # computer</code></pre>
+<div style="margin-top: 8px; color: #475569;">Slicing uses <code>[start:stop]</code>. The stop index is not included.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧰 Common string methods you will use a lot</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.45;"><code>text = "  Hello World  "
+
+print(text.lower())      # hello world
+print(text.upper())      # HELLO WORLD
+print(text.strip())      # Hello World
+print(text.replace("World", "Python"))
+print(text.split())      # ['Hello', 'World']</code></pre>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Why this matters:</strong> Cleaning and normalising input avoids bugs caused by spaces and capital letters.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Trying to change a character directly</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code># ❌ Not allowed
+word = "cat"
+# word[0] = "b"</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> build a new string.</div>
+<pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>word = "cat"
+word = "b" + word[1:]
+print(word)</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 2: Forgetting to clean input</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>answer = input("Yes or no? ")
+
+if answer == "yes":
+    print("OK")</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> normalise input first.</div>
+<pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>answer = input("Yes or no? ").strip().lower()
+
+if answer == "yes":
+    print("OK")</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div>Task 1 (starter): Username cleaner</div>
+<div style="font-size: 14px; color: #334155;">Ask the user for a username. Remove spaces and convert it to lowercase before printing it.</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use <code>strip()</code> and <code>lower()</code>.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>username = input("Enter username: ").strip().lower()
+print(username)</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div>Task 2 (stretch): First and last letters</div>
+<div style="font-size: 14px; color: #334155;">Ask the user for a word and print the first and last letters.</div>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer;">Hint</summary>
+                        Use indexing with <code>[0]</code> and <code>[-1]</code>.
+                    </details>
+<details style="margin-top: 8px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>word = input("Enter a word: ")
+print(word[0])
+print(word[-1])</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#lists-tuples" style="text-decoration: none; font-size: 13px; color: #6b21a8; background: #faf5ff; border: 1px solid #e9d5ff; padding: 8px 10px; border-radius: 999px;">Next: Lists &amp; Tuples →</a></div>
+</div>
+</div>
+<div id="lists-tuples" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">8) Lists &amp; tuples: storing many values in one place</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">A single variable can store one value… but most real problems involve <strong>collections</strong>. Lists and tuples let you group values together so you can loop over them, update them, and keep your data organised.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can create a list and access items by index.</li>
+<li style="margin: 6px 0;">You can change a list (lists are mutable).</li>
+<li style="margin: 6px 0;">You can loop through a list with <code>for</code>.</li>
+<li style="margin: 6px 0;">You know that tuples are like lists, but fixed (immutable).</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: a list is a sequence of values</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">A list stores multiple values in a single variable, in a specific order. Each item has an index (starting at 0), just like strings.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>Think of a list as:</strong> a backpack with labelled pockets (indexes). You can add, remove, and swap items.</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Important:</strong> Lists can change (mutable). Tuples can’t (immutable).</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧱 Creating lists and accessing items</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Create a list</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>fruits = ["apple", "banana", "mango"]
+numbers = [3, 7, 10, 12]
+mixed = ["Ava", 14, True]</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Access items by index</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>fruits = ["apple", "banana", "mango"]
+
+print(fruits[0])   # apple
+print(fruits[1])   # banana
+print(fruits[-1])  # mango (last item)</code></pre>
+</div>
+</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Checkpoint:</strong> Indexes start at 0, and negative indexes count from the end.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🛠️ Changing a list: append, remove, and update</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example A: Updating items</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>teams = ["red", "blue", "green"]
+teams[1] = "yellow"
+print(teams)   # ['red', 'yellow', 'green']</code></pre>
+<div style="margin-top: 8px; color: #475569;">Lists are mutable, so you can replace an item by assigning a new value at that index.</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">append()</div>
+<div style="color: #475569; margin-bottom: 8px; font-size: 14px;">Adds an item to the end of the list</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>fruits = ["apple", "banana"]
+fruits.append("mango")
+print(fruits)</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">remove()</div>
+<div style="color: #475569; margin-bottom: 8px; font-size: 14px;">Removes the first matching value</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>fruits = ["apple", "banana", "mango"]
+fruits.remove("banana")
+print(fruits)</code></pre>
+</div>
+</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Watch out:</strong> <code>remove()</code> removes by value. If the value is not in the list, Python gives an error.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🔁 Looping through a list</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">The most common pattern</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>pets = ["dog", "cat", "fish"]
+
+for pet in pets:
+    print(pet)</code></pre>
+<div style="margin-top: 8px; color: #475569;">Python sets <code>pet</code> to each item in the list, one by one.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">When you need the index too</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>pets = ["dog", "cat", "fish"]
+
+for i in range(len(pets)):
+    print(i, pets[i])</code></pre>
+<div style="margin-top: 8px; color: #475569;">This pattern is useful when you need both the position and the value.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📦 Tuples: like lists, but fixed</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Creating a tuple</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>coords = (10, 20)
+days = ("Mon", "Tue", "Wed")</code></pre>
+</div>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Important:</strong> You can read items from a tuple, but you can’t change them. That’s why tuples are used for “this should not change” data (like coordinates).</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Index out of range</div>
+<div style="margin-bottom: 6px;">If a list has 3 items, valid indexes are 0, 1, and 2.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = ["Ava", "Noah", "Zoe"]
+# print(names[3])  # ❌ error</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 2: Expecting remove() to use an index</div>
+<div style="margin-bottom: 6px;"><code>remove()</code> removes by value, not index.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = ["Ava", "Noah", "Zoe"]
+
+# ❌ Wrong idea:
+# names.remove(1)
+
+# ✅ Correct:
+names.remove("Noah")
+print(names)</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Class roll list</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create a list of 5 names (they can be made up). Then:
+                        <ol style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;">Print the first name</li>
+<li style="margin: 6px 0;">Print the last name</li>
+<li style="margin: 6px 0;">Replace the third name with a different name</li>
+<li style="margin: 6px 0;">Print the whole list</li>
+</ol>
+<div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Your printed list should show the updated third name.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">The third item in a list is index <code>2</code>. Use <code>names[2] = "NewName"</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = ["Ava", "Noah", "Zoe", "Liam", "Mia"]
+
+print(names[0])
+print(names[-1])
+
+names[2] = "Kai"
+print(names)</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Total the numbers</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create a list of numbers. Use a <code>for</code> loop to add them up and print the total.
+                        <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Your total should match what you get if you add them on a calculator.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Start with <code>total = 0</code>. Then loop through the list and add each number to <code>total</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>numbers = [3, 7, 10, 12]
+total = 0
+
+for n in numbers:
+    total = total + n
+
+print(total)</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="https://qed09.instructure.com/#dicts-sets" style="text-decoration: none; font-size: 13px; color: #0f766e; background: #f0fdfa; border: 1px solid #99f6e4; padding: 8px 10px; border-radius: 999px;">Next: Dictionaries and Sets →</a></div>
+</div>
+</div>
+<div id="dicts-sets" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">9) Dictionaries &amp; sets: labelled data and unique collections</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Lists are great when order matters. But sometimes you want: <br/><strong>labelled data</strong> (like a student profile) or <strong>unique values</strong> (no duplicates). <br/>That’s where <strong>dictionaries</strong> and <strong>sets</strong> shine.</div>
+</div>
+<div style="width: 390px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can create a dictionary and use keys to access values.</li>
+<li style="margin: 6px 0;">You can add/update dictionary entries.</li>
+<li style="margin: 6px 0;">You can loop through a dictionary.</li>
+<li style="margin: 6px 0;">You can use a set to remove duplicates and check “is it already there?”</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: dictionary = labelled values, set = unique values</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Dictionary</div>
+<div style="color: #475569; margin-bottom: 8px;">A dictionary stores <strong>key → value</strong> pairs. Keys are like labels.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>student = {
+    "name": "Ava",
+    "year": 9,
+    "age": 14
+}</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Set</div>
+<div style="color: #475569; margin-bottom: 8px;">A set stores <strong>unique values</strong> only. Duplicates are automatically removed.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = {"Ava", "Noah", "Zoe"}</code></pre>
+</div>
+</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Quick test:</strong><br/>If you need a <strong>label</strong> (like "score" or "age") → dictionary.<br/>If you need <strong>no duplicates</strong> (unique values) → set.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧠 Dictionaries: key → value pairs</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Create and access dictionary values</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>profile = {
+    "name": "Ava",
+    "year": 9,
+    "favourite_subject": "Science"
+}
+
+print(profile["name"])
+print(profile["year"])
+print(profile["favourite_subject"])</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Key idea:</strong> You use the key (label) inside square brackets to get the value.</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin-bottom: 10px;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Add a new key</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>profile["school"] = "Stretton"
+print(profile)</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Update an existing value</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>profile["year"] = 10
+print(profile)</code></pre>
+</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Looping through a dictionary</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>scores = {
+    "Ava": 85,
+    "Noah": 72,
+    "Zoe": 90
+}
+
+for name, score in scores.items():
+    print(name, score)</code></pre>
+<div style="margin-top: 8px; color: #475569;"><code>items()</code> gives you both the key and the value each time through the loop.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧩 Sets: unique values + fast “already used?” checks</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Removing duplicates using a set</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = ["Ava", "Noah", "Ava", "Zoe", "Noah"]
+unique_names = set(names)
+
+print(unique_names)</code></pre>
+<div style="margin-top: 8px; color: #475569;">A set automatically keeps only one copy of each value.</div>
+</div>
+<div style="margin-bottom: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Important:</strong> Sets do not keep order. If you need order, use a list.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin-bottom: 10px;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Creating a set</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>colours = {"red", "blue", "green"}
+print(colours)</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Adding to a set</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>colours.add("yellow")
+print(colours)</code></pre>
+</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Membership checking with <code>in</code></div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>used_names = {"Ava", "Noah", "Zoe"}
+name = input("Enter a name: ")
+
+if name in used_names:
+    print("Already used")
+else:
+    print("Available")</code></pre>
+<div style="margin-top: 8px; color: #475569;">Sets are excellent for “have we seen this before?” programs.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Treating a dictionary like a list</div>
+<div style="margin-bottom: 6px;">Dictionaries use keys, not numbered positions.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>profile = {"name": "Ava", "year": 9}
+
+# ❌ Wrong idea:
+# print(profile[0])
+
+# ✅ Correct:
+print(profile["name"])</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Key not found</div>
+<div style="margin-bottom: 6px;">If the key doesn’t exist, Python throws an error. For beginners, the fix is usually: make sure the spelling matches.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>scores = {"Ava": 85}
+
+name = input("Enter name exactly: ")
+print(scores[name])</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 3: Expecting sets to keep order</div>
+<div style="margin-bottom: 6px;">A set is for uniqueness, not order. Printing a set may look “scrambled”.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>numbers = [3, 1, 3, 2]
+print(set(numbers))</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 4: Creating an empty set the wrong way</div>
+<div style="margin-bottom: 6px;"><code>{}</code> creates an empty dictionary, not an empty set.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>empty_dict = {}
+empty_set = set()
+
+print(type(empty_dict))
+print(type(empty_set))</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Build a student dictionary</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create a dictionary called <code style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px;">student</code> with keys:
+                        <ul style="margin: 6px 0 0 18px; padding: 0;">
+<li style="margin: 4px 0;"><code>"name"</code></li>
+<li style="margin: 4px 0;"><code>"year"</code></li>
+<li style="margin: 4px 0;"><code>"favourite_subject"</code></li>
+</ul>
+                        Print each value on a new line.
+                    </div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Access values using <code>student["name"]</code>, <code>student["year"]</code>, etc.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>student = {
+    "name": "Ava",
+    "year": 9,
+    "favourite_subject": "Science"
+}
+
+print(student["name"])
+print(student["year"])
+print(student["favourite_subject"])</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Duplicate remover</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Create a list that contains repeated values (e.g. names or items). Convert it to a set and print the set.
+                        <div style="margin-top: 8px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;"><strong>Checkpoint:</strong> Your printed set should show each item only once.</div>
+</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code>set(your_list)</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>items = ["pen", "pen", "book", "pen", "ruler"]
+unique_items = set(items)
+
+print(unique_items)</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#functions" style="text-decoration: none; font-size: 13px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; padding: 8px 10px; border-radius: 999px;">Next: Functions →</a></div>
+</div>
+</div>
+<div id="functions" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">10) Functions: reusable blocks of code</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">As programs get bigger, repeating the same code becomes messy. <br/><strong>Functions</strong> let you package instructions into a reusable block with a clear name.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can define a function using <code>def</code>.</li>
+<li style="margin: 6px 0;">You can call a function to run it.</li>
+<li style="margin: 6px 0;">You understand parameters vs arguments.</li>
+<li style="margin: 6px 0;">You know the difference between <code>print</code> and <code>return</code>.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: name a job once, use it many times</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<p style="margin: 0 0 10px 0;">A function is a named set of instructions. Instead of rewriting the same code again and again, you:</p>
+<ul style="margin: 0 0 10px 18px; padding: 0;">
+<li>Write it once</li>
+<li>Give it a clear name</li>
+<li>Run it whenever you need it</li>
+</ul>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;"><strong>Think of a function as:</strong> a recipe. You don’t rewrite the recipe — you just follow it when needed.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧱 Defining and calling a function</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Define a function</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>def greet():
+    print("Hello!")</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Call (run) the function</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>greet()
+greet()</code></pre>
+<div style="margin-top: 8px; color: #475569;">The code inside the function only runs when you call it.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📥 Parameters and arguments</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Function with a parameter</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>def greet(name):
+    print("Hello", name)</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Calling with an argument</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>greet("Ava")
+greet("Noah")</code></pre>
+<div style="margin-top: 8px; color: #475569;"><strong>Parameter</strong> = the variable in the function definition.<br/><strong>Argument</strong> = the actual value you pass in.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📤 Return vs print</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Using <code>print</code></div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def add_print(a, b):
+    print(a + b)
+
+add_print(3, 4)</code></pre>
+<div style="margin-top: 8px; color: #475569;">This shows the result, but you can’t reuse it later.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Using <code>return</code></div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def add_return(a, b):
+    return a + b
+
+result = add_return(3, 4)
+print(result)</code></pre>
+<div style="margin-top: 8px; color: #475569;"><code>return</code> sends a value back so it can be stored or reused.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Forgetting to call the function</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def greet():
+    print("Hello")
+
+# ❌ Nothing happens</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Call it using <code>greet()</code>.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Missing arguments</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def greet(name):
+    print(name)
+
+# greet()  ❌ error</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Pass a value: <code>greet("Ava")</code>.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Expecting print to return a value</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def add(a, b):
+    print(a + b)
+
+total = add(2, 3)
+print(total)  # prints None</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Greeting function</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Write a function called <code>say_hello</code> that takes a name and prints a greeting.</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px;">Use one parameter and <code>print()</code> inside the function.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def say_hello(name):
+    print("Hello", name)
+
+say_hello("Ava")</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Add numbers</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Write a function that takes two numbers and returns their total. Print the result.</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px;">Use <code>return</code>, not <code>print</code>, inside the function.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>def add(a, b):
+    return a + b
+
+result = add(5, 7)
+print(result)</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="https://qed09.instructure.com/#files" style="text-decoration: none; font-size: 13px; color: #065f46; background: #ecfdf5; border: 1px solid #6ee7b7; padding: 8px 10px; border-radius: 999px;">Next: Files →</a></div>
+</div>
+</div>
+<div id="files" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">11) Working with files: saving and loading data</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">So far, your programs forget everything when they stop running. Files let you <strong>save data</strong> and <strong>load it later</strong>.</div>
+</div>
+<div style="width: 380px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li>You can open a file using <code>with open()</code>.</li>
+<li>You understand read (<code>"r"</code>), write (<code>"w"</code>) and append (<code>"a"</code>).</li>
+<li>You can write text to a file.</li>
+<li>You can read text from a file.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: programs can store information</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">A file is just saved text on your computer. Python can open it, read it, change it, and save it again.</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">✍️ Writing to a file</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>with open("notes.txt", "w") as file:
+    file.write("Hello world\n")
+    file.write("This is saved text.")</code></pre>
+<div style="margin-top: 8px;"><strong>"w"</strong> means write. If the file already exists, it will be replaced.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📖 Reading from a file</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>with open("notes.txt", "r") as file:
+    content = file.read()
+
+print(content)</code></pre>
+<div style="margin-top: 8px;"><strong>"r"</strong> means read.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="margin-bottom: 10px;"><strong>Overwriting files accidentally</strong><br/>Using <code>"w"</code> deletes old content. Use <code>"a"</code> to append instead.</div>
+<div><strong>File not found error</strong><br/>Make sure the file name matches exactly.</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 12px;"><strong>Task 1:</strong> Write a program that saves your name to a file called <code>name.txt</code>.</div>
+<div><strong>Task 2:</strong> Write a program that reads from <code>name.txt</code> and prints the name.</div>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a></div>
+</div>
+</div>
+<div id="modules" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">12) Modules &amp; imports: using built-in tools</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Python comes with loads of useful code already written. <br/>Imports let you use those tools instead of reinventing them.</div>
+</div>
+<div style="width: 390px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can use <code>import</code> to access a module.</li>
+<li style="margin: 6px 0;">You can call functions inside modules (e.g. <code>random.randint</code>).</li>
+<li style="margin: 6px 0;">You can use <code>from ... import ...</code> when needed.</li>
+<li style="margin: 6px 0;">You can recognise common import mistakes.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 Core idea: a module is a toolbox</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">A module is a collection of useful functions. Importing a module is like opening a toolbox.</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧱 Basic import pattern</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Import the module</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>import random</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Use something inside it</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>number = random.randint(1, 10)
+print(number)</code></pre>
+<div style="margin-top: 8px; color: #475569;">You call functions using <code>module_name.function_name()</code>.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🎲 Useful modules (starter pack)</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">random</div>
+<div style="color: #475569; margin-bottom: 8px;">Random numbers and random choices</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>import random
+
+coin = random.choice(["Heads", "Tails"])
+print(coin)</code></pre>
+</div>
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">time</div>
+<div style="color: #475569; margin-bottom: 8px;">Pauses and time delays</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>import time
+
+print("Get ready...")
+time.sleep(2)
+print("Go!")</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧠 Another pattern: <code>from ... import ...</code></summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Import a specific function</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>from random import randint
+
+number = randint(1, 10)
+print(number)</code></pre>
+</div>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;"><strong>Note:</strong> This can be convenient, but it can also make code harder to read. For beginners, <code>import random</code> is often clearer.</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #7c2d12;">⚠️ Common mistakes (and fixes)</summary>
+<div style="margin-top: 10px; color: #7c2d12; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 1: Naming your file the same as a module</div>
+<div style="margin-bottom: 6px;">If your file is called <code>random.py</code>, Python might import your file instead of the real module.</div>
+<div><strong>Fix:</strong> Rename your file to something else (e.g. <code>dice_game.py</code>).</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="margin-bottom: 6px;">Mistake 2: Forgetting parentheses</div>
+<div style="margin-bottom: 6px;"><code>randint</code> is a function — it needs brackets to run.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code># ❌ Wrong:
+# number = random.randint
+
+# ✅ Correct:
+number = random.randint(1, 10)</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px;">
+<div style="margin-bottom: 6px;">Mistake 3: Importing but not using it</div>
+<div style="margin-bottom: 6px;">Imports should be at the top and used in your program. If you never use it, delete it.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Dice roll</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Import <code>random</code> and simulate a dice roll (number 1 to 6). Print the result.</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use <code>random.randint(1, 6)</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>import random
+
+roll = random.randint(1, 6)
+print("You rolled:", roll)</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Countdown timer</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">Import <code>time</code>. Create a countdown from 3 to 1, pausing 1 second between each number. Print <strong>Go!</strong> at the end.</div>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Use a loop and <code>time.sleep(1)</code>.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>import time
+
+for i in range(3, 0, -1):
+    print(i)
+    time.sleep(1)
+
+print("Go!")</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#debugging" style="text-decoration: none; font-size: 13px; color: #7c3aed; background: #f5f3ff; border: 1px solid #ddd6fe; padding: 8px 10px; border-radius: 999px;">Next: Errors &amp; Debugging →</a></div>
+</div>
+</div>
+<div id="debugging" style="max-width: 1040px; margin: 0 auto; padding: 0 14px 18px 14px; font-family: Arial, Helvetica, sans-serif; line-height: 1.5;">
+<div style="background: #ffffff; border: 1px solid #e6e6e6; border-radius: 16px; padding: 18px 18px 14px 18px; margin-top: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between;">
+<div style="min-width: 240px; flex: 1;">
+<div style="font-size: 18px; color: #1f2a37; margin: 0 0 6px 0;">13) Debugging: finding and fixing problems in your code</div>
+<div style="font-size: 14px; color: #425466; margin: 0;">Debugging is not “being bad at coding”. It’s a normal part of coding. <br/>Your job is to <strong>read what Python is telling you</strong>, work out what went wrong, and fix it.</div>
+</div>
+<div style="width: 420px; max-width: 100%; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 14px; padding: 12px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">✅ Success looks like</div>
+<ul style="margin: 0 0 0 18px; padding: 0; color: #334155; font-size: 14px;">
+<li style="margin: 6px 0;">You can find the line number where the problem happened.</li>
+<li style="margin: 6px 0;">You can name the error type (e.g. <code>NameError</code>, <code>TypeError</code>).</li>
+<li style="margin: 6px 0;">You can explain what the error means in plain English.</li>
+<li style="margin: 6px 0;">You can fix it and test again.</li>
+<li style="margin: 6px 0;">You can use <code>print()</code> to inspect variables while debugging.</li>
+</ul>
+</div>
+</div>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">📌 The 4-step debugging routine</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Step 1: Read the LAST line of the error</div>
+<div>The last line usually tells you the <strong>error type</strong> and a message explaining what Python thinks is wrong.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Step 2: Find the line number</div>
+<div>Python shows you the line where it <strong>noticed</strong> the error. That line is where you start looking first.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Step 3: Translate the message into plain English</div>
+<div>Example: <code>NameError: name 'scroe' is not defined</code> means you used a variable name that doesn't exist. Often it’s a spelling mistake.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Step 4: Fix ONE thing, test again</div>
+<div>Don’t change five things at once. Fix one thing, run it again, and see what happens.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧾 How to read an error message (traceback)</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">What a traceback looks like</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>Traceback (most recent call last):
+  File "main.py", line 7, in &lt;module&gt;
+    print(score)
+NameError: name 'score' is not defined</code></pre>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;">
+<div style="flex: 1; min-width: 260px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Where to look first</div>
+<ol style="margin: 0 0 0 18px; padding: 0; color: #334155;">
+<li style="margin: 6px 0;">The <strong>last line</strong> (error type + message)</li>
+<li style="margin: 6px 0;">The <strong>line number</strong> shown above it</li>
+<li style="margin: 6px 0;">Your code on that line</li>
+</ol>
+</div>
+<div style="flex: 1; min-width: 260px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;">
+<div style="margin-bottom: 6px;">Important detail</div>
+                        Sometimes the error shows up on one line, but the real cause is on a line above it. Example: you forgot a bracket earlier, and Python only “realises” later.
+                    </div>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧪 The #1 debugging tool: print what you THINK is happening</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Why print-debugging works</div>
+<div>Beginners often have the right idea but the code is doing something different. Printing values helps you see what’s actually happening inside your program.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example: checking variable values</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age_text = input("Enter your age: ")
+
+print("DEBUG: age_text is", age_text)
+print("DEBUG: type is", type(age_text))
+
+age = int(age_text)
+print("DEBUG: age is", age)</code></pre>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Tip: label your debug prints</div>
+<div style="margin-bottom: 8px;">If you only print values, you might forget what they mean. Labels make it obvious.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>print("DEBUG: total =", total)</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧩 The most common error types (what they mean + how to fix)</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">SyntaxError: Python can't understand your code</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> You wrote something that is not valid Python grammar. This often happens with missing brackets, missing colons, or mismatched quotes.</div>
+<div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12; margin-bottom: 10px;"><strong>What to do first:</strong> Look at the line Python highlights, then also look at the line ABOVE it. Syntax mistakes often “break” the next line too.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code># Common SyntaxError example:
+age = 14
+if age &gt; 13
+    print("Teen")</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Add the missing colon <code>:</code> after the <code>if</code>.</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">IndentationError: your blocks don't line up</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> Code inside an <code>if</code>, <code>for</code>, <code>while</code>, or function must be indented consistently. Python uses indentation to know what belongs inside the block.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>if True:
+print("Hi")</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Indent the line inside the block (usually 4 spaces).</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Common cause:</strong> Mixing tabs and spaces. Use spaces only.</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">NameError: you used a name Python doesn't know</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> You used a variable or function name that doesn't exist (usually a spelling mistake, or you forgot to create it first).</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = 10
+print(scroe)</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Make the name match exactly (<code>score</code> not <code>scroe</code>).</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Debug tip:</strong> Copy-paste the variable name from where you created it to where you used it.</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">TypeError: you used the wrong type of data</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> You tried to do something with a value that isn't the right type. Example: adding a number to a string.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = input("Age: ")
+print(age + 1)</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Convert text to a number first: <code>int(age)</code>.</div>
+<div style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">A safe debugging habit</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>print("DEBUG:", age, type(age))</code></pre>
+<div style="margin-top: 8px; color: #475569;">Always check the value and the type when you're confused.</div>
+</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">ValueError: the type is right, but the value is wrong</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> Python tried to convert or use a value, but the value doesn't make sense. Example: trying to turn <code>"hello"</code> into an integer.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>text = input("Enter a number: ")
+number = int(text)</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Make sure the input really is a number. A simple beginner strategy is to tell the user what to enter and test carefully.</div>
+<div style="margin-top: 10px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 10px 12px; color: #7c2d12;">Later on, you can learn error-handling with <code>try</code> and <code>except</code>. For now: focus on reading the error and checking the input.</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">IndexError: list index out of range</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> You tried to access a position in a list that doesn't exist. If a list has 3 items, valid indexes are 0, 1, 2.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>names = ["Ava", "Noah", "Zoe"]
+print(names[3])</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Check the list length using <code>len(names)</code> and check your indexes.</div>
+<div style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Debug tip</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>print("DEBUG: len(names) =", len(names))
+print("DEBUG: names =", names)</code></pre>
+</div>
+</div>
+</details>
+<details style="margin-top: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">KeyError: dictionary key not found</summary>
+<div style="margin-top: 10px;">
+<div style="margin-bottom: 8px;"><strong>Meaning:</strong> You tried to access a dictionary key that isn't in the dictionary. Often it's spelling or capital letters.</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>scores = {"Ava": 85, "Noah": 72}
+print(scores["ava"])</code></pre>
+<div style="margin-top: 8px;"><strong>Fix:</strong> Keys must match exactly. "Ava" is not the same as "ava".</div>
+<div style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;"><strong>Debug tip:</strong> Print the keys to see what’s actually available:
+                            <pre style="margin: 8px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>print(scores.keys())</code></pre>
+</div>
+</div>
+</details>
+</div>
+</details>
+<details style="margin-top: 12px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 12px; padding: 10px 12px;">
+<summary style="cursor: pointer; color: #1f2a37;">🧠 Logic bugs: when your code runs but gives the wrong answer</summary>
+<div style="margin-top: 10px; color: #334155; font-size: 14px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">What a logic bug is</div>
+<div>Sometimes your code has no errors, but the output is wrong. That means the logic is wrong, not the syntax.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a; margin-bottom: 6px;">Example: incorrect comparison</div>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>age = 14
+
+if age &gt; 14:
+    print("You can go")
+else:
+    print("You cannot go")</code></pre>
+<div style="margin-top: 8px; color: #475569;">If the rule is “14 and above”, the check should be <code>&gt;=</code>.</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a; margin-bottom: 6px;">How to debug a logic bug</div>
+<ol style="margin: 0 0 0 18px; padding: 0;">
+<li style="margin: 6px 0;">Choose one test input (like <code>age = 14</code>).</li>
+<li style="margin: 6px 0;">Predict what should happen before you run it.</li>
+<li style="margin: 6px 0;">Run it and compare the result.</li>
+<li style="margin: 6px 0;">Add debug prints to show the values used in decisions.</li>
+</ol>
+</div>
+</div>
+</details>
+<details style="margin-top: 14px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 12px;">
+<summary style="cursor: pointer; color: #0f172a;">🎮 Try it: mini practice tasks <span style="color: #475569; font-size: 13px;"> (2 tasks • hints + solutions inside)</span></summary>
+<div style="margin-top: 10px;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;">
+<div style="color: #0f172a;">Task 1 (starter): Fix the NameError</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">The program below crashes. Run it, read the error carefully, and fix it so it works.</div>
+<pre style="margin: 10px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>score = 10
+print(scroe)</code></pre>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Compare the spelling of the variable on both lines.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px;"><code>score = 10
+print(score)</code></pre>
+</details>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px;">
+<div style="color: #0f172a;">Task 2 (stretch): Debug a logic bug with prints</div>
+<div style="color: #334155; font-size: 14px; margin-top: 6px;">The program runs, but the answer is wrong. It is meant to add up 3 numbers and print the total. Use debug prints to work out what is happening and fix it.</div>
+<pre style="margin: 10px 0 0 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>a = 5
+b = 7
+c = 2
+
+total = a + b
+total = c
+
+print(total)</code></pre>
+<details style="margin-top: 10px; background: #f8fafc; border: 1px solid #e6e6e6; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #1f2a37;">Hint</summary>
+<div style="margin-top: 8px; color: #334155; font-size: 14px;">Notice that <code>total</code> is being overwritten. Print <code>total</code> after each line to see when it changes.</div>
+</details>
+<details style="margin-top: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px;">
+<summary style="cursor: pointer; color: #166534;">Solution</summary>
+<pre style="margin: 0; background: #0b1020; color: #e5e7eb; border-radius: 12px; padding: 12px; overflow: auto; font-size: 13px; line-height: 1.45;"><code>a = 5
+b = 7
+c = 2
+
+total = a + b + c
+print(total)</code></pre>
+</details>
+</div>
+</div>
+</details>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 14px;"><a href="#top" style="text-decoration: none; font-size: 13px; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 999px;">↑ Back to top</a> <a href="#top" style="text-decoration: none; font-size: 13px; color: #0f172a; background: #f8fafc; border: 1px solid #e6e6e6; padding: 8px 10px; border-radius: 999px;">Next: Jump Menu ↑</a></div>
+</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="end-of-term-projects.html">← End of term projects</a><a href="../unit1.html">Back to Unit 1</a><a href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero →</a></nav></main></div><footer class="site-footer"></footer></body></html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Blocks API</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link active" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="using-vexcode.html">← Using VEXcode</a><a href="../unit2.html">Back to Unit 2</a><a href="python-api.html">Python API →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div id="top" style="max-width: 1040px; margin: 0 auto; padding: 18px 16px; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; border-radius: 18px; padding: 24px; background: linear-gradient(135deg, #eff6ff, #f8fbff); margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 10px; border-radius: 999px; background: #dbeafe; color: #1e3a8a; font-size: 12px; margin-bottom: 10px;">REFERENCE WIKI</div>
+<h2 style="margin: 0 0 8px 0; font-size: 28px;">VEX IQ Blocks API Reference Guide</h2>
+<p style="margin: 0 0 10px 0;">This page is a <strong>local reference guide</strong> for the main VEX IQ Blocks API categories. It is designed so you can still learn and work even if the VEX documentation site is blocked or unavailable.</p>
+<p style="margin: 0;">Use this page to understand <strong>what each block family does</strong>, <strong>when to use it</strong>, and <strong>how it connects to the Python ideas you already know</strong>. Official API links are included as backup reading.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; margin-bottom: 18px;">
+<div style="flex: 2 1 620px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; background: #ffffff;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">How to use this page</h3>
+<p style="margin: 0 0 8px 0;">When you are coding in VEX Blocks, you are usually trying to do one of these jobs:</p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>start a program</li>
+<li>move the robot or a mechanism</li>
+<li>read controller or sensor input</li>
+<li>make decisions using conditions</li>
+<li>store and reuse data</li>
+<li>organise code more clearly</li>
+<li>debug what is happening</li>
+<li>bridge visual coding into Python thinking</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 320px; display: flex;">
+<div style="width: 100%; border: 1px solid #d1fae5; border-radius: 16px; padding: 18px; background: #f0fdf4;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">Big idea</h3>
+<p style="margin: 0 0 8px 0;">Blocks are not “baby code.”</p>
+<p style="margin: 0;">They are a visual way of building real programs using sequence, variables, conditions, loops, events, functions, sensors, and outputs.</p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; background: #ffffff; margin-bottom: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 12px;">Jump menu</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;"><a href="#blocks-structure" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe;">Overview</a> <a href="#events" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Events</a> <a href="#drivetrain" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">Drivetrain</a> <a href="#motion" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #0f766e; border: 1px solid #a5f3fc;">Motion</a> <a href="#controller" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;">Controller</a> <a href="#sensing-overview" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;">Sensing</a> <a href="#brain-sensing" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fefce8; color: #a16207; border: 1px solid #fde68a;">Brain Sensing</a> <a href="#bumper" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">Bumper</a> <a href="#touch-led" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3;">Touch LED</a> <a href="#color-sensor" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">Color Sensor</a> <a href="#distance-sensor" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #4d7c0f; border: 1px solid #d9f99d;">Distance Sensor</a> <a href="#optical-sensor" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #155e75; border: 1px solid #a5f3fc;">Optical Sensor</a> <a href="#inertial-gyro" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff;">Inertial / Gyro</a> <a href="#screen" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f8fafc; color: #334155; border: 1px solid #cbd5e1;">Screen</a> <a href="#control" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe;">Control</a> <a href="#operators" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;">Operators</a> <a href="#variables" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe;">Variables</a> <a href="#my-blocks" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">My Blocks</a> <a href="#comments" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa;">Comments</a> <a href="#switch" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fdf4ff; color: #a21caf; border: 1px solid #f5d0fe;">Switch</a> <a href="#python-bridge" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #3f6212; border: 1px solid #d9f99d;">Blocks → Python</a></div>
+</div>
+<div id="blocks-structure" style="border: 1px solid #c7d2fe; border-radius: 16px; padding: 20px; background: #fafaff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">1. How the Blocks API is organised</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The official Blocks API is designed so each block entry shows a block name, a description, its parameters, and a worked example. That means you are expected to read a block in terms of <strong>what it does</strong>, <strong>what values it needs</strong>, and <strong>what it looks like in a real program</strong>.</p>
+<p style="margin: 0 0 10px 0;">This reference page follows the same pattern, but in teacher-friendly language for class use.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px;">
+<div style="flex: 1 1 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #dbeafe; border-radius: 14px; padding: 14px; background: #eff6ff;"><strong>Block name</strong>
+<p style="margin: 8px 0 0 0;">What the block is called in VEXcode.</p>
+</div>
+</div>
+<div style="flex: 1 1 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #ede9fe; border-radius: 14px; padding: 14px; background: #f5f3ff;"><strong>Description</strong>
+<p style="margin: 8px 0 0 0;">What the block does in plain language.</p>
+</div>
+</div>
+<div style="flex: 1 1 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #d1fae5; border-radius: 14px; padding: 14px; background: #f0fdf4;"><strong>Parameters</strong>
+<p style="margin: 8px 0 0 0;">The values, devices, directions, or units you must choose.</p>
+</div>
+</div>
+<div style="flex: 1 1 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #fde68a; border-radius: 14px; padding: 14px; background: #fffbeb;"><strong>Example</strong>
+<p style="margin: 8px 0 0 0;">A real stack showing how the block is used.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="events" style="border: 1px solid #ddd6fe; border-radius: 16px; padding: 20px; background: #faf5ff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">2. Events</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Event blocks are about <strong>when something starts</strong> or <strong>when one part of the program triggers another part</strong>. The main event blocks are:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li><strong>when started</strong></li>
+<li><strong>when I receive event</strong></li>
+<li><strong>broadcast event</strong></li>
+<li><strong>broadcast event and wait</strong></li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use events when:</strong> you want a project to begin, or when you want one stack to activate another stack.</p>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">when started broadcast [turn_now] when I receive [turn_now] turn [right] for (90) degrees</div>
+<p style="margin: 10px 0 0 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/Events.html" target="_blank">Events API</a></p>
+</div>
+<div id="drivetrain" style="border: 1px solid #bfdbfe; border-radius: 16px; padding: 20px; background: #f8fbff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">3. Drivetrain</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Drivetrain blocks control the <strong>whole robot as one moving system</strong>. They include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li><strong>Actions:</strong> drive, drive for, turn, turn for, turn to heading, turn to rotation, stop driving</li>
+<li><strong>Settings:</strong> set drive velocity, set turn velocity, set drive stopping, set drive timeout, set drive heading, set drive rotation</li>
+<li><strong>Values:</strong> drive is done?, drive is moving?, drive heading, drive rotation, drive velocity, drive current</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use drivetrain when:</strong> the entire robot body should move or turn.</p>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">when started set drive velocity to (40) % drive [forward] for (500) [mm] turn [right] for (90) degrees</div>
+<p style="margin: 10px 0 0 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/drivetrain.html" target="_blank">Drivetrain API</a></p>
+</div>
+<div id="motion" style="border: 1px solid #a5f3fc; border-radius: 16px; padding: 20px; background: #f0fdff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">4. Motion</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #0f766e; border: 1px solid #a5f3fc; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The Motion category is about <strong>motors, motor groups, and device-based movement</strong> rather than whole-robot drivetrain movement.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 10px;">
+<div style="flex: 1 1 360px; display: flex;">
+<div style="width: 100%; border: 1px solid #bae6fd; border-radius: 14px; padding: 14px; background: #f0f9ff;"><strong>Motors and Motor Groups</strong>
+<ul style="margin: 8px 0 0 0; padding-left: 18px;">
+<li>spin motor</li>
+<li>spin motor for</li>
+<li>spin motor to position</li>
+<li>stop motor</li>
+<li>set motor position</li>
+<li>set motor velocity</li>
+<li>set motor stopping</li>
+<li>set motor max torque</li>
+<li>set motor timeout</li>
+<li>motor is done?</li>
+<li>motor is spinning?</li>
+<li>motor position</li>
+<li>motor velocity</li>
+<li>motor current</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1 1 360px; display: flex;">
+<div style="width: 100%; border: 1px solid #ccfbf1; border-radius: 14px; padding: 14px; background: #f0fdfa;"><strong>Use this when:</strong>
+<p style="margin: 8px 0 8px 0;">one mechanism moves separately from the main drivetrain, such as:</p>
+<ul style="margin: 0; padding-left: 18px;">
+<li>a claw</li>
+<li>a lift</li>
+<li>an arm</li>
+<li>a grabber</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">when started set [ClawMotor] velocity to (30) % spin [ClawMotor] [forward] for (90) [degrees]</div>
+<p style="margin: 10px 0 0 0;">Official backup links: <a href="https://api.vex.com/iq2/home/blocks/Motion/index.html" target="_blank">Motion API overview</a> | <a href="https://api.vex.com/iq2/home/blocks/Motion/motors.html" target="_blank">Motors and Motor Groups API</a></p>
+</div>
+<div id="controller" style="border: 1px solid #bbf7d0; border-radius: 16px; padding: 20px; background: #f7fff9; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">5. Controller</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Controller blocks let the program respond to button presses and joystick movement. Main blocks include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li><strong>controller button pressed?</strong></li>
+<li><strong>controller axis position</strong></li>
+<li><strong>controller enable/disable</strong></li>
+<li><strong>when controller button</strong></li>
+<li><strong>when controller axis is changed</strong></li>
+</ul>
+<p style="margin: 0 0 10px 0;">The axes return values from <strong>-100 to 100</strong>. This is useful for proportional control and reading joystick direction.</p>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">when started forever if then drive [forward] else stop driving end</div>
+<p style="margin: 10px 0 0 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/controller.html" target="_blank">Controller API</a></p>
+</div>
+<div id="sensing-overview" style="border: 1px solid #fed7aa; border-radius: 16px; padding: 20px; background: #fffaf5; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">6. Sensing overview</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Sensing blocks let the robot detect and respond to its environment. The VEX IQ Blocks sensing pages include:</p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>Brain Sensing</li>
+<li>Bumper Switch</li>
+<li>Touch LED</li>
+<li>Color Sensor</li>
+<li>Distance Sensor</li>
+<li>Optical Sensor</li>
+<li>Inertial and Gyro Sensor</li>
+</ul>
+</div>
+<div id="brain-sensing" style="border: 1px solid #fde68a; border-radius: 16px; padding: 20px; background: #fffcf0; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">7. Brain Sensing</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fefce8; color: #a16207; border: 1px solid #fde68a; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Brain Sensing is for reading inputs and values from the robot brain itself. Main blocks:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li><strong>brain button pressed?</strong></li>
+<li><strong>battery capacity</strong></li>
+<li><strong>when Brain button</strong></li>
+</ul>
+<p style="margin: 0 0 10px 0;">Use these blocks when you want the program to respond to the physical Brain buttons or show system status such as charge level.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Sensors/brain_sensing.html" target="_blank">Brain Sensing API</a></p>
+</div>
+<div id="bumper" style="border: 1px solid #fecaca; border-radius: 16px; padding: 20px; background: #fff8f8; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">8. Bumper Switch</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">A bumper switch is a simple pressed/not pressed sensor. It is useful for collision detection or contact detection.</p>
+<p style="margin: 0 0 10px 0;"><strong>Main ideas:</strong></p>
+<ul style="margin: 0; padding-left: 20px;">
+<li>check whether the bumper is pressed</li>
+<li>run code when the bumper is pressed or released</li>
+</ul>
+</div>
+<div id="touch-led" style="border: 1px solid #fecdd3; border-radius: 16px; padding: 20px; background: #fff7f8; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">9. Touch LED</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Touch LED blocks can both <strong>sense touch</strong> and <strong>control the LED light</strong>. Main blocks include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>set Touch LED color</li>
+<li>set Touch LED fade</li>
+<li>set Touch LED brightness</li>
+<li>Touch LED pressed?</li>
+<li>when Touch LED</li>
+</ul>
+<p style="margin: 0 0 10px 0;">This is useful when you want a device that acts as both an input and an output.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Sensors/touchled_sensing.html" target="_blank">Touch LED API</a></p>
+</div>
+<div id="color-sensor" style="border: 1px solid #bbf7d0; border-radius: 16px; padding: 20px; background: #f7fff9; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">10. Color Sensor</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The Color Sensor is for detecting coloured surfaces or objects and measuring visual data. Main blocks include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>set Color light</li>
+<li>Color found an object?</li>
+<li>Color detects color?</li>
+<li>Color color name</li>
+<li>Color brightness</li>
+<li>Color hue</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use this when:</strong> you need to detect specific colours, check whether an object is present, or compare brightness/hue values.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Sensors/color_sensing.html" target="_blank">Color Sensor API</a></p>
+</div>
+<div id="distance-sensor" style="border: 1px solid #d9f99d; border-radius: 16px; padding: 20px; background: #fbfff2; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">11. Distance Sensor</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #4d7c0f; border: 1px solid #d9f99d; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The Distance Sensor measures how far away an object is and gives other object information. Main 2nd gen blocks include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>object distance</li>
+<li>object velocity</li>
+<li>object size is?</li>
+<li>Distance found an object?</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use this when:</strong> you need the robot to stop near something, detect whether something is in front of it, or react differently depending on object distance or size.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Sensors/distance_sensing.html" target="_blank">Distance Sensor API</a></p>
+</div>
+<div id="optical-sensor" style="border: 1px solid #a5f3fc; border-radius: 16px; padding: 20px; background: #f0fdff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">12. Optical Sensor</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #155e75; border: 1px solid #a5f3fc; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The sensing overview includes an Optical Sensor category for detecting objects, colours, hue, and brightness. In practice, it is similar in purpose to colour-based sensing, but it is a different device category in the VEX docs.</p>
+<p style="margin: 0 0 10px 0;"><strong>Use this when:</strong> the configured device for the task is an Optical Sensor rather than a Color Sensor, and you need visual data from the environment.</p>
+</div>
+<div id="inertial-gyro" style="border: 1px solid #e9d5ff; border-radius: 16px; padding: 20px; background: #fcf8ff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">13. Inertial and Gyro Sensor</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">The IQ Brain includes a built-in Inertial Sensor, and the VEX docs also support an external Gyro Sensor. The main blocks include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>calibrate gyro</li>
+<li>calibrate BrainInertial</li>
+<li>set Inertial/Gyro heading</li>
+<li>set Inertial/Gyro rotation</li>
+<li>angle of Inertial/Gyro heading</li>
+<li>angle of Inertial/Gyro rotation</li>
+<li>rate of gyro</li>
+<li>acceleration</li>
+<li>gyro rate</li>
+<li>orientation</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use this when:</strong> your program needs heading, rotation, tilt, orientation, or motion data.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Inertial.html" target="_blank">Inertial and Gyro API</a></p>
+</div>
+<div id="screen" style="border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px; background: #fcfdff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">14. Screen</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Screen blocks control the Brain Screen. They are especially useful for debugging and live feedback. The Screen category includes:</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 10px;">
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #ffffff;"><strong>Print</strong>
+<p style="margin: 8px 0 0 0;">print on screen, set cursor, next row, clear row, cursor column, cursor row</p>
+</div>
+</div>
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #ffffff;"><strong>Settings</strong>
+<p style="margin: 8px 0 0 0;">clear screen, set font, print precision, pen width, pen/font colour, fill colour</p>
+</div>
+</div>
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #ffffff;"><strong>Draw</strong>
+<p style="margin: 8px 0 0 0;">draw pixel, line, rectangle, circle</p>
+</div>
+</div>
+</div>
+<p style="margin: 0 0 10px 0;"><strong>Use screen blocks when:</strong> you want to show sensor values, status messages, simple interfaces, or visual debugging clues.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/screen.html" target="_blank">Screen API</a></p>
+</div>
+<div id="control" style="border: 1px solid #c7d2fe; border-radius: 16px; padding: 20px; background: #fafaff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">15. Control</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Control blocks manage program flow. These include:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>wait</li>
+<li>wait until</li>
+<li>repeat</li>
+<li>forever</li>
+<li>repeat until</li>
+<li>while</li>
+<li>if</li>
+<li>if / else</li>
+<li>if / else if / else</li>
+<li>break</li>
+<li>stop project</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>These are the “thinking shape” of your code.</strong> They decide whether something repeats, pauses, branches, or stops.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/Control.html" target="_blank">Control API</a></p>
+</div>
+<div id="operators" style="border: 1px solid #ddd6fe; border-radius: 16px; padding: 20px; background: #faf8ff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">16. Operators</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Operator blocks do maths, comparisons, logic, and text handling. The official page includes:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>math operator</li>
+<li>comparison operator</li>
+<li>logical operator</li>
+<li>not operator</li>
+<li>range operator</li>
+<li>pick random</li>
+<li>round number</li>
+<li>math functions</li>
+<li>atan2</li>
+<li>remainder</li>
+<li>join</li>
+<li>letter</li>
+<li>length</li>
+<li>contains</li>
+<li>convert</li>
+</ul>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/Operators.html" target="_blank">Operators API</a></p>
+</div>
+<div id="variables" style="border: 1px solid #bfdbfe; border-radius: 16px; padding: 20px; background: #f8fbff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">17. Variables</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Variables store data. The VEX Blocks variables page includes:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li><strong>Numeric Variables:</strong> numeric variable, set numeric variable, change numeric variable</li>
+<li><strong>Boolean Variables:</strong> Boolean variable, set Boolean variable</li>
+<li><strong>Lists:</strong> list item, replace list item, set list items, length of list</li>
+<li><strong>2D Lists:</strong> 2D list item, replace 2D list item, set 2D list items, length of 2D list</li>
+</ul>
+<p style="margin: 0 0 10px 0;">All variables are global by default in VEX Blocks, which means they can be used anywhere in the project once created.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/Variables.html" target="_blank">Variables API</a></p>
+</div>
+<div id="my-blocks" style="border: 1px solid #bbf7d0; border-radius: 16px; padding: 20px; background: #f7fff9; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">18. My Blocks</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">My Blocks are the Blocks version of functions. They let you define a reusable named chunk of code, with or without parameters.</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>My Blocks</li>
+<li>My Blocks with Parameters</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Use this when:</strong> you keep repeating the same code pattern and want to organise your project more cleanly.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/My_Blocks.html" target="_blank">My Blocks API</a></p>
+</div>
+<div id="comments" style="border: 1px solid #fed7aa; border-radius: 16px; padding: 20px; background: #fffaf5; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">19. Comments</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Comments are notes written inside the project. They do not change how the program runs. They help explain logic, label sections, and record your thinking.</p>
+<p style="margin: 0 0 10px 0;"><strong>Main block:</strong> comment</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Logic/Comments.html" target="_blank">Comments API</a></p>
+</div>
+<div id="switch" style="border: 1px solid #f5d0fe; border-radius: 16px; padding: 20px; background: #fff9ff; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">20. Switch blocks</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fdf4ff; color: #a21caf; border: 1px solid #f5d0fe; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">Switch blocks are special bridge blocks that let you write <strong>Python directly inside the Blocks environment</strong>. They help students move from block-based coding toward text-based coding without fully leaving the visual environment.</p>
+<p style="margin: 0 0 10px 0;">The Switch page describes several block shapes:</p>
+<ul style="margin: 0 0 10px 0; padding-left: 20px;">
+<li>Stack</li>
+<li>C Block</li>
+<li>C Expandable</li>
+<li>Boolean</li>
+<li>Reporter</li>
+<li>Hat</li>
+</ul>
+<p style="margin: 0 0 10px 0;"><strong>Why this matters:</strong> Switch blocks are one of the clearest built-in bridges between visual coding and Python syntax.</p>
+<p style="margin: 0;">Official backup link: <a href="https://api.vex.com/iq2/home/blocks/Switch.html" target="_blank">Switch API</a></p>
+</div>
+<div id="python-bridge" style="border: 1px solid #d9f99d; border-radius: 16px; padding: 20px; background: #fbfff2; margin-bottom: 18px;">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+<h3 style="margin: 0;">21. Blocks → Python bridge</h3>
+<a href="#top" style="text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #3f6212; border: 1px solid #d9f99d; font-size: 14px;">Back to top ↑</a></div>
+<p style="margin: 12px 0 10px 0;">This is the most important connection for this term: Blocks and Python are not separate worlds. They are different ways of expressing the same programming ideas.</p>
+<div style="overflow-x: auto;">
+<table style="width: 100%; border-collapse: collapse; min-width: 720px;">
+<thead>
+<tr style="background: #f7fee7;">
+<th style="text-align: left; padding: 12px; border: 1px solid #d1d5db;">Blocks idea</th>
+<th style="text-align: left; padding: 12px; border: 1px solid #d1d5db;">Meaning</th>
+<th style="text-align: left; padding: 12px; border: 1px solid #d1d5db;">Python link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">when started</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">where execution begins</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">top of a script / starting flow</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">if / else</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">decision making</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">if / elif / else</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">repeat / while / forever</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">repetition</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">for / while loops</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">variables</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">stored data</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">variables</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">My Blocks</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">reusable named code</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">functions</td>
+</tr>
+<tr>
+<td style="padding: 12px; border: 1px solid #d1d5db;">Switch blocks</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">typed Python inside Blocks</td>
+<td style="padding: 12px; border: 1px solid #d1d5db;">direct syntax bridge</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; background: #fcfcfc; margin-bottom: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">Quick self-check</h3>
+<ol style="margin: 0; padding-left: 20px;">
+<li>Can you explain the difference between <strong>drivetrain</strong> and <strong>motion / motor</strong> blocks?</li>
+<li>Can you name at least <strong>four sensing categories</strong> from the API?</li>
+<li>Can you explain when to use <strong>control blocks</strong> and when to use <strong>event blocks</strong>?</li>
+<li>Can you explain how <strong>operators</strong> work inside conditions?</li>
+<li>Can you explain why <strong>Switch blocks</strong> matter for moving toward Python?</li>
+</ol>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: stretch; margin-bottom: 18px;"><a href="#" style="flex: 1 1 320px; text-decoration: none; border: 1px solid #cbd5e1; border-radius: 14px; padding: 16px; background: #f8fafc; color: #1f2937; text-align: center; ">← Back to the Using VEXcode page</a> <a href="https://api.vex.com/iq2/home/python/index.html" style="flex: 1 1 320px; text-decoration: none; border: 1px solid #bbf7d0; border-radius: 14px; padding: 16px; background: #f0fdf4; color: #166534; text-align: center; " target="_blank">Next: Python API reference page →</a></div>
+<div style="border-top: 1px solid #e5e7eb; padding-top: 12px; font-size: 12px; color: #6b7280;">Year 9 Digital Technologies • Term 2 • Local VEX IQ Blocks API reference • <a href="#top" style="color: #4f46e5;">Back to top</a></div>
+</div>
+</div></article><nav class="site-page-actions"><a href="using-vexcode.html">← Using VEXcode</a><a href="../unit2.html">Back to Unit 2</a><a href="python-api.html">Python API →</a></nav></main></div><footer class="site-footer"></footer></body></html>

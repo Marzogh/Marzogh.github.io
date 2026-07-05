@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Welcome to Unit 2 - Making Python interact with the real-world!</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link active" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="sandbox-for-html-testing.html">← Sandbox for HTML testing</a><a href="../unit2.html">Back to Unit 2</a><a href="week-1-meet-the-robot.html">Week 1: Meet the Robot →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 16px; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+<div style="border: 1px solid #bfdbfe; border-radius: 18px; padding: 24px; margin-bottom: 18px; background: linear-gradient(135deg, #eff6ff, #f8fbff);">
+<div style="display: inline-block; padding: 4px 10px; border-radius: 999px; background: #1d4ed8; color: #ffffff; font-size: 12px; margin-bottom: 10px;">COURSE HUB</div>
+<h2 style="margin: 0 0 8px 0;">Term 2 – Robotics Systems &amp; Physical Computing 🤖</h2>
+<p style="margin: 0 0 10px 0;">This term, you are moving from code on a screen to code in the real world. You will use <strong>VEX IQ</strong> to build, test, code, and improve robots that move, repeat actions, sense, and respond to what is happening around them.</p>
+<p style="margin: 0;">You are <strong>not</strong> starting coding again from zero. You already know how to write, test, debug, and improve Python programs. This term, you will apply those same habits to physical systems, where the code matters, the build matters, and the testing matters.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; margin-bottom: 18px;">
+<div style="flex: 2; min-width: 320px; display: flex;">
+<div style="width: 100%; border: 2px solid #bfdbfe; border-radius: 16px; padding: 22px; background: #f8fbff;">
+<div style="display: inline-block; padding: 4px 10px; border-radius: 999px; background: #2563eb; color: #ffffff; font-size: 12px; margin-bottom: 10px;">START HERE</div>
+<h3 style="margin: 0 0 8px 0;">📍 Where to next?</h3>
+<p style="margin: 0 0 12px 0;">Use this page as your main Term 2 information hub:</p>
+<div style="border: 1px solid #dbeafe; border-radius: 12px; background: #ffffff; padding: 14px; margin-bottom: 12px;">
+<div style="margin-bottom: 6px;">1. Open this week’s lesson page</div>
+<div style="font-size: 14px; color: #374151;">Follow the lesson sequence in order. That is your main pathway through the term.</div>
+</div>
+<div style="border: 1px solid #dbeafe; border-radius: 12px; background: #ffffff; padding: 14px; margin-bottom: 12px;">
+<div style="margin-bottom: 6px;">2. Record evidence in your engineering notebook</div>
+<div style="font-size: 14px; color: #374151;">Write during the lesson as you test, fix, and improve. Do not leave it until the end of the lesson or later.</div>
+</div>
+<div style="border: 1px solid #dbeafe; border-radius: 12px; background: #ffffff; padding: 14px;">
+<div style="margin-bottom: 6px;">3. Use support or challenge sections when needed</div>
+<div style="font-size: 14px; color: #374151;">If you are stuck, troubleshoot properly. If you finish early, push your work further instead of waiting.</div>
+</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #fcd34d; border-radius: 16px; padding: 20px; background: #fffbeb;">
+<div style="color: #92400e; margin-bottom: 10px;">📘 ENGINEERING NOTEBOOK</div>
+<p style="margin: 0 0 10px 0;">This term, you will keep an <strong>individual</strong> engineering notebook alongside your robotics work.</p>
+<p style="margin: 0 0 10px 0;">Your notebook should include:</p>
+<ul style="margin: 0 0 12px 0; padding-left: 18px;">
+<li>build notes and diagrams</li>
+<li>path plans and ideas</li>
+<li>test results</li>
+<li>problems noticed</li>
+<li>changes made</li>
+<li>evidence of improvement</li>
+</ul>
+<div style="padding: 12px; border-radius: 12px; background: #fef3c7; margin-bottom: 12px; font-size: 14px;"><strong>Important:</strong> Your notebook is checked during class and used later as part of your assessment evidence.</div>
+<a href="how-to-use-your-engineering-notebook.html" style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: #92400e; color: #ffffff; text-decoration: none; font-size: 14px;" title="How to Use Your Engineering Notebook">Open the Engineering Notebook guide</a></div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #c7d2fe; border-radius: 16px; margin-bottom: 18px; background: #eef2ff;">
+<summary style="display: block; cursor: pointer; padding: 18px 22px; font-size: 20px;"><strong>💻 VEXcode resources</strong></summary>
+<div style="padding: 0 22px 22px 22px;">
+<p style="margin-top: 0; margin-bottom: 14px;">Use these pages if you need help opening VEXcode, choosing the correct mode, connecting your robot, configuring devices, or checking Python-style function calls.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch;">
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #bfdbfe; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>Open the VEXcode setup and help page</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Use this if you need help with installation, opening VEXcode, connecting the Brain, configuring devices, or downloading code.</div>
+<a href="using-vexcode.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #2563eb; color: #ffffff; text-decoration: none; font-size: 14px;" title="Using VEXcode">Open setup help</a></div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>Open the VEX IQ Python API reference</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Use this if you want to check Python-style function calls, arguments, and what commands are available for the robot.</div>
+<a href="python-api.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #5b21b6; color: #ffffff; text-decoration: none; font-size: 14px;" title="Python API">Open Python API reference</a></div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #a7f3d0; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>When should I use these?</strong></div>
+<div style="font-size: 14px; color: #374151;">Use the <strong>setup help</strong> page when VEXcode or the robot is not working properly.<br/><br/>Use the <strong>API reference</strong> page when you are building your Python command notes or checking what a function does.</div>
+</div>
+</div>
+</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #ddd6fe; border-radius: 16px; margin-bottom: 18px; background: #f5f3ff;">
+<summary style="display: block; cursor: pointer; padding: 18px 22px; font-size: 20px;"><strong>🧭 Code modes this term</strong></summary>
+<div style="padding: 0 22px 22px 22px;">
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch;">
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>Driver Control</strong></div>
+<div style="font-size: 14px; color: #374151;">Useful for learning what the robot can physically do before trying to code it autonomously.</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>Blocks</strong></div>
+<div style="font-size: 14px; color: #374151;">Useful for quick prototyping, visual structure, and seeing robot behaviour clearly.</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff;">
+<div style="margin-bottom: 6px;"><strong>Python</strong></div>
+<div style="font-size: 14px; color: #374151;">Useful for clearer text-based structure, stronger code habits, and representing the same logic more directly.</div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff; margin-top: 14px;"><strong>The main idea:</strong> this term is about <strong>control, testing, and problem solving</strong>, not just dragging blocks around.</div>
+</div>
+</details>
+<div style="border: 2px solid #c7d2fe; border-radius: 18px; padding: 22px; margin-bottom: 22px; background: #f5f3ff;">
+<div style="display: inline-block; padding: 4px 10px; border-radius: 999px; background: #5b21b6; color: #ffffff; font-size: 12px; margin-bottom: 10px;">ASSESSMENT</div>
+<h3 style="margin: 0 0 8px 0;">Assessment Item 2: VEX IQ Gen 2 Space Rover Engineering Challenge</h3>
+<p style="margin: 0 0 12px 0;">Your assessment is an engineering design challenge. You will design, build, test and improve a VEX IQ Gen 2 space rover prototype, then use your individual Engineering Portfolio Folder to show the planning, testing, changes and evidence behind your work.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+<div style="flex: 1; min-width: 220px; border: 1px solid #ddd6fe; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="font-size: 13px; color: #6b21a8; margin-bottom: 4px;">Due date</div>
+<strong>11:30pm Tuesday 16 June 2026</strong></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #ddd6fe; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="font-size: 13px; color: #6b21a8; margin-bottom: 4px;">Group size</div>
+<strong>Maximum two students</strong></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #ddd6fe; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="font-size: 13px; color: #6b21a8; margin-bottom: 4px;">Assignment lessons</div>
+<strong>10 lessons</strong></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #ddd6fe; border-radius: 12px; padding: 12px; background: #ffffff;">
+<div style="font-size: 13px; color: #6b21a8; margin-bottom: 4px;">Engineering entries</div>
+<strong>At least 8 completed entries</strong></div>
+</div>
+<div style="border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff; margin-bottom: 14px;"><strong>What you must produce:</strong>
+<ul style="margin: 8px 0 0 0; padding-left: 20px;">
+<li>a functioning VEX IQ Gen 2 rover prototype demonstrated in class</li>
+<li>an individual handwritten Engineering Portfolio Folder stored in a clear plastic folder</li>
+<li>at least 8 completed engineering entries unless sick/away with prior permission</li>
+<li>final rover photos uploaded through QLearn</li>
+<li>a reference list if external sources were used</li>
+</ul>
+</div>
+<div style="border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff; margin-bottom: 14px;"><strong>Assessment lesson sequence</strong>
+<p style="margin: 6px 0 10px 0; font-size: 14px; color: #374151;">Use these quick links during the assessment lessons.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;"><a href="assessment-2-lesson-1.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 1"><strong>Tue 26 May</strong><br/>Lesson 1: Planning Sprint</a> <a href="assessment-2-lesson-2.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 2"><strong>Thu 28 May</strong><br/>Lesson 2: Start Building</a> <a href="assessment-2-lesson-3.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 3"><strong>Fri 29 May</strong><br/>Lesson 3: Movement Testing</a> <a href="assessment-2-lesson-4.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 4"><strong>Tue 2 Jun</strong><br/>Lesson 4: Object Mechanism</a> <a href="assessment-2-lesson-5.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 5"><strong>Thu 4 Jun</strong><br/>Lesson 5: Improve Design</a> <a href="assessment-2-lesson-6.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 6"><strong>Fri 5 Jun</strong><br/>Lesson 6: Prototype Checkpoint</a> <a href="assessment-2-lesson-7.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 7"><strong>Tue 9 Jun</strong><br/>Lesson 7: Required Testing</a> <a href="assessment-2-lesson-8.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 8"><strong>Thu 11 Jun</strong><br/>Lesson 8: Refine</a> <a href="assessment-2-lesson-9.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 9"><strong>Fri 12 Jun</strong><br/>Lesson 9: Final Evidence</a> <a href="assessment-2-lesson-10.html" style="display: inline-block; flex: 1 1 180px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 10px; background: #f9fafb; color: #1d4ed8; text-decoration: none; font-size: 14px;" title="Assessment 2 - Lesson 10"><strong>Tue 16 Jun</strong><br/>Lesson 10: Submit</a></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="flex: 1; min-width: 220px; border: 1px solid #bfdbfe; border-radius: 12px; padding: 14px; background: #ffffff;"><strong>Assessment launch page</strong>
+<p style="margin: 6px 0 10px 0; font-size: 14px; color: #374151;">Start here for the task overview and submission requirements.</p>
+<a href="assignment-term-2-assignment-space-rover-design.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #2563eb; color: #ffffff; text-decoration: none; font-size: 14px;" title="Term 2 Assignment - Space Rover Design">Open assessment page</a></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px; background: #ffffff;"><strong>Rover prototype support</strong>
+<p style="margin: 6px 0 10px 0; font-size: 14px; color: #374151;">Use this for rover inspiration, object interaction and required tests.</p>
+<a href="rover-prototype-space-robot-inspiration.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #047857; color: #ffffff; text-decoration: none; font-size: 14px;" title="Rover Prototype: Space Robot Inspiration">Open rover support</a></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px; background: #ffffff;"><strong>Starter Pack support</strong>
+<p style="margin: 6px 0 10px 0; font-size: 14px; color: #374151;">Use this for the scaffold pages in your Engineering Portfolio Folder.</p>
+<a href="engineering-portfolio-starter-pack.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #c2410c; color: #ffffff; text-decoration: none; font-size: 14px;" title="Engineering Portfolio Starter Pack">Open Starter Pack support</a></div>
+<div style="flex: 1; min-width: 220px; border: 1px solid #ddd6fe; border-radius: 12px; padding: 14px; background: #ffffff;"><strong>Engineering entries support</strong>
+<p style="margin: 6px 0 10px 0; font-size: 14px; color: #374151;">Use this when writing your lesson-by-lesson engineering entries.</p>
+<a href="lesson-by-lesson-engineering-entries.html" style="display: inline-block; padding: 8px 12px; border-radius: 10px; background: #7c3aed; color: #ffffff; text-decoration: none; font-size: 14px;" title="Lesson-by-Lesson Engineering Entries">Open entry support</a></div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 16px; padding: 22px; margin-bottom: 22px; background: #ffffff;">
+<h3 style="margin-top: 0; margin-bottom: 8px;">📘 Main lesson sequence</h3>
+<p style="margin-top: 0; margin-bottom: 16px;">Each week builds on the one before it. Open the current week first, then use the support and challenge sections below when needed.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+<div style="flex: 1; min-width: 300px; display: flex;">
+<div style="width: 100%;">
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><a class="inline_disabled" href="week-1-meet-the-robot.html" target="_blank"><strong>Week 1 – Meet the Robot</strong></a></div>
+<div style="font-size: 14px; color: #374151;">Systems, parts, build, and manual control. Learn how the robot works before you try to control it with code.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><a href="week-2-autonomous-movement-and-control.html" title="Week 2 – Autonomous Movement and Control"><strong>Week 2 – Autonomous Movement and Control</strong></a></div>
+<div style="font-size: 14px; color: #374151;">Program purposeful movement, test for accuracy, and debug both code and robot behaviour.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><a href="week-3-sensors-decisions-and-treasure-hunting.html" title="Week 3 - Sensors, Decisions, and Treasure Hunting"><strong>Week 3 – Sensors, Decisions, and Treasure Hunting</strong></a></div>
+<div style="font-size: 14px; color: #374151;">Use the Optical Sensor, <strong>[If then]</strong>, and <strong>[Repeat]</strong> blocks so the robot can check cube colour and collect only the red Treasure Cube.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><a href="week-4-build-drive-and-test-the-cube-collector-clawbot.html" title="Week 4: Build, Drive, and Test the Cube Collector Clawbot"><strong>Week 4 – Build, Drive, and Test the Cube Collector</strong></a></div>
+<div style="font-size: 14px; color: #374151;">Build or finish the Cube Collector Clawbot, test Driver Control, start Stack and Score, attempt Speed Stack, and observe the arm/claw stability problem.</div>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc;">
+<div style="margin-bottom: 6px;"><a href="week-5-build-drive-and-test-the-cube-collector-clawbot.html" title="Week 5: Build, Drive, and Test the Cube Collector Clawbot"><strong>Week 5 – Finish, Stack, Engineer, and Code the Cube Collector</strong></a></div>
+<div style="font-size: 14px; color: #374151;">Catch up if needed, complete Stack and Score, engineer a better solution for tipping or dropping cubes, then begin autonomous Coding for Cubes.</div>
+</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 300px; display: flex;">
+<div style="width: 100%;">
+<div style="border: 1px solid #dbeafe; border-radius: 14px; padding: 16px; background: #eff6ff; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><strong>Week 6 – Assessment planning and early build</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Start the assessment pathway: plan, build the rover base, and begin movement testing.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li><a href="assessment-2-lesson-1.html" title="Assessment 2 - Lesson 1">Assessment Lesson 1 – Planning Sprint</a></li>
+<li><a href="assessment-2-lesson-2.html" title="Assessment 2 - Lesson 2">Assessment Lesson 2 – Start Building the Rover Base</a></li>
+<li><a href="assessment-2-lesson-3.html" title="Assessment 2 - Lesson 3">Assessment Lesson 3 – Movement and Drivetrain Testing</a></li>
+</ul>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><strong>Week 7 – Mechanism, criteria and prototype checkpoint</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Develop the object mechanism, improve the design, and prepare the portfolio for formal testing.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li><a href="assessment-2-lesson-4.html" title="Assessment 2 - Lesson 4">Assessment Lesson 4 – Object Interaction: First Mechanism Build</a></li>
+<li><a href="assessment-2-lesson-5.html" title="Assessment 2 - Lesson 5">Assessment Lesson 5 – Improve Object Interaction and Criteria</a></li>
+<li><a href="assessment-2-lesson-6.html" title="Assessment 2 - Lesson 6">Assessment Lesson 6 – Prototype Checkpoint and Evidence Catch-up</a></li>
+</ul>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc; margin-bottom: 14px;">
+<div style="margin-bottom: 6px;"><strong>Week 8 – Required testing and final design evidence</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Complete required testing, refine using evidence, and prepare the final design summary and photo evidence.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li><a href="assessment-2-lesson-7.html" title="Assessment 2 - Lesson 7">Assessment Lesson 7 – Required Testing Begins</a></li>
+<li><a href="assessment-2-lesson-8.html" title="Assessment 2 - Lesson 8">Assessment Lesson 8 – Testing and Refinement Checkpoint</a></li>
+<li><a href="assessment-2-lesson-9.html" title="Assessment 2 - Lesson 9">Assessment Lesson 9 – Final Testing, Final Design Summary and Photo Evidence</a></li>
+</ul>
+</div>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; background: #fcfcfc;">
+<div style="margin-bottom: 6px;"><strong>Week 9 – Finish, reflect and submit</strong></div>
+<div style="font-size: 14px; color: #374151; margin-bottom: 10px;">Finish the final evaluation, individual reflection, final checklist, photo upload and folder submission.</div>
+<ul style="margin: 0; padding-left: 18px;">
+<li><a href="assessment-2-lesson-10.html" title="Assessment 2 - Lesson 10">Assessment Lesson 10 – Finish, Reflect and Submit</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 14px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px; font-size: 18px;"><strong>🧠 How this term connects to Term 1</strong></summary>
+<div style="padding: 0 18px 18px 18px;">
+<p style="margin-top: 0;">Term 2 will teach you to transfer the programming skills you learnt last term into real-world systems. You are applying familiar coding ideas in a less predictable environment.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch;">
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Sequence</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">becomes robot movement in order</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Decisions</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">become reactions to sensor input, robot state, and conditions</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Loops</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">become repeated checks, repeated actions, and more efficient robot programs</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Debugging</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">now includes code problems, robot setup problems, and physical design problems</div>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #dbeafe; border-radius: 12px; background: #eff6ff; padding: 14px; margin-top: 14px;"><strong>Important:</strong> Python thinking still matters here. Whether you use Driver Control, blocks, Python, or a mix, the goal is to build a system that is logical, testable, and reliable.</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 14px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px; font-size: 18px;"><strong>🛠️ Support centre</strong></summary>
+<div style="padding: 0 18px 18px 18px;">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch;">
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #fecaca; border-radius: 14px; padding: 16px; background: #fef2f2;">
+<h4 style="margin-top: 0; margin-bottom: 8px;">Robot or build problem?</h4>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Check the build carefully</li>
+<li>Check ports, battery, and connection setup</li>
+<li>Make sure the robot is assembled the right way around</li>
+<li>Look for loose parts, wiring issues, or jammed movement</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #bfdbfe; border-radius: 14px; padding: 16px; background: #eff6ff;">
+<h4 style="margin-top: 0; margin-bottom: 8px;">Code problem?</h4>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Read your blocks or code from top to bottom</li>
+<li>Watch what the robot actually does</li>
+<li>Test movement, arm, and claw actions separately</li>
+<li>Change one thing at a time</li>
+</ul>
+</div>
+</div>
+<div style="flex: 1; min-width: 280px; display: flex;">
+<div style="width: 100%; border: 1px solid #bbf7d0; border-radius: 14px; padding: 16px; background: #f0fdf4;">
+<h4 style="margin-top: 0; margin-bottom: 8px;">Still stuck?</h4>
+<ul style="margin: 0; padding-left: 18px;">
+<li>Use the lesson page troubleshooting section</li>
+<li>Check your notebook for your last successful version</li>
+<li>Be specific when asking for help</li>
+<li>Explain what happened, not just that it failed</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #fde68a; border-radius: 12px; background: #fffbeb; padding: 14px; margin-top: 14px;"><strong>Remember:</strong> “It didn’t work” is not the end of the story. Your job is to work out <strong>what</strong> didn’t work and <strong>why</strong>.</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 14px; margin-bottom: 18px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 18px; font-size: 18px;"><strong>🚀 Challenge pathway</strong></summary>
+<div style="padding: 0 18px 18px 18px;">
+<p style="margin-top: 0;">If you finish the main task in a lesson, do not switch off. Push your work further.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch;">
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Make it more reliable</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">Can it succeed several times in a row, not just once?</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Improve precision</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">Can you reduce drift, overshoot, messy turning, or dropped cubes?</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Test a different strategy</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">Can the same goal be solved in a better way?</div>
+</div>
+</div>
+<div style="flex: 1; min-width: 240px; display: flex;">
+<div style="width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fcfcfc;"><strong>Represent it in Python</strong>
+<div style="font-size: 14px; color: #374151; margin-top: 6px;">Can you show the same behaviour in text-based code?</div>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; background: #fcfcfc; margin-bottom: 20px;">
+<h3 style="margin-top: 0; margin-bottom: 8px;">🤝 Expectations and norms</h3>
+<ul style="margin-bottom: 0; padding-left: 18px;">
+<li>Handle robot parts carefully and pack them away properly.</li>
+<li>Read your code or blocks carefully before running the robot again.</li>
+<li>Test often instead of guessing.</li>
+<li>Try to identify the problem before asking for help.</li>
+<li>Help your group solve problems instead of waiting passively.</li>
+<li>Be respectful when giving feedback or sharing equipment.</li>
+</ul>
+</div>
+<div style="border-top: 1px solid #e5e7eb; padding-top: 10px; color: #6b7280; font-size: 12px;">Page last updated 26 May 2026</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="sandbox-for-html-testing.html">← Sandbox for HTML testing</a><a href="../unit2.html">Back to Unit 2</a><a href="week-1-meet-the-robot.html">Week 1: Meet the Robot →</a></nav></main></div><footer class="site-footer"></footer></body></html>

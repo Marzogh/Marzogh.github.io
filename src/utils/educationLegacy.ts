@@ -1,32 +1,36 @@
 export const EDUCATION_LEGACY_PAGE_ROUTE_MAP: Record<string, string> = {
-  'welcome-to-unit-1-all-about-python': '/education/year-9-python-foundations',
-  'get-python-ready-install-thonny': '/education/install-python-with-thonny',
-  'writing-good-code-an-introduction': '/education/writing-good-code',
-  'explorer-python-basics-hub': '/education/python-basics-hub',
-  'chapter-01': '/education/python-basics-hub/chapter-1-your-first-python-mission',
-  'chapter-02': '/education/python-basics-hub/chapter-2-printing-and-running-code',
-  'chapter-03': '/education/python-basics-hub/chapter-3-variables',
-  'chapter-04': '/education/python-basics-hub/chapter-4-data-types',
-  'chapter-05': '/education/python-basics-hub/chapter-5-input',
-  'chapter-06': '/education/python-basics-hub/chapter-6-if-statements',
-  'chapter-07': '/education/python-basics-hub/chapter-7-loops',
-  'chapter-08': '/education/python-basics-hub/chapter-8-lists',
-  'chapter-09': '/education/python-basics-hub/chapter-9-functions',
-  'chapter-10': '/education/python-basics-hub/chapter-10-debugging-and-errors',
-  'python-reference-wiki': '/education/python-reference',
-  'mermaid-live-building-an-algorithm-flow-chart': '/education/algorithms-with-mermaid',
-  'level-1-writing-code-from-zero': '/education/year-9-python-foundations/writing-code-from-zero',
-  'pet-services-program-target-audience-and-decision-tree': '/education/pet-services-project/planning-and-decision-tree',
-  'pet-services-program-generating': '/education/pet-services-project/build-the-booking-program',
-  'pet-services-program-a-worked-solution': '/education/pet-services-project/worked-solution',
-  'pet-services-program-feedback': '/education/pet-services-project/feedback-and-improvement',
-  'pet-services-program-what-is-a-function-and-why-does-it-exist': '/education/pet-services-project/why-functions-matter',
-  'pet-services-program-refactoring-our-pet-booking-system-using-functions': '/education/pet-services-project/refactoring-with-functions',
+  'welcome-to-unit-1-all-about-python': '/education/digital-technologies/year-9/unit-1',
+  'get-python-ready-install-thonny': '/education/digital-technologies/year-9/unit-1/setup/install-thonny',
+  '2-1-get-python-ready-install-thonny': '/education/digital-technologies/year-9/unit-1/setup/install-thonny',
+  'writing-good-code-an-introduction': '/education/digital-technologies/year-9/unit-1/foundations/writing-good-code',
+  'explorer-python-basics-hub': '/education/digital-technologies/year-9/unit-1/explorer',
+  'chapter-01': '/education/digital-technologies/year-9/unit-1/explorer/chapter-01',
+  'chapter-02': '/education/digital-technologies/year-9/unit-1/explorer/chapter-02',
+  'chapter-03': '/education/digital-technologies/year-9/unit-1/explorer/chapter-03',
+  'chapter-04': '/education/digital-technologies/year-9/unit-1/explorer/chapter-04',
+  'chapter-05': '/education/digital-technologies/year-9/unit-1/explorer/chapter-05',
+  'chapter-06': '/education/digital-technologies/year-9/unit-1/explorer/chapter-06',
+  'chapter-07': '/education/digital-technologies/year-9/unit-1/explorer/chapter-07',
+  'chapter-08': '/education/digital-technologies/year-9/unit-1/explorer/chapter-08',
+  'chapter-09': '/education/digital-technologies/year-9/unit-1/explorer/chapter-09',
+  'chapter-10': '/education/digital-technologies/year-9/unit-1/explorer/chapter-10',
+  'python-reference-wiki': '/education/digital-technologies/year-9/unit-1/reference/python-reference',
+  'mermaid-live-building-an-algorithm-flow-chart': '/education/digital-technologies/year-9/unit-1/reference/mermaid-live-algorithm-guide',
+  'level-1-writing-code-from-zero': '/education/digital-technologies/year-9/unit-1/reference/writing-code-from-zero',
+  'pet-services-program-target-audience-and-decision-tree': '/education/digital-technologies/year-9/unit-1/projects/pet-services/decision-tree',
+  'pet-services-program-target-audience-decision-tree': '/education/digital-technologies/year-9/unit-1/projects/pet-services/decision-tree',
+  'pet-services-program-generating': '/education/digital-technologies/year-9/unit-1/projects/pet-services/generating',
+  'pet-services-program-a-worked-solution': '/education/digital-technologies/year-9/unit-1/projects/pet-services/worked-solution',
+  'pet-services-program-feedback': '/education/digital-technologies/year-9/unit-1/projects/pet-services/feedback',
+  'pet-services-program-what-is-a-function-and-why-does-it-exist': '/education/digital-technologies/year-9/unit-1/projects/pet-services/why-functions-exist',
+  'pet-services-program-refactoring-our-pet-booking-system-using-functions': '/education/digital-technologies/year-9/unit-1/projects/pet-services/refactoring-with-functions',
+  'welcome-to-unit-2-making-python-interact-with-the-real-world': '/education/digital-technologies/year-9/unit-2',
 };
 
 export const EDUCATION_LEGACY_PREFIXES = [
   'digital-technologies-yr9-2026',
   'student-resources/digital-technologies-yr9-2026',
+  'student-resources/digital-technologies-year-9-2026/pages',
 ];
 
 export const EDUCATION_LEGACY_REDIRECTS: Record<string, string> = Object.fromEntries(
@@ -34,3 +38,6 @@ export const EDUCATION_LEGACY_REDIRECTS: Record<string, string> = Object.fromEnt
     Object.entries(EDUCATION_LEGACY_PAGE_ROUTE_MAP).map(([legacy, target]) => [`${prefix}/${legacy}`, target])
   )
 );
+
+EDUCATION_LEGACY_REDIRECTS['digital-technologies/year-9/unit-1/welcome'] = '/education/digital-technologies/year-9/unit-1';
+EDUCATION_LEGACY_REDIRECTS['digital-technologies/year-9/unit-2/welcome'] = '/education/digital-technologies/year-9/unit-2';

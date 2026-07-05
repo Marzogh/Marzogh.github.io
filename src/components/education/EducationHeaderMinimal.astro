@@ -1,0 +1,41 @@
+---
+interface Props {
+  backHref?: string;
+  backLabel?: string;
+  title: string;
+}
+
+const { backHref = '/education', backLabel = 'Back to Education', title } = Astro.props;
+---
+
+<header class="edu-head-minimal">
+  <a class="edu-head-minimal__back" href={backHref}>← {backLabel}</a>
+  <h1 class="edu-head-minimal__title">{title}</h1>
+</header>
+
+<style>
+  .edu-head-minimal {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .edu-head-minimal__back {
+    width: fit-content;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .edu-head-minimal__back:hover {
+    color: var(--link-hover);
+  }
+
+  .edu-head-minimal__title {
+    margin: 0;
+    font-size: clamp(2.1rem, 4vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+</style>

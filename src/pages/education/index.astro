@@ -3,437 +3,262 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-import IndexHeader from '../../components/IndexHeader.astro';
+import EducationSubjectGatewayBand from '../../components/education/EducationSubjectGatewayBand.astro';
+import { YEAR9_DIGITECH_RESOURCES } from '../../data/educationYear9DigitalTechnologies';
+import {
+  educationPathFromId,
+  getEducationLevelLabel,
+} from '../../utils/education';
 
-const educationEntries = (await getCollection('education', ({ data }) => !data.draft && data.showInIndex !== false)).sort(
-  (a, b) =>
-    (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER) ||
-    (b.data.pubDate?.valueOf() ?? 0) - (a.data.pubDate?.valueOf() ?? 0)
-);
-
-function formatLabel(value?: string | null) {
-  if (!value) return '';
-  return value
-    .split('-')
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+interface SearchRow {
+  href: string;
+  title: string;
+  subject: string;
+  level: string;
+  description: string;
+  search: string;
 }
 
-function inferUse(type?: string | null) {
-  const v = (type ?? '').toLowerCase();
-  if (v.includes('unit hub') || v.includes('chapter hub') || v.includes('project hub') || v.includes('resource pack')) return 'Plan';
-  if (v.includes('worksheet')) return 'Practice';
-  if (v.includes('lab') || v.includes('interactive')) return 'Run';
-  if (v.includes('setup')) return 'Prepare';
-  if (v.includes('reference')) return 'Reference';
-  return 'Teach';
-}
+const entries = await getCollection('education', ({ data }) => !data.draft && data.showInLanding !== false);
 
-function inferStatus(title: string) {
-  return title.toLowerCase().includes('draft') ? 'Draft' : 'Ready';
-}
+const canonicalDigitechHref = (slug: string, sourceSlug?: string) => {
+  if (sourceSlug === 'welcome-to-unit-1-all-about-python.html') {
+    return '/education/digital-technologies/year-9/unit-1';
+  }
+  if (sourceSlug === 'welcome-to-unit-2-making-python-interact-with-the-real-world.html') {
+    return '/education/digital-technologies/year-9/unit-2';
+  }
+  return `/education/${slug}`;
+};
 
-function inferAudience(type?: string | null) {
-  const v = (type ?? '').toLowerCase();
-  if (v.includes('unit hub') || v.includes('resource pack')) return 'Teacher';
-  return 'Student';
-}
-
-const resources = educationEntries.map((entry) => {
-  const type = entry.data.type ? formatLabel(entry.data.type) : 'Lesson';
-  const use = inferUse(type);
-  const status = inferStatus(entry.data.title);
-  const audience = inferAudience(type);
-  return {
-    id: entry.id,
+const searchRows: SearchRow[] = [
+  ...entries.map((entry) => ({
+    href: educationPathFromId(entry.id),
     title: entry.data.title,
+    subject: entry.data.subject ?? 'general',
+    level: entry.data.level ?? '',
     description: entry.data.description ?? '',
-    subject: formatLabel(entry.data.subject) || 'General',
-    year: formatLabel(entry.data.level) || 'Senior Secondary',
-    type,
-    use,
-    status,
-    audience,
-  };
-});
-
-const subjects = [...new Set(resources.map((r) => r.subject))].sort();
-const years = [...new Set(resources.map((r) => r.year))].sort();
-const types = [...new Set(resources.map((r) => r.type))].sort();
-const uses = [...new Set(resources.map((r) => r.use))].sort();
-const statuses = [...new Set(resources.map((r) => r.status))].sort();
-
-const grouped = subjects.map((subject) => ({
-  subject,
-  rows: resources.filter((r) => r.subject === subject).sort((a, b) => a.title.localeCompare(b.title)),
-}));
-
-const pathwayNodes = [
-  { label: '01 Setup', href: '/education/install-python-with-thonny' },
-  { label: '02 Output', href: '/education/python-basics-hub/chapter-2-printing-and-running-code' },
-  { label: '03 Variables', href: '/education/python-basics-hub/chapter-3-variables' },
-  { label: '04 Input', href: '/education/python-basics-hub/chapter-5-input' },
-  { label: '05 Logic', href: '/education/python-basics-hub/chapter-6-if-statements' },
-  { label: '06 Loops', href: '/education/python-basics-hub/chapter-7-loops' },
-  { label: '07 Lists', href: '/education/python-basics-hub/chapter-8-lists' },
-  { label: '08 Functions', href: '/education/python-basics-hub/chapter-9-functions' },
-  { label: '09 Debugging', href: '/education/python-basics-hub/chapter-10-debugging-and-errors' },
-  { label: '10 Pet Services Project', href: '/education/pet-services-project' },
+    search: `${entry.data.title} ${entry.data.description ?? ''} ${entry.data.subject ?? ''} ${entry.data.level ?? ''} ${(entry.data.tags ?? []).join(' ')}`.toLowerCase(),
+  })),
+  ...YEAR9_DIGITECH_RESOURCES.map((resource) => ({
+    href: canonicalDigitechHref(resource.slug, resource.sourceSlug),
+    title: resource.title,
+    subject: 'digital-technologies',
+    level: 'year-9',
+    description: resource.description,
+    search: `${resource.title} ${resource.description} digital technologies year 9 ${resource.tags.join(' ')}`.toLowerCase(),
+  })),
 ];
+
+const biologyLevels = [...new Set(entries.filter((entry) => entry.data.subject === 'biology').map((entry) => entry.data.level).filter(Boolean))]
+  .map((level) => ({ href: `/education/biology#${level}`, label: getEducationLevelLabel(level) }));
+
+const mathematicsLevels = [...new Set(entries.filter((entry) => entry.data.subject === 'mathematics').map((entry) => entry.data.level).filter(Boolean))]
+  .map((level) => ({ href: `/education/mathematics#${level}`, label: getEducationLevelLabel(level) }));
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead
-      title="Education — Chips’nCode"
-      description="Teaching resources, lesson structures, curriculum design, and educational experiments."
-    />
+    <BaseHead title="Education — Chips’nCode" description="Education." />
   </head>
   <body class="theme-edu">
     <Header />
+    <main class="edu-index-page">
+      <header class="edu-index-header">
+        <h1>Education</h1>
+      </header>
 
-    <main class="education-index">
-      <IndexHeader
-        eyebrow="Education"
-        title="Education"
-        lede="Teaching resources, lesson structures, curriculum design, classroom tools, and student-facing activities."
-        terminalTitle="education.index"
-        statusLines={[
-          { label: 'resources', value: resources.length },
-          { label: 'subjects', value: subjects.length },
-          { label: 'year_levels', value: years.length },
-        ]}
-      />
-
-      <section class="finder" aria-label="Resource finder">
-        <div class="finder__searchWrap panel panel--soft">
-          <label for="finder-search" class="finder__label">Search resources</label>
-          <input id="finder-search" type="search" placeholder="Search title, subject, year, type, use, description" data-filter-search />
-          <div class="finder__quick" role="group" aria-label="Quick filters">
-            <button type="button" data-quick="year:Year 9">Year 9</button>
-            <button type="button" data-quick="year:Year 11">Year 11</button>
-            <button type="button" data-quick="year:Year 12">Year 12</button>
-            <button type="button" data-quick="subject:Biology">Biology</button>
-            <button type="button" data-quick="subject:Digital Technologies">Digital Technologies</button>
-            <button type="button" data-quick="subject:Mathematics">Mathematics</button>
-            <button type="button" data-quick="type:Interactive">Interactives</button>
-            <button type="button" data-quick="type:Worksheet">Worksheets</button>
+      <section class="edu-index-search" aria-label="Search education">
+        <label class="edu-index-search__label" for="edu-search">Search</label>
+        <div class="edu-index-search__body">
+          <input id="edu-search" type="search" placeholder="Search lessons, notes, worksheets, labs" data-edu-search />
+          <div class="edu-index-results" data-edu-results hidden>
+            <p class="edu-index-results__count" data-edu-results-count></p>
+            <ul data-edu-results-list></ul>
           </div>
         </div>
       </section>
 
-      <section class="start-here" aria-labelledby="start-here-heading">
-        <h2 id="start-here-heading">Start here</h2>
-        <div class="start-here__actions" role="group" aria-label="Use case actions">
-          <button type="button" data-action="plan">Plan a lesson</button>
-          <button type="button" data-action="sequence">Teach a sequence</button>
-          <button type="button" data-action="run">Run an activity</button>
-          <button type="button" data-action="reference">Find a reference</button>
-        </div>
-      </section>
+      <section class="edu-index-subjects" aria-label="Education subjects">
+        <EducationSubjectGatewayBand
+          title="Digital Technologies"
+          href="/education/digital-technologies"
+          context={['Subject']}
+          previewLinks={[
+            { href: '/education/digital-technologies', label: 'Year 9' },
+          ]}
+        />
 
-      <section class="pathway" aria-labelledby="pathway-heading">
-        <div class="pathway__head">
-          <h2 id="pathway-heading">Featured pathway</h2>
-          <p>Year 9 Python Foundations · Digital Technologies · Year 9 · Unit sequence</p>
-        </div>
-        <ol class="pathway__nodes">
-          {pathwayNodes.map((node) => (
-            <li><a href={node.href}>{node.label}</a></li>
-          ))}
-        </ol>
-      </section>
+        <EducationSubjectGatewayBand
+          title="Biology"
+          href="/education/biology"
+          context={['Subject']}
+          previewLinks={biologyLevels}
+        />
 
-      <section class="library" aria-labelledby="library-heading">
-        <div class="library__top">
-          <h2 id="library-heading">Resource library</h2>
-          <div class="library__count" data-results-summary>{resources.length} resources</div>
-        </div>
-
-        <div class="library__filters" role="group" aria-label="Library filters">
-          <select data-filter-subject>
-            <option value="">All subjects</option>
-            {subjects.map((value) => <option value={value}>{value}</option>)}
-          </select>
-          <select data-filter-year>
-            <option value="">All year levels</option>
-            {years.map((value) => <option value={value}>{value}</option>)}
-          </select>
-          <select data-filter-type>
-            <option value="">All resource types</option>
-            {types.map((value) => <option value={value}>{value}</option>)}
-          </select>
-          <select data-filter-use>
-            <option value="">All use cases</option>
-            {uses.map((value) => <option value={value}>{value}</option>)}
-          </select>
-          <select data-filter-status>
-            <option value="">All status</option>
-            {statuses.map((value) => <option value={value}>{value}</option>)}
-          </select>
-          <button type="button" data-clear>Clear filters</button>
-        </div>
-
-        <div class="library__groups" data-library>
-          {grouped.map((group) => (
-            <section class="subject-block" data-subject-block={group.subject}>
-              <header class="subject-block__head">
-                <h3>{group.subject}</h3>
-                <p><span data-subject-count={group.subject}>{group.rows.length}</span> resources</p>
-              </header>
-
-              <div class="resource-table">
-                <div class="resource-table__head">
-                  <span>Resource</span>
-                  <span>Year</span>
-                  <span>Type</span>
-                  <span>Use</span>
-                  <span>Status</span>
-                </div>
-
-                <div class="resource-table__rows">
-                  {group.rows.map((row) => (
-                    <a
-                      class="resource-row"
-                      href={`/education/${row.id}`}
-                      data-title={row.title.toLowerCase()}
-                      data-description={row.description.toLowerCase()}
-                      data-subject={row.subject}
-                      data-year={row.year}
-                      data-type={row.type}
-                      data-use={row.use}
-                      data-status={row.status}
-                    >
-                      <span class="resource-row__resource">
-                        <strong>{row.title}</strong>
-                        <small>{row.description}</small>
-                      </span>
-                      <span>{row.year}</span>
-                      <span>{row.type}</span>
-                      <span>{row.use}</span>
-                      <span class:list={[row.status === 'Draft' ? 'status-draft' : 'status-ready']}>{row.status}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ))}
-        </div>
-
-        <p class="library__empty" data-empty hidden>
-          No resources match those filters. Try clearing the year level or searching by topic instead.
-        </p>
+        <EducationSubjectGatewayBand
+          title="Mathematics"
+          href="/education/mathematics"
+          context={['Subject']}
+          previewLinks={mathematicsLevels}
+        />
       </section>
     </main>
 
     <Footer />
 
-    <script is:inline>
+    <script is:inline define:vars={{ searchRows }}>
       (() => {
-        const $ = (s) => document.querySelector(s);
-        const $$ = (s) => Array.from(document.querySelectorAll(s));
+        const searchEl = document.querySelector('[data-edu-search]');
+        const resultsWrap = document.querySelector('[data-edu-results]');
+        const resultsCount = document.querySelector('[data-edu-results-count]');
+        const resultsList = document.querySelector('[data-edu-results-list]');
+        const rows = searchRows || [];
 
-        const searchEl = $('[data-filter-search]');
-        const subjectEl = $('[data-filter-subject]');
-        const yearEl = $('[data-filter-year]');
-        const typeEl = $('[data-filter-type]');
-        const useEl = $('[data-filter-use]');
-        const statusEl = $('[data-filter-status]');
-        const clearEl = $('[data-clear]');
-        const quickEls = $$('[data-quick]');
-        const actionEls = $$('[data-action]');
+        const render = (query) => {
+          if (!resultsWrap || !resultsCount || !resultsList) return;
+          const q = query.trim().toLowerCase();
 
-        const rows = $$('.resource-row');
-        const blocks = $$('[data-subject-block]');
-        const summary = $('[data-results-summary]');
-        const empty = $('[data-empty]');
+          if (!q) {
+            resultsWrap.hidden = true;
+            resultsList.innerHTML = '';
+            resultsCount.textContent = '';
+            return;
+          }
 
-        const state = { q: '', subject: '', year: '', type: '', use: '', status: '' };
+          const matches = rows.filter((row) => row.search.includes(q)).slice(0, 18);
+          resultsWrap.hidden = false;
+          resultsCount.textContent = `${matches.length} match${matches.length === 1 ? '' : 'es'}`;
+          resultsList.innerHTML = matches.map((row) => `
+            <li>
+              <a href="${row.href}">
+                <strong>${row.title}</strong>
+                <span>${row.subject === 'digital-technologies' ? 'Digital Technologies' : row.subject.charAt(0).toUpperCase() + row.subject.slice(1).replace(/-/g, ' ')}</span>
+                ${row.level ? `<em>${row.level.replace(/^year-/i, 'Year ')}</em>` : ''}
+              </a>
+            </li>
+          `).join('');
+        };
 
-        function updateUrl() {
-          const p = new URLSearchParams();
-          Object.entries(state).forEach(([k, v]) => {
-            if (v) p.set(k, v);
-          });
-          const q = p.toString();
-          history.replaceState({}, '', q ? `${location.pathname}?${q}` : location.pathname);
-        }
-
-        function parseUrl() {
-          const p = new URLSearchParams(location.search);
-          state.q = (p.get('q') || '').toLowerCase();
-          state.subject = p.get('subject') || '';
-          state.year = p.get('year') || '';
-          state.type = p.get('type') || '';
-          state.use = p.get('use') || '';
-          state.status = p.get('status') || '';
-
-          if (searchEl) searchEl.value = state.q;
-          if (subjectEl) subjectEl.value = state.subject;
-          if (yearEl) yearEl.value = state.year;
-          if (typeEl) typeEl.value = state.type;
-          if (useEl) useEl.value = state.use;
-          if (statusEl) statusEl.value = state.status;
-        }
-
-        function apply() {
-          let visible = 0;
-
-          rows.forEach((row) => {
-            const hay = `${row.dataset.title} ${row.dataset.description} ${row.dataset.subject} ${row.dataset.year} ${row.dataset.type} ${row.dataset.use} ${row.dataset.status}`;
-            const qOk = !state.q || hay.includes(state.q);
-            const subjectOk = !state.subject || row.dataset.subject === state.subject;
-            const yearOk = !state.year || row.dataset.year === state.year;
-            const typeOk = !state.type || row.dataset.type.toLowerCase().includes(state.type.toLowerCase());
-            const useOk = !state.use || row.dataset.use === state.use;
-            const statusOk = !state.status || row.dataset.status === state.status;
-            const show = qOk && subjectOk && yearOk && typeOk && useOk && statusOk;
-            row.hidden = !show;
-            if (show) visible += 1;
-          });
-
-          blocks.forEach((block) => {
-            const subject = block.dataset.subjectBlock;
-            const subjectRows = rows.filter((row) => row.dataset.subject === subject);
-            const subjectVisible = subjectRows.filter((row) => !row.hidden).length;
-            block.hidden = subjectVisible === 0;
-            const counter = document.querySelector(`[data-subject-count="${subject}"]`);
-            if (counter) counter.textContent = String(subjectVisible);
-          });
-
-          if (summary) summary.textContent = `${visible} resource${visible === 1 ? '' : 's'} match`;
-          if (empty) empty.hidden = visible !== 0;
-          updateUrl();
-        }
-
-        function setState(next) {
-          Object.assign(state, next);
-          if (searchEl) searchEl.value = state.q;
-          if (subjectEl) subjectEl.value = state.subject;
-          if (yearEl) yearEl.value = state.year;
-          if (typeEl) typeEl.value = state.type;
-          if (useEl) useEl.value = state.use;
-          if (statusEl) statusEl.value = state.status;
-          apply();
-        }
-
-        searchEl?.addEventListener('input', () => setState({ q: searchEl.value.trim().toLowerCase() }));
-        subjectEl?.addEventListener('change', () => setState({ subject: subjectEl.value }));
-        yearEl?.addEventListener('change', () => setState({ year: yearEl.value }));
-        typeEl?.addEventListener('change', () => setState({ type: typeEl.value }));
-        useEl?.addEventListener('change', () => setState({ use: useEl.value }));
-        statusEl?.addEventListener('change', () => setState({ status: statusEl.value }));
-        clearEl?.addEventListener('click', () => setState({ q: '', subject: '', year: '', type: '', use: '', status: '' }));
-
-        quickEls.forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const val = btn.dataset.quick || '';
-            if (val.startsWith('year:')) return setState({ q: '', subject: '', year: val.replace('year:', ''), type: '', use: '', status: '' });
-            if (val.startsWith('subject:')) return setState({ q: '', subject: val.replace('subject:', ''), year: '', type: '', use: '', status: '' });
-            if (val.startsWith('type:')) return setState({ q: '', subject: '', year: '', type: val.replace('type:', ''), use: '', status: '' });
-          });
-        });
-
-        actionEls.forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const action = btn.dataset.action;
-            if (action === 'plan') return setState({ q: '', type: 'Hub', use: 'Plan', subject: '', year: '', status: '' });
-            if (action === 'sequence') return setState({ q: '', type: 'Hub', use: 'Teach', subject: '', year: '', status: '' });
-            if (action === 'run') return setState({ q: '', type: 'Interactive', use: '', subject: '', year: '', status: '' });
-            if (action === 'reference') return setState({ q: '', type: 'Reference', use: 'Reference', subject: '', year: '', status: '' });
-          });
-        });
-
-        parseUrl();
-        apply();
+        searchEl?.addEventListener('input', () => render(searchEl.value));
       })();
     </script>
   </body>
 </html>
 
 <style>
-  .education-index { max-width: min(1320px, calc(100% - 2 * var(--space-5))); }
-  .finder__searchWrap { display: grid; gap: 0.7rem; margin-bottom: var(--space-5); }
-  .finder__label { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-  #finder-search { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 0.8rem 0.92rem; background: var(--surface-raised); color: var(--text); }
-
-  .finder__quick, .start-here__actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
-  .finder__quick button, .start-here__actions button, .library__filters button {
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.42rem 0.78rem;
-    background: color-mix(in srgb, var(--surface-raised) 92%, transparent 8%);
-    color: var(--text-2);
-    cursor: pointer;
-  }
-  .finder__quick button:hover, .start-here__actions button:hover, .library__filters button:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 35%, var(--border) 65%); }
-
-  .start-here { margin-bottom: var(--space-6); }
-  .start-here h2 { margin: 0 0 0.7rem; font-size: clamp(1.35rem, 1.8vw, 1.9rem); }
-
-  .pathway { margin-bottom: var(--space-6); padding: var(--space-4) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .pathway__head h2 { margin: 0; }
-  .pathway__head p { margin: 0.3rem 0 0; color: var(--text-2); }
-  .pathway__nodes { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.55rem; }
-  .pathway__nodes li a { display: block; text-decoration: none; border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.62rem; color: var(--text); background: color-mix(in srgb, var(--surface-raised) 95%, transparent 5%); font-size: 0.9rem; }
-  .pathway__nodes li a:hover { border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%); }
-
-  .library__top { display: flex; justify-content: space-between; align-items: end; gap: var(--space-4); margin-bottom: var(--space-3); }
-  .library__top h2 { margin: 0; font-size: clamp(1.35rem, 1.8vw, 1.9rem); }
-  .library__count { color: var(--text-2); }
-
-  .library__filters { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: var(--space-4); }
-  .library__filters select { border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 0.55rem; background: var(--surface-raised); color: var(--text); }
-
-  .subject-block { margin-bottom: var(--space-4); border-top: 1px solid var(--border); }
-  .subject-block__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding: 0.7rem 0; }
-  .subject-block__head h3 { margin: 0; font-size: 1.1rem; }
-  .subject-block__head p { margin: 0; color: var(--text-2); font-size: 0.9rem; }
-
-  .resource-table__head, .resource-row {
+  .edu-index-page {
+    width: min(1320px, calc(100% - 4rem));
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
     display: grid;
-    grid-template-columns: minmax(0, 1.9fr) minmax(90px, 0.6fr) minmax(150px, 0.9fr) minmax(95px, 0.55fr) minmax(90px, 0.5fr);
-    gap: 0.8rem;
-    align-items: start;
+    gap: 1.8rem;
   }
 
-  .resource-table__head {
-    font-size: 0.76rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    padding: 0.45rem 0;
+  .edu-index-header h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+
+  .edu-index-search {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1fr);
+    gap: 1.2rem 2rem;
+    padding: 0.85rem 0 0.95rem;
+    border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
 
-  .resource-row {
-    text-decoration: none;
-    color: inherit;
+  .edu-index-search__label {
+    color: var(--muted);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    align-self: start;
+    padding-top: 0.8rem;
+  }
+
+  .edu-index-search__body {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .edu-index-search__body input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 0.7rem 0.82rem;
+    font: inherit;
+    border-radius: 0.85rem;
+  }
+
+  .edu-index-results {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .edu-index-results__count {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.92rem;
+  }
+
+  .edu-index-results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .edu-index-results li {
+    border-top: 1px solid color-mix(in srgb, var(--border) 68%, transparent 32%);
+  }
+
+  .edu-index-results a {
+    display: grid;
+    gap: 0.2rem;
     padding: 0.72rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--border) 75%, transparent 25%);
-  }
-  .resource-row:hover { background: color-mix(in srgb, var(--accent) 8%, transparent 92%); }
-  .resource-row__resource strong { display: block; line-height: 1.25; }
-  .resource-row__resource small { display: block; margin-top: 0.22rem; color: var(--text-2); line-height: 1.33; }
-  .status-ready { color: #7ee787; }
-  .status-draft { color: #ffd580; }
-
-  .library__empty { color: var(--text-2); margin: 0.9rem 0 0; }
-
-  @media (max-width: 980px) {
-    .library__filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .pathway__nodes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    color: inherit;
+    text-decoration: none;
   }
 
-  @media (max-width: 760px) {
-    .education-index { max-width: calc(100% - 2 * var(--space-4)); }
-    .library__top { flex-direction: column; align-items: start; }
-    .library__filters { grid-template-columns: 1fr 1fr; }
-    .resource-table__head { display: none; }
-    .resource-row { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.66rem 0; }
-    .resource-row span:not(.resource-row__resource) { color: var(--text-2); font-size: 0.82rem; }
-    .pathway__nodes { grid-template-columns: 1fr; }
+  .edu-index-results strong {
+    font-size: 1rem;
+  }
+
+  .edu-index-results a:hover strong {
+    color: var(--link-hover);
+  }
+
+  .edu-index-results span,
+  .edu-index-results em {
+    color: var(--text-2);
+    font-style: normal;
+    font-size: 0.92rem;
+  }
+
+  .edu-index-subjects {
+    display: grid;
+  }
+
+  @media (max-width: 720px) {
+    .edu-index-page {
+      width: min(100% - 1.5rem, 1320px);
+      padding-top: 2.2rem;
+    }
+
+    .edu-index-search {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .edu-index-search__label {
+      padding-top: 0;
+    }
   }
 </style>

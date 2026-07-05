@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Prajwal Bhattaram" name="author"/><title>Python API</title><link href="../styles.css" rel="stylesheet"/><script defer="" src="../site.js"></script></head><body><header class="site-header"><div class="site-header-inner"><div class="site-title">Year 9 Digital Technologies<small>Units 1 and 2</small></div><nav class="site-tabs"><a href="../index.html">Home</a><a href="../unit1.html">Unit 1</a><a href="../unit2.html">Unit 2</a></nav></div></header><div class="site-layout"><aside class="site-sidebar"><input class="site-search" id="siteSearch" oninput="filterNav()" placeholder="Filter pages" type="search"/><a class="site-unit-home" href="../index.html">Home</a><h2><a href="../unit1.html">Unit 1: Python</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-1-all-about-python.html">Welcome to Unit 1</a><a class="site-nav-link" href="2-1-get-python-ready-install-thonny.html">Get Python Ready: Install Thonny</a><a class="site-nav-link" href="writing-good-code-an-introduction.html">How to think like a programmer</a><a class="site-nav-link" href="assignment-term-1-assignment-python-digital-system.html">Term 1 Assignment: Python Digital System</a></div><div class="site-nav-group"><h3>Python Explorer</h3><a class="site-nav-link" href="explorer-python-basics-hub.html">Explorer: Python Basics Hub</a><a class="site-nav-link" href="chapter-01.html">Chapter 01</a><a class="site-nav-link" href="chapter-02.html">Chapter 02</a><a class="site-nav-link" href="chapter-03.html">Chapter 03</a><a class="site-nav-link" href="chapter-04.html">Chapter 04</a><a class="site-nav-link" href="chapter-05.html">Chapter 05</a><a class="site-nav-link" href="chapter-06.html">Chapter 06</a><a class="site-nav-link" href="chapter-07.html">Chapter 07</a><a class="site-nav-link" href="chapter-08.html">Chapter 08</a><a class="site-nav-link" href="chapter-09.html">Chapter 09</a><a class="site-nav-link" href="chapter-10.html">Chapter 10</a></div><div class="site-nav-group"><h3>Project: Pet Services Program</h3><a class="site-nav-link" href="pet-services-program-target-audience-decision-tree.html">Target Audience &amp; Decision Tree</a><a class="site-nav-link" href="pet-services-program-generating.html">Generating</a><a class="site-nav-link" href="pet-services-program-feedback.html">Feedback</a><a class="site-nav-link" href="pet-services-program-a-worked-solution.html">Worked Solution</a><a class="site-nav-link" href="pet-services-program-what-is-a-function-and-why-does-it-exist.html">What is a function and why does it exist?</a><a class="site-nav-link" href="pet-services-program-refactoring-our-pet-booking-system-using-functions.html">Refactoring using functions</a><a class="site-nav-link" href="pet-services-program-making-and-reading-lists.html">Making and Reading Lists</a></div><div class="site-nav-group"><h3>Project: Shopping List</h3><a class="site-nav-link" href="shopping-list-decision-trees-additional-features.html">Decision Trees &amp; Additional Features</a><a class="site-nav-link" href="shopping-list-generating.html">Generating</a><a class="site-nav-link" href="shopping-list-generating-cont.html">Generating cont.</a></div><div class="site-nav-group"><h3>Mini games</h3><a class="site-nav-link" href="mini-game-dice-roll-guesser.html">Dice Roll Guesser</a><a class="site-nav-link" href="mini-game-scissors-paper-rock.html">Scissors, Paper, Rock</a><a class="site-nav-link" href="mini-game-guess-the-number.html">Guess The Number</a></div><div class="site-nav-group"><h3>Challenges and end-of-term</h3><a class="site-nav-link" href="week-8-lesson-1-challenge.html">Week 8 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge.html">Week 9 Lesson 1 Challenge</a><a class="site-nav-link" href="week-9-lesson-1-challenge-teacher-solution.html">Week 9 Lesson 1 Teacher Solution</a><a class="site-nav-link" href="week-9-lesson-2-challenge.html">Week 9 Lesson 2 Challenge</a><a class="site-nav-link" href="week-9-lesson-2-challenge-teacher-solution.html">Week 9 Lesson 2 Teacher Solution</a><a class="site-nav-link" href="week-10-lesson-01-challenge.html">Week 10 Lesson 01 Challenge</a><a class="site-nav-link" href="end-of-term-projects.html">End of term projects</a></div><div class="site-nav-group"><h3>Reference</h3><a class="site-nav-link" href="python-reference-wiki.html">Python Reference Wiki</a><a class="site-nav-link" href="level-1-writing-code-from-zero.html">Level 1: Writing code from zero</a><a class="site-nav-link" href="images-are-text.html">Images are text?!</a><a class="site-nav-link" href="images-are-text-2.html">Images are text?! 2</a><a class="site-nav-link" href="mermaid-live-building-an-algorithm-flow-chart.html">Mermaid.live Algorithm Guide</a><a class="site-nav-link" href="sandbox-for-html-testing.html">Sandbox for HTML testing</a></div><h2><a href="../unit2.html">Unit 2: Python and Robots</a></h2><div class="site-nav-group"><h3>Start here</h3><a class="site-nav-link" href="welcome-to-unit-2-making-python-interact-with-the-real-world.html">Welcome to Unit 2</a></div><div class="site-nav-group"><h3>Weekly build sequence</h3><a class="site-nav-link" href="week-1-meet-the-robot.html">Week 1: Meet the Robot</a><a class="site-nav-link" href="week-2-autonomous-movement-and-control.html">Week 2: Autonomous Movement and Control</a><a class="site-nav-link" href="week-3-sensors-decisions-and-treasure-hunting.html">Week 3: Sensors, Decisions, and Treasure Hunting</a><a class="site-nav-link" href="week-4-build-drive-and-test-the-cube-collector-clawbot.html">Week 4: Build, Drive, and Test the Cube Collector Clawbot</a><a class="site-nav-link" href="week-5-build-drive-and-test-the-cube-collector-clawbot.html">Week 5: Build, Drive, and Test the Cube Collector Clawbot</a></div><div class="site-nav-group"><h3>Assessment: Space Rover Design</h3><a class="site-nav-link" href="assignment-term-2-assignment-space-rover-design.html">Term 2 Assignment: Space Rover Design</a><a class="site-nav-link" href="rover-prototype-space-robot-inspiration.html">Rover Prototype: Space Robot Inspiration</a><a class="site-nav-link" href="engineering-portfolio-starter-pack.html">Engineering Portfolio Starter Pack</a><a class="site-nav-link" href="lesson-by-lesson-engineering-entries.html">Lesson-by-Lesson Engineering Entries</a><a class="site-nav-link" href="how-to-use-your-engineering-notebook.html">How to Use Your Engineering Notebook</a></div><div class="site-nav-group"><h3>Assessment lesson sequence</h3><a class="site-nav-link" href="assessment-2-lesson-1.html">Assessment 2 Lesson 1</a><a class="site-nav-link" href="assessment-2-lesson-2.html">Assessment 2 Lesson 2</a><a class="site-nav-link" href="assessment-2-lesson-3.html">Assessment 2 Lesson 3</a><a class="site-nav-link" href="assessment-2-lesson-4.html">Assessment 2 Lesson 4</a><a class="site-nav-link" href="assessment-2-lesson-5.html">Assessment 2 Lesson 5</a><a class="site-nav-link" href="assessment-2-lesson-6.html">Assessment 2 Lesson 6</a><a class="site-nav-link" href="assessment-2-lesson-7.html">Assessment 2 Lesson 7</a><a class="site-nav-link" href="assessment-2-lesson-8.html">Assessment 2 Lesson 8</a><a class="site-nav-link" href="assessment-2-lesson-9.html">Assessment 2 Lesson 9</a><a class="site-nav-link" href="assessment-2-lesson-10.html">Assessment 2 Lesson 10</a></div><div class="site-nav-group"><h3>VEX and coding reference</h3><a class="site-nav-link" href="using-vexcode.html">Using VEXcode</a><a class="site-nav-link" href="blocks-api.html">Blocks API</a><a class="site-nav-link active" href="python-api.html">Python API</a></div><div class="site-nav-group"><h3>Teacher reference</h3><a class="site-nav-link" href="teacher-reference-page.html">Teacher Reference page</a></div></aside><main class="site-main"><nav class="site-page-actions"><a href="blocks-api.html">← Blocks API</a><a href="../unit2.html">Back to Unit 2</a><a href="teacher-reference-page.html">Teacher Reference page →</a></nav><article class="site-qlearn-frame"><div class="site-qlearn-content">
+<div style="max-width: 1040px; margin: 0 auto; padding: 18px 16px; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937;">
+<div id="top" style="border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-radius: 18px; padding: 24px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #dbeafe; color: #1e3a8a; font-size: 12px; margin-bottom: 10px; border: 1px solid #bfdbfe;">REFERENCE WIKI • VEX IQ PYTHON API</div>
+<h2 style="margin: 0 0 10px 0; font-size: 29px;">VEX IQ Python API Reference Guide 🤖🐍</h2>
+<p style="margin: 0 0 10px 0;">Use this page as your local reference when you need to remember what a VEX Python command does, how it is written, and which part of the robot it belongs to.</p>
+<p style="margin: 0;">This version is broader than a quick cheat sheet. It covers the main hardware pages, the key logic pages, and the extra tools that sit around them so you can keep working even if the VEX site is slow or blocked.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; align-items: stretch;">
+<div style="flex: 2 1 620px; display: flex;">
+<div style="width: 100%; border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 16px; padding: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">How to use this page</h3>
+<p style="margin: 0 0 8px 0;"><strong>Start with the jump menu</strong> to go straight to the section you need.</p>
+<p style="margin: 0 0 8px 0;"><strong>Read the short explanation first</strong> so you know what family of commands you are looking at.</p>
+<p style="margin: 0 0 8px 0;"><strong>Check the examples</strong> to see how commands are actually used in code.</p>
+<p style="margin: 0;"><strong>Use the official links</strong> when you want every single method on the full VEX page.</p>
+</div>
+</div>
+<div style="flex: 1 1 320px; display: flex;">
+<div style="width: 100%; border: 1px solid #bbf7d0; background: #ecfdf5; border-radius: 16px; padding: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">Success looks like</h3>
+<ul style="margin: 0; padding-left: 18px;">
+<li>you can find the right command family quickly</li>
+<li>you can tell the difference between movement, sensing, and logic</li>
+<li>you can adapt an example instead of starting from nothing</li>
+<li>you can debug using screen output or print output</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 18px; margin-bottom: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 12px;">Jump menu</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;"><a href="#reading-api" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">How to read the API</a> <a href="#program-shape" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;">Program shape</a> <a href="#drivetrain" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #0f766e; border: 1px solid #a5f3fc;">Drivetrain</a> <a href="#motors" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #3f6212; border: 1px solid #bef264;">Motors</a> <a href="#controller" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fff7ed; color: #c2410c; border: 1px solid #fdba74;">Controller</a> <a href="#brain" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">Brain, screen, console, timer</a> <a href="#sensors" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">Sensors</a> <a href="#logic" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff;">Logic tools</a> <a href="#extra-hardware" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f9fafb; color: #374151; border: 1px solid #d1d5db;">Extra hardware</a> <a href="#common-mistakes" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #fffbeb; color: #92400e; border: 1px solid #fde68a;">Common mistakes</a> <a href="#practice" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe;">Practice tasks</a></div>
+</div>
+<div id="reading-api" style="border: 1px solid #bfdbfe; background: #f8fbff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #dbeafe; color: #1e3a8a; border: 1px solid #bfdbfe; font-size: 12px; margin-bottom: 10px;">BLUE SECTION • HOW TO READ THE API</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">1. How to read a VEX API entry</h3>
+<p style="margin: 0 0 10px 0;">Each VEX API method entry usually gives you the same kinds of information: the command name, a short description, the exact syntax, the parameter list, and an example. Learn to scan those pieces first instead of trying to read every page from top to bottom.</p>
+<p style="margin: 0 0 12px 0;">The Python API home page also warns that IQ (2nd gen) runs Python through a virtual machine with limited memory, so very large or complicated programs may fail even if they seem short enough. Keep projects tidy and modular rather than growing one giant monster script.</p>
+<div style="border: 1px solid #dbeafe; border-radius: 14px; background: #ffffff; padding: 16px; margin-bottom: 12px;"><strong>What to scan first</strong>
+<ul style="margin: 8px 0 0 0; padding-left: 18px;">
+<li><strong>Usage:</strong> the exact way the command is written</li>
+<li><strong>Parameters:</strong> what inputs it expects and in what order</li>
+<li><strong>Return value:</strong> what you get back, if anything</li>
+<li><strong>Example:</strong> how VEX expects you to use it</li>
+</ul>
+</div>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;"># Read this line like a sentence # object . method ( inputs ) drivetrain.drive_for(FORWARD, 200, MM) # object = drivetrain # method = drive_for # inputs = FORWARD, 200, MM</div>
+<div style="margin-top: 14px;"><a href="#top" style="color: #1d4ed8;">Back to top</a></div>
+</div>
+<div id="program-shape" style="border: 1px solid #ddd6fe; background: #faf8ff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe; font-size: 12px; margin-bottom: 10px;">PURPLE SECTION • PROGRAM SHAPE</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">2. The basic shape of a VEX Python program</h3>
+<p style="margin: 0 0 10px 0;">Most VEX projects follow the same rhythm: create or use configured devices, read inputs or sensor values, make a decision, run an action, wait if needed, then repeat. The logic pages cover control flow, variables, functions, events, math, random, operators, comments, string formatting, threads, timer tools, and MicroPython library support.</p>
+<p style="margin: 0 0 12px 0;">That means a strong robotics program is not just hardware code. It is also ordinary Python thinking stitched to robot devices.</p>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">from vex import * brain = Brain() controller = Controller() # drivetrain is often already configured in VEXcode while True: if controller.buttonEUp.pressing(): drivetrain.drive(FORWARD) else: drivetrain.stop() wait(20, MSEC)</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #ddd6fe; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Key Python ideas that show up everywhere in VEXcode</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<ul style="margin: 0; padding-left: 18px;">
+<li><strong>Variables</strong> store numbers, text, Booleans, lists, and more.</li>
+<li><strong>Functions</strong> let you package repeated behaviour into reusable blocks.</li>
+<li><strong>Events</strong> let multiple registered functions run when an event is broadcast.</li>
+<li><strong>Threads</strong> let parts of a program run in parallel.</li>
+<li><strong>Operators</strong> help compare values and build conditions.</li>
+<li><strong>Comments</strong> explain code without changing how it runs.</li>
+<li><strong>String formatting</strong> makes debug output easier to read.</li>
+</ul>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #6d28d9;">Back to top</a></div>
+</div>
+<div id="drivetrain" style="border: 1px solid #a5f3fc; background: #f0fdff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #cffafe; color: #155e75; border: 1px solid #a5f3fc; font-size: 12px; margin-bottom: 10px;">TEAL SECTION • DRIVETRAIN</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">3. Drivetrain and smart drivetrain</h3>
+<p style="margin: 0 0 10px 0;">The drivetrain page is one of the most important in the whole API. It covers basic movement, measured movement, turning, heading-based turning, velocity settings, stopping behaviour, timeouts, sensor-linked calibration, and movement status checks.</p>
+<div style="overflow-x: auto;">
+<table style="width: 100%; border-collapse: collapse; min-width: 840px;">
+<thead>
+<tr style="background: #ecfeff;">
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">Command</th>
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">What it does</th>
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>drive()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Starts driving and keeps going</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Good for live control and loops</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>drive_for()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Drives a set distance</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Great for autonomous tasks</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>turn()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Starts turning and keeps going</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Useful in loops or manual control</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>turn_for()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Turns by a measured amount</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Useful for square paths and fixed angles</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>turn_to_heading()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Turns to a specific heading</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Uses a smart drivetrain with inertial data</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>turn_to_rotation()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Turns to a specific rotational value</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Good for orientation-based programs</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>set_drive_velocity()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Sets default drive speed</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Saves repetition</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>set_turn_velocity()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Sets default turn speed</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Makes turning more consistent</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>set_stopping()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Changes stop behaviour</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Can brake, coast, or hold</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>is_moving()</code>, <code>is_done()</code>, <code>is_turning()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Checks robot status</td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Helpful for advanced logic</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #a5f3fc; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Example: square path</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">drivetrain.set_drive_velocity(40, PERCENT) drivetrain.set_turn_velocity(30, PERCENT) for side in range(4): drivetrain.drive_for(FORWARD, 200, MM) drivetrain.turn_for(RIGHT, 90, DEGREES)</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #a5f3fc; border-radius: 14px; margin-top: 12px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Constructors you may see</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<p style="margin-top: 0;"><code>DriveTrain(...)</code> creates a drivetrain without sensor-based smart turning.</p>
+<p style="margin: 0;"><code>SmartDrive(...)</code> creates a drivetrain with a Gyro or Inertial Sensor so commands like <code>turn_to_heading()</code> can work.</p>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #0f766e;">Back to top</a></div>
+</div>
+<div id="motors" style="border: 1px solid #bef264; background: #f9fee7; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #ecfccb; color: #4d7c0f; border: 1px solid #bef264; font-size: 12px; margin-bottom: 10px;">GREEN SECTION • MOTORS</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">4. Motors and motor groups</h3>
+<p style="margin: 0 0 10px 0;">The motor page handles both individual motors and motor groups. This is where you go when you need an arm, claw, intake, lift, or other mechanism that is not just the drivetrain.</p>
+<ul style="margin: 0 0 12px 0; padding-left: 18px;">
+<li><code>spin()</code> starts spinning indefinitely</li>
+<li><code>spin_for()</code> spins by a set amount</li>
+<li><code>spin_to_position()</code> moves to a target position</li>
+<li><code>stop()</code> stops the motor</li>
+<li><code>set_velocity()</code>, <code>set_max_torque()</code>, <code>set_stopping()</code> set defaults</li>
+<li><code>position()</code>, <code>velocity()</code>, <code>current()</code>, <code>temperature()</code> report data</li>
+<li><code>reset_position()</code> and <code>set_position()</code> help zero the mechanism</li>
+</ul>
+<div style="border: 1px solid #bef264; border-radius: 14px; background: #ffffff; padding: 16px; margin-bottom: 12px;"><strong>When to use a motor instead of the drivetrain</strong>
+<p style="margin: 8px 0 0 0;">Use motors for parts of the robot that are not the whole drive base. Think claws, lifts, catapults, intakes, and custom mechanisms.</p>
+</div>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">arm_motor.spin_for(FORWARD, 180, DEGREES) claw_motor.spin(REVERSE, 50, PERCENT) wait(0.5, SECONDS) claw_motor.stop()</div>
+<div style="margin-top: 14px;"><a href="#top" style="color: #4d7c0f;">Back to top</a></div>
+</div>
+<div id="controller" style="border: 1px solid #fdba74; background: #fffaf5; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #ffedd5; color: #9a3412; border: 1px solid #fdba74; font-size: 12px; margin-bottom: 10px;">ORANGE SECTION • CONTROLLER</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">5. Controller buttons and joysticks</h3>
+<p style="margin: 0 0 10px 0;">The controller page covers button states, joystick positions, controller events, and enabling or disabling remote-control code. That means it supports both simple button checks and more advanced event-driven control.</p>
+<ul style="margin: 0 0 12px 0; padding-left: 18px;">
+<li><code>.pressing()</code> checks whether a button is held</li>
+<li><code>.pressed(callback)</code> runs a function when pressed</li>
+<li><code>.released(callback)</code> runs a function when released</li>
+<li><code>.changed(callback)</code> reacts when joystick values change</li>
+<li><code>.position()</code> reads joystick position</li>
+<li><code>remote_control_code_enabled()</code> can enable or disable configured controller actions</li>
+</ul>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while True: if controller.buttonEUp.pressing(): drivetrain.drive(FORWARD) elif controller.buttonEDown.pressing(): drivetrain.drive(REVERSE) else: drivetrain.stop() wait(20, MSEC)</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #fdba74; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Buttons vs callbacks</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<p style="margin-top: 0;"><strong>Button polling</strong> means you check inside a loop with <code>.pressing()</code>.</p>
+<p style="margin: 0;"><strong>Callbacks</strong> mean you register a function to run when the press or release happens. Both are valid. Polling is usually easier when you are learning.</p>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #c2410c;">Back to top</a></div>
+</div>
+<div id="brain" style="border: 1px solid #fecaca; background: #fff8f8; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; font-size: 12px; margin-bottom: 10px;">RED SECTION • BRAIN, SCREEN, CONSOLE, TIMER</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">6. Brain tools: buttons, battery, screen, console, and timer</h3>
+<p style="margin: 0 0 12px 0;">These pages are your debugging and information pages. They let you show values, track time, read battery data, respond to brain button presses, and print messages to the monitor console.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; margin-bottom: 12px;">
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #fecaca; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Brain sensing</strong>
+<p style="margin: 8px 0 0 0;"><code>pressing()</code>, <code>pressed()</code>, <code>released()</code>, <code>capacity()</code>, <code>voltage()</code>, <code>current()</code></p>
+</div>
+</div>
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #fecaca; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Screen</strong>
+<p style="margin: 8px 0 0 0;"><code>print()</code>, <code>clear_screen()</code>, <code>set_cursor()</code>, <code>next_row()</code>, draw commands</p>
+</div>
+</div>
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #fecaca; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Console</strong>
+<p style="margin: 8px 0 0 0;"><code>print()</code> to the monitor window for debugging</p>
+</div>
+</div>
+<div style="flex: 1 1 220px; display: flex;">
+<div style="width: 100%; border: 1px solid #fecaca; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Timer</strong>
+<p style="margin: 8px 0 0 0;"><code>time()</code>, <code>clear()</code>, <code>system()</code>, <code>system_high_res()</code>, <code>event()</code></p>
+</div>
+</div>
+</div>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while True: brain.screen.clear_screen() brain.screen.set_cursor(1, 1) brain.screen.print("Battery: ") brain.screen.print(brain.battery.capacity()) brain.screen.next_row() brain.screen.print("Time: ") brain.screen.print(brain.timer.time(SECONDS)) wait(0.2, SECONDS)</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #fecaca; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Why both screen and console?</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<p style="margin-top: 0;"><strong>Brain screen</strong> is good when you want feedback on the robot itself.</p>
+<p style="margin: 0;"><strong>Console output</strong> is often better for long lists of changing values while debugging.</p>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #b91c1c;">Back to top</a></div>
+</div>
+<div id="sensors" style="border: 1px solid #bbf7d0; background: #f6fff8; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; font-size: 12px; margin-bottom: 10px;">FOREST SECTION • SENSORS</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">7. Sensors</h3>
+<p style="margin: 0 0 12px 0;">The sensing pages let the robot detect contact, light, colour, object presence, distance, orientation, acceleration, and more. This is where robot behaviour starts becoming reactive instead of pre-planned.</p>
+<div style="overflow-x: auto;">
+<table style="width: 100%; border-collapse: collapse; min-width: 880px;">
+<thead>
+<tr style="background: #f0fdf4;">
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">Sensor</th>
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">Key methods</th>
+<th style="text-align: left; padding: 10px; border: 1px solid #d1d5db;">What it is useful for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Bumper</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>pressing()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Collision detection and touch triggers</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Touch LED</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>pressing()</code>, <code>pressed()</code>, <code>released()</code>, <code>set_color()</code>, <code>set_blink()</code>, <code>set_brightness()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Interactive input plus visual status</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Color Sensor</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>is_near_object()</code>, <code>color()</code>, <code>brightness()</code>, <code>hue()</code>, <code>set_light()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Colour-based tasks and reflected light sensing</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Optical Sensor</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>is_near_object()</code>, <code>color()</code>, <code>brightness()</code>, <code>hue()</code>, <code>rgb()</code>, <code>set_light_power()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Object and colour detection</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Distance Sensor</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>is_object_detected()</code>, <code>object_distance()</code>, <code>object_velocity()</code>, <code>object_size()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Obstacle sensing and approach logic</td>
+</tr>
+<tr>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><strong>Inertial</strong></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;"><code>heading()</code>, <code>rotation()</code>, <code>calibrate()</code>, <code>reset_heading()</code>, <code>acceleration()</code>, <code>gyro_rate()</code>, <code>orientation()</code></td>
+<td style="padding: 10px; border: 1px solid #d1d5db;">Heading, turning accuracy, and motion tracking</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #bbf7d0; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Example: stop at a target distance</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while distance_1.object_distance(MM) &gt; 200: drivetrain.drive(FORWARD) drivetrain.stop()</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #bbf7d0; border-radius: 14px; margin-top: 12px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Example: use a Touch LED as both input and output</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while True: if touchled_1.pressing(): touchled_1.set_color(Color.GREEN) else: touchled_1.set_color(Color.RED) wait(50, MSEC)</div>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #166534;">Back to top</a></div>
+</div>
+<div id="logic" style="border: 1px solid #e9d5ff; background: #fcf7ff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; font-size: 12px; margin-bottom: 10px;">VIOLET SECTION • LOGIC TOOLS</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">8. Logic tools around the hardware</h3>
+<p style="margin: 0 0 12px 0;">These pages are not robot parts, but they matter just as much. They are the thinking tools behind the robot.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch;">
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Variables</strong>
+<p style="margin: 8px 0 0 0;">Store integers, floats, strings, Booleans, lists, tuples, and more.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Functions</strong>
+<p style="margin: 8px 0 0 0;">Package reusable behaviour with <code>def</code> and optionally <code>return</code>.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Events</strong>
+<p style="margin: 8px 0 0 0;">Register functions, then run them together using <code>broadcast()</code> or <code>broadcast_and_wait()</code>.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Threads</strong>
+<p style="margin: 8px 0 0 0;">Use <code>Thread(my_function)</code> to run tasks in parallel, then <code>stop()</code> if needed.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Math and Random</strong>
+<p style="margin: 8px 0 0 0;">Use built-in math functions, the <code>math</code> module, and <code>urandom</code> helpers like <code>randint()</code>.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #e9d5ff; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Operators, comments, formatting</strong>
+<p style="margin: 8px 0 0 0;">Use comparisons, logical operators, comments, and string formatting to make code readable and testable.</p>
+</div>
+</div>
+</div>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e9d5ff; border-radius: 14px; margin-top: 16px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>Example: function + variable + condition</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">target_distance = 200 # Drive until the robot reaches the target distance def approach_target(): while distance_1.object_distance(MM) &gt; target_distance: drivetrain.drive(FORWARD) drivetrain.stop() approach_target()</div>
+</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #e9d5ff; border-radius: 14px; margin-top: 12px; background: #ffffff;">
+<summary style="display: block; cursor: pointer; padding: 16px;"><strong>MicroPython note</strong></summary>
+<div style="padding: 0 16px 16px 16px;">
+<p style="margin-top: 0;">VEX IQ (2nd gen) runs MicroPython 1.13, based on Python 3.4.</p>
+<p style="margin: 0;">That means some familiar modules are available, including things like <code>math</code>, <code>sys</code>, <code>gc</code>, <code>ujson</code>, <code>urandom</code>, and more, but not everything from modern desktop Python is guaranteed.</p>
+</div>
+</details>
+<div style="margin-top: 14px;"><a href="#top" style="color: #7e22ce;">Back to top</a></div>
+</div>
+<div id="extra-hardware" style="border: 1px solid #d1d5db; background: #fcfcfd; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; font-size: 12px; margin-bottom: 10px;">GREY SECTION • EXTRA HARDWARE</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">9. Extra hardware pages</h3>
+<p style="margin: 0 0 12px 0;">Not every class will use these straight away, but they are still part of the API structure.</p>
+<ul style="margin: 0 0 12px 0; padding-left: 18px;">
+<li><strong>Pneumatics:</strong> <code>extend()</code>, <code>retract()</code>, <code>pump_on()</code>, <code>pump_off()</code>, <code>pump()</code>, <code>installed()</code></li>
+<li><strong>Motion index:</strong> acts as a hub for motors, motor groups, and pneumatics</li>
+<li><strong>Sensing index:</strong> acts as a hub for the brain, bumper, Touch LED, colour-based sensors, distance, and inertial tools</li>
+</ul>
+<div style="border: 1px solid #111827; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">pneumatic_1.pump_on() wait(1, SECONDS) pneumatic_1.extend() wait(1, SECONDS) pneumatic_1.retract() pneumatic_1.pump_off()</div>
+<div style="margin-top: 14px;"><a href="#top" style="color: #374151;">Back to top</a></div>
+</div>
+<div id="common-mistakes" style="border: 1px solid #fde68a; background: #fffdf7; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-size: 12px; margin-bottom: 10px;">AMBER SECTION • COMMON MISTAKES</div>
+<h3 style="margin-top: 0; margin-bottom: 10px;">10. Common mistakes</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch;">
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #fde68a; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Using an endless command by mistake</strong>
+<p style="margin: 8px 0 0 0;">If the robot keeps going forever, check whether you used <code>drive()</code> instead of <code>drive_for()</code> or <code>turn()</code> instead of <code>turn_for()</code>.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #fde68a; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Forgetting the object name</strong>
+<p style="margin: 8px 0 0 0;">The command belongs to something. You need <code>drivetrain.drive_for(...)</code>, not just <code>drive_for(...)</code>.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #fde68a; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>No wait in a fast loop</strong>
+<p style="margin: 8px 0 0 0;">Add a small <code>wait(20, MSEC)</code> when you are constantly polling buttons or sensors.</p>
+</div>
+</div>
+<div style="flex: 1 1 300px; display: flex;">
+<div style="width: 100%; border: 1px solid #fde68a; background: #ffffff; border-radius: 14px; padding: 16px;"><strong>Guessing instead of debugging</strong>
+<p style="margin: 8px 0 0 0;">Show values on the screen or print them to the console. Let the robot tell you what it is seeing.</p>
+</div>
+</div>
+</div>
+<div style="margin-top: 14px;"><a href="#top" style="color: #92400e;">Back to top</a></div>
+</div>
+<div id="practice" style="border: 1px solid #c7d2fe; background: #f7f8ff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<div style="display: inline-block; padding: 5px 12px; border-radius: 999px; background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; font-size: 12px; margin-bottom: 10px;">INDIGO SECTION • PRACTICE</div>
+<h3 style="margin-top: 0; margin-bottom: 12px;">11. Practice tasks</h3>
+<div style="border: 1px solid #c7d2fe; background: #ffffff; border-radius: 14px; padding: 16px; margin-bottom: 14px;"><strong>Practice task 1</strong>
+<p style="margin: 8px 0 8px 0;">Write code that drives forward while the E ▲ button is being pressed. When the button is not being pressed, the robot must stop.</p>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #c7d2fe; border-radius: 12px; margin-top: 10px; background: #f8fbff;">
+<summary style="display: block; cursor: pointer; padding: 14px;"><strong>Hint</strong></summary>
+<div style="padding: 0 14px 14px 14px;">Use a <code>while True</code> loop, a controller button with <code>.pressing()</code>, and a tiny <code>wait()</code>.</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #c7d2fe; border-radius: 12px; margin-top: 10px; background: #f8fbff;">
+<summary style="display: block; cursor: pointer; padding: 14px;"><strong>Possible solution</strong></summary>
+<div style="padding: 0 14px 14px 14px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while True: if controller.buttonEUp.pressing(): drivetrain.drive(FORWARD) else: drivetrain.stop() wait(20, MSEC)</div>
+</div>
+</details></div>
+<div style="border: 1px solid #c7d2fe; background: #ffffff; border-radius: 14px; padding: 16px; margin-bottom: 14px;"><strong>Practice task 2</strong>
+<p style="margin: 8px 0 8px 0;">Write code that drives forward until the robot is 200 mm away from an object, then stops.</p>
+<details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #c7d2fe; border-radius: 12px; margin-top: 10px; background: #f8fbff;">
+<summary style="display: block; cursor: pointer; padding: 14px;"><strong>Hint</strong></summary>
+<div style="padding: 0 14px 14px 14px;">This one is a good job for the Distance Sensor and a <code>while</code> loop.</div>
+</details><details style="display: block; width: 100%; clear: both; overflow: hidden; border: 1px solid #c7d2fe; border-radius: 12px; margin-top: 10px; background: #f8fbff;">
+<summary style="display: block; cursor: pointer; padding: 14px;"><strong>Possible solution</strong></summary>
+<div style="padding: 0 14px 14px 14px;">
+<div style="border: 1px solid #1f2937; border-radius: 14px; background: #111827; color: #f9fafb; padding: 16px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-x: auto;">while distance_1.object_distance(MM) &gt; 200: drivetrain.drive(FORWARD) drivetrain.stop()</div>
+</div>
+</details></div>
+<div style="margin-top: 14px;"><a href="#top" style="color: #3730a3;">Back to top</a></div>
+</div>
+<div style="border: 1px solid #e5e7eb; background: #ffffff; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+<h3 style="margin-top: 0; margin-bottom: 10px;">Official VEX links</h3>
+<p style="margin: 0 0 10px 0;">Use these when you want the full original pages.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;"><a href="https://api.vex.com/iq2/home/python/index.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">Python API home</a> <a href="https://api.vex.com/iq2/home/python/Drivetrain.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfeff; color: #0f766e; border: 1px solid #a5f3fc;">Drivetrain</a> <a href="https://api.vex.com/iq2/home/python/Motion/Motor.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ecfccb; color: #4d7c0f; border: 1px solid #bef264;">Motor</a> <a href="https://api.vex.com/iq2/home/python/Controller.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #ffedd5; color: #c2410c; border: 1px solid #fdba74;">Controller</a> <a href="https://api.vex.com/iq2/home/python/Sensing/index.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">Sensing index</a> <a href="https://api.vex.com/iq2/home/python/Logic/index.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff;">Logic index</a> <a href="https://api.vex.com/iq2/home/python/Motion/Pneumatic.html" style="display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 999px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">Pneumatics</a></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; margin-bottom: 18px;">
+<div style="flex: 1 1 280px; display: flex;"><a href="#top" style="display: block; width: 100%; text-align: center; text-decoration: none; padding: 14px 16px; border-radius: 14px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; ">⬆ Back to top</a></div>
+<div style="flex: 1 1 360px; display: flex;"><a href="REPLACE_WITH_YOUR_USING_VEXCODE_PAGE_LINK" style="display: block; width: 100%; text-align: center; text-decoration: none; padding: 14px 16px; border-radius: 14px; background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0; ">↩ Back to the Using VEXcode page</a></div>
+</div>
+<div style="border-top: 1px solid #e5e7eb; padding-top: 10px; color: #6b7280; font-size: 12px;">Local VEX IQ Python API reference page for Year 9 Digital Technologies</div>
+</div>
+</div></article><nav class="site-page-actions"><a href="blocks-api.html">← Blocks API</a><a href="../unit2.html">Back to Unit 2</a><a href="teacher-reference-page.html">Teacher Reference page →</a></nav></main></div><footer class="site-footer"></footer></body></html>

@@ -1,0 +1,25 @@
+---
+interface Props {
+  src: string;
+  title: string;
+  minHeight?: string;
+}
+
+const { src, title, minHeight = '1600px' } = Astro.props;
+---
+
+<section class="edu-interactive-shell">
+  <iframe class="edu-interactive-shell__frame" src={src} title={title} loading="lazy" style={`min-height:${minHeight};`} />
+</section>
+
+<style>
+  .edu-interactive-shell {
+    display: grid;
+  }
+
+  .edu-interactive-shell__frame {
+    width: 100%;
+    border: 0;
+    background: transparent;
+  }
+</style>

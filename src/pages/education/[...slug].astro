@@ -1,62 +1,101 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { toTagSlug } from '../../utils/tags';
+import Header from '../../components/Header.astro';
+import EducationHeaderMinimal from '../../components/education/EducationHeaderMinimal.astro';
+import EducationImportedContent from '../../components/education/EducationImportedContent.astro';
+import EducationMetaLine from '../../components/education/EducationMetaLine.astro';
+import EducationUtilityBar from '../../components/education/EducationUtilityBar.astro';
+import { YEAR9_DIGITECH_BY_SLUG, YEAR9_DIGITECH_RESOURCES } from '../../data/educationYear9DigitalTechnologies';
 import {
-  EDUCATION_LEGACY_PAGE_ROUTE_MAP,
-  EDUCATION_LEGACY_PREFIXES,
-  EDUCATION_LEGACY_REDIRECTS,
-} from '../../utils/educationLegacy';
+  normalizeEducationId,
+} from '../../utils/education';
+import { EDUCATION_LEGACY_REDIRECTS } from '../../utils/educationLegacy';
 
 export async function getStaticPaths() {
   const entries = await getCollection('education', ({ data }) => !data.draft);
-
-  if (!entries || entries.length === 0) {
-    return [];
-  }
-
-  const entryPaths = entries.map((entry) => ({
-    params: { slug: entry.id },
-  }));
-
-  const legacyPaths = EDUCATION_LEGACY_PREFIXES.flatMap((prefix) =>
-    Object.keys(EDUCATION_LEGACY_PAGE_ROUTE_MAP).map((legacy) => `${prefix}/${legacy}`)
-  ).map((legacySlug) => ({
-    params: { slug: legacySlug },
-  }));
-
-  return [...entryPaths, ...legacyPaths];
+  const contentPaths = entries.map((entry) => ({ params: { slug: normalizeEducationId(entry.id) } }));
+  const legacyPaths = Object.keys(EDUCATION_LEGACY_REDIRECTS).map((slug) => ({ params: { slug } }));
+  const qlearnPaths = YEAR9_DIGITECH_RESOURCES.map((resource) => ({ params: { slug: resource.slug } }));
+  return [...contentPaths, ...legacyPaths, ...qlearnPaths];
 }
 
 const { slug } = Astro.params;
+if (!slug) throw new Error('Missing route parameter: slug');
 
-if (!slug) {
-  throw new Error('Missing route parameter: slug');
-}
-
-const legacyTarget = EDUCATION_LEGACY_REDIRECTS[slug];
+const canonicalYear9Target = slug === 'digital-technologies/year-9' ? '/education/digital-technologies' : null;
+const legacyTarget = canonicalYear9Target ?? EDUCATION_LEGACY_REDIRECTS[slug];
 const legacyRedirectScript = legacyTarget ? `window.location.replace(${JSON.stringify(legacyTarget)});` : '';
 
-let entry = null;
+const entries = legacyTarget ? [] : await getCollection('education', ({ data }) => !data.draft);
+const entry = legacyTarget ? null : entries.find((candidate) => normalizeEducationId(candidate.id) === slug) ?? null;
+const qlearnResource = !entry && !legacyTarget ? YEAR9_DIGITECH_BY_SLUG.get(slug) ?? null : null;
+
+if (!legacyTarget && !entry && !qlearnResource) {
+  throw new Error(`Education entry not found: ${slug}`);
+}
+
 let Content = null;
-let hero = null;
-let headerStyle: 'panel' | 'plain' = 'panel';
-
-if (!legacyTarget) {
-  entry = await getEntry('education', slug);
-
-  if (!entry) {
-    throw new Error(`Education entry not found: ${slug}`);
-  }
-
+if (entry) {
   const rendered = await render(entry);
   Content = rendered.Content;
-  hero = entry.data.image ?? null;
-  headerStyle = entry.data.headerStyle ?? 'panel';
 }
+
+const qlearnHubSourceBySlug: Record<string, string> = {
+  'digital-technologies/year-9/unit-1': 'welcome-to-unit-1-all-about-python.html',
+  'digital-technologies/year-9/unit-2': 'welcome-to-unit-2-making-python-interact-with-the-real-world.html',
+};
+
+const qlearnImportedSource = qlearnResource?.sourceSlug ?? (qlearnResource ? qlearnHubSourceBySlug[qlearnResource.slug] : undefined);
+const qlearnUtilityLinks = qlearnImportedSource
+  ? [{ label: 'Open standalone HTML', url: `/education/student-resources/digital-technologies-year-9-2026/pages/${qlearnImportedSource}` }]
+  : [];
+
+const canonicalQlearnHref = (resource) => {
+  if (!resource) return '';
+  if (resource.sourceSlug === 'welcome-to-unit-1-all-about-python.html') {
+    return '/education/digital-technologies/year-9/unit-1';
+  }
+  if (resource.sourceSlug === 'welcome-to-unit-2-making-python-interact-with-the-real-world.html') {
+    return '/education/digital-technologies/year-9/unit-2';
+  }
+  return `/education/${resource.slug}`;
+};
+
+const isTeacherOnlyQlearn = qlearnResource?.audience === 'teacher';
+const isQlearnUnitHub =
+  qlearnResource?.slug === 'digital-technologies/year-9/unit-1' ||
+  qlearnResource?.slug === 'digital-technologies/year-9/unit-2';
+
+const metadata = entry
+  ? [
+      entry.data.subject ? entry.data.subject.replace(/-/g, ' ') : '',
+      entry.data.level ? entry.data.level.replace(/^year-/i, 'Year ') : '',
+    ].filter(Boolean)
+  : isTeacherOnlyQlearn
+    ? ['Teacher material']
+    : [];
+
+const backHref = qlearnResource
+  ? qlearnResource.slug === 'digital-technologies/year-9/unit-1' || qlearnResource.slug === 'digital-technologies/year-9/unit-2'
+      ? '/education/digital-technologies'
+      : qlearnResource.unit === 'unit-1'
+      ? '/education/digital-technologies/year-9/unit-1'
+      : qlearnResource.unit === 'unit-2'
+        ? '/education/digital-technologies/year-9/unit-2'
+        : '/education/digital-technologies'
+  : '/education';
+
+const backLabel = qlearnResource
+  ? isQlearnUnitHub
+      ? 'Back to Digital Technologies'
+      : qlearnResource.unit === 'unit-1'
+      ? 'Back to Unit 1'
+      : qlearnResource.unit === 'unit-2'
+        ? 'Back to Unit 2'
+        : 'Back to Digital Technologies'
+  : 'Back to Education';
 ---
 
 <!doctype html>
@@ -70,101 +109,33 @@ if (!legacyTarget) {
         <title>Redirecting…</title>
       </>
     ) : (
-      <BaseHead title={entry!.data.title} description={entry!.data.description} />
+      <BaseHead title={entry?.data.title ?? qlearnResource!.title} description={entry?.data.description ?? qlearnResource!.description} />
     )}
   </head>
   <body class="theme-edu">
     {legacyTarget ? (
-      <main class="edu-page">
-        <p>Redirecting to <a href={legacyTarget}>{legacyTarget}</a>.</p>
-        <script is:inline set:html={legacyRedirectScript} />
-      </main>
+      <main class="edu-page"><p>Redirecting to <a href={legacyTarget}>{legacyTarget}</a>.</p><script is:inline set:html={legacyRedirectScript} /></main>
     ) : (
       <>
         <Header />
         <main class="edu-page">
-          <article class="edu-entry">
-            <a href="/education" class="edu-back">
-              ← Back to Education
-            </a>
-
-            <header class:list={['edu-hero', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'edu-hero--plain']}>
-              <div class="edu-hero__copy">
-                <div class="edu-kickers">
-                  <span class="pill">Education</span>
-                  {entry!.data.subject ? <span class="pill">{entry!.data.subject}</span> : null}
-                  {entry!.data.level ? <span class="pill pill--coral">{entry!.data.level}</span> : null}
-                </div>
-
-                <h1 class="edu-title">{entry!.data.title}</h1>
-                <p class="edu-description">{entry!.data.description}</p>
-
-                <div class="edu-meta">
-                  {entry!.data.pubDate ? (
-                    <span class="edu-meta__item">
-                      Published <FormattedDate date={entry!.data.pubDate} />
-                    </span>
-                  ) : null}
-                  {entry!.data.updatedDate ? (
-                    <span class="edu-meta__item">
-                      Updated <FormattedDate date={entry!.data.updatedDate} />
-                    </span>
-                  ) : null}
-                  {entry!.data.type ? <span class="edu-meta__item">Type {entry!.data.type}</span> : null}
-                </div>
-              </div>
-
-              {headerStyle === 'panel' && hero ? (
-                <div class="edu-hero__media">
-                  <img src={hero} alt="" loading="eager" decoding="async" />
-                </div>
+          <article class="edu-resource">
+            <div class="edu-resource__masthead">
+              <EducationHeaderMinimal backHref={backHref} backLabel={backLabel} title={entry?.data.title ?? qlearnResource!.title} />
+              {((entry?.data.downloadTargets?.length ? entry.data.downloadTargets : qlearnUtilityLinks).length) ? (
+                <EducationUtilityBar links={entry?.data.downloadTargets?.length ? entry.data.downloadTargets : qlearnUtilityLinks} />
               ) : null}
-            </header>
+            </div>
+            {(entry || isTeacherOnlyQlearn) ? <EducationMetaLine items={metadata} /> : null}
 
-            {headerStyle === 'plain' && hero ? (
-              <figure class="edu-hero-media">
-                <img src={hero} alt="" loading="eager" decoding="async" />
-              </figure>
-            ) : null}
-
-            <div class="edu-layout">
-              <aside class="edu-side panel">
-                <h2 class="edu-side__title">At A Glance</h2>
-                <dl class="edu-facts">
-                  {entry!.data.subject ? (
-                    <>
-                      <dt>Subject</dt>
-                      <dd>{entry!.data.subject}</dd>
-                    </>
-                  ) : null}
-                  {entry!.data.level ? (
-                    <>
-                      <dt>Level</dt>
-                      <dd>{entry!.data.level}</dd>
-                    </>
-                  ) : null}
-                  {entry!.data.type ? (
-                    <>
-                      <dt>Format</dt>
-                      <dd>{entry!.data.type}</dd>
-                    </>
-                  ) : null}
-                </dl>
-
-                {entry!.data.tags?.length ? (
-                  <div class="edu-tags">
-                    {entry!.data.tags.map((tag) => (
-                      <a class="tagLink" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                    ))}
-                  </div>
-                ) : null}
-              </aside>
-
-              <div class="edu-body panel panel--soft">
-                <div class="prose prose--edu">
+            <div class="edu-resource__body">
+              {entry ? (
+                <div class:list={['prose', 'prose--edu', entry.data.renderMode === 'interactive-document' && 'prose--eduInteractive']}>
                   {Content ? <Content /> : null}
                 </div>
-              </div>
+              ) : qlearnImportedSource ? (
+                <EducationImportedContent source={qlearnImportedSource} sourceKind="qlearn-year9" />
+              ) : null}
             </div>
           </article>
         </main>
@@ -176,233 +147,43 @@ if (!legacyTarget) {
 
 <style>
   .edu-page {
-    max-width: min(1180px, calc(100% - 2 * var(--space-5)));
+    width: min(1360px, calc(100% - 4rem));
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
   }
 
-  .edu-entry {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
-
-  .edu-back {
-    width: fit-content;
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  .edu-back:hover {
-    color: var(--accent);
-  }
-
-  .edu-hero {
-    min-width: 0;
-  }
-
-  .edu-hero.panel {
+  .edu-resource {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-    gap: var(--space-5);
-    align-items: center;
-    background:
-      radial-gradient(760px 220px at top right, rgba(34, 197, 94, 0.08), transparent 72%),
-      radial-gradient(620px 220px at bottom left, rgba(37, 99, 235, 0.08), transparent 78%),
-      var(--surface-raised);
+    gap: 0.8rem;
   }
 
-  .edu-hero--plain {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding: 0 0 var(--space-3);
-    background: none;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .edu-hero--plain::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--leaf) 26%, transparent 74%),
-      color-mix(in srgb, var(--border) 72%, transparent 28%)
-    );
-  }
-
-  .edu-hero__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .edu-kickers,
-  .edu-meta,
-  .edu-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .edu-title,
-  .edu-description {
-    margin: 0;
-  }
-
-  .edu-hero--plain .edu-title {
-    font-size: clamp(2.3rem, 4vw, 4.3rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    text-wrap: balance;
-  }
-
-  .edu-description {
-    max-width: 64ch;
-    font-size: 1.06rem;
-    color: var(--text-2);
-  }
-
-  .edu-hero--plain .edu-description {
-    font-size: clamp(1rem, 1.2vw, 1.1rem);
-  }
-
-  .edu-meta__item {
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  .tagLink {
-    color: var(--text-2);
-    text-decoration: none;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-  }
-
-  .tagLink:hover {
-    color: var(--accent);
-  }
-
-  .edu-hero__media {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
-      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
-    );
-    box-shadow: var(--shadow-sm);
-  }
-
-  .edu-hero-media {
-    margin: 0;
-    max-width: min(760px, 100%);
-    margin-left: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--surface-raised) 92%, transparent 8%),
-      color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
-    );
-    box-shadow: var(--shadow-sm);
-  }
-
-  .edu-hero-media img {
-    width: 100%;
-    display: block;
-  }
-
-  .edu-hero__media img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-
-  .edu-layout {
+  .edu-resource__masthead {
     display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: var(--space-5);
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem 1.5rem;
     align-items: start;
   }
 
-  .edu-side {
-    position: sticky;
-    top: 92px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--surface-raised) 96%, transparent 4%),
-      color-mix(in srgb, var(--surface) 92%, var(--surface-raised) 8%)
-    );
-  }
-
-  .edu-side__title {
-    margin: 0;
-    font-size: 1.05rem;
-  }
-
-  .edu-facts {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
-    margin: 0;
-  }
-
-  .edu-facts dt {
-    margin: 0 0 0.2rem 0;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-  }
-
-  .edu-facts dd {
-    margin: 0;
-    color: var(--text);
-    font-weight: 700;
-  }
-
-  .edu-body {
-    padding-top: calc(var(--space-5) + 2px);
-  }
-
-  .prose--edu :global(h2) {
-    margin-top: 2rem;
-    padding-bottom: 0.45rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .prose--edu :global(ul li::marker) {
-    color: var(--leaf);
+  .edu-resource__body {
+    padding-top: 0.35rem;
   }
 
   .prose--edu :global(.embed) {
-    margin: 1.6rem 0 2rem;
+    margin: 0;
   }
 
-  @media (max-width: 960px) {
+  .prose--eduInteractive {
+    max-width: none;
+  }
+
+  @media (max-width: 720px) {
     .edu-page {
-      max-width: calc(100% - 2 * var(--space-4));
+      width: min(100% - 1.5rem, 1360px);
+      padding-top: 2.2rem;
     }
 
-    .edu-hero.panel,
-    .edu-layout {
+    .edu-resource__masthead {
       grid-template-columns: 1fr;
-    }
-
-    .edu-side {
-      position: static;
     }
   }
 </style>

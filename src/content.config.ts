@@ -2,8 +2,6 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { DOC_SECTION_LABELS } from './utils/docs';
 
-const EDUCATION_HOME_CATEGORIES = ['student-resources', 'teaching-resources', 'interactive-utilities'] as const;
-
 // ------------------------
 // Blog Collection
 // ------------------------
@@ -108,40 +106,35 @@ const education = defineCollection({
       draft: z.boolean().default(false),
       level: z.string().optional(),
       subject: z.string().optional(),
+      course: z.string().optional(),
+      unit: z.string().optional(),
+      audience: z.enum(['student', 'teacher', 'both']).optional(),
+      renderMode: z.enum(['document', 'interactive-document']).default('document'),
       order: z.number().optional(),
+      sequence: z.number().optional(),
       tags: z.array(z.string()).default([]),
-      homeCategory: z.enum(EDUCATION_HOME_CATEGORIES),
+      resourceType: z.string().optional(),
       type: z.string().optional(),
       featured: z.boolean().default(false),
       showInIndex: z.boolean().default(true),
+      showInLanding: z.boolean().default(true),
       image: z.string().optional(),
+      source: z.string().optional(),
+      sourceSlug: z.string().optional(),
+      legacyUrl: z.string().optional(),
+      downloadable: z.boolean().default(false),
+      downloadTargets: z.array(z.object({
+        label: z.string(),
+        url: z.string(),
+      })).default([]),
       headerStyle: z.enum(['panel', 'plain']).optional(),
-    }).superRefine((data, ctx) => {
-      if (data.draft) return;
-      const broadTags = EDUCATION_HOME_CATEGORIES as readonly string[];
-      const matchingBroadTags = data.tags.filter((tag) => broadTags.includes(tag));
-      const uniqueMatching = [...new Set(matchingBroadTags)];
-
-      if (uniqueMatching.length !== 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Education entries must include exactly one broad tag: student-resources, teaching-resources, or interactive-utilities.',
-          path: ['tags'],
-        });
-      }
-
-      if (!uniqueMatching.includes(data.homeCategory)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'homeCategory must match the broad classification tag in tags.',
-          path: ['homeCategory'],
-        });
-      }
+      homeCategory: z.string().optional(),
     }),
 });
 
 // ------------------------
 // Astrophotography Collection
+
 // ------------------------
 
 const astrophotography = defineCollection({
