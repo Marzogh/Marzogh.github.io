@@ -1,0 +1,56 @@
+{
+  "comets": {
+    "fingerprint": "5f3bfe0423ec1fef9d8e54defdbaf58fa9fc2c073f173652ae3defd803a4ea89"
+  },
+  "conjunctions": {
+    "fingerprint": "dc263af0b87a453cb9a7e7e9ac962428fe7e60c187e7ee2109ef0ee72c3f1e13"
+  },
+  "meteors": {
+    "fingerprint": "34ab480e051268572e199e45df10ae2fd514d331086b7954dadff425bb30663d"
+  },
+  "milky_way": {
+    "fingerprint": "f2eece078905bcc3e67e65b0e26469302262e470bc814ee7ad9f41a3c82ced0c"
+  },
+  "minor_comets": {
+    "fingerprint": "ae518ffa8e520601ef4637d36e30d621c38fb0fb366ab1b3d6667989b16e643b"
+  },
+  "minor_planets": {
+    "fingerprint": "30c64d0c9b62fd716cd84cd15f45a859e946fa124a48fa017674e758a36df058"
+  },
+  "moons": {
+    "fingerprint": "d4c4dc5aec5e85ba0532339631bc140d9cd5c3b61534340bdc29a255ecca502c"
+  },
+  "occultations": {
+    "fingerprint": "eb718be3d55d3fb87a289711004d976de54ff79a486bf2baab8e41bd52c5a917"
+  },
+  "planets": {
+    "fingerprint": "14a269aa2e77c6ce3248e3bdfff497c645cd8716ee75f0d33f97b145d194eea9"
+  },
+  "sun_moon": {
+    "fingerprint": "145e852e87d0100bdb2ad975405a77e28bd1f14e703e982b3637327f855589f4"
+  },
+  "ui_notes": {
+    "fingerprint": "cb7cc17bd1f31ef6c63b39813ca286bce15c0f379a141939e9669b93c6c388cf"
+  },
+  "ui_notes_bundle": {
+    "fingerprint": "4a74cbcd66d44dca2d16b912bbba3ca8b4e17d34f7fc4ca32051a4f4a7d1f4f6"
+  },
+  "ui_notes_context": {
+    "fingerprint": "3a7c39c44b835fe4e8a0fd4b5b1760c47a69c727a34cfa286b2fa83bfbb01cf3"
+  },
+  "ui_notes_events": {
+    "fingerprint": "b42860b835e0013c105e9338f0f84bd78e9207f5eeb9fd1bc926b6f50871f555"
+  },
+  "ui_notes_milky_way": {
+    "fingerprint": "0da4ad9a5d192e14ac90afa231b52b4caa89cfd232dcb3e0fde8a861415acbf2"
+  },
+  "ui_notes_recommendations": {
+    "fingerprint": "5c00d0a41397e53e72eb9d21acfffca535ba6e27293602a29725c26c10f8c010"
+  },
+  "ui_notes_tonight": {
+    "fingerprint": "7c4aed5e3aa232ff531c951b29d78f635972db0f9b8bcc144246aca5339b14ed"
+  },
+  "ui_notes_validation": {
+    "fingerprint": "d1ebdeafab5cb943979479f5ca5f8e92d18e9587bf4543fe528a65655970eaad"
+  }
+}

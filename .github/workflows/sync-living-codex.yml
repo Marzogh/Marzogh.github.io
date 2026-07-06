@@ -32,7 +32,9 @@ jobs:
 
       - name: Update submodule to latest main
         run: |
-          git submodule update --remote --merge vendor/the-living-codex
+          git -C vendor/the-living-codex fetch origin main --tags --force
+          git -C vendor/the-living-codex checkout --detach FETCH_HEAD
+          git add vendor/the-living-codex
 
       - name: Capture updated submodule SHA
         id: after

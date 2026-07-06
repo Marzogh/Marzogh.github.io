@@ -1,0 +1,10 @@
+note_id,section,title,body,score,date_local
+hero_subtitle,hero,Context,"Generated for South East Queensland, Australia. Times shown in Australia/Brisbane.",info,
+tonight_score,tonight,Fair,Astronomical dark 19:14 to 04:27. Moon illumination 45%.,fair,2027-01-01
+moon_summary,moon,45%,"Moon rises --, sets 13:06. Use moon-free windows first for deep sky.",info,2027-01-01
+event_dark_1,events,Dark-sky window,Longest moon-free window around Jun 24.,excellent,2027-06-24
+event_jupiter,events,Jupiter observing window,Best in 2027-01 with altitude near 48 degrees.,good,2027-01-01
+event_minor,events,Minor planet: 3;,High scoring target for small-scope imaging from this site.,fair,2027-12-31
+mw_summary,milky_way,Milky Way window,4 excellent windows this month group. Best altitude about 32 degrees.,info,
+validation_summary,validation,9/9,Validation check: all core datasets are present.,good,
+recommended_tonight,recommendations,Recommended tonight,"Use deep sky early, then switch to planetary once the Moon is higher. Check occultations list for timed events.",info,

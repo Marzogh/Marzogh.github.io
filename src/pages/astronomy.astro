@@ -1,0 +1,537 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Personal Astro Almanac — Chips’nCode"
+      description="Observer-first astronomy dashboard powered by generated yearly almanac bundles."
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="shell astro-almanac-page" data-astronomy-root>
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div>
+            <h1>Astro Almanac</h1>
+            <p>Personal observing dashboard</p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="year">Year</label>
+          <select id="year" data-year-select></select>
+          <label for="site">Site</label>
+          <select id="site" data-site-select></select>
+          <label for="mode">Mode</label>
+          <select id="mode" data-mode-select>
+            <option>Imaging</option>
+            <option>Observing</option>
+            <option>Nightscape</option>
+            <option>Planetary</option>
+          </select>
+        </div>
+
+        <input type="search" placeholder="Search events, targets, dates..." />
+
+        <div class="nav-title">Overview</div>
+        <nav>
+          <a class="active" href="#"><span>Dashboard</span><span class="astro-pill info">Now</span></a>
+          <a href="#"><span>Tonight</span><span class="astro-pill good" data-nav-tonight>Good</span></a>
+          <a href="#"><span>Best Nights</span></a>
+          <a href="#"><span>Year Calendar</span></a>
+        </nav>
+
+        <div class="nav-title">Sections</div>
+        <nav>
+          <a href="#"><span>Moon & Darkness</span></a>
+          <a href="#"><span>Milky Way</span></a>
+          <a href="#"><span>Planets</span></a>
+          <a href="#"><span>Jupiter Moons</span></a>
+          <a href="#"><span>Saturn Moons</span></a>
+          <a href="#"><span>Minor Planets</span></a>
+          <a href="#"><span>Lunar Occultations</span></a>
+          <a href="#"><span>Comets</span></a>
+          <a href="#"><span>Meteor Showers</span></a>
+          <a href="#"><span>Gear Targets</span></a>
+        </nav>
+
+        <div class="nav-title">Months</div>
+        <nav data-month-nav>
+          <a href="#"><span>Loading months…</span></a>
+        </nav>
+
+        <div class="nav-title">Status</div>
+        <p data-status class="status">Loading manifest…</p>
+      </aside>
+
+      <section class="content-wrap">
+        <div class="content">
+          <section class="astro-hero">
+            <div>
+              <h2 data-hero-title>2027 observing cockpit</h2>
+              <p data-hero-subtitle>Generated for South East Queensland, Australia. Times shown in Australia/Brisbane.</p>
+            </div>
+            <div class="astro-hero-actions">
+              <p class="astro-generated-at" data-generated-at>Data generated at: --</p>
+              <a class="astro-button primary" data-link-html href="#">Open Tonight</a>
+              <a class="astro-button" data-link-csv href="#">Download CSV</a>
+              <a class="astro-button" data-link-pdf href="#">Print PDF</a>
+            </div>
+          </section>
+
+          <section class="astro-grid astro-cards-4">
+            <article class="astro-card">
+              <h3>Tonight</h3>
+              <div class="metric" data-tonight-score>Good early</div>
+              <p class="small" data-tonight-line>Astronomical dark 19:14 to 04:28. Moon rises 00:21, so deep-sky work is best before midnight.</p>
+            </article>
+            <article class="astro-card">
+              <h3>Moon</h3>
+              <div class="metric" data-moon-metric>45%</div>
+              <p class="small" data-moon-line>Waning. Sets 13:06, rises after midnight. Mild interference late.</p>
+            </article>
+            <article class="astro-card">
+              <h3>Milky Way</h3>
+              <div class="metric" data-mw-metric>Pre-dawn</div>
+              <p class="small" data-mw-line>Core window emerging. Best dates this month cluster around the New Moon.</p>
+            </article>
+            <article class="astro-card">
+              <h3>Validation</h3>
+              <div class="metric" data-val-metric>7/9</div>
+              <p class="small" data-val-line>Sun, Moon, planets, and dark windows generated. Occultations and Saturn moons pending import.</p>
+            </article>
+          </section>
+
+          <section class="section astro-grid astro-two">
+            <div>
+              <div class="astro-section-header">
+                <h2>Best upcoming opportunities</h2>
+                <button type="button" class="astro-pill soft astro-upcoming-open" data-upcoming-open aria-haspopup="dialog" aria-controls="upcoming-modal">
+                  Next 30 days
+                </button>
+              </div>
+              <div class="astro-timeline">
+                <article class="astro-event">
+                  <time data-e1-date>Jan 08</time>
+                  <div>
+                    <h4 data-e1-title>New Moon dark-sky window</h4>
+                    <p class="small" data-e1-note>Excellent Moon-free astronomical darkness. Best nightscape and broadband DSO opportunity.</p>
+                  </div>
+                  <span class="astro-pill good" data-e1-score>Excellent</span>
+                </article>
+                <article class="astro-event">
+                  <time data-e2-date>Jan 10</time>
+                  <div>
+                    <h4 data-e2-title>Jupiter observing window</h4>
+                    <p class="small" data-e2-note>High evening altitude. Generate Galilean moon strip chart for this night.</p>
+                  </div>
+                  <span class="astro-pill good" data-e2-score>Good</span>
+                </article>
+                <article class="astro-event">
+                  <time data-e3-date>Jan 14</time>
+                  <div>
+                    <h4 data-e3-title>Minor planet: Vesta</h4>
+                    <p class="small" data-e3-note>Bright enough for easy imaging. Moon separation favourable before midnight.</p>
+                  </div>
+                  <span class="astro-pill fair" data-e3-score>Fair</span>
+                </article>
+              </div>
+            </div>
+
+            <aside class="astro-card">
+              <h3>Recommended tonight</h3>
+              <p class="small" data-rec-1><strong>Refractor DSO:</strong> use 19:14 to 00:21 before Moonrise.</p>
+              <p class="small" data-rec-2><strong>C8 planetary:</strong> check Jupiter between 21:00 and midnight.</p>
+              <p class="small" data-rec-3><strong>Nightscape:</strong> wait for darker Moon-free dates near New Moon.</p>
+              <p class="small" data-rec-4><strong>Occultations:</strong> no high-priority events loaded.</p>
+            </aside>
+          </section>
+
+          <section class="section">
+            <div class="astro-section-header">
+              <h2 data-planner-title>Planner</h2>
+              <span class="astro-pill info">Calendar view</span>
+            </div>
+            <div class="astro-month-grid" data-planner-grid></div>
+          </section>
+
+          <section class="section astro-grid astro-two">
+            <div class="astro-card">
+              <div class="astro-section-header">
+                <h2>Milky Way visibility</h2>
+                <span class="astro-pill soft">Chart placeholder</span>
+              </div>
+              <div class="astro-chart-placeholder">
+                <div>
+                  <strong>Milky Way core window chart</strong><br />
+                  Date vs local time, with bands for Galactic Centre above 20°/25° and Moon-free astronomical darkness.
+                </div>
+              </div>
+            </div>
+
+            <div class="astro-card">
+              <div class="astro-section-header">
+                <h2>Planet focus</h2>
+                <span class="astro-pill info">Imaging</span>
+              </div>
+              <table>
+                <thead><tr><th>Planet</th><th>Best</th><th>Alt.</th><th>Score</th></tr></thead>
+                <tbody data-planet-body>
+                  <tr><td>Jupiter</td><td>Jan-Feb</td><td class="num">72°</td><td><span class="astro-pill good">Excellent</span></td></tr>
+                  <tr><td>Saturn</td><td>Aug-Oct</td><td class="num">58°</td><td><span class="astro-pill good">Good</span></td></tr>
+                  <tr><td>Mars</td><td>Not favourable</td><td class="num">29°</td><td><span class="astro-pill poor">Poor</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="astro-section-header">
+              <h2>Reference tables</h2>
+              <span class="astro-pill soft">Expandable raw data</span>
+            </div>
+            <details open>
+              <summary>Moon and darkness summary</summary>
+              <div class="inside table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Date</th><th>Dusk</th><th>Dawn</th><th>Moon</th><th>Moonrise</th><th>Moonset</th><th>Dark score</th></tr>
+                  </thead>
+                  <tbody data-moon-table>
+                    <tr><td>Jan 01</td><td class="num">19:14</td><td class="num">04:28</td><td>45%</td><td class="num">00:21</td><td class="num">13:06</td><td><span class="astro-pill good">Good early</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+            <details>
+              <summary>Jupiter moon maps</summary>
+              <div class="inside">
+                <p class="small">Generated moon strip charts will appear here from the local pipeline outputs.</p>
+                <div class="astro-chart-placeholder">Jupiter moon strip chart placeholder</div>
+              </div>
+            </details>
+            <details>
+              <summary>Minor planets and lunar occultations</summary>
+              <div class="inside">
+                <p class="small">Recommended minor planets and imported occultation events are filtered for local usefulness and presented here.</p>
+              </div>
+            </details>
+          </section>
+
+          <div class="astro-source-note">
+            <strong>Source and method:</strong> Sun/twilight and Moon data generated locally for the selected site. Planet, moon, comet, and minor-planet ephemerides sourced from local outputs. Raw CSV/JSON outputs remain downloadable under each year/site bundle.
+          </div>
+        </div>
+      </section>
+
+      <section class="astro-modal-backdrop" data-upcoming-modal hidden>
+        <div class="astro-modal" id="upcoming-modal" role="dialog" aria-modal="true" aria-labelledby="upcoming-modal-title">
+        <div class="astro-modal-head">
+          <h2 id="upcoming-modal-title">All opportunities in the next 30 days</h2>
+          <button type="button" class="astro-modal-close" data-upcoming-close aria-label="Close upcoming opportunities">Close</button>
+        </div>
+        <p class="astro-modal-subtitle" data-upcoming-range>Loading event range…</p>
+        <div class="astro-modal-toolbar">
+          <div class="astro-modal-filters" data-upcoming-filters>
+            <button type="button" class="astro-pill soft active" data-filter="all">All</button>
+            <button type="button" class="astro-pill soft" data-filter="excellent">Excellent</button>
+            <button type="button" class="astro-pill soft" data-filter="goodplus">Good+</button>
+            <button type="button" class="astro-pill soft" data-filter="imaging">Imaging</button>
+            <button type="button" class="astro-pill soft" data-filter="planetary">Planetary</button>
+            <button type="button" class="astro-pill soft" data-filter="milkyway">Milky Way</button>
+          </div>
+        </div>
+        <div class="astro-modal-body" data-upcoming-list></div>
+      </div>
+    </section>
+    </main>
+    <Footer />
+    <script type="module" src="/scripts/astronomy-hook.js"></script>
+  </body>
+</html>
+
+<style>
+  :root { --bg:#07111f; --text:#edf4ff; --muted:#aab8ca; --line:rgba(255,255,255,0.12); --accent:#7cc7ff; --accent-2:#b7f7d1; --warn:#ffd166; --bad:#ff8a8a; --good:#8ee6a8; --radius:18px; --max:1260px; }
+  .shell { display:grid; grid-template-columns:280px minmax(0,1fr); width:100vw; max-width:none; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); min-height:calc(100vh - 120px); background:radial-gradient(circle at top left, rgba(124,199,255,0.2), transparent 28rem),radial-gradient(circle at 80% 20%, rgba(183,247,209,0.08), transparent 22rem),var(--bg); color:var(--text); }
+  .sidebar { position:sticky; top:0; height:100vh; overflow:auto; background:rgba(7,17,31,0.86); backdrop-filter:blur(16px); border-right:1px solid var(--line); padding:20px 16px; font-size:16px; }
+  .brand { display:flex; gap:12px; align-items:center; margin-bottom:24px; } .brand-mark { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; background:linear-gradient(135deg,#7cc7ff,#b7f7d1); color:#07111f; font-weight:900; }
+  .brand h1{margin:0;font-size:1.04rem;line-height:1.1;font-weight:800;} .brand p{margin:3px 0 0;color:var(--muted);font-size:.82rem;line-height:1.3;}
+  .control-group { margin-bottom:16px; padding:12px; border:1px solid var(--line); border-radius:var(--radius); background:rgba(255,255,255,.035); }
+  label { display:block; color:var(--muted); font-size:.78rem; margin-bottom:6px; }
+  select, input[type="search"] { width:100%; border:1px solid var(--line); background:#07111f; color:var(--text); border-radius:12px; padding:9px 11px; margin-bottom:9px; font-size:.9rem; line-height:1.2; }
+  .nav-title { color:var(--muted); font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; margin:16px 8px 8px; }
+  nav a { display:flex; justify-content:space-between; text-decoration:none; color:var(--muted); padding:9px 11px; border-radius:12px; margin:2px 0; font-size:.97rem; line-height:1.25; }
+  nav a:hover, nav a.active { background:rgba(124,199,255,.12); color:var(--text); }
+  .astro-pill { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:3px 8px; font-size:.74rem; background:rgba(255,255,255,.08); color:var(--muted); }
+  .astro-pill.good{color:#06110a;background:var(--good);} .astro-pill.fair{color:#2b2100;background:var(--warn);} .astro-pill.poor{color:#2b0505;background:var(--bad);} .astro-pill.info{color:#031321;background:var(--accent);} .astro-pill.soft{color:var(--accent-2);background:rgba(183,247,209,.1);border:1px solid rgba(183,247,209,.28);} .status{color:var(--accent-2);font-size:.86rem;}
+  .content-wrap{min-width:0;padding:28px;} .content{max-width:var(--max);margin:0 auto;}
+  .astro-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:end;margin-bottom:24px;} .astro-hero h2{margin:0 0 8px;font-size:clamp(2rem,4.2vw,3.85rem);line-height:.95;letter-spacing:-.045em;white-space:nowrap;} .astro-hero p{margin:0;color:var(--muted);max-width:68ch;} .astro-hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
+  .astro-generated-at{margin:0 10px 0 0 !important;color:rgba(170,184,202,.86) !important;font-size:.75rem !important;letter-spacing:.04em !important;text-transform:uppercase;border-right:1px solid rgba(255,255,255,.16);padding-right:10px;white-space:nowrap;}
+  .astro-button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);padding:10px 14px;border-radius:13px;text-decoration:none;font-weight:700;font-size:.9rem;} .astro-button.primary{color:#07111f;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:0;}
+  .astro-grid{display:grid;gap:16px;} .astro-grid.astro-cards-4{grid-template-columns:repeat(4,minmax(0,1fr));} .astro-grid.astro-two{grid-template-columns:minmax(0,1.3fr) minmax(320px,.7fr);} .astro-card{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));border:1px solid var(--line);border-radius:var(--radius);padding:18px;} .astro-card h3{margin:0 0 12px;font-size:1rem;} .metric{font-size:1.8rem;line-height:1.05;font-weight:850;letter-spacing:-.03em;margin-bottom:6px;} .small{color:var(--muted);font-size:.88rem;line-height:1.45;}
+  .section{margin-top:26px;} .astro-section-header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:12px;} .astro-section-header h2{margin:0;font-size:1.35rem;}
+  .astro-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;}
+  .astro-day-name,.astro-day{min-height:104px;border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(255,255,255,.035);}
+  .astro-day-name{min-height:auto;padding:9px 10px;color:var(--muted);text-align:center;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;background:rgba(255,255,255,.015);}
+  .astro-day strong{display:block;margin-bottom:8px;font-size:1rem;line-height:1;}
+  .astro-day .astro-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start}
+  .astro-day-empty{background:transparent;border-color:rgba(255,255,255,.06);}
+  .astro-pill{font-size:.72rem !important;padding:3px 9px !important;line-height:1.15 !important;}
+  .astro-upcoming-open{cursor:pointer;}
+  .astro-timeline{display:grid;gap:10px;} .astro-event{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.032);} .astro-event time{color:var(--accent);font-weight:800;} .astro-event h4{margin:0 0 3px;font-size:.95rem;} .astro-event p{margin:0;}
+  table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);} th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:.9rem;} th{position:sticky;top:0;background:#10233a;color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;z-index:1;} tr:last-child td{border-bottom:0;} td.num{font-variant-numeric:tabular-nums;} .astro-table-wrap{max-height:420px;overflow:auto;border-radius:16px;}
+  details{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.03);margin-top:12px;overflow:hidden;} summary{cursor:pointer;padding:14px 16px;font-weight:800;} details .inside{padding:0 16px 16px;}
+  .astro-chart-placeholder{min-height:260px;border:1px dashed rgba(124,199,255,.35);border-radius:16px;display:grid;place-items:center;color:var(--muted);background:linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);background-size:34px 34px;text-align:center;padding:18px;}
+  .astro-source-note{margin-top:18px;padding:14px 16px;border-left:4px solid var(--accent);color:var(--muted);background:rgba(124,199,255,.08);border-radius:12px;font-size:.88rem;}
+  .astro-modal-backdrop{position:fixed;inset:0;z-index:2000;background:rgba(2,7,14,.78);backdrop-filter:blur(4px);padding:24px 28px;overflow:auto;}
+  .astro-modal{width:min(1360px,calc(100vw - 56px));margin:0 auto;background:linear-gradient(180deg, rgba(10,22,39,.98), rgba(8,17,31,.98));border:1px solid rgba(255,255,255,.16);border-radius:18px;box-shadow:0 20px 48px rgba(0,0,0,.55);padding:16px 16px 12px;}
+  .astro-modal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;}
+  .astro-modal-head h2{margin:0;font-size:1.4rem;line-height:1.15;}
+  .astro-modal-close{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700;}
+  .astro-modal-subtitle{margin:0 0 12px;color:var(--muted);font-size:.9rem;}
+  .astro-modal-toolbar{margin:0 0 10px;}
+  .astro-modal-filters{display:flex;gap:8px;flex-wrap:wrap}
+  .astro-modal-filters .astro-pill{cursor:pointer}
+  .astro-modal-filters .astro-pill.active{outline:1px solid rgba(124,199,255,.75); background:rgba(124,199,255,.2); color:#dff1ff;}
+  .astro-modal-body{max-height:68vh;overflow:auto;display:grid;grid-template-columns:1fr;gap:12px;padding-right:4px;align-content:start;}
+  .astro-modal-day{border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.02);padding:6px 10px;}
+  .astro-modal-day h3{margin:0 0 4px;font-size:.93rem;color:#c6d7ef;letter-spacing:.01em;}
+  .astro-modal-event{display:grid;grid-template-columns:112px minmax(0,1fr) 92px;gap:10px;align-items:center;border-top:1px solid rgba(255,255,255,.08);padding:7px 2px;}
+  .astro-modal-event:first-of-type{border-top:0;}
+  .astro-modal-event time{color:var(--accent);font-weight:700;font-size:.8rem;white-space:nowrap;opacity:.95;}
+  .astro-modal-event h4{margin:0 0 1px;font-size:.94rem;line-height:1.22;}
+  .astro-modal-event p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .astro-modal-empty{border:1px dashed var(--line);border-radius:12px;padding:14px;color:var(--muted);}
+  @media (max-width:980px){.shell{grid-template-columns:1fr;}.sidebar{position:relative;height:auto;}.astro-grid.astro-cards-4,.astro-grid.astro-two{grid-template-columns:1fr;}.astro-hero{grid-template-columns:1fr;}.astro-hero h2{white-space:normal;}.astro-hero-actions{justify-content:flex-start;}.astro-month-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.astro-event{grid-template-columns:1fr;}}
+</style>
+
+<style is:global>
+  [data-astronomy-root] [hidden] { display: none !important; }
+  [data-astronomy-root] {
+    --astro-font: "Inter", "Manrope", "SF Pro Text", "Segoe UI", sans-serif;
+    font-family: var(--astro-font);
+    line-height: 1.35;
+  }
+  [data-astronomy-root] *,
+  [data-astronomy-root] *::before,
+  [data-astronomy-root] *::after {
+    box-sizing: border-box;
+    font-family: var(--astro-font);
+  }
+  [data-astronomy-root] h1,
+  [data-astronomy-root] h2,
+  [data-astronomy-root] h3,
+  [data-astronomy-root] h4,
+  [data-astronomy-root] p,
+  [data-astronomy-root] span,
+  [data-astronomy-root] time,
+  [data-astronomy-root] label,
+  [data-astronomy-root] th,
+  [data-astronomy-root] td,
+  [data-astronomy-root] a,
+  [data-astronomy-root] strong,
+  [data-astronomy-root] summary {
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  [data-astronomy-root] .astro-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    line-height: 1.15;
+    background: rgba(255, 255, 255, 0.08);
+    color: #aab8ca;
+    white-space: nowrap;
+  }
+  [data-astronomy-root] .astro-pill.good { color: #06110a; background: #8ee6a8; }
+  [data-astronomy-root] .astro-pill.fair { color: #2b2100; background: #ffd166; }
+  [data-astronomy-root] .astro-pill.poor { color: #2b0505; background: #ff8a8a; }
+  [data-astronomy-root] .astro-pill.info { color: #031321; background: #7cc7ff; }
+  [data-astronomy-root] .astro-pill.soft {
+    color: #b7f7d1;
+    background: rgba(183, 247, 209, 0.1);
+    border: 1px solid rgba(183, 247, 209, 0.28);
+  }
+  [data-astronomy-root] .astro-pill.twilight{
+    color:#2b2100;
+    background:#ffd89a;
+    border:1px solid rgba(255,216,154,.55);
+    margin-left:6px;
+    vertical-align:1px;
+  }
+
+  [data-astronomy-root] .astro-event {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.032);
+  }
+  [data-astronomy-root] .astro-event time {
+    color: #7cc7ff;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  [data-astronomy-root] .astro-event h4 { margin: 0 0 3px; font-size: 0.95rem; line-height: 1.25; font-weight: 700; color: #dfe9f7; }
+  [data-astronomy-root] .astro-event p { margin: 0; color: #aab8ca; line-height: 1.45; font-size: 0.88rem; }
+
+  [data-astronomy-root] .astro-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 9px;
+  }
+  [data-astronomy-root] .astro-day-name,
+  [data-astronomy-root] .astro-day {
+    min-height: 104px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+  [data-astronomy-root] .astro-day-name {
+    min-height: auto;
+    padding: 9px 10px;
+    color: #aab8ca;
+    text-align: center;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(255, 255, 255, 0.015);
+  }
+  [data-astronomy-root] .astro-day strong { display: block; margin-bottom: 8px; font-size: 1rem; line-height: 1; }
+  [data-astronomy-root] .astro-day .astro-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; }
+  [data-astronomy-root] .astro-day-empty { background: transparent; border-color: rgba(255, 255, 255, 0.06); }
+  [data-astronomy-root] .astro-day { position: relative; }
+  [data-astronomy-root] .astro-more-btn { cursor: pointer; border: 1px solid rgba(183,247,209,.28); }
+  [data-astronomy-root] .astro-day-popover {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 68px;
+    z-index: 20;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 12px;
+    background: rgba(8, 18, 32, 0.96);
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+  }
+  [data-astronomy-root] .astro-popover-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  [data-astronomy-root] .astro-popover-events {
+    margin: 0;
+    padding-left: 16px;
+    color: #c7d4e7;
+    font-size: .78rem;
+    line-height: 1.35;
+    max-height: 120px;
+    overflow: auto;
+  }
+
+  [data-astronomy-root] table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.025);
+  }
+  [data-astronomy-root] th,
+  [data-astronomy-root] td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  [data-astronomy-root] th {
+    position: sticky;
+    top: 0;
+    background: #10233a;
+    color: #aab8ca;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 1;
+  }
+  [data-astronomy-root] tr:last-child td { border-bottom: 0; }
+  [data-astronomy-root] td.num { font-variant-numeric: tabular-nums; }
+
+  [data-astronomy-root] .astro-generated-at {
+    margin: 0 10px 0 0;
+    color: rgba(170, 184, 202, 0.92);
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.16);
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  [data-astronomy-root] .astro-modal-body { max-height: 68vh; overflow: auto; display: grid; grid-template-columns: 1fr; gap: 12px; padding-right: 4px; align-content: start; }
+  [data-astronomy-root] .astro-modal-day { border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: rgba(255,255,255,.02); padding: 6px 10px; margin-bottom: 0; }
+  [data-astronomy-root] .astro-modal-day > h3 { margin: 0 0 4px; font-size: .93rem; color: #c6d7ef; }
+  [data-astronomy-root] .astro-modal-event { display: grid !important; grid-template-columns: 112px minmax(0,1fr) 92px; gap: 10px; align-items: center; border-top: 1px solid rgba(255,255,255,.08); padding: 7px 2px; }
+  [data-astronomy-root] .astro-modal-event:first-of-type { border-top: 0; }
+  [data-astronomy-root] .astro-modal-event > time { color: #7cc7ff; font-weight: 700; font-size: .8rem; white-space: nowrap; }
+  [data-astronomy-root] .astro-modal-event > div > h4 { margin: 0 0 1px; font-size: .94rem; line-height: 1.22; }
+  [data-astronomy-root] .astro-modal-event > div > p { margin: 0; color: #aab8ca; font-size: .84rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  [data-astronomy-root] .astro-modal-event > .astro-pill { justify-self: end; }
+  @media (min-width:1200px) {
+    [data-astronomy-root] .astro-modal-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    [data-astronomy-root] .astro-modal-event { grid-template-columns: 98px minmax(0,1fr) 88px; }
+    [data-astronomy-root] .astro-modal-event > time { font-size: .78rem; }
+  }
+  @media (min-width:1700px) {
+    [data-astronomy-root] .astro-modal-body { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    [data-astronomy-root] .astro-modal-event { grid-template-columns: 92px minmax(0,1fr) 84px; }
+  }
+  @media (max-width:980px) {
+    [data-astronomy-root] .astro-modal-body { grid-template-columns: 1fr; }
+    [data-astronomy-root] .astro-modal-event { grid-template-columns: 1fr auto; gap: 8px; }
+    [data-astronomy-root] .astro-modal-event > time { grid-column: 1 / -1; }
+    [data-astronomy-root] .astro-modal-event > div { grid-column: 1 / 2; }
+    [data-astronomy-root] .astro-modal-event > .astro-pill { grid-column: 2 / 3; align-self: start; }
+  }
+  [data-astronomy-root] .astro-ev-icon{
+    display:inline-flex;
+    width:14px;
+    height:14px;
+    margin-right:6px;
+    vertical-align:-2px;
+    color:#7cc7ff;
+    opacity:.95;
+  }
+  [data-astronomy-root] .astro-ev-icon--default{ color:#7cc7ff; }
+  [data-astronomy-root] .astro-ev-icon--dark{ color:#9fd3ff; }
+  [data-astronomy-root] .astro-ev-icon--mw{ color:#9be7c4; }
+  [data-astronomy-root] .astro-ev-icon--planet{ color:#8fc5ff; }
+  [data-astronomy-root] .astro-ev-icon--conj{ color:#d2b7ff; }
+  [data-astronomy-root] .astro-ev-icon--occult{ color:#ffd49a; }
+  [data-astronomy-root] .astro-ev-icon--meteor{ color:#ffcf8a; }
+  [data-astronomy-root] .astro-ev-icon--comet{ color:#91e7ee; }
+  [data-astronomy-root] .astro-ev-icon--minor{ color:#f3da9b; }
+  [data-astronomy-root] .astro-ev-icon--solar{ color:#ffd166; }
+  [data-astronomy-root] .astro-ev-icon--twilight{ color:#ffb86b; }
+  [data-astronomy-root] .astro-ev-icon > svg{
+    width:14px;
+    height:14px;
+    stroke:currentColor;
+    fill:none;
+  }
+</style>

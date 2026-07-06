@@ -1,0 +1,4 @@
+datetime_local,target,target_mag,moon_altitude_deg,limb,event_type,is_planetary,score
+2027-05-01T20:15:00+10:00,Jupiter,-2.1,45.0,dark,planetary,True,excellent
+2027-06-14T22:40:00+10:00,SAO 12345,7.8,32.0,bright,star,False,fair
+2027-07-09T19:55:00+10:00,SAO 88888,10.7,18.0,dark,star,False,good

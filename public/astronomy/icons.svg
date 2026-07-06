@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="icon-dark-sky" viewBox="0 0 24 24">
+    <path d="M15.5 3.2A8.5 8.5 0 1 0 20.8 15a7.2 7.2 0 0 1-5.3-11.8Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m18.5 5.5.6 1.2 1.2.6-1.2.6-.6 1.2-.6-1.2-1.2-.6 1.2-.6.6-1.2Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="icon-milky-way" viewBox="0 0 24 24">
+    <ellipse cx="12" cy="12" rx="9" ry="4.8" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <ellipse cx="12" cy="12" rx="4.8" ry="9" fill="none" stroke="currentColor" stroke-width="1.75" opacity=".85"/>
+    <circle cx="12" cy="12" r="1.6" fill="currentColor"/>
+  </symbol>
+  <symbol id="icon-planet" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4.8" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <ellipse cx="12" cy="12" rx="10" ry="3.8" fill="none" stroke="currentColor" stroke-width="1.75"/>
+  </symbol>
+  <symbol id="icon-conjunction" viewBox="0 0 24 24">
+    <circle cx="9.2" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <circle cx="14.8" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+  </symbol>
+  <symbol id="icon-occultation" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <path d="M12 5.8A6.2 6.2 0 0 1 12 18.2Z" fill="currentColor" opacity=".9"/>
+  </symbol>
+  <symbol id="icon-meteor" viewBox="0 0 24 24">
+    <path d="M5 18.5h6.5M3.5 15.5h4.8M7 12.5h3.6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+    <path d="m17.4 6.6 2.6 2.6-5.3 5.3-3.4.8.8-3.4 5.3-5.3Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-comet" viewBox="0 0 24 24">
+    <circle cx="17" cy="7" r="2.6" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <path d="M4 19c3.8-1.8 7-5 8.8-8.8M6.5 20.5c4.4-2.1 8.1-5.8 10.2-10.2" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-minor-planet" viewBox="0 0 24 24">
+    <path d="m6.2 13.8 3.6-6.2h7.1l3.5 6.2-3.5 6.2H9.8l-3.6-6.2Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-solar-transit" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="6.8" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <circle cx="9.2" cy="10.3" r="1.2" fill="currentColor"/>
+    <path d="M12 2.2v2.2M12 19.6v2.2M2.2 12h2.2M19.6 12h2.2M4.8 4.8l1.6 1.6M17.6 17.6l1.6 1.6M19.2 4.8l-1.6 1.6M6.4 17.6l-1.6 1.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-warning" viewBox="0 0 24 24">
+    <path d="m12 3 9 16H3l9-16Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+    <path d="M12 8.2v5.8M12 16.8h.01" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-check-badge" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <path d="m8.7 12.3 2.3 2.3 4.4-4.4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "year": 2026,
+      "site": "South East Queensland, Australia",
+      "siteSlug": "south-east-queensland-australia",
+      "basePath": "/astronomy/years/2026/south-east-queensland-australia",
+      "sourceOutput": "/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output",
+      "generatedAt": "2026-05-31T14:54:44.553Z"
+    },
+    {
+      "year": 2027,
+      "site": "Malabar Coast, India",
+      "siteSlug": "malabar-coast-india",
+      "basePath": "/astronomy/years/2027/malabar-coast-india",
+      "sourceOutput": "/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output",
+      "generatedAt": "2026-05-30T04:21:37.288Z"
+    },
+    {
+      "year": 2027,
+      "site": "South East Queensland, Australia",
+      "siteSlug": "south-east-queensland-australia",
+      "basePath": "/astronomy/years/2027/south-east-queensland-australia",
+      "sourceOutput": "/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output",
+      "generatedAt": "2026-05-30T05:05:47.693Z"
+    },
+    {
+      "year": 2027,
+      "site": "Southern Tasmania, Australia",
+      "siteSlug": "southern-tasmania-australia",
+      "basePath": "/astronomy/years/2027/southern-tasmania-australia",
+      "sourceOutput": "/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output",
+      "generatedAt": "2026-05-30T04:21:37.274Z"
+    }
+  ]
+}

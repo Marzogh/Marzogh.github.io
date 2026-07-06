@@ -1,0 +1,14 @@
+{
+  "author": "Prajwal Bhattaram",
+  "config_hashes": {
+    "almanac.yaml": "f194ee7253ee13066a13875e8d9e4f50346ed1dd25c0d30a2c7f5010164fb60f",
+    "horizons_objects.yaml": "815cc6cff304c60869b854742c690834b503d951232738afb24c1daf2ab375be",
+    "meteor_showers.yaml": "be0cb18891bed25bac0660db3b75eb310c37a5a00b9520a668105dfe67ce2c30",
+    "sites.yaml": "908944e59da59f4109bf11eca2a4fd421469784433b1b420303759ceef753755"
+  },
+  "generated_at_utc": "2026-05-29T07:26:14.185866+00:00",
+  "generator": "personal-astro-almanac",
+  "run_id": 1,
+  "site_id": "home",
+  "year": 2027
+}

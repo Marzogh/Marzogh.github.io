@@ -1,0 +1,74 @@
+[
+  {
+    "note_id": "hero_subtitle",
+    "section": "hero",
+    "title": "Context",
+    "body": "Generated for South East Queensland, Australia. Times shown in Australia/Brisbane.",
+    "score": "info",
+    "date_local": ""
+  },
+  {
+    "note_id": "tonight_score",
+    "section": "tonight",
+    "title": "Fair",
+    "body": "Astronomical dark 19:14 to 04:27. Moon illumination 45%.",
+    "score": "fair",
+    "date_local": "2027-01-01"
+  },
+  {
+    "note_id": "moon_summary",
+    "section": "moon",
+    "title": "45%",
+    "body": "Moon rises --, sets 13:06. Use moon-free windows first for deep sky.",
+    "score": "info",
+    "date_local": "2027-01-01"
+  },
+  {
+    "note_id": "event_dark_1",
+    "section": "events",
+    "title": "Dark-sky window",
+    "body": "Longest moon-free window around Jun 24.",
+    "score": "excellent",
+    "date_local": "2027-06-24"
+  },
+  {
+    "note_id": "event_jupiter",
+    "section": "events",
+    "title": "Jupiter observing window",
+    "body": "Best in 2027-01 with altitude near 48 degrees.",
+    "score": "good",
+    "date_local": "2027-01-01"
+  },
+  {
+    "note_id": "event_minor",
+    "section": "events",
+    "title": "Minor planet: 3;",
+    "body": "High scoring target for small-scope imaging from this site.",
+    "score": "fair",
+    "date_local": "2027-12-31"
+  },
+  {
+    "note_id": "mw_summary",
+    "section": "milky_way",
+    "title": "Milky Way window",
+    "body": "4 excellent windows this month group. Best altitude about 32 degrees.",
+    "score": "info",
+    "date_local": ""
+  },
+  {
+    "note_id": "validation_summary",
+    "section": "validation",
+    "title": "9/9",
+    "body": "Validation check: all core datasets are present.",
+    "score": "good",
+    "date_local": ""
+  },
+  {
+    "note_id": "recommended_tonight",
+    "section": "recommendations",
+    "title": "Recommended tonight",
+    "body": "Use deep sky early, then switch to planetary once the Moon is higher. Check occultations list for timed events.",
+    "score": "info",
+    "date_local": ""
+  }
+]
