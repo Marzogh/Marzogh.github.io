@@ -5,131 +5,94 @@ pubDate: 2026-03-02
 draft: false
 tags: [ham-radio, amateur-radio, bandplan, australia, wia, hf, vhf, uhf]
 featured: true
+type: Band plan
 headerStyle: plain
 ---
 
 import BandPlanStyles from '../../components/blog/bandplan/BandPlanStyles.astro';
 import BandInspector from '../../components/blog/bandplan/BandInspector.astro';
-import KeyChangesGrid from '../../components/blog/bandplan/KeyChangesGrid.astro';
-import SourceDisclaimer from '../../components/blog/bandplan/SourceDisclaimer.astro';
-import SourceLinks from '../../components/blog/bandplan/SourceLinks.astro';
-import { bandCharts, bandPanels, keyChanges, sourceLinks } from '../../data/bandplans/wia-2026';
+import EditorialReferencePanel from '../../components/EditorialReferencePanel.astro';
+import { bandCharts, bandPanels, sourceLinks } from '../../data/bandplans/wia-2026';
 
 <BandPlanStyles />
 
-The Wireless Institute of Australia has published its revised 2026 Australian Amateur Radio Band Plan after the 2025 consultation process. Band plans are voluntary, but they still shape how amateurs find each other, avoid interference, and build shared expectations about where different kinds of activity belong.
+The WIA published a substantially revised Australian Amateur Radio Band Plan in 2026, following the consultation process that ran through 2025. Some of the changes are small, but there are enough moved frequencies and redrawn sections that I would not rely entirely on memory if I had been using an older copy of the plan for a while.
 
-This revision is not just a visual refresh. Some HF frequencies that many Australian amateurs will recognise have moved, several digital-heavy areas are now shown more clearly in the published plan, and parts of the VHF, UHF, and microwave sections have been reorganised to match current operating patterns more closely.
+The HF changes are probably the ones most operators will notice first. A few familiar emergency and voice references have moved, while areas already dominated by digital operation are now described more realistically. From 6 metres upwards, the changes become more structural, with larger revisions to data, beacons, repeaters, ATV and experimental allocations.
 
-<details class="bandplan-glance panel panel--soft" open>
-  <summary class="bandplan-glance__summary">Show headline changes</summary>
-  <p class="bandplan-glance__intro">
-    This is a shortlist of the changes most likely to affect day-to-day operating. If you want the full
-    set of bands, use the band chart and inspector below.
-  </p>
-  <KeyChangesGrid items={keyChanges} />
-</details>
+Band plans are voluntary, but they are still useful because we collectively rely on them to find one another and avoid making a mess of the bands. Once actual operating practice drifts too far away from what the published plan says, the plan gradually becomes less useful. Reading the consultation material alongside the final 2026 version, quite a bit of this revision seems to be about catching the document up with what has already been happening on air.
 
-<div class="bandplan-columns">
-  <section class="bandplan-columns__item panel panel--soft">
-    <h2>Why the plan changed</h2>
+## What actually changed
 
-    <p>The consultation outcomes point to a few recurring problems.</p>
+The easiest place to start is HF, because most of the changes there are fairly specific.
 
-    <p>
-      One was friction between voice activity and parts of the bands that now carry heavy digital use. That
-      shows up on `80m`, `40m`, and `30m`. Another was that some informal operating habits had drifted away
-      from what the published plan still showed. The 2026 revision updates the published plan to match that
-      reality more closely.
-    </p>
+On 80 metres, the Australian emergency communications centre of activity moves from 3600 to 3610 kHz, while 3686 kHz is now listed as the AM centre of activity. Moving away from 3600 kHz makes sense given where data activity now sits, although I suspect the old frequency will remain in people’s heads for quite a while. Ten kilohertz is not much spectrum, but habits tend to have a longer half-life than band plans.
 
-    <p>
-      That has advantages, but it also has a cost. A more realistic band plan is useful only if people
-      actually adjust to it, and that means some operators will need to give up habits that have been around
-      for years. Even where the new plan makes technical sense, not everyone will agree that the new
-      boundaries are the right ones.
-    </p>
+Forty metres has a little more going on. The Australian emergency communications reference is now 7110 kHz and the AM centre of activity is 7125 kHz, while 7074–7080 kHz is explicitly shown as DATA / CW.
 
-    <p>
-      There is also a difference between bands where the changes affect everyday operating and bands where the
-      changes mostly affect coordinators, repeater groups, ATV users, or microwave experimenters. Some parts
-      of the revision will feel immediately relevant. Other parts will seem remote unless you already work in
-      those areas.
-    </p>
-  </section>
+That last change mostly formalises what is already happening on air. Anyone who has spent time around 7074 kHz already knows how heavily that part of the band is used for digital modes, so the revised plan now reflects that more clearly.
 
-  <section class="bandplan-columns__item panel panel--soft">
-    <h2>What this means in practice</h2>
+Thirty metres follows much the same logic. The recommended voice section is now 10120–10131 kHz, leaving more room above it for the international data activity already concentrated there. On a 50 kHz-wide band even a small adjustment is noticeable, but there was never much spare room to work with in the first place.
 
-    <p>For ordinary operating, the main message is simple: a few familiar frequencies should no longer be treated as the obvious default.</p>
+The 20 metre emergency communications reference moves from 14125 to 14300 kHz, bringing the Australian plan into line with the IARU Region 3 emergency frequency. That makes the reference easier to reconcile internationally, although 14300 kHz is already familiar territory rather than unused spectrum.
 
-    <p>
-      If you operate HF voice, especially on `80m`, `40m`, `30m`, or `20m`, it is worth checking the new
-      plan rather than relying on memory. Several of the updates move voice or emergency activity away from
-      digital-heavy areas, and several AM centres of activity are now listed by frequency in the plan.
-    </p>
+Twelve metres changes much less. The consultation considered removing the 24950 kHz emergency communications reference, but it remains in the final plan after WICEN interest in retaining it.
 
-    <p>
-      That should reduce avoidable clashes over time. In the short term, though, it may do the opposite.
-      During any transition, some operators will still be listening on the old frequencies, others will move
-      to the new ones straight away, and some will not even realise anything has changed.
-    </p>
+Taken together, I would describe the HF changes as housekeeping rather than a redesign. They mostly tidy up places where operating practice and the older plan had started to drift apart.
 
-    <p>
-      For POTA and SOTA activators, the main effect is better frequency choice on HF, especially around the
-      revised voice, data, and emergency communications segments.
-    </p>
-  </section>
-</div>
+<section class="bandplan-quickview" aria-labelledby="bandplan-quickview-title">
+  <p class="bandplan-quickview__kicker">Quick view</p>
+  <p id="bandplan-quickview-title" class="bandplan-quickview__title">The changes most operators are likely to notice</p>
+  <div class="bandplan-quickview__scroll">
+    <table>
+      <thead>
+        <tr><th>Band</th><th>Previous reference</th><th>2026 change</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>80 m</th><td>3600 kHz EmCom</td><td>3610 kHz EmCom; 3686 kHz AM CoA</td></tr>
+        <tr><th>40 m</th><td>Voice/data overlap around 7074 kHz</td><td>7110 kHz EmCom; 7125 kHz AM CoA; 7074–7080 kHz DATA / CW</td></tr>
+        <tr><th>30 m</th><td>Broader domestic voice</td><td>10120–10131 kHz voice</td></tr>
+        <tr><th>20 m</th><td>14125 kHz EmCom</td><td>14300 kHz EmCom</td></tr>
+        <tr><th>6 m</th><td>Earlier DATA, beacon and experimental layout</td><td>Substantial rearrangement of those sections</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-## Band-by-band changes
+## From 6 metres upwards
+
+Six metres has been reorganised more substantially than the HF bands. The DATA section is now 50.220–50.330 MHz, the beacon allocation moves to 50.400–50.500 MHz, and 52.000–52.500 MHz becomes a wideband experimental all-modes section. The lower end of the band is also laid out more explicitly around IBP, beacons, CW, voice and data.
+
+That makes the band a little harder to carry around entirely in your head, but I think the extra structure is useful. Weak-signal digital operation is now a major part of 6 metres, while the space above 52 MHz gives Australian operators a useful chunk of spectrum for experimentation without crowding the narrowband end.
+
+Two metres has changed differently. Much of the familiar structure remains, but the new plan is more explicit about digital modes, repeater use and the shared -1.6 MHz repeater pairs. Those unusual offsets are being treated as exceptions rather than something to use simply because they are available, which will matter much more to repeater coordinators than to somebody making simplex contacts on 146.5 MHz.
+
+On 70 centimetres, repeater inputs and outputs, hotspot space and link allocations are identified more clearly, while the consultation outcomes point towards -7 MHz as the preferred long-term repeater arrangement. Existing infrastructure means that the published plan and everything already on air will not line up immediately, and the LIPD allocation in the middle of the band adds another practical constraint.
+
+Once you get into the microwave bands, the detailed comparison is much more useful than paragraphs full of frequency ranges. The broad direction is still clear enough: the new plan gives more space and clearer structure to data networking, ATV, repeater pairs and wideband experimentation, while also accounting for constraints such as radionavigation satellite services and radio astronomy.
+
+On 23 centimetres, ATV is kept lower in the band while a new repeater pair appears at 1257.5–1258.0 MHz output and 1297.5–1298.0 MHz input. FM simplex and narrowband activity are pushed further into the 1296 MHz region, which also helps reduce the risk of interference to radionavigation satellite services.
+
+Thirteen centimetres gains a 20 MHz repeater pair and a clearer ATV arrangement, while 9 centimetres has to accommodate radio astronomy exclusions as well as its own new repeater pair. Higher again, the older pattern of alternating 20 MHz voice and data blocks gives way to broader data allocations on 6 and 3 centimetres.
+
+If you use those bands, I would look at the detailed plan rather than try to memorise a summary from this page. There is enough going on that the exact allocations matter more than any neat description I could give them here.
+
+## Band-by-band inspector
+
+If you want the actual before-and-after layout, use the inspector below. I built it because once I started comparing the old and new plans band by band, paragraphs stopped being a particularly sensible way of showing what had moved.
+
+Pick a band and the inspector will show the earlier arrangement beside the 2026 version, followed by a short note on the change itself and any context that is genuinely useful.
 
 <BandInspector panels={bandPanels} charts={bandCharts} />
 
-<div class="bandplan-columns bandplan-columns--closing">
-  <section class="bandplan-columns__item panel panel--soft">
-    <h2>What the consultation outcomes suggest</h2>
+## What I make of the revision
 
-    <p>Reading the consultation outcomes alongside the final plan gives a better sense of the tradeoffs.</p>
+Reading through the consultation outcomes, I think the overall direction is sensible. The WIA has tried to make the published plan look more like the bands people are actually using, particularly where digital activity has expanded into areas that older plans still treated more loosely.
 
-    <p>
-      Some of the changes are clearly overdue. A few older arrangements had become awkward enough that leaving
-      them alone would have been harder to justify than changing them. That is particularly true where voice
-      and data were sitting on top of each other in ways that no longer reflected actual operating.
-    </p>
+There is inevitably some friction in doing that. If you have used a particular frequency or part of a band for years, a revised plan can put a different use there even though your own operating habits have not changed. At the same time, a voluntary band plan only works while enough people recognise what it says, so leaving older arrangements untouched when actual use has moved on does not help much either.
 
-    <p>
-      At the same time, not every change will feel neutral. Some operators will read the revision as sensible
-      housekeeping. Others will read parts of it as the WIA publishing changes that confirm older operating
-      habits no longer fit the band as well as they once did. Both views can be true at once.
-    </p>
+I also do not think every change deserves the same amount of attention. If I were mainly operating HF, I would make sure I had the new 80, 40, 30 and 20 metre arrangements in mind and then get on with operating. From 6 metres upwards, particularly for repeaters, ATV or microwave work, I would be much more inclined to keep the current plan nearby because some of the allocations have moved enough that memory is not going to be particularly trustworthy.
 
-    <p>
-      The strongest point in the new plan is that it is generally more in touch with current practice. The
-      weakest point is that current practice is not always universally welcomed. A band plan can reflect
-      reality, but it cannot make everyone happy about the reality it reflects.
-    </p>
-  </section>
-
-  <section class="bandplan-columns__item panel panel--soft">
-    <h2>Final thoughts</h2>
-
-    <p>The 2026 WIA Australian Amateur Radio Band Plan is worth reading even if you normally ignore band-planning documents.</p>
-
-    <p>
-      Several of the changes affect frequencies that many Australian amateurs use regularly, especially on
-      `80m`, `40m`, `30m`, and `20m`. Others are more relevant to repeater groups, ATV users, and microwave
-      experimenters, but still show where the WIA thinks structure is needed.
-    </p>
-
-    <p>
-      The update should reduce some longstanding friction. It may also create a short-term adjustment period,
-      especially where familiar frequencies have moved or long-established habits are being pushed aside. That
-      is probably unavoidable.
-    </p>
-  </section>
-</div>
-
-<SourceDisclaimer />
-
-<SourceLinks links={sourceLinks} />
+<EditorialReferencePanel title="Official sources" links={sourceLinks}>
+  <p>The comparison graphics and band inspector on this page are my own interpretation of the published material, so I would not use them as the final authority before transmitting somewhere unfamiliar. For that, I would go back to the WIA documents themselves.</p>
+</EditorialReferencePanel>

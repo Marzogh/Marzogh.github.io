@@ -17,6 +17,7 @@ const blog = defineCollection({
       draft: z.boolean().default(false),
       tags: z.array(z.string()).default([]),
       type: z.string().optional(),
+      pullQuotes: z.array(z.string()).default([]),
       featured: z.boolean().default(false),
       image: z.string().optional(),
       headerStyle: z.enum(['panel', 'plain']).optional(),

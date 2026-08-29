@@ -1,0 +1,112 @@
+---
+interface Datum {
+  label: string;
+  value: string | number;
+}
+
+interface Props {
+  items: Datum[];
+  label: string;
+  layout?: 'row' | 'rail';
+}
+
+const { items, label, layout = 'row' } = Astro.props;
+---
+
+<dl class:list={['editorial-stats', `editorial-stats--${layout}`]} aria-label={label}>
+  {items.map((item) => (
+    <div><dt>{item.label}</dt><dd>{item.value}</dd></div>
+  ))}
+</dl>
+
+<style>
+  .editorial-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    margin: 0;
+    border-block: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  }
+
+  .editorial-stats div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.58rem 0.7rem;
+    border-left: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  .editorial-stats div:first-child {
+    border-left: 0;
+  }
+
+  .editorial-stats dt,
+  .editorial-stats dd {
+    margin: 0;
+  }
+
+  .editorial-stats dt {
+    color: color-mix(in srgb, var(--muted) 78%, transparent);
+  }
+
+  .editorial-stats dd {
+    color: var(--text-2);
+    font-size: 0.68rem;
+    text-align: right;
+  }
+
+  .editorial-stats--rail {
+    grid-template-columns: 1fr;
+    width: min(100%, 260px);
+    justify-self: end;
+    align-self: start;
+    border-top-color: color-mix(in srgb, var(--text-2) 48%, transparent);
+  }
+
+  .editorial-stats--rail div {
+    padding: 0.44rem 0;
+    border-left: 0;
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  }
+
+  .editorial-stats--rail div:first-child {
+    border-top: 0;
+  }
+
+  @media (max-width: 820px) {
+    .editorial-stats--rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: min(100%, 330px);
+    }
+
+    .editorial-stats--rail div:nth-child(even) {
+      padding-left: 0.7rem;
+      border-left: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    }
+
+    .editorial-stats--rail div:nth-child(-n + 2) {
+      border-top: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .editorial-stats--rail {
+      grid-template-columns: 1fr;
+      width: min(100%, 250px);
+    }
+
+    .editorial-stats--rail div:nth-child(even) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .editorial-stats--rail div:nth-child(2) {
+      border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    }
+  }
+</style>

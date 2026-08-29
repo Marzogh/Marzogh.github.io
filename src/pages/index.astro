@@ -1,1206 +1,788 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { getCollection } from 'astro:content';
-import { poetry } from '../data/poetry';
-import { YEAR9_DIGITECH_RESOURCES } from '../data/educationYear9DigitalTechnologies';
+import ThemeIcon from '../components/ThemeIcon.astro';
+import heroImage from '../assets/home-hero-2026.png';
 import { isPublishedEntryData } from '../utils/publishing';
 
-const title = 'Chips’nCode';
-const description = 'A living technical playground — projects, tools, documentation, and education.';
-const contentUpdatedAt = import.meta.env.PUBLIC_CONTENT_UPDATED_AT || import.meta.env.PUBLIC_SITE_BUILD_AT || '';
+const blog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
+const projects = await getCollection('projects', ({ data }) => !data.draft);
+const tools = await getCollection('tools', ({ data }) => !data.draft);
+const docs = await getCollection('docs', ({ data }) => !data.draft);
+const education = await getCollection('education', ({ data }) => !data.draft && data.showInLanding);
+const astrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
 
-const entryDateValue = (entry) =>
-  new Date(entry?.data?.pubDate ?? entry?.data?.updatedDate ?? 0).valueOf();
-
-// Latest content (update collection names here if yours differ)
-const allBlog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
-const latestBlog = [...allBlog]
-  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
-  .slice(0, 5);
-
-const allProjects = await getCollection('projects', ({ data }) => !data.draft);
-const latestProjects = [...allProjects]
-  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
-  .slice(0, 5);
-
-const allTools = await getCollection('tools', ({ data }) => !data.draft);
-const latestTools = [...allTools]
-  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
-  .slice(0, 5);
-
-const allDocs = await getCollection('docs', ({ data }) => !data.draft);
-const latestDocs = [...allDocs]
-  .sort((a, b) => entryDateValue(b) - entryDateValue(a))
-  .slice(0, 5);
-const allAstrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
-
-const allEducation = await getCollection('education', ({ data }) => !data.draft);
-const EDUCATION_HOME_GROUPS = [
-  { slug: 'digital-technologies', label: 'Digital Technologies', linkLabel: 'Course pathways & references', note: 'Year 9 programming, projects, robotics, and physical computing.' },
-  { slug: 'biology', label: 'Biology', linkLabel: 'Resource packs & lesson material', note: 'Senior biology packs, lessons, and classroom notes.' },
-  { slug: 'mathematics', label: 'Mathematics', linkLabel: 'Interactive worksheets & worked examples', note: 'Interactive documents, practice material, and classroom support.' },
-] as const;
-const educationByHomeCategory = Object.fromEntries(
-  EDUCATION_HOME_GROUPS.map((group) => [
-    group.slug,
-    group.slug === 'digital-technologies' ? [...allEducation.filter((entry) => entry.data.subject === group.slug), ...YEAR9_DIGITECH_RESOURCES] : allEducation.filter((entry) => entry.data.subject === group.slug),
-  ])
-);
-
-const toTagLine = (entry) => {
-  const tags = entry?.data?.tags;
-  if (Array.isArray(tags) && tags.length) return tags.slice(0, 4).join(' · ');
-  const desc = entry?.data?.description;
-  if (typeof desc === 'string' && desc.trim()) return desc;
-  return '';
+const slugFor = (entry) => String(entry.slug ?? entry.id ?? '').replace(/\.(md|mdx)$/i, '');
+const dated = (entry) => new Date(entry.data.updatedDate ?? entry.data.pubDate ?? entry.data.sessionDate ?? 0);
+const formatDate = (date) => Number.isFinite(date.valueOf())
+  ? new Intl.DateTimeFormat('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+  : 'Undated';
+const imageFor = (entry) => {
+  const image = entry?.data?.image;
+  return typeof image === 'string' ? image : image?.src;
 };
-
-const safeSlug = (entry) => {
-  if (typeof entry?.slug === 'string' && entry.slug.trim()) return entry.slug;
-  if (typeof entry?.id === 'string' && entry.id.trim()) {
-    // Fallback: derive a usable path segment from the content entry id
-    return entry.id
-      .replace(/^\/+/, '')
-      .replace(/\.(md|mdx)$/i, '');
-  }
-  return '';
-};
-
-// Unified index across collections we currently have wired here
-// (If you add more collections later, extend this list.)
-const normalize = (entry, kind) => {
-  const title = entry?.data?.title ?? safeSlug(entry);
-  const date = new Date(entry?.data?.pubDate ?? entry?.data?.updatedDate ?? 0);
-  const tags = Array.isArray(entry?.data?.tags)
-    ? entry.data.tags.map((tag) => String(tag).toLowerCase())
-    : [];
-  const featured = Boolean(entry?.data?.featured || entry?.data?.pinned || entry?.data?.pin);
-  const slug = safeSlug(entry);
-  const url =
-    kind === 'blog' ? `/notebook/${slug}` :
-    kind === 'projects' ? `/projects/${slug}` :
-    kind === 'tools' ? `/tools/${slug}` :
-    kind === 'docs' ? `/docs/${slug}` :
-    kind === 'education' ? `/education/${slug.replace(/\/index$/, '')}` :
-    kind === 'poetry' ? `/poetry/${slug}` :
-    kind === 'astrophotography' ? `/astrophotography/${slug}` :
-    `/${slug}`;
-  return { kind, title, date, tags, featured, url, raw: entry };
-};
+const kindClass = (type) => type.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const kindSymbol = (type) => ({
+  Notebook: '¶',
+  Project: '▦',
+  Tool: '⌁',
+  Reference: '§',
+  Astrophotography: '✦',
+}[type] ?? '•');
 
 const allEntries = [
-  ...allBlog.map((e) => normalize(e, 'blog')),
-  ...allProjects.map((e) => normalize(e, 'projects')),
-  ...allTools.map((e) => normalize(e, 'tools')),
-  ...allDocs.map((e) => normalize(e, 'docs')),
-  ...allEducation.map((e) => normalize(e, 'education')),
-  ...poetry.map((entry) => ({
-    kind: 'poetry',
-    title: entry.title,
-    date: entry.pubDateValue,
-    tags: ['poetry', 'life'],
-    featured: false,
-    url: `/poetry/${entry.slug}`,
-    raw: entry,
-  })),
-  ...allAstrophotography.map((e) => normalize(e, 'astrophotography')),
+  ...blog.map((entry) => ({ entry, type: 'Notebook', href: `/notebook/${slugFor(entry)}` })),
+  ...projects.map((entry) => ({ entry, type: 'Project', href: `/projects/${slugFor(entry)}` })),
+  ...tools.map((entry) => ({ entry, type: 'Tool', href: `/tools/${slugFor(entry)}` })),
+  ...docs.map((entry) => ({ entry, type: 'Reference', href: `/docs/${slugFor(entry)}` })),
+  ...astrophotography.map((entry) => ({ entry, type: 'Astrophotography', href: `/astrophotography/${slugFor(entry)}` })),
+].sort((a, b) => dated(b.entry).valueOf() - dated(a.entry).valueOf());
+
+const seen = new Set();
+const entries = allEntries.filter(({ entry, type }) => {
+  const key = `${type}:${entry.data.title}`;
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+});
+
+const latest = entries.slice(0, 6);
+const latestHref = latest[0]?.href ?? '/notebook';
+
+const featuredProject = projects
+  .filter(({ data }) => data.featured && data.image)
+  .sort((a, b) => dated(b).valueOf() - dated(a).valueOf())[0];
+const featuredAstro = [...astrophotography]
+  .sort((a, b) => dated(b).valueOf() - dated(a).valueOf())[0];
+
+const sections = [
+  { code: 'P', title: 'Projects', href: '/projects', detail: 'Things I have built, am building or am planning to build.', tone: 'builds' },
+  { code: 'N', title: 'Notebook', href: '/notebook', detail: 'Notes, investigations and occasional rabbit holes.', tone: 'mind' },
+  { code: 'D', title: 'Documentation', href: '/docs', detail: 'References, manuals and things written down properly.', tone: 'code' },
+  { code: 'T', title: 'Tools', href: '/tools', detail: 'Small utilities and instruments I needed.', tone: 'life' },
+  { code: 'A', title: 'Astrophotography', href: '/astrophotography', detail: 'Sessions, images and processing notes.', tone: 'light' },
+  { code: 'E', title: 'Education', href: '/education', detail: 'Teaching material I actually use.', tone: 'builds' },
+  { code: 'P', title: 'Poetry', href: '/poetry', detail: 'The much older and rather different bit of the site.', tone: 'mind' },
 ];
 
-const PILL_RULES = [
-  {
-    name: 'Builds',
-    kinds: ['projects', 'tools'],
-    tags: [
-      'ham-radio',
-      'amateur-radio',
-      'electronics',
-      'arduino',
-      'pota',
-      'portable',
-      'activation-reports',
-      'field-ops',
-      'build',
-    ],
-  },
-  {
-    name: 'Code',
-    kinds: ['docs', 'tools', 'education'],
-    tags: [
-      'python',
-      'tutorial',
-      'refactoring',
-      'functions',
-      'programming-foundations',
-      'code',
-      'astro',
-      'github-pages',
-      'dns',
-      'custom-domain',
-      'https',
-      'website',
-    ],
-  },
-  {
-    name: 'Life',
-    kinds: ['poetry'],
-    tags: ['life', 'reflection', 'essay', 'journal', 'personal'],
-  },
-  {
-    name: 'Mind',
-    kinds: ['education', 'docs'],
-    tags: ['teaching-resources', 'student-resources', 'curriculum', 'design', 'architecture', 'analysis'],
-  },
-  {
-    name: 'Light',
-    kinds: ['astrophotography'],
-    tags: ['astrophotography', 'stars', 'moon', 'light'],
-  },
+const themes = [
+  { title: 'Builds', href: '/projects', tone: 'builds' },
+  { title: 'Code', href: '/docs', tone: 'code' },
+  { title: 'Life', href: '/notebook', tone: 'life' },
+  { title: 'Mind', href: '/poetry', tone: 'mind' },
+  { title: 'Light', href: '/astrophotography', tone: 'light' },
 ];
-
-const PILL_TAGS = PILL_RULES.map((rule) => rule.name);
-
-const byPill = Object.fromEntries(
-  PILL_RULES.map((rule) => {
-    const items = allEntries
-      .filter((entry) => {
-        const byKind = rule.kinds.includes(entry.kind);
-        const byTag = entry.tags.some((tag) => rule.tags.includes(tag));
-        return byKind || byTag;
-      })
-      .sort((a, b) => {
-        if (a.featured !== b.featured) return a.featured ? -1 : 1;
-        return b.date.valueOf() - a.date.valueOf();
-      });
-    return [rule.name, items];
-  })
-);
-
-const latestEntry = [...allEntries]
-  .filter((entry) => Number.isFinite(entry.date.valueOf()))
-  .sort((a, b) => b.date.valueOf() - a.date.valueOf())[0] ?? null;
-const latestEntryUrl = latestEntry?.url ?? '/notebook';
-const latestEntryTitle = latestEntry?.title ?? 'latest entry';
-
-const kindLabel = (kind) =>
-  kind === 'blog' ? 'Post' :
-  kind === 'projects' ? 'Project' :
-  kind === 'tools' ? 'Tool' :
-  kind === 'docs' ? 'Doc' :
-  kind === 'education' ? 'Education' :
-  kind === 'poetry' ? 'Poem' :
-  kind === 'astrophotography' ? 'Astro' :
-  'Entry';
-
-const spotlight = (pill) => byPill[pill].slice(0, 3);
-const rest = (pill) => byPill[pill].slice(3);
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead
+      title="Chips’nCode"
+      description="Things built, investigated, photographed, taught and occasionally overcomplicated."
+    />
   </head>
-  <body>
+  <body class="home-page">
     <Header />
 
-    <main class="page" id="top">
-      <section class="migration-note" aria-label="Migration status">
-        <p>
-          <span class="migration-note__badge" aria-hidden="true">Under Construction</span>
-          Chips'nCode is being migrated post-by-post from a previous version of the website. More archived content will return over time.
-          {contentUpdatedAt ? <span class="migration-note__updated">Last content update: {contentUpdatedAt}</span> : null}
-        </p>
-      </section>
-
-      <!-- HERO (banner-driven) -->
-      <section class="hero" aria-label="Site introduction">
-        <div class="hero__bg" aria-hidden="true"></div>
-        <div class="hero__inner">
-          <div class="hero__content">
-            <h1 class="hero__title">Chips’nCode</h1>
-            <p class="hero__subtitle">
-              Signals in silicon, code in carbon, light, life, and the planetary systems that tie these together — welcome to the ramblings of an easily distracted mind.
-            </p>
-
-            <div class="hero__actions">
-              <a class="btn btn--primary" href="/projects">Browse projects</a>
-              <a class="btn" href={latestEntryUrl} aria-label={`Read the latest: ${latestEntryTitle}`}>Read the latest</a>
-            </div>
-
-            <nav class="hero__meta" aria-label="Explore by theme">
-              <a class="chip" href="#pill-builds">Builds</a>
-              <a class="chip" href="#pill-code">Code</a>
-              <a class="chip" href="#pill-life">Life</a>
-              <a class="chip" href="#pill-mind">Mind</a>
-              <a class="chip" href="#pill-light">Light</a>
-            </nav>
+    <main class="home-main">
+      <section class="home-hero" aria-labelledby="home-hero-title">
+        <Image
+          class="home-hero__image"
+          src={heroImage}
+          alt="A radio, code-covered laptop, coffee, electronics and field notebook beneath the Milky Way"
+          widths={[800, 1200, 1600, 2048]}
+          sizes="(max-width: 1904px) calc(100vw - 64px), 1840px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="home-hero__shade" aria-hidden="true"></div>
+        <div class="home-hero__copy">
+          <h1 id="home-hero-title">Chips’nCode</h1>
+          <p>Chips’nCode is where I keep the things I build, investigate, photograph, teach and occasionally get distracted by.</p>
+          <p>There is a lot of amateur radio and electronics here, alongside software, astronomy, teaching resources and whatever else I have wandered into lately.</p>
+          <div class="home-hero__actions">
+            <a class="home-action home-action--primary" href={latestHref}>Latest <span aria-hidden="true">→</span></a>
+            <a class="home-action" href="/projects">Projects <span aria-hidden="true">→</span></a>
           </div>
+          <nav class="theme-strip theme-strip--hero" aria-label="Browse by theme">
+            {themes.map((theme) => (
+              <a class={`theme-chip theme-chip--${theme.tone}`} href={theme.href}>
+                <ThemeIcon name={theme.tone} />{theme.title}
+              </a>
+            ))}
+          </nav>
         </div>
       </section>
 
-      <section class="home-masonry" aria-label="Homepage highlights" data-masonry data-randomize="true">
-        <section class="home-card dash__col home-card--writing" aria-label="Latest writing">
-          <div class="dash__head">
-            <h2 class="dash__title">Latest writing</h2>
-            <a class="dash__more" href="/notebook">All posts →</a>
-          </div>
+      <section class="home-section" aria-labelledby="latest-title">
+        <header class="home-section__heading">
+          <h2 id="latest-title">Latest</h2>
+          <a href="/notebook">View everything <span aria-hidden="true">→</span></a>
+        </header>
 
-          <ul class="dash__list">
-            {latestBlog.map((post) => (
-              <li>
-                <a href={`/notebook/${safeSlug(post)}`}>{post.data?.title ?? safeSlug(post)}</a>
-                {toTagLine(post) ? <span class="dash__sub">{toTagLine(post)}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section class="home-card dash__col home-card--projects" aria-label="Featured projects">
-          <div class="dash__head">
-            <h2 class="dash__title">Projects &amp; builds</h2>
-            <a class="dash__more" href="/projects">All projects →</a>
-          </div>
-
-          <ul class="dash__list">
-            {latestProjects.map((proj) => (
-              <li>
-                <a href={`/projects/${safeSlug(proj)}`}>{proj.data?.title ?? safeSlug(proj)}</a>
-                {toTagLine(proj) ? <span class="dash__sub">{toTagLine(proj)}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section class="home-card dash__col dash__col--edu home-card--education" aria-label="Education">
-          <div class="dash__head">
-            <h2 class="dash__title">Education</h2>
-            <a class="dash__more" href="/education">Education hub →</a>
-          </div>
-
-          <div class="edu__stack">
-            {EDUCATION_HOME_GROUPS.map((group) => {
-              const count = educationByHomeCategory[group.slug]?.length ?? 0;
-              return (
-                <div class="edu__block">
-                  <div class="edu__label">{group.label}</div>
-                  {count > 0 ? (
-                    <a class="edu__link" href={`/education/${group.slug}`}>{group.linkLabel}</a>
-                  ) : (
-                    <span class="edu__link edu__link--muted">{group.linkLabel}</span>
-                  )}
-                  <div class="edu__note">{group.note}</div>
-                  <div class="edu__count">{count} resource{count === 1 ? '' : 's'}</div>
+        <div class="latest-grid">
+          {latest.map(({ entry, type, href }) => {
+            const image = imageFor(entry);
+            return (
+              <a class={`latest-card latest-card--${kindClass(type)}`} href={href}>
+                <div class="latest-card__copy">
+                  <span class="content-label">{type}</span>
+                  <h3>{entry.data.title}</h3>
+                  <p>{entry.data.description}</p>
+                  <span class="latest-card__date">{formatDate(dated(entry))}</span>
                 </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section class="home-card dash__col home-card--tools" aria-label="Latest tools">
-          <div class="dash__head">
-            <h2 class="dash__title">Latest tools</h2>
-            <a class="dash__more" href="/tools">All tools →</a>
-          </div>
-
-          <ul class="dash__list">
-            {latestTools.map((tool) => (
-              <li>
-                <a href={`/tools/${safeSlug(tool)}`}>{tool.data?.title ?? safeSlug(tool)}</a>
-                {toTagLine(tool) ? <span class="dash__sub">{toTagLine(tool)}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section class="home-card dash__col dash__col--docs home-card--docs" aria-label="Latest documentation">
-          <div class="dash__head">
-            <h2 class="dash__title">Documentation</h2>
-            <a class="dash__more" href="/docs">Docs index →</a>
-          </div>
-
-          <ul class="dash__list">
-            {latestDocs.map((doc) => (
-              <li>
-                <a href={`/docs/${safeSlug(doc)}`}>{doc.data?.title ?? safeSlug(doc)}</a>
-                {toTagLine(doc) ? <span class="dash__sub">{toTagLine(doc)}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <a class="home-card feature__tile feature__tile--wide home-card--feature" href="/projects" aria-label="Featured build">
-          <div class="feature__kicker">Featured</div>
-          <div class="feature__title">Builds worth bookmarking</div>
-          <div class="feature__text">Hardware experiments, antenna work, field kits, and practical write-ups.</div>
-          <div class="feature__cta">Explore projects →</div>
-        </a>
-
-        <a class="home-card feature__tile feature__tile--astro home-card--astro" href="/astrophotography" aria-label="Featured astrophotography">
-          <div class="feature__kicker">Featured</div>
-          <div class="feature__title">Astrophotography logs</div>
-          <div class="feature__text">Sessions, calibration, processing pipelines, and gear notes.</div>
-          <div class="feature__cta">View astrophotography →</div>
-        </a>
-      </section>
-
-      <!-- PILL VIEWS (all posts by elemental tags) -->
-      <section class="pills" aria-label="Browse by elemental themes">
-        <div class="pills__head">
-          <h2 class="pills__title">Browse by theme</h2>
-          <p class="pills__desc">Showing everything tagged with this theme. Spotlight items are newest (and any pinned/featured posts).</p>
-        </div>
-
-        <div class="pills__grid">
-          {PILL_TAGS.map((pill) => (
-            <section
-              class="pill"
-              id={`pill-${pill.toLowerCase()}`}
-              aria-label={`${pill} posts`}
-            >
-              <div class="pill__top">
-                <h3 class="pill__title">{pill}</h3>
-                <div class="pill__right">
-                  <span class="pill__count">{byPill[pill].length} item{byPill[pill].length === 1 ? '' : 's'}</span>
-                  <a class="pill__close" href="#top" aria-label="Hide theme panel">Close</a>
-                </div>
-              </div>
-
-              {byPill[pill].length === 0 ? (
-                <div class="pill__empty">Nothing tagged <strong>{pill}</strong> yet — soon.</div>
-              ) : (
-                <>
-                  <div class="pill__spotlight" aria-label={`${pill} spotlight`}>
-                    {spotlight(pill).map((e) => (
-                      <a class="spot" href={e.url}>
-                        <div class="spot__row">
-                          <span class="spot__title">{e.title}</span>
-                          {e.featured ? <span class="spot__badge">Featured</span> : null}
-                        </div>
-                        <div class="spot__meta">
-                          <span class="spot__kind">{kindLabel(e.kind)}</span>
-                          <span class="spot__dot">•</span>
-                          <span class="spot__date">{Number.isFinite(e.date.valueOf()) ? e.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
-                        </div>
-                      </a>
-                    ))}
+                {image ? (
+                  <img class="latest-card__image" src={image} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <div class="latest-card__visual" aria-hidden="true">
+                    <span class="filigree-letter">{kindSymbol(type)}</span>
+                    <small>{type}</small>
                   </div>
-
-                  {rest(pill).length ? (
-                    <details class="pill__more">
-                      <summary>Show all {pill.toLowerCase()} ({rest(pill).length} more)</summary>
-                      <ul class="pill__list">
-                        {rest(pill).map((e) => (
-                          <li>
-                            <a href={e.url}>{e.title}</a>
-                            <span class="pill__sub">{kindLabel(e.kind)}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  ) : null}
-                </>
-              )}
-            </section>
-          ))}
+                )}
+                <span class="latest-card__arrow" aria-hidden="true">↗</span>
+              </a>
+            );
+          })}
         </div>
+      </section>
+
+      <section class="home-section" aria-labelledby="explore-title">
+        <header class="home-section__heading">
+          <h2 id="explore-title">Explore</h2>
+        </header>
+        <nav class="explore-grid" aria-label="Site sections">
+          {sections.map((section) => (
+            <a class={`explore-card explore-card--${section.tone}`} href={section.href}>
+              <span class="explore-card__code" aria-hidden="true">
+                <span class="filigree-letter">{section.code}</span>
+              </span>
+              <span class="explore-card__copy">
+                <strong>{section.title}</strong>
+                <small>{section.detail}</small>
+              </span>
+              <span class="explore-card__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </nav>
+      </section>
+
+      <section class="home-section" aria-labelledby="featured-title">
+        <header class="home-section__heading">
+          <h2 id="featured-title">Featured</h2>
+          <a href="/projects">More featured <span aria-hidden="true">→</span></a>
+        </header>
+        <div class="featured-grid">
+          {featuredProject ? (
+            <a class="featured-card" href={`/projects/${slugFor(featuredProject)}`}>
+              <img src={imageFor(featuredProject)} alt="" loading="lazy" decoding="async" />
+              <div>
+                <span class="content-label">Featured project</span>
+                <h3>{featuredProject.data.title}</h3>
+                <p>{featuredProject.data.description}</p>
+                <span class="featured-card__action">View project →</span>
+              </div>
+            </a>
+          ) : null}
+
+          {featuredAstro ? (
+            <a class="featured-card" href={`/astrophotography/${slugFor(featuredAstro)}`}>
+              <img src={imageFor(featuredAstro)} alt="" loading="lazy" decoding="async" />
+              <div>
+                <span class="content-label">Featured image</span>
+                <h3>{featuredAstro.data.title}</h3>
+                <p>{featuredAstro.data.description}</p>
+                <span class="featured-card__action">View image →</span>
+              </div>
+            </a>
+          ) : null}
+        </div>
+      </section>
+
+      <section class="theme-browser" aria-labelledby="themes-title">
+        <div>
+          <h2 id="themes-title">Browse by theme</h2>
+          <p>Follow an idea across projects, writing, tools, documentation and photographs.</p>
+        </div>
+        <nav class="theme-strip" aria-label="Browse site themes">
+          {themes.map((theme) => (
+            <a class={`theme-chip theme-chip--${theme.tone}`} href={theme.href}>
+              <ThemeIcon name={theme.tone} />{theme.title}
+            </a>
+          ))}
+        </nav>
+        <a class="theme-browser__about" href="/about">About the site →</a>
       </section>
     </main>
 
     <Footer />
-
-    <script src="/scripts/masonry-grid.js" defer></script>
-
-    <style>
-      /* PILL VIEWS */
-      .pills {
-        margin-top: 1.25rem;
-        /* Hidden until a pill is targeted */
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(-4px);
-        transition: opacity 160ms ease, transform 160ms ease;
-      }
-
-      /* Reveal the entire section when any pill panel is targeted */
-      .pills:has(.pill:target) {
-        max-height: 10000px;
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-      }
-
-      .pills__head {
-        margin-bottom: 0.75rem;
-      }
-
-      .pills__title {
-        margin: 0 0 0.25rem;
-        font-size: 1.15rem;
-        letter-spacing: -0.01em;
-        color: var(--text);
-      }
-
-      .pills__desc {
-        margin: 0;
-        color: var(--muted);
-        max-width: 80ch;
-      }
-
-      .pills__grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr;
-      }
-
-      @media (min-width: 900px) {
-        .pills__grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-      }
-
-      @media (min-width: 1200px) {
-        .pills__grid {
-          grid-template-columns: repeat(5, minmax(0, 1fr));
-        }
-      }
-
-      .pill {
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
-        box-shadow: var(--shadow-sm);
-        padding: 0.95rem;
-        scroll-margin-top: 92px;
-        display: none;
-      }
-
-      .pill:target {
-        display: block;
-      }
-
-      /* If someone jumps to the section without a target, keep it tidy */
-      .pills__grid {
-        grid-template-columns: 1fr;
-      }
-
-      .pill__top {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.6rem;
-        margin-bottom: 0.65rem;
-        flex-wrap: wrap;
-      }
-
-      .pill__right {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        flex: 0 0 auto;
-      }
-
-      .pill__close {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.22rem 0.55rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: color-mix(in srgb, var(--surface) 78%, transparent 22%);
-        color: var(--text);
-        text-decoration: none;
-        font-weight: 650;
-        font-size: 0.88rem;
-      }
-
-      .pill__close:hover {
-        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
-        color: var(--link-hover);
-      }
-
-      .pill__title {
-        margin: 0;
-        font-size: 1.02rem;
-        letter-spacing: -0.01em;
-        color: var(--text);
-        white-space: nowrap;
-      }
-
-      .pill__count {
-        color: var(--muted);
-        font-size: 0.9rem;
-        white-space: nowrap;
-        flex: 0 0 auto;
-      }
-
-      .pill__empty {
-        color: var(--muted);
-        font-size: 0.95rem;
-        padding: 0.4rem 0;
-      }
-
-      .pill__spotlight {
-        display: grid;
-        gap: 0.6rem;
-      }
-
-      .spot {
-        display: block;
-        padding: 0.7rem 0.75rem;
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
-        text-decoration: none;
-        color: var(--text);
-      }
-
-      .spot:hover {
-        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
-      }
-
-      .spot__row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-      }
-
-      .spot__title {
-        font-weight: 800;
-        letter-spacing: -0.01em;
-      }
-
-      .spot__badge {
-        font-size: 0.75rem;
-        padding: 0.18rem 0.45rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        color: var(--text-2);
-        background: color-mix(in srgb, var(--surface) 80%, transparent 20%);
-        white-space: nowrap;
-      }
-
-      .spot__meta {
-        margin-top: 0.28rem;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .spot__dot {
-        opacity: 0.75;
-      }
-
-      .pill__more {
-        margin-top: 0.7rem;
-        border-top: 1px dashed var(--border);
-        padding-top: 0.65rem;
-      }
-
-      .pill__more summary {
-        cursor: pointer;
-        color: var(--link);
-        font-weight: 700;
-        list-style: none;
-      }
-
-      .pill__more summary::-webkit-details-marker {
-        display: none;
-      }
-
-      .pill__more summary:hover {
-        color: var(--link-hover);
-        text-decoration: underline;
-      }
-
-      .pill__list {
-        list-style: none;
-        margin: 0.6rem 0 0;
-        padding: 0;
-        display: grid;
-        gap: 0.45rem;
-      }
-
-      .pill__list li {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.6rem;
-      }
-
-      .pill__list a {
-        color: var(--text);
-        text-decoration: none;
-        font-weight: 650;
-      }
-
-      .pill__list a:hover {
-        color: var(--link-hover);
-      }
-
-      .pill__sub {
-        color: var(--muted);
-        font-size: 0.88rem;
-        white-space: nowrap;
-      }
-
-      @media (max-width: 900px) {
-        .pill {
-          scroll-margin-top: 120px;
-        }
-      }
-      .page {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 1.25rem 1rem 3.5rem;
-      }
-
-      .migration-note {
-        width: min(100%, 1220px);
-        margin: 0 auto 0.6rem;
-        padding: 0.42rem 0.2rem 0.55rem;
-        border-top: 1px solid color-mix(in srgb, var(--border) 85%, var(--text) 15%);
-        border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
-        background:
-          linear-gradient(
-            90deg,
-            transparent 0%,
-            color-mix(in srgb, var(--surface-raised) 35%, transparent 65%) 24%,
-            color-mix(in srgb, var(--surface-raised) 22%, transparent 78%) 76%,
-            transparent 100%
-          );
-      }
-
-      .migration-note p {
-        margin: 0;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.55rem;
-        color: color-mix(in srgb, var(--muted) 84%, var(--text) 16%);
-        font-size: 0.86rem;
-        line-height: 1.45;
-        letter-spacing: 0.01em;
-        text-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 72%, transparent 28%);
-      }
-
-      .migration-note__badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: color-mix(in srgb, var(--accent) 46%, var(--text) 54%);
-        padding: 0.18rem 0.45rem;
-        border: 1px solid color-mix(in srgb, var(--border) 70%, var(--accent) 30%);
-        border-radius: 999px;
-        background:
-          repeating-linear-gradient(
-            -45deg,
-            color-mix(in srgb, var(--surface) 70%, transparent 30%) 0 6px,
-            color-mix(in srgb, var(--surface-raised) 70%, transparent 30%) 6px 12px
-          );
-        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface) 85%, transparent 15%);
-      }
-
-      .migration-note__updated {
-        margin-left: auto;
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.06em;
-        color: color-mix(in srgb, var(--muted) 72%, var(--text) 28%);
-        white-space: nowrap;
-      }
-
-      @media (max-width: 860px) {
-        .migration-note__updated {
-          width: 100%;
-          margin-left: 0;
-          margin-top: 0.12rem;
-        }
-      }
-
-      /* HERO */
-      .hero {
-        position: relative;
-        width: min(100%, 1220px);
-        margin-inline: auto;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-      }
-
-      .hero__bg {
-        position: absolute;
-        inset: 0;
-        /* NOTE: place Banner.png in /public/Banner.png */
-        background-image:
-          linear-gradient(
-            to left,
-            rgba(0, 0, 0, 0.00) 0%,
-            rgba(0, 0, 0, 0.10) 26%,
-            rgba(0, 0, 0, 0.34) 52%,
-            rgba(0, 0, 0, 0.62) 78%,
-            rgba(0, 0, 0, 0.78) 100%
-          ),
-          url('/Banner.png');
-        background-size: cover;
-        background-position: center;
-        filter: saturate(1.05);
-      }
-
-      :global(html[data-theme="light"]) .hero__bg {
-        background-image:
-          linear-gradient(
-            to left,
-            rgba(255, 255, 255, 0.82) 0%,
-            rgba(255, 255, 255, 0.66) 28%,
-            rgba(255, 255, 255, 0.34) 52%,
-            rgba(255, 255, 255, 0.12) 70%,
-            rgba(255, 255, 255, 0.00) 82%
-          ),
-          url('/Banner.png');
-      }
-
-      @media (prefers-color-scheme: light) {
-        :global(html:not([data-theme="dark"])) .hero__bg {
-          background-image:
-            linear-gradient(
-              to left,
-              rgba(255, 255, 255, 0.82) 0%,
-              rgba(255, 255, 255, 0.66) 28%,
-              rgba(255, 255, 255, 0.34) 52%,
-              rgba(255, 255, 255, 0.12) 70%,
-              rgba(255, 255, 255, 0.00) 82%
-            ),
-            url('/Banner.png');
-        }
-      }
-
-      .hero__inner {
-        position: relative;
-        padding: 2.5rem 2rem;
-        min-height: 310px;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-      }
-
-      .hero__content {
-        max-width: 640px;
-        text-align: right;
-        padding: 0.55rem 0.65rem;
-        border-radius: 16px;
-        backdrop-filter: blur(6px);
-      }
-
-      /* LIGHT MODE: add a gentle translucent panel so text stays readable over the banner */
-
-      /* (Removed light-mode translucent panel for hero__content) */
-
-      .hero__title {
-        margin: 0 0 0.5rem;
-        font-size: clamp(2rem, 3vw, 3rem);
-        letter-spacing: -0.02em;
-        color: var(--text);
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 22px rgba(0, 0, 0, 0.18);
-      }
-
-      .hero__subtitle {
-        margin: 0 0 1.25rem;
-        color: var(--text-2);
-        max-width: 60ch;
-        font-size: 1.05rem;
-        line-height: 1.55;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 18px rgba(0, 0, 0, 0.16);
-      }
-
-      /* LIGHT MODE: bump contrast a touch for the subtitle */
-      :global(html[data-theme="light"]) .hero__subtitle {
-        color: color-mix(in srgb, var(--text) 86%, black 14%);
-      }
-
-      @media (prefers-color-scheme: light) {
-        :global(html:not([data-theme="dark"])) .hero__subtitle {
-          color: color-mix(in srgb, var(--text) 86%, black 14%);
-        }
-      }
-
-      .hero__actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-        justify-content: flex-end;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.65rem 0.95rem;
-        border-radius: 12px;
-        border: 1px solid var(--border-2);
-        background: color-mix(in srgb, var(--surface) 85%, transparent 15%);
-        color: var(--text);
-        text-decoration: none;
-        box-shadow: var(--shadow-sm);
-      }
-
-      .btn:hover {
-        border-color: color-mix(in srgb, var(--accent) 22%, var(--border-2) 78%);
-      }
-
-      .btn--primary {
-        background: var(--accent);
-        color: var(--accent-ink);
-        border-color: color-mix(in srgb, var(--accent) 70%, black 30%);
-      }
-
-      .btn--primary:hover {
-        filter: brightness(1.03);
-      }
-
-      .hero__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: flex-end;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.28rem 0.55rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: color-mix(in srgb, var(--surface) 70%, transparent 30%);
-        color: var(--text-2);
-        font-size: 0.85rem;
-        text-decoration: none;
-        cursor: pointer;
-      }
-
-      .chip:hover {
-        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
-        color: var(--text);
-      }
-
-      .chip:focus-visible {
-        outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent 50%);
-        outline-offset: 2px;
-      }
-
-      .home-masonry {
-        width: min(100%, 1180px);
-        margin: 1.25rem auto 0;
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr;
-      }
-
-      .home-card {
-        min-width: 0;
-      }
-
-      @media (min-width: 720px) {
-        .home-masonry {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .home-card--education,
-        .home-card--feature {
-          grid-column: span 2;
-        }
-      }
-
-      @media (min-width: 980px) {
-        .home-masonry[data-masonry-ready='true'] {
-          grid-template-columns: repeat(6, minmax(0, 1fr));
-          grid-auto-flow: dense;
-          grid-auto-rows: 12px;
-          align-items: start;
-        }
-
-        .home-card--writing,
-        .home-card--projects,
-        .home-card--education,
-        .home-card--docs,
-        .home-card--elsewhere,
-        .home-card--astro {
-          grid-column: span 2;
-        }
-
-        .home-card--feature {
-          grid-column: span 3;
-        }
-      }
-
-      .dash__col {
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
-        box-shadow: var(--shadow-sm);
-        padding: 1rem;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .dash__head {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.75rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .dash__title {
-        margin: 0;
-        font-size: 1.05rem;
-        letter-spacing: -0.01em;
-        color: var(--text);
-      }
-
-      .dash__more {
-        color: var(--link);
-        text-decoration: none;
-        font-size: 0.95rem;
-        white-space: nowrap;
-      }
-
-      .dash__more:hover {
-        text-decoration: underline;
-      }
-
-      .dash__list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 0.75rem;
-      }
-
-      .dash__list li {
-        display: grid;
-        gap: 0.2rem;
-      }
-
-      .dash__list a {
-        color: var(--text);
-        text-decoration: none;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-      }
-
-      .dash__list a:hover {
-        color: var(--link-hover);
-      }
-
-      .dash__sub {
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      .dash__col--docs {
-        border-color: color-mix(in srgb, var(--coral) 18%, var(--border) 82%);
-        background:
-          radial-gradient(680px 260px at 8% 0%, color-mix(in srgb, var(--coral) 13%, transparent 87%), transparent 56%),
-          radial-gradient(620px 240px at 100% 100%, color-mix(in srgb, var(--accent) 9%, transparent 91%), transparent 58%),
-          color-mix(in srgb, var(--surface) 92%, transparent 8%);
-      }
-
-      /* Education column: calmer, more structured */
-      .dash__col--edu {
-        border-color: color-mix(in srgb, var(--accent) 18%, var(--border) 82%);
-        background:
-          radial-gradient(700px 280px at 15% 0%, color-mix(in srgb, var(--leaf) 14%, transparent 86%), transparent 55%),
-          color-mix(in srgb, var(--surface) 92%, transparent 8%);
-      }
-
-      .edu__stack {
-        display: grid;
-        gap: 0.75rem;
-      }
-
-      .edu__block {
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
-        padding: 0.85rem;
-      }
-
-      .edu__label {
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 0.35rem;
-      }
-
-      .edu__link {
-        display: inline-block;
-        font-weight: 700;
-        color: var(--text);
-        text-decoration: none;
-        margin-bottom: 0.25rem;
-      }
-
-      .edu__link:hover {
-        color: var(--link-hover);
-      }
-
-      .edu__link--muted {
-        color: var(--muted);
-      }
-
-      .edu__note {
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      .edu__count {
-        margin-top: 0.4rem;
-        color: var(--text-2);
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .feature-band__intro {
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 1.2rem 1.15rem;
-        background:
-          radial-gradient(720px 260px at 0% 0%, color-mix(in srgb, var(--accent) 13%, transparent 87%), transparent 58%),
-          radial-gradient(620px 240px at 100% 100%, color-mix(in srgb, var(--leaf) 10%, transparent 90%), transparent 55%),
-          color-mix(in srgb, var(--surface) 94%, transparent 6%);
-        box-shadow: var(--shadow-sm);
-      }
-
-      .feature-band__kicker {
-        margin: 0;
-      }
-
-      .feature-band__kicker {
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 1rem;
-      }
-
-      .feature-band__tiles {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr;
-      }
-
-      .feature__tile {
-        display: block;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.15rem;
-        text-decoration: none;
-        color: var(--text);
-        background:
-          radial-gradient(700px 280px at 0% 0%, color-mix(in srgb, var(--accent) 15%, transparent 85%), transparent 55%),
-          color-mix(in srgb, var(--surface) 92%, transparent 8%);
-        box-shadow: var(--shadow-sm);
-        min-height: 100%;
-      }
-
-      .feature__tile--astro {
-        background:
-          radial-gradient(700px 280px at 0% 0%, color-mix(in srgb, var(--accent) 12%, transparent 88%), transparent 55%),
-          radial-gradient(700px 280px at 100% 10%, color-mix(in srgb, var(--leaf) 10%, transparent 90%), transparent 55%),
-          color-mix(in srgb, var(--surface) 92%, transparent 8%);
-      }
-
-      .feature__tile:hover {
-        border-color: color-mix(in srgb, var(--accent) 22%, var(--border) 78%);
-      }
-
-      .feature__kicker {
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 0.5rem;
-      }
-
-      .feature__title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin: 0 0 0.45rem;
-      }
-
-      .feature__text {
-        margin: 0 0 0.85rem;
-        color: var(--text-2);
-        max-width: 62ch;
-      }
-
-      .feature__cta {
-        font-weight: 700;
-        color: var(--link);
-      }
-
-      .quick__grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.65rem;
-        position: relative;
-        z-index: 1;
-      }
-
-      .pills {
-        width: min(100%, 980px);
-        margin-inline: auto;
-      }
-
-      @media (min-width: 1100px) {
-        .hero {
-          margin-left: 20px;
-          margin-right: auto;
-        }
-      }
-
-      .quick__link {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.55rem 0.8rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: color-mix(in srgb, var(--surface) 92%, transparent 8%);
-        text-decoration: none;
-        color: var(--text);
-        box-shadow: var(--shadow-sm);
-      }
-
-      .quick__link:hover {
-        border-color: color-mix(in srgb, var(--accent) 20%, var(--border) 80%);
-        color: var(--link-hover);
-      }
-
-      /* Tighten on small screens */
-      @media (max-width: 480px) {
-        .hero__inner {
-          padding: 1.6rem 1.1rem;
-          min-height: 250px;
-        }
-
-        .page {
-          padding: 1rem 1rem 2.5rem;
-        }
-      }
-    </style>
   </body>
 </html>
+
+<style>
+  :global(body.home-page) {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--paper) 96%, var(--accent) 4%), var(--paper));
+  }
+
+  .home-main {
+    width: min(100% - 64px, 1840px);
+    max-width: none;
+    margin-inline: auto;
+    padding: 0 0 clamp(3rem, 7vw, 6rem);
+  }
+
+  .home-hero {
+    position: relative;
+    width: 100%;
+    height: clamp(400px, 30vw, 460px);
+    min-height: 0;
+    margin-inline: auto;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(246, 241, 231, 0.32);
+    background: #07090c;
+    color: #f6f1e7;
+  }
+
+  .home-hero__image,
+  .home-hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-hero__image {
+    object-fit: cover;
+    object-position: center 56%;
+  }
+
+  .home-hero__shade {
+    background:
+      linear-gradient(90deg, transparent 38%, rgba(4, 6, 9, 0.12) 52%, rgba(4, 6, 9, 0.82) 76%, rgba(4, 6, 9, 0.94) 100%),
+      linear-gradient(0deg, rgba(4, 6, 9, 0.22), transparent 42%);
+  }
+
+  .home-hero__copy {
+    position: relative;
+    z-index: 1;
+    width: min(47%, 590px);
+    margin-left: auto;
+    padding: clamp(2.2rem, 4vw, 4rem) clamp(2rem, 4vw, 4.5rem) 2rem;
+  }
+
+  .home-hero h1 {
+    margin: 0 0 0.75rem;
+    color: #f6f1e7;
+    font-size: clamp(2.2rem, 3.5vw, 3.7rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
+  }
+
+  .home-hero__copy > p {
+    max-width: 50ch;
+    margin: 0.55rem 0 0;
+    color: rgba(246, 241, 231, 0.82);
+    font-size: clamp(0.84rem, 1.1vw, 0.98rem);
+    line-height: 1.55;
+  }
+
+  .home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+  }
+
+  .home-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-width: 112px;
+    padding: 0.62rem 0.78rem;
+    border: 1px solid rgba(246, 241, 231, 0.42);
+    color: #f6f1e7;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .home-action--primary {
+    border-color: #7065c7;
+    background: #51479f;
+  }
+
+  .home-action:hover {
+    border-color: #df916f;
+    background: #df916f;
+    color: #111318;
+  }
+
+  .theme-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .theme-strip--hero {
+    margin-top: 1.15rem;
+  }
+
+  .theme-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.48rem;
+    min-height: 2.35rem;
+    padding: 0.42rem 0.68rem;
+    border: 1px solid color-mix(in srgb, var(--theme-colour) 26%, transparent 74%);
+    background: color-mix(in srgb, var(--theme-colour) 9%, transparent 91%);
+    color: var(--theme-colour);
+    font-size: 0.72rem;
+    text-decoration: none;
+  }
+
+  .theme-strip--hero .theme-chip {
+    border-color: color-mix(in srgb, var(--theme-colour) 42%, transparent 58%);
+    background: color-mix(in srgb, #10151c 82%, var(--theme-colour) 18%);
+  }
+
+  .theme-chip:hover {
+    background: color-mix(in srgb, var(--theme-colour) 18%, transparent 82%);
+  }
+
+  .theme-chip--builds,
+  .explore-card--builds { --theme-colour: #61c989; }
+  .theme-chip--code,
+  .explore-card--code { --theme-colour: #6ca8ef; }
+  .theme-chip--life,
+  .explore-card--life { --theme-colour: #dfbd43; }
+  .theme-chip--mind,
+  .explore-card--mind { --theme-colour: #b788ed; }
+  .theme-chip--light,
+  .explore-card--light { --theme-colour: #60bdda; }
+
+  .home-section {
+    padding-top: clamp(1.35rem, 2.4vw, 2.25rem);
+  }
+
+  .home-section__heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+    padding: 0 0.5rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-section__heading h2,
+  .theme-browser h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.3vw, 1.9rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .home-section__heading a,
+  .theme-browser__about {
+    color: var(--link);
+    font-size: 0.72rem;
+    text-decoration: none;
+  }
+
+  .latest-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .latest-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 124px;
+    min-height: 176px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 72%, transparent 28%);
+    color: var(--text);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .latest-card__copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 0.85rem;
+  }
+
+  .content-label {
+    align-self: flex-start;
+    padding: 0.18rem 0.32rem;
+    background: color-mix(in srgb, var(--card-tone, var(--tag-ink)) 14%, transparent 86%);
+    color: var(--card-tone, var(--tag-ink));
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .latest-card h3,
+  .featured-card h3 {
+    margin: 0.65rem 0 0.45rem;
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.22;
+    letter-spacing: -0.025em;
+  }
+
+  .latest-card p,
+  .featured-card p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-2);
+    font-size: 0.68rem;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .latest-card__date {
+    margin-top: auto;
+    padding-top: 0.7rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+  }
+
+  .latest-card__image,
+  .latest-card__visual {
+    position: relative;
+    align-self: start;
+    width: 112px;
+    height: 112px;
+    margin: 0.75rem 0.75rem 0.75rem 0;
+    border: 1px solid var(--border);
+    aspect-ratio: 1;
+  }
+
+  .latest-card__image {
+    object-fit: cover;
+  }
+
+  .latest-card__visual {
+    --filigree-ink: var(--card-tone);
+    --filigree-paper: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    background:
+      linear-gradient(135deg, transparent 49.5%, color-mix(in srgb, var(--card-tone) 28%, transparent) 50%, transparent 50.5%),
+      repeating-linear-gradient(0deg, transparent 0 17px, color-mix(in srgb, var(--card-tone) 16%, transparent) 18px),
+      color-mix(in srgb, var(--card-tone) 8%, var(--surface) 92%);
+    color: var(--card-tone);
+    box-shadow:
+      inset 0 0 0 3px color-mix(in srgb, var(--surface) 72%, transparent 28%),
+      inset 0 0 0 4px color-mix(in srgb, var(--card-tone) 24%, transparent 76%);
+  }
+
+  .latest-card__visual span {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 2.65rem;
+    font-weight: 800;
+    line-height: 1;
+    transform: rotate(-1.5deg);
+  }
+
+  .latest-card__visual .filigree-letter {
+    display: inline-block;
+    background:
+      repeating-radial-gradient(
+        ellipse at 18% 52%,
+        transparent 0 3px,
+        color-mix(in srgb, var(--filigree-paper) 92%, transparent 8%) 3.5px 4.5px,
+        transparent 5px 8px
+      ),
+      repeating-radial-gradient(
+        ellipse at 82% 48%,
+        transparent 0 4px,
+        color-mix(in srgb, var(--filigree-paper) 82%, transparent 18%) 4.5px 5.5px,
+        transparent 6px 10px
+      ),
+      repeating-linear-gradient(
+        42deg,
+        var(--filigree-ink) 0 2px,
+        color-mix(in srgb, var(--filigree-paper) 76%, var(--filigree-ink) 24%) 2px 3px,
+        var(--filigree-ink) 3px 6px
+      );
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-stroke: 0.55px color-mix(in srgb, var(--filigree-ink) 78%, var(--text) 22%);
+    filter: drop-shadow(0.8px 0.8px 0 color-mix(in srgb, var(--text) 38%, transparent 62%));
+  }
+
+  .latest-card__visual small {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .latest-card--notebook { --card-tone: #a47adc; }
+  .latest-card--project { --card-tone: #51aa74; }
+  .latest-card--tool { --card-tone: #c9a52e; }
+  .latest-card--reference { --card-tone: #5f8fc9; }
+  .latest-card--astrophotography { --card-tone: #52a8c3; }
+
+  .latest-card__arrow {
+    position: absolute;
+    right: 0.45rem;
+    bottom: 0.35rem;
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+
+  .latest-card:hover,
+  .featured-card:hover,
+  .explore-card:hover {
+    background: color-mix(in srgb, var(--tag-ink) 7%, var(--surface) 93%);
+  }
+
+  .latest-card:hover h3,
+  .latest-card:hover .latest-card__arrow,
+  .featured-card:hover h3,
+  .explore-card:hover strong,
+  .explore-card:hover .explore-card__arrow {
+    color: var(--accent);
+  }
+
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .explore-card {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    min-height: 92px;
+    padding: 0.8rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 68%, transparent 32%);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .explore-card__code {
+    --filigree-ink: var(--theme-colour);
+    --filigree-paper: var(--surface);
+    position: relative;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--theme-colour) 58%, transparent 42%);
+    background: color-mix(in srgb, var(--theme-colour) 12%, var(--surface) 88%);
+    box-shadow:
+      inset 0 0 0 2px color-mix(in srgb, var(--surface) 76%, transparent 24%),
+      inset 0 0 0 3px color-mix(in srgb, var(--theme-colour) 24%, transparent 76%);
+    color: var(--theme-colour);
+    font-family: var(--font-filigree);
+    font-size: 1.55rem;
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: 1;
+    transform: rotate(-1.5deg);
+  }
+
+  .explore-card__code .filigree-letter {
+    color: var(--theme-colour);
+    font-family: var(--font-filigree);
+    font-size: 1.7rem;
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: 1;
+    filter: none;
+    text-shadow: none;
+    -webkit-text-stroke: 0;
+  }
+
+  .explore-card__copy {
+    display: grid;
+    align-content: start;
+    gap: 0.2rem;
+  }
+
+  .explore-card strong {
+    font-size: 0.88rem;
+  }
+
+  .explore-card small {
+    max-width: 30ch;
+    color: var(--text-2);
+    font-size: 0.66rem;
+    line-height: 1.4;
+  }
+
+  .explore-card__arrow {
+    align-self: center;
+  }
+
+  .explore-card:last-child:nth-child(3n + 1) {
+    grid-column: 2;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .featured-card {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    min-height: 204px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 72%, transparent 28%);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .featured-card > img {
+    align-self: start;
+    width: 180px;
+    height: 180px;
+    margin: 0.75rem 0 0.75rem 0.75rem;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    aspect-ratio: 1;
+  }
+
+  .featured-card > div {
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem 1rem;
+  }
+
+  .featured-card__action {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--text);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .theme-browser {
+    display: grid;
+    grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.4fr) auto;
+    gap: 1.5rem;
+    align-items: center;
+    margin-top: clamp(1.35rem, 2.4vw, 2.25rem);
+    padding: 0.75rem 0.5rem;
+    border-block: 1px solid var(--border);
+  }
+
+  .theme-browser p {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+    font-size: 0.68rem;
+  }
+
+  @media (max-width: 1000px) {
+    .latest-grid,
+    .explore-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .explore-card:last-child:nth-child(3n + 1) {
+      grid-column: auto;
+    }
+
+    .theme-browser {
+      grid-template-columns: 1fr;
+    }
+
+    .theme-browser__about {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .home-hero {
+      min-height: 620px;
+    }
+
+    .home-hero__image {
+      object-position: 29% center;
+    }
+
+    .home-hero__shade {
+      background: linear-gradient(0deg, rgba(4, 6, 9, 0.98) 0%, rgba(4, 6, 9, 0.82) 48%, rgba(4, 6, 9, 0.08) 82%);
+    }
+
+    .home-hero__copy {
+      position: absolute;
+      inset: auto 0 0;
+      width: auto;
+      padding: 1.5rem;
+    }
+
+    .theme-strip--hero {
+      display: none;
+    }
+
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .home-main {
+      width: min(100% - 28px, 1840px);
+    }
+
+    .latest-grid,
+    .explore-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .latest-card {
+      grid-template-columns: minmax(0, 1fr) 112px;
+    }
+
+    .latest-card__image,
+    .latest-card__visual {
+      width: 100px;
+      height: 100px;
+    }
+
+    .featured-card {
+      grid-template-columns: 128px minmax(0, 1fr);
+    }
+
+    .featured-card > img {
+      width: 112px;
+      height: 112px;
+    }
+
+    .home-section__heading {
+      padding-inline: 0;
+    }
+  }
+</style>

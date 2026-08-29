@@ -1,11 +1,12 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
+import EditorialEntryRow from '../../components/EditorialEntryRow.astro';
+import EditorialHeading from '../../components/EditorialHeading.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import IndexHeader from '../../components/IndexHeader.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import CliShell from '../../components/CliShell.astro';
 import { toTagSlug } from '../../utils/tags';
 import { isPublishedEntryData } from '../../utils/publishing';
@@ -25,16 +26,6 @@ const supportingPosts = topCandidates.slice(1, 3);
 const topIds = new Set([leadPost?.id, ...supportingPosts.map((post) => post.id)].filter(Boolean));
 const archivePosts = posts.filter((post) => !topIds.has(post.id));
 const totalFeatured = featuredPosts.length;
-
-function pickThumb(data: any) {
-  return data.thumbnail ?? data.thumb ?? data.cover ?? data.coverImage ?? data.heroImage ?? data.image ?? null;
-}
-
-function imageSizes(kind: 'lead' | 'support' | 'archive') {
-  if (kind === 'lead') return '(max-width: 920px) 100vw, (max-width: 1240px) 58vw, 720px';
-  if (kind === 'support') return '(max-width: 920px) 100vw, (max-width: 1240px) 42vw, 520px';
-  return '(max-width: 720px) 100vw, (max-width: 1120px) 42vw, 360px';
-}
 
 function postDateValue(post: (typeof posts)[number]) {
   const candidate = post.data.updatedDate ?? post.data.pubDate ?? null;
@@ -93,15 +84,19 @@ const cliManual = {
     <Header />
 
     <main class="blog-index">
-      <section class="notebook-hero">
-        <div>
-          <IndexHeader
-            eyebrow="Notebook"
-            title="Notebook"
-            lede="Essays, field notes, technical write-ups, poetry, reflections, hobby rabbit holes, and the occasional deep dive into something that refused to behave."
-          />
-        </div>
-      </section>
+      <PageHeader
+        kicker="Notebook / field notes"
+        title="Rabbit holes, documented for posterity."
+        lede="Technical write-ups, field notes, reflections, and overcomplicated answers to questions that were supposed to be simple."
+        variant="index-rail"
+        id="notebook-title"
+        stats={[
+          { label: 'Published', value: posts.length },
+          { label: 'Featured', value: totalFeatured },
+          { label: 'Tags in use', value: notebookTags.length },
+          { label: 'Last updated', value: formatDateStamp(latestPostUpdated) },
+        ]}
+      />
 
       {posts.length === 0 ? (
         <div class="panel panel--soft empty">
@@ -114,162 +109,65 @@ const cliManual = {
       ) : (
         <>
           {leadPost ? (
-            <section class="feature-band" aria-labelledby="blog-featured-heading">
-              <div class="section-head">
-                <div>
-                  <p class="eyebrow eyebrow--accent">Front Shelf</p>
-                  <h2 id="blog-featured-heading">Featured writing</h2>
-                </div>
-              </div>
+            <section class="front-shelf" aria-labelledby="blog-featured-heading">
+              <EditorialHeading kicker="Front shelf" title="Featured writing" id="blog-featured-heading" align="split" />
 
-              <div class="feature-band__grid">
-                <article class:list={['lead panel', !pickThumb(leadPost.data) && 'lead--textOnly']}>
-                  {pickThumb(leadPost.data) ? (
-                    <a class="lead__media" href={`/notebook/${leadPost.id}`} aria-label={`Open post: ${leadPost.data.title}`}>
-                      {typeof pickThumb(leadPost.data) === 'string' ? (
-                        <img src={pickThumb(leadPost.data)} alt="" loading="eager" decoding="async" />
-                      ) : (
-                        <Image
-                          src={pickThumb(leadPost.data)}
-                          alt=""
-                          widths={[720, 1080, 1440]}
-                          sizes={imageSizes('lead')}
-                        />
-                      )}
-                    </a>
-                  ) : null}
-
-                  <div class="lead__copy">
-                    <div class="lead__kickers meta-row">
-                      <div class="meta-cluster">
-                        <span class="meta-kicker">Notebook</span>
-                        {leadPost.data.featured ? <span class="meta-status">Featured</span> : null}
-                      </div>
-                      {leadPost.data.pubDate ? (
-                        <span class="meta-date lead__date">
-                          <FormattedDate date={leadPost.data.pubDate} />
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <h3 class="lead__title">
-                      <a href={`/notebook/${leadPost.id}`}>{leadPost.data.title}</a>
-                    </h3>
-
-                    {leadPost.data.description ? <p class="lead__desc">{leadPost.data.description}</p> : null}
-
-                    {leadPost.data.tags?.length ? (
-                      <div class="tag-row tag-list">
-                        {leadPost.data.tags.slice(0, 4).map((tag) => (
-                          <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                        ))}
-                      </div>
-                    ) : null}
-
+              <div class="front-shelf__layout">
+                <article class="notebook-lead">
+                  <div class="notebook-lead__meta">
+                    <p class="editorial-meta">Notebook {leadPost.data.featured ? '/ Featured' : '/ Latest'}</p>
+                    {leadPost.data.pubDate ? <span><FormattedDate date={leadPost.data.pubDate} /></span> : null}
                   </div>
+                  <h2><a href={`/notebook/${leadPost.id}`}>{leadPost.data.title}</a></h2>
+                  {leadPost.data.description ? <p>{leadPost.data.description}</p> : null}
+                  {leadPost.data.tags?.length ? (
+                    <div class="notebook-lead__tags">
+                      {leadPost.data.tags.slice(0, 5).map((tag) => (
+                        <a href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                      ))}
+                    </div>
+                  ) : null}
+                  <a class="notebook-lead__open" href={`/notebook/${leadPost.id}`}>Read entry →</a>
                 </article>
 
-                <div class="supportRail" aria-label="Supporting posts">
-                  {supportingPosts.map((post) => {
-                    const thumb = pickThumb(post.data);
-
-                    return (
-                      <article class:list={['supportCard panel panel--soft', !thumb && 'supportCard--textOnly']}>
-                        {thumb ? (
-                          <a class="supportCard__media" href={`/notebook/${post.id}`} aria-label={`Open post: ${post.data.title}`}>
-                            {typeof thumb === 'string' ? (
-                              <img src={thumb} alt="" loading="lazy" decoding="async" />
-                            ) : (
-                              <Image
-                                src={thumb}
-                                alt=""
-                                widths={[520, 720, 960]}
-                                sizes={imageSizes('support')}
-                              />
-                            )}
-                          </a>
-                        ) : null}
-
-                        <div class="supportCard__copy">
-                          <div class="supportCard__meta meta-row">
-                            <div class="meta-cluster">
-                              <span class="meta-kicker">Notebook</span>
-                              {post.data.featured ? <span class="meta-status">Featured</span> : null}
-                            </div>
-                            {post.data.pubDate ? (
-                              <span class="meta-date supportCard__date">
-                                <FormattedDate date={post.data.pubDate} />
-                              </span>
-                            ) : null}
-                          </div>
-
-                          <h3 class="supportCard__title">
-                            <a href={`/notebook/${post.id}`}>{post.data.title}</a>
-                          </h3>
-
-                          {post.data.description ? <p class="supportCard__desc">{post.data.description}</p> : null}
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
+                <aside class="editorial-list front-shelf__support" aria-label="Supporting posts">
+                  {supportingPosts.map((post, index) => (
+                    <EditorialEntryRow
+                      index={String(index + 2).padStart(2, '0')}
+                      meta={`Notebook${post.data.featured ? ' / Featured' : ''}${post.data.pubDate ? ` / ${formatDateStamp(post.data.pubDate.valueOf())}` : ''}`}
+                      title={post.data.title}
+                      href={`/notebook/${post.id}`}
+                      description={post.data.description}
+                    />
+                  ))}
+                </aside>
               </div>
             </section>
           ) : null}
 
           {archivePosts.length ? (
             <section class="archive" aria-labelledby="blog-archive-heading">
-              <div class="section-head section-head--archive">
-                <div>
-                  <p class="eyebrow eyebrow--muted">Archive</p>
-                  <h2 id="blog-archive-heading">Everything else</h2>
-                </div>
-                <p>Older posts fall into a denser archive so the page can stay readable as it grows.</p>
-              </div>
+              <aside class="archive__rail">
+                <p class="editorial-kicker">Archive</p>
+                <h2 id="blog-archive-heading">Everything else</h2>
+                <p class="archive__note">The complete notebook, ordered from newest to oldest.</p>
+                <nav class="archive__tags" aria-label="Browse notebook tags">
+                  {notebookTags.slice(0, 8).map((tag) => (
+                    <a href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
+                  ))}
+                </nav>
+              </aside>
 
-              <div class="archiveList">
-                {archivePosts.map((post) => {
-                  const thumb = pickThumb(post.data);
-
-                  return (
-                    <article class:list={['archiveRow', !thumb && 'archiveRow--textOnly']}>
-                      {thumb ? (
-                        <a class="archiveRow__media" href={`/notebook/${post.id}`} aria-label={`Open post: ${post.data.title}`}>
-                          {typeof thumb === 'string' ? (
-                            <img src={thumb} alt="" loading="lazy" decoding="async" />
-                          ) : (
-                            <Image
-                              src={thumb}
-                              alt=""
-                              widths={[360, 520, 720]}
-                              sizes={imageSizes('archive')}
-                            />
-                          )}
-                        </a>
-                      ) : null}
-
-                      <div class="archiveRow__copy">
-                        <div class="archiveRow__meta meta-row">
-                          <div class="meta-cluster">
-                            <span class="meta-kicker">Notebook</span>
-                            {post.data.featured ? <span class="meta-status">Featured</span> : null}
-                          </div>
-                          {post.data.pubDate ? (
-                            <span class="meta-date archiveRow__date">
-                              <FormattedDate date={post.data.pubDate} />
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <h3 class="archiveRow__title">
-                          <a href={`/notebook/${post.id}`}>{post.data.title}</a>
-                        </h3>
-
-                        {post.data.description ? <p class="archiveRow__desc">{post.data.description}</p> : null}
-                      </div>
-                    </article>
-                  );
-                })}
+              <div class="editorial-list archive__entries" tabindex="0" aria-label="Notebook archive entries">
+                {archivePosts.map((post, index) => (
+                  <EditorialEntryRow
+                    index={String(index + supportingPosts.length + 2).padStart(2, '0')}
+                    meta={`Notebook${post.data.pubDate ? ` / ${formatDateStamp(post.data.pubDate.valueOf())}` : ''}`}
+                    title={post.data.title}
+                    href={`/notebook/${post.id}`}
+                    description={post.data.description}
+                  />
+                ))}
               </div>
             </section>
           ) : null}
@@ -293,7 +191,7 @@ const cliManual = {
       <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="notebook-query-toggle">
         <label for="notebook-query-toggle" class="edge-drawer-backdrop" aria-label="Close notebook query drawer"></label>
         <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Notebook query drawer">
-          <label for="notebook-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
+          <label for="notebook-query-toggle" class="edge-drawer-close edge-drawer-close--query" aria-label="Close notebook query drawer">×</label>
           <CliShell
             shellId="notebook-cli"
             shellTitle="notebook.query"
@@ -656,6 +554,287 @@ const cliManual = {
     .supportCard__media,
     .archiveRow__media {
       aspect-ratio: 16 / 9;
+    }
+  }
+
+  /* Editorial framework composition */
+  .blog-index {
+    width: min(100%, 1320px);
+    max-width: 1320px;
+    padding-top: 0;
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .notebook-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: end;
+    padding-bottom: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .notebook-intro__copy h1 {
+    max-width: 900px;
+    margin: 0.85rem 0 1.2rem;
+    font-size: clamp(3.7rem, 7.5vw, 7.4rem);
+    line-height: 0.92;
+    letter-spacing: -0.065em;
+  }
+
+  .notebook-intro__copy > p:last-child {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--text-2);
+    font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  }
+
+  .notebook-stats {
+    margin: 0;
+    border-top: 1px solid var(--text);
+  }
+
+  .notebook-stats div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.72rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .notebook-stats dt,
+  .notebook-stats dd {
+    margin: 0;
+  }
+
+  .notebook-stats dt {
+    color: var(--muted);
+  }
+
+  .notebook-stats dd {
+    color: var(--text);
+    text-align: right;
+  }
+
+  .front-shelf {
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .notebook-lead {
+    position: relative;
+    padding: clamp(2rem, 5vw, 4rem) 0;
+    border-bottom: 1px solid var(--text);
+  }
+
+  .notebook-lead__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  .notebook-lead h2 {
+    max-width: 900px;
+    margin: 1rem 0 1rem;
+    font-size: clamp(1.75rem, 2.5vw, 2.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.042em;
+  }
+
+  .notebook-lead h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .notebook-lead h2 a:hover {
+    color: var(--accent);
+  }
+
+  .notebook-lead > p {
+    max-width: 66ch;
+    margin: 0;
+    color: var(--text-2);
+    font-size: 1.05rem;
+  }
+
+  .notebook-lead__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .notebook-lead__tags a {
+    color: var(--tag-ink);
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+
+  .notebook-lead__open {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--text);
+    font-weight: 700;
+    text-underline-offset: 0.25em;
+  }
+
+  .archive {
+    display: block;
+  }
+
+  .archive__note {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .front-shelf__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(340px, 5fr);
+    border-bottom: 1px solid var(--text);
+  }
+
+  .front-shelf__layout .notebook-lead {
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(2rem, 4vw, 4rem) clamp(2rem, 4vw, 3.5rem) 0;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+
+  .front-shelf__support {
+    align-self: stretch;
+    padding-left: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .front-shelf__support :global(.editorial-row) {
+    grid-template-columns: 30px minmax(0, 1fr) 24px;
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .front-shelf__support :global(.editorial-row__title) {
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  }
+
+  .front-shelf__support :global(.editorial-row__description) {
+    font-size: 0.86rem;
+  }
+
+  .archive {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+    gap: clamp(3rem, 7vw, 7rem);
+    align-items: start;
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--text);
+  }
+
+  .archive__rail {
+    position: sticky;
+    top: 112px;
+  }
+
+  .archive__rail h2 {
+    margin: 0.55rem 0 0;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    letter-spacing: -0.045em;
+  }
+
+  .archive__tags {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .archive__tags a {
+    width: fit-content;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-decoration: none;
+  }
+
+  .archive__tags a:hover {
+    color: var(--accent);
+  }
+
+  .archive__entries {
+    border-top: 0;
+    max-height: min(62vh, 620px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.7rem;
+    scrollbar-color: var(--muted) transparent;
+    scrollbar-width: thin;
+    mask-image: linear-gradient(to bottom, transparent 0, black 1.25rem, black calc(100% - 1.25rem), transparent 100%);
+  }
+
+  .archive__entries:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 0.35rem;
+  }
+
+  .archive__entries :global(.editorial-row:first-child) {
+    padding-top: 0;
+  }
+
+  @media (max-width: 1080px) {
+    .front-shelf__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .front-shelf__layout .notebook-lead {
+      padding-right: 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--text);
+    }
+
+    .front-shelf__support {
+      padding-left: 0;
+    }
+
+    .archive {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .archive__rail {
+      position: static;
+    }
+
+    .archive__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem 1rem;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .notebook-intro {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .blog-index {
+      padding-inline: 1rem;
+    }
+
+    .notebook-intro__copy h1 {
+      font-size: clamp(3.5rem, 17vw, 5rem);
+    }
+
+    .notebook-lead__meta {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.4rem;
     }
   }
 </style>

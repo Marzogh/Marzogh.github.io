@@ -11,14 +11,15 @@
   --font-sans: "Atkinson", system-ui, -apple-system, Roboto, Helvetica, Arial, "Apple Color Emoji",
     "Noto Color Emoji", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-filigree: "Rothenburg Decorative", "American Typewriter", Georgia, serif;
 
   /* Sizing + rhythm */
-  --container: 1040px;
-  --container-narrow: 760px;
+  --container: 1320px;
+  --container-narrow: 780px;
 
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
 
   --space-1: 6px;
   --space-2: 10px;
@@ -30,26 +31,26 @@
 
   /* Colours (light) */
   --bg: #2a241a; /* used for subtle top tint only */
-  --paper: #f5f0e6;
-  --surface: #fbf7ef;
-  --surface-2: #f1eadb;
-  --surface-raised: #fffdfa;
+  --paper: #eee8dc;
+  --surface: #f6f1e7;
+  --surface-2: #e7dfd1;
+  --surface-raised: #fbf7ee;
   --surface-glass: rgba(255, 253, 250, 0.82);
   --surface-glass-border: rgba(255, 250, 241, 0.66);
   --surface-accent-soft: color-mix(in srgb, var(--accent) 6%, var(--surface-raised) 94%);
   --surface-coral-soft: color-mix(in srgb, var(--coral) 7%, var(--surface-raised) 93%);
 
-  --text: #2a241c;
-  --text-2: #51483c;
-  --muted: #7b6f61;
+  --text: #24211b;
+  --text-2: #514b42;
+  --muted: #756d60;
 
-  --border: #ddd2c2;
-  --border-2: #c7baa7;
+  --border: #c9c0b0;
+  --border-2: #948a7a;
 
-  --shadow-sm: 0 1px 2px rgba(42, 36, 28, 0.06);
-  --shadow-md: 0 10px 26px rgba(42, 36, 28, 0.10);
+  --shadow-sm: none;
+  --shadow-md: none;
 
-  --accent: #a8844f;
+  --accent: #9d4f35;
   --accent-2: #7d8b63;
   --accent-ink: #fffdfa;
 
@@ -66,13 +67,32 @@
 
   /* Links */
   --link: var(--accent);
-  --link-hover: #8e6d3e;
+  --link-hover: #713824;
 
   /* Quirky surprise */
   --neon: #c7b18a;
 
   /* Focus */
   --focus: rgba(168, 132, 79, 0.28);
+  --tag-ink: color-mix(in srgb, var(--coral) 72%, var(--text) 28%);
+
+  /* Controls: semantic contrast contract */
+  --button-bg: var(--surface-raised);
+  --button-ink: var(--text);
+  --button-border: var(--border-2);
+  --button-hover-bg: var(--surface-2);
+  --button-hover-ink: var(--text);
+  --button-primary-bg: var(--text);
+  --button-primary-ink: var(--paper);
+  --button-primary-border: var(--text);
+  --button-primary-hover-bg: var(--accent);
+  --button-primary-hover-ink: #fffdfa;
+  --button-inverse-bg: #f6f1e7;
+  --button-inverse-ink: #24211b;
+  --button-inverse-border: #f6f1e7;
+  --button-inverse-outline-bg: transparent;
+  --button-inverse-outline-ink: #f6f1e7;
+  --button-inverse-outline-border: rgba(246, 241, 231, 0.76);
 
   /* Header utilities (used by Header.astro) */
   /* Light mode: darker + cleaner (less bright, minimal texture) */
@@ -87,6 +107,13 @@
 @font-face {
   font-family: "Atkinson";
   src: url("/fonts/atkinson-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Rothenburg Decorative";
+  src: url("/fonts/rothenburg-decorative.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -118,12 +145,7 @@ body {
   padding: 0;
   text-align: left;
   color: var(--text);
-  background:
-    radial-gradient(900px 260px at 18% 0%, color-mix(in srgb, var(--accent) 11%, transparent 89%), transparent 62%),
-    radial-gradient(760px 220px at 82% 0%, var(--coral-soft), transparent 72%),
-    radial-gradient(620px 190px at 60% 0%, var(--leaf-soft), transparent 74%),
-    linear-gradient(180deg, rgba(42, 36, 28, 0.05) 0%, rgba(42, 36, 28, 0) 380px),
-    var(--paper);
+  background: var(--paper);
   word-wrap: break-word;
   overflow-wrap: anywhere;
   font-size: 17.5px;
@@ -155,7 +177,7 @@ h6 {
   margin: 0 0 0.55rem 0;
   color: var(--text);
   line-height: 1.18;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 
 h1 {
@@ -251,11 +273,10 @@ a:visited {
 }
 
 .tag-link {
-  color: color-mix(in srgb, var(--text-2) 82%, var(--text) 18%);
+  color: var(--tag-ink);
   text-decoration: none;
   font-size: 0.92rem;
   letter-spacing: 0.01em;
-  text-shadow: 0 1px 0 rgba(255, 253, 250, 0.85);
 }
 
 .tag-link:hover {
@@ -405,34 +426,59 @@ button {
   justify-content: center;
   gap: 0.5em;
   padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
-  background: color-mix(in srgb, var(--accent) 12%, #ffffff 88%);
-  color: var(--text);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-ink);
   text-decoration: none;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 .btn:hover,
 button:hover {
-  border-color: color-mix(in srgb, var(--coral) 40%, var(--border) 60%);
-  background: color-mix(in srgb, var(--coral) 10%, #ffffff 90%);
+  border-color: var(--button-border);
+  background: var(--button-hover-bg);
+  color: var(--button-hover-ink);
 }
 .btn--primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-color: color-mix(in srgb, var(--accent) 85%, #000 15%);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-ink) !important;
+  border-color: var(--button-primary-border);
 }
 .btn--primary:hover {
-  background: color-mix(in srgb, var(--accent) 88%, #000 12%);
+  background: var(--button-primary-hover-bg);
+  color: var(--button-primary-hover-ink) !important;
+}
+
+.btn--inverse {
+  background: var(--button-inverse-bg) !important;
+  color: var(--button-inverse-ink) !important;
+  border-color: var(--button-inverse-border) !important;
+}
+
+.btn--inverse:hover {
+  background: #fffdfa !important;
+  color: var(--button-inverse-ink) !important;
+}
+
+.btn--inverse-outline {
+  background: var(--button-inverse-outline-bg) !important;
+  color: var(--button-inverse-outline-ink) !important;
+  border-color: var(--button-inverse-outline-border) !important;
+}
+
+.btn--inverse-outline:hover {
+  background: var(--button-inverse-bg) !important;
+  color: var(--button-inverse-ink) !important;
+  border-color: var(--button-inverse-border) !important;
 }
 
 /* Panels / cards (optional primitives) */
 .panel {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: #fff;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: none;
   padding: var(--space-5);
 }
 .panel--soft {
@@ -481,7 +527,6 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
     color-mix(in srgb, var(--surface-raised) 90%, var(--edge-drawer-hue) 10%) 100%
   );
   --drawer-tab-ink: color-mix(in srgb, var(--text) 74%, var(--edge-drawer-hue) 26%);
-  --drawer-tab-shadow: 0 6px 14px color-mix(in srgb, var(--edge-drawer-hue) 16%, transparent 84%);
   position: fixed;
   right: -1px;
   top: calc(22% + (var(--edge-drawer-order, 0) * 170px));
@@ -496,7 +541,7 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
   border: 1px solid color-mix(in srgb, var(--edge-drawer-hue) 32%, var(--border) 68%);
   border-right: 0;
   border-radius: 0;
-  clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%, 0 16%);
+  clip-path: none;
   background: var(--drawer-tab-bg);
   color: var(--drawer-tab-ink);
   font-size: 0.76rem;
@@ -504,7 +549,8 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: var(--drawer-tab-shadow);
+  box-shadow: none;
+  backdrop-filter: blur(14px) saturate(1.08);
 }
 
 .edge-drawer-tab:hover {
@@ -588,11 +634,17 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
 }
 
 .edge-drawer-close--query {
-  align-self: flex-end;
+  display: grid;
+  place-items: center;
   position: absolute;
-  top: -48px;
-  right: 0;
-  z-index: 1;
+  top: -2.25rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .edge-drawer-overlay--query .edge-drawer-backdrop {
@@ -631,7 +683,7 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
   border: 1px solid var(--border);
   background: var(--surface-glass);
   color: var(--text-2);
-  border-radius: 999px;
+  border-radius: 0;
   padding: 0.38rem 0.72rem;
   cursor: pointer;
   font-weight: 700;
@@ -720,7 +772,7 @@ body:has(.edge-drawer-instance .edge-drawer-toggle:checked:not(.edge-drawer-togg
     padding: 0.5rem 0.76rem;
     border-right: 1px solid var(--border);
     border-radius: 0;
-    clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+    clip-path: none;
     letter-spacing: 0.04em;
     font-size: 0.72rem;
   }
@@ -953,23 +1005,24 @@ body.theme-edu {
   /* Buttons */
   .btn,
   button {
-    background: color-mix(in srgb, var(--accent) 18%, transparent 82%);
-    border-color: color-mix(in srgb, var(--accent) 45%, transparent 55%);
-    color: var(--text);
+    background: var(--button-bg);
+    border-color: var(--button-border);
+    color: var(--button-ink);
   }
 
   .btn--primary {
-    background: color-mix(in srgb, var(--accent) 72%, #000 28%);
-    color: #ffffff;
-    border-color: color-mix(in srgb, var(--accent) 78%, #000 22%);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    background: var(--button-primary-bg);
+    color: var(--button-primary-ink) !important;
+    border-color: var(--button-primary-border);
+    box-shadow: none;
     font-weight: 700;
     letter-spacing: 0.01em;
   }
 
   .btn--primary:hover {
-    background: color-mix(in srgb, var(--accent) 64%, #000 36%);
-    border-color: color-mix(in srgb, var(--accent) 82%, #000 18%);
+    background: var(--button-primary-hover-bg);
+    color: var(--button-primary-hover-ink) !important;
+    border-color: var(--button-primary-hover-bg);
   }
 }
 
@@ -1050,23 +1103,24 @@ body.theme-edu {
 
 :root[data-theme="dark"] .btn,
 :root[data-theme="dark"] button {
-  background: color-mix(in srgb, var(--accent) 18%, transparent 82%);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent 55%);
-  color: var(--text);
+  background: var(--button-bg);
+  border-color: var(--button-border);
+  color: var(--button-ink);
 }
 
 :root[data-theme="dark"] .btn--primary {
-  background: color-mix(in srgb, var(--accent) 72%, #000 28%);
-  color: #ffffff;
-  border-color: color-mix(in srgb, var(--accent) 78%, #000 22%);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-ink) !important;
+  border-color: var(--button-primary-border);
+  box-shadow: none;
   font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 :root[data-theme="dark"] .btn--primary:hover {
-  background: color-mix(in srgb, var(--accent) 64%, #000 36%);
-  border-color: color-mix(in srgb, var(--accent) 82%, #000 18%);
+  background: var(--button-primary-hover-bg);
+  color: var(--button-primary-hover-ink) !important;
+  border-color: var(--button-primary-hover-bg);
 }
 
 /* Education theme only adjusts the atmosphere, not the global theme engine. */

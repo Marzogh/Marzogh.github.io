@@ -25,9 +25,9 @@ if (!isPublishedEntryData(post.data)) {
 	throw new Error(`Notebook entry is not published yet: ${slug}`);
 }
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...post.data} pullQuotes={post.data.pullQuotes} headings={headings}>
 	<Content />
 </BlogPost>

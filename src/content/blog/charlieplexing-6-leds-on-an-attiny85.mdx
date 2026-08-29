@@ -7,89 +7,61 @@ tags: [electronics, attiny85, charlieplexing, leds, avr]
 featured: false
 ---
 
-At some point, every small microcontroller project runs into the same rude question:
+The ATTiny85 is a lovely little microcontroller, but it is not exactly generous with GPIO. That is usually fine until a small project grows one more LED, button or sensor than you planned for and you suddenly find yourself counting pins.
 
-How many pins do you *actually* need?
+Charlieplexing is a neat way around that when the problem is LEDs. With three GPIO pins on the ATTiny85, I can control six of them without adding a shift register or moving to a larger microcontroller. There are compromises, particularly around brightness and timing, but for status lights and other small indicators it is a surprisingly useful trick.
 
-If the answer is "more than the chip has", charlieplexing starts looking very attractive. With an ATTiny85 and three GPIO pins, you can drive six LEDs without adding a shift register, a bigger microcontroller, or a dramatic sigh.
+## Six LEDs from three pins
 
-## The trick
+The useful bit is that a GPIO pin does not have only two useful states. It can drive high, drive low, or be configured as an input and effectively get out of the way in a high-impedance state. Charlieplexing combines that with the fact that an LED only conducts in one direction.
 
-Charlieplexing works because each GPIO pin can be in one of three states:
+Take two GPIO pins and connect a pair of LEDs between them in opposite directions. If the first pin is high and the second is low, one LED conducts. Reverse the polarity and the other LED conducts instead. The third pin stays high impedance so it does not provide another current path.
 
-- driving high
-- driving low
-- pretending it was never involved at all (`INPUT` / high impedance)
-
-Take any two pins, drive one high and one low, and current flows through exactly one LED in one direction. Flip the polarity, and the opposite LED lights instead.
-
-With `n` pins, the theoretical maximum is:
+With `n` pins, that gives a theoretical maximum of:
 
 ```text
-n * (n - 1)
+n × (n - 1)
 ```
 
-So with three pins, we get:
+So three pins gives:
 
 ```text
-3 * (3 - 1) = 6 LEDs
+3 × (3 - 1) = 6 LEDs
 ```
 
-Tiny chip. Mildly unreasonable number of lights. Good result.
+For the ATTiny85, that means the six LEDs are connected across the three pins as directional pairs:
 
-## The wiring idea
+- A → B
+- B → A
+- A → C
+- C → A
+- B → C
+- C → B
 
-The six LEDs are connected between every ordered pair of the three pins. In plain English:
+That directionality is the whole reason the arrangement works. A single pair of wires can address two different LEDs because changing the polarity changes which one is able to conduct.
 
-- one LED from pin A to pin B
-- one LED from pin B to pin A
-- one LED from pin A to pin C
-- one LED from pin C to pin A
-- one LED from pin B to pin C
-- one LED from pin C to pin B
+Tiny chip, mildly unreasonable number of lights. I’m quite happy with that.
 
-That directional part matters. An LED is a one-way device, which is exactly why this trick works.
+## Wiring is only half of it
 
-## The software idea
+Of course, the ATTiny85 is not actually driving all six LEDs continuously. It is lighting them one at a time and moving between them quickly enough that the individual flashes blur together visually.
 
-You do **not** leave all six LEDs on at once. You cycle through them quickly enough that your eyeballs politely average it out.
+I use a timer interrupt for the refresh rather than relying on the main loop. That keeps the multiplexing regular regardless of what the rest of the program happens to be doing, which matters if you want the display to look steady rather than change its mind whenever the main loop gets busy.
 
-The gist uses a timer interrupt to handle the refresh loop. That is the right move here because it keeps the multiplexing regular instead of depending on whatever chaos your main loop is up to that day.
+For each refresh, I first return all three LED pins to `INPUT`, putting them into their high-impedance state. I can then choose the LED I want to light, make its source pin an output driven `HIGH`, and make its sink pin an output driven `LOW`. On the next timer interrupt the pins are cleared again and the process repeats for the next LED.
 
-The important jobs are:
+That initial high-impedance step matters. If one of the unused pins is accidentally left driving high or low, it can create an unintended path through another LED and you start getting ghosting, odd brightness changes or several LEDs doing things you did not actually ask them to do.
 
-- set all LED pins to high impedance first
-- pick the one LED you want for this cycle
-- set its source pin to `OUTPUT` and `HIGH`
-- set its sink pin to `OUTPUT` and `LOW`
-- move to the next LED on the next interrupt
+The timer also gives a convenient place to handle brightness if I need it. Because each LED is only active for part of the refresh cycle anyway, its apparent brightness is already determined partly by duty cycle, and additional PWM-style control can be layered on top if the project needs it.
 
-In other words: clear the stage, spotlight one performer, repeat fast.
+## Where I’d use it
 
-## Why I like this approach
+The obvious cost of charlieplexing is brightness. With six LEDs sharing the display time, each individual LED is only being driven for a fraction of the refresh cycle, so this is never going to behave like six independently driven LEDs that can all sit at full brightness indefinitely. The refresh also has to be fast enough to avoid visible flicker, while still leaving enough on-time for each LED to be useful.
 
-- It squeezes surprising mileage out of a tiny chip.
-- It teaches good habits about pin state management.
-- It is one of those tricks that feels like cheating, but in a respectable way.
+Current limiting does not disappear either. The LEDs still need suitable resistors, and the ATTiny85 GPIO limits still apply just as they would in a conventional circuit. Charlieplexing saves pins; it does not repeal Ohm’s law.
 
-## The gotchas
+For small status indicators, tiny battery-powered projects, wearables or anything else where GPIO is scarce and maximum brightness is not particularly important, I like it. Three pins for six individually addressable LEDs is a good trade when the alternative is adding another IC simply because the microcontroller ran out of legs.
 
-Charlieplexing is clever, but it is not magic.
+If I needed a large number of LEDs, high brightness, or genuinely independent simultaneous control, I would stop being clever and use a proper LED driver. There is a point where saving another GPIO pin stops being worth the increasingly interesting wiring.
 
-- You need current-limiting resistors. The LEDs are still LEDs, not wishes.
-- Brightness per LED is lower because each one is only on for part of the time.
-- Timing matters. If your refresh rate is too slow, you get flicker instead of glory.
-- If you forget to tri-state the inactive pins, the whole illusion turns into confusion very quickly.
-
-## Where this makes sense
-
-This is a great fit for:
-
-- status indicators
-- tiny wearables
-- small battery projects
-- any build where saving pins matters more than absolute brightness
-
-If you need lots of LEDs at full brightness with independent control, this is probably the point where a driver IC enters the chat.
-
-I have turned the original note into the "why this works" version here, because a little explanation goes a long way when the wiring starts looking like a dare.
+For six LEDs on an ATTiny85, though, charlieplexing sits comfortably on the useful side of that line.

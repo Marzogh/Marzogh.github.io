@@ -52,19 +52,17 @@ const today = new Date();
 </footer>
 <style>
 	.site-footer {
-		padding: 2rem 1rem;
-		border-top: 1px solid var(--border);
-		background:
-			radial-gradient(1200px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent 90%), transparent 65%),
-			radial-gradient(900px 120px at 90% 0%, color-mix(in srgb, var(--accent) 8%, transparent 92%), transparent 60%),
-			color-mix(in srgb, var(--surface) 97%, transparent 3%);
+		padding: 2.25rem 1.5rem 3rem;
+		background: var(--paper);
 		color: var(--text);
 		font-size: 0.95rem;
 	}
 
 	.footer__inner {
-		max-width: 1400px;
+		max-width: 1320px;
 		margin: 0 auto;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border-2);
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 1.25rem;
@@ -73,7 +71,7 @@ const today = new Date();
 
 	@media (min-width: 900px) {
 		.footer__inner {
-			grid-template-columns: 260px 1fr auto;
+			grid-template-columns: 260px 1fr;
 			align-items: center;
 		}
 	}
@@ -84,7 +82,7 @@ const today = new Date();
 		gap: 0.6rem;
 		text-decoration: none;
 		color: var(--text);
-		font-weight: 900;
+		font-weight: 700;
 		letter-spacing: -0.01em;
 		white-space: nowrap;
 	}
@@ -97,10 +95,10 @@ const today = new Date();
 		display: block;
 		width: 44px;
 		height: 44px;
-		border-radius: 14px;
-		border: 1px solid var(--border);
-		background: color-mix(in srgb, var(--surface-2) 85%, transparent 15%);
-		box-shadow: var(--shadow-sm);
+		border-radius: 0;
+		border: 0;
+		background: transparent;
+		box-shadow: none;
 		object-fit: cover;
 		flex: 0 0 44px;
 	}
@@ -160,7 +158,7 @@ const today = new Date();
 		justify-content: center;
 		width: 42px;
 		height: 42px;
-		border-radius: 999px;
+		border-radius: var(--radius-sm);
 		border: 0;
 		background: transparent;
 		color: color-mix(in srgb, var(--text) 78%, var(--muted) 22%);

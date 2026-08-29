@@ -1,0 +1,21 @@
+---
+interface Props {
+  index: string;
+  meta: string;
+  title: string;
+  href: string;
+  description?: string;
+}
+
+const { index, meta, title, href, description } = Astro.props;
+---
+
+<article class="editorial-row">
+  <span class="editorial-row__index">{index}</span>
+  <div class="editorial-row__copy">
+    <p class="editorial-meta">{meta}</p>
+    <h3 class="editorial-row__title"><a href={href}>{title}</a></h3>
+    {description ? <p class="editorial-row__description">{description}</p> : null}
+  </div>
+  <a class="editorial-row__arrow" href={href} aria-label={`Read ${title}`}>→</a>
+</article>

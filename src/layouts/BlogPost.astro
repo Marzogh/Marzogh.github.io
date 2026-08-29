@@ -3,239 +3,534 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import PageHeader from '../components/PageHeader.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface ArticleHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+type Props = CollectionEntry<'blog'>['data'] & {
+  headings?: ArticleHeading[];
+};
 
 const {
   title,
   description,
   pubDate,
   updatedDate,
-  heroImage,
   image,
   tags = [],
-  featured,
-  headerStyle = 'plain',
+  type,
+  pullQuotes = [],
+  headings = [],
 } = Astro.props;
-const hero = heroImage ?? image ?? null;
+
+const sectionHeadings = headings.filter((heading) => heading.depth === 2);
+const articleKind = type ?? (tags.length ? 'Field note' : 'Essay');
+const dateFormatter = new Intl.DateTimeFormat('en-AU', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
+const meta = [
+  ...(pubDate ? [{ label: 'Published', value: dateFormatter.format(pubDate) }] : []),
+  ...(updatedDate ? [{ label: 'Updated', value: dateFormatter.format(updatedDate) }] : []),
+  { label: 'Format', value: articleKind },
+];
 ---
 
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} image={hero} />
+    <BaseHead title={title} description={description} image={image} />
   </head>
 
   <body>
     <Header />
 
-    <main>
-      <article class="post">
-        <div class="post-back">
-          <a href="/notebook" class="post-back__link">← Back to Notebook</a>
-        </div>
+    <main class="article-main">
+      <article class:list={['article-shell', `article-shell--${articleKind.toLowerCase().replaceAll(' ', '-')}`]}>
+        <a href="/notebook" class="article-back">← Notebook</a>
 
-        <header class:list={['post-header', headerStyle === 'panel' && 'panel', headerStyle === 'plain' && 'post-header--plain']}>
-          <div class="post-kickers">
-            <span class="pill">Narrative</span>
-            {featured ? <span class="pill pill--coral">Featured</span> : null}
-            {tags.slice(0, 3).map((tag) => (
-              <a class="pill" href={`/tags/${tag.toLowerCase()}`}>#{tag}</a>
+        <PageHeader
+          kicker={`Notebook / ${articleKind}`}
+          title={title}
+          lede={description}
+          variant="article"
+          meta={meta}
+          id="article-title"
+        />
+
+        {tags.length ? (
+          <div class="article-taxonomy" aria-label="Article classification">
+            {tags.map((tag) => (
+              <a class="tag-link" href={`/tags/${tag.toLowerCase()}`}>#{tag}</a>
             ))}
           </div>
+        ) : null}
 
-          <div class="post-meta">
-            <span class="post-date">
-              <FormattedDate date={pubDate} />
-            </span>
-            {updatedDate && (
-              <span class="post-updated">
-                · Updated <FormattedDate date={updatedDate} />
-              </span>
-            )}
-          </div>
-
-          <h1 class="post-title">{title}</h1>
-
-          {description && (
-            <p class="post-description">{description}</p>
-          )}
-        </header>
-
-        {hero && (
-          <figure class="post-hero">
-            {typeof hero === 'string' ? (
-              <img src={hero} alt="" loading="eager" decoding="async" />
+        {image ? (
+          <figure class="article-hero">
+            {typeof image === 'string' ? (
+              <img src={image} alt="" loading="eager" decoding="async" />
             ) : (
-              <Image src={hero} alt="" widths={[800, 1200]} sizes="(max-width: 800px) 100vw, 760px" />
+              <Image src={image} alt="" widths={[800, 1200]} sizes="(max-width: 900px) 100vw, 960px" />
             )}
           </figure>
-        )}
+        ) : null}
 
-        <div class="prose">
-          <slot />
+        <div class="article-body">
+          <aside class="article-rail" aria-label="Article navigation">
+            {sectionHeadings.length ? (
+              <>
+                <p class="editorial-kicker">On this page</p>
+                <nav data-article-nav>
+                  <ol>
+                    {sectionHeadings.map((heading, index) => (
+                      <li>
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <a href={`#${heading.slug}`} data-section-link={heading.slug}>{heading.text}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              </>
+            ) : pullQuotes.length ? (
+              <div class="narrative-notes" aria-label="Pull quotes">
+                {pullQuotes.map((quote, index) => (
+                  <blockquote
+                    class:list={{ 'is-active': index === 0 }}
+                    data-pull-quote={quote}
+                  >{quote}</blockquote>
+                ))}
+              </div>
+            ) : (
+              <>
+                <p class="editorial-kicker">Filed as</p>
+                <p class="article-rail__kind">{articleKind}</p>
+              </>
+            )}
+          </aside>
+
+          <div class="prose">
+            <slot />
+            <footer class="article-end">
+              <span aria-hidden="true">■</span>
+              <a href="/notebook">Return to the Notebook</a>
+            </footer>
+          </div>
         </div>
       </article>
     </main>
 
     <Footer />
+
+    <script>
+      const nav = document.querySelector('[data-article-nav]');
+
+      if (nav) {
+        const links = Array.from(nav.querySelectorAll('[data-section-link]'));
+        const sections = links
+          .map((link) => {
+            const id = link.getAttribute('data-section-link');
+            const heading = id ? document.getElementById(id) : null;
+            return heading ? { heading, link } : null;
+          })
+          .filter(Boolean);
+
+        const setActive = (activeLink) => {
+          links.forEach((link) => {
+            const active = link === activeLink;
+            link.classList.toggle('is-active', active);
+            if (active) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+        };
+
+        if (sections.length) {
+          setActive(sections[0].link);
+
+          const observer = new IntersectionObserver((entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+            if (visible[0]) {
+              const match = sections.find(({ heading }) => heading === visible[0].target);
+              if (match) setActive(match.link);
+            }
+          }, {
+            rootMargin: '-18% 0px -68% 0px',
+            threshold: 0,
+          });
+
+          sections.forEach(({ heading }) => observer.observe(heading));
+
+          window.addEventListener('scroll', () => {
+            const current = [...sections]
+              .reverse()
+              .find(({ heading }) => heading.getBoundingClientRect().top <= window.innerHeight * 0.28);
+            if (current) setActive(current.link);
+          }, { passive: true });
+        }
+      }
+
+      const pullQuoteItems = Array.from(document.querySelectorAll('[data-pull-quote]'));
+
+      if (pullQuoteItems.length) {
+        const paragraphs = Array.from(document.querySelectorAll('.article-shell--narrative .prose p'));
+        const quotePoints = pullQuoteItems.flatMap((item, index) => {
+          const quote = item.getAttribute('data-pull-quote');
+          const paragraph = paragraphs.find((item) => quote && item.textContent?.includes(quote));
+
+          if (!paragraph) return [];
+
+          paragraph.id ||= `pull-quote-${index + 1}`;
+          return [{ item, paragraph }];
+        });
+
+        let frame = 0;
+        const updatePullQuote = () => {
+          const readingLine = window.scrollY + window.innerHeight * 0.42;
+          let activeIndex = 0;
+
+          quotePoints.forEach((point, index) => {
+            const paragraphTop = point.paragraph.getBoundingClientRect().top + window.scrollY;
+            if (paragraphTop <= readingLine) activeIndex = index;
+          });
+
+          quotePoints.forEach((point, index) => {
+            point.item.classList.toggle('is-active', index === activeIndex);
+          });
+        };
+
+        const requestPullQuoteUpdate = () => {
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(updatePullQuote);
+        };
+
+        updatePullQuote();
+        window.addEventListener('scroll', requestPullQuoteUpdate, { passive: true });
+        window.addEventListener('resize', requestPullQuoteUpdate);
+      }
+    </script>
   </body>
 </html>
 
 <style>
-  :global(main) {
-    max-width: min(1120px, calc(100% - 2 * var(--space-5)));
+  :global(.article-main) {
+    width: min(100%, 1320px);
+    max-width: 1320px;
+    padding-top: 0;
+    padding-bottom: clamp(4rem, 8vw, 7rem);
   }
 
-  .post {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
+  .article-shell { min-width: 0; }
 
-  .post-back__link {
-    font-size: 0.95rem;
-    text-decoration: none;
+  .article-back {
+    display: inline-block;
+    margin-top: 1.5rem;
     color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
   }
 
-  .post-back__link:hover {
-    color: var(--accent);
-  }
+  .article-back:hover { color: var(--accent); }
 
-  .post-hero {
-    margin: 0;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    background:
-      radial-gradient(640px 220px at 10% 10%, rgba(37, 99, 235, 0.09), transparent 65%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.95));
-    box-shadow: var(--shadow-md);
-    padding: 10px;
-  }
-
-  .post-hero :global(img) {
-    width: 100%;
-    border-radius: var(--radius-lg);
-    display: block;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
-
-  .post-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    min-width: 0;
-    background:
-      radial-gradient(700px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
-      radial-gradient(540px 180px at top left, rgba(251, 113, 133, 0.07), transparent 72%),
-      #fff;
-  }
-
-  .post-header--plain {
-    padding: 0;
-    background: none;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    position: relative;
-  }
-
-  .post-header--plain::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 1px;
-    margin-top: var(--space-2);
-    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent 76%), color-mix(in srgb, var(--border) 72%, transparent 28%));
-  }
-
-  .post-kickers {
+  .article-taxonomy {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    gap: 0.45rem 0.8rem;
+    margin: 0 0 0 auto;
+    padding: 0.15rem 0;
+    border: 0;
+    line-height: 1.2;
   }
 
-  .post-meta {
-    font-size: 0.95rem;
+  .article-taxonomy :global(.tag-link) {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+  }
+
+  .article-hero {
+    margin: clamp(2rem, 5vw, 4rem) 0 0;
+    border-block: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .article-hero :global(img) {
+    display: block;
+    width: 100%;
+    max-height: 680px;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .article-body {
+    display: grid;
+    grid-template-columns: minmax(160px, 220px) minmax(0, 860px);
+    gap: clamp(3rem, 8vw, 8rem);
+    justify-content: start;
+    align-items: start;
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .article-rail {
+    position: sticky;
+    top: 112px;
+    padding-top: 0.3rem;
+  }
+
+  .article-rail ol {
+    display: grid;
+    gap: 0;
+    margin: 1rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .article-rail li {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.65rem 0 0.65rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .article-rail li span {
     color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
   }
 
-  .post-title {
-    margin: 0;
-    text-wrap: balance;
-  }
-
-  .post-description {
-    margin: 0;
-    font-size: 1.08rem;
+  .article-rail li a {
     color: var(--text-2);
-    max-width: 60ch;
+    text-decoration: none;
   }
 
-  .post-header--plain .post-title {
-    font-size: clamp(2.35rem, 4.2vw, 4.35rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    text-shadow: 0 1px 0 color-mix(in srgb, var(--surface-raised) 85%, transparent 15%);
+  .article-rail li a:hover { color: var(--accent); }
+
+  .article-rail li:has(a.is-active) {
+    box-shadow: inset 2px 0 0 var(--tag-ink);
   }
 
-  .post-header--plain .post-description {
-    font-size: clamp(1rem, 1.2vw, 1.18rem);
-    max-width: 68ch;
+  .article-rail li a.is-active {
+    padding-left: 0.55rem;
+    color: var(--text);
   }
 
-  .post-header--plain .post-kickers {
-    gap: 8px;
+  .article-rail__kind {
+    margin: 0.8rem 0 0;
+    color: var(--text-2);
+    font-size: 0.9rem;
   }
 
-  .post-header--plain .post-meta {
-    font-size: 0.92rem;
+  .narrative-notes {
+    display: grid;
+    min-height: 9rem;
+    margin-top: 0;
+  }
+
+  .narrative-notes blockquote {
+    grid-area: 1 / 1;
+    align-self: start;
+    margin: 0;
+    padding: 0 0 0 0.85rem;
+    border-left: 1px solid var(--tag-ink);
+    background: transparent;
+    color: var(--text-2);
+    font-size: 0.88rem;
+    font-style: italic;
+    line-height: 1.55;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .narrative-notes blockquote.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .prose {
-    margin-top: var(--space-2);
-    position: relative;
+    min-width: 0;
+    font-size: 1.02rem;
+    line-height: 1.72;
   }
 
-  .prose::before {
-    content: "";
-    display: block;
-    width: 84px;
-    height: 4px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--coral) 70%, #fff 30%));
-    margin-bottom: var(--space-5);
-  }
+  .prose > :global(:first-child) { margin-top: 0; }
 
   .prose :global(h2) {
-    margin-top: 2.3rem;
+    margin: 3.2rem 0 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+    font-size: clamp(1.75rem, 2.6vw, 2.45rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
   }
 
-  .prose :global(figure) {
+  .prose :global(h3) {
+    margin-top: 2.3rem;
+    font-size: 1.35rem;
+  }
+
+  .prose :global(p),
+  .prose :global(li) { max-width: 72ch; }
+
+  .prose :global(pre) {
     margin: 1.8rem 0;
+    padding: 1.15rem 1.25rem;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .prose :global(blockquote) {
-    border-left-width: 5px;
+    margin-inline: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
-  @media (max-width: 720px) {
-    :global(main) {
-      max-width: calc(100% - 2 * var(--space-4));
+  .prose :global(img) { border-radius: 0; }
+
+  .prose :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .article-end {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: clamp(4rem, 8vw, 7rem);
+    padding-top: 1rem;
+    border-top: 1px solid var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .article-end span { color: var(--accent); }
+
+  .article-end a {
+    color: var(--text);
+    text-underline-offset: 0.25em;
+  }
+
+  .article-shell--narrative .article-body {
+    grid-template-columns: minmax(0, 780px) minmax(220px, 280px);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    justify-content: center;
+  }
+
+  .article-shell--narrative .prose {
+    grid-column: 1;
+    grid-row: 1;
+    max-width: 66ch;
+    font-size: 1.08rem;
+    line-height: 1.82;
+  }
+
+  .article-shell--narrative .article-rail {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: clamp(9rem, 28vh, 15rem);
+  }
+
+  .article-shell--narrative .prose > :global(p:first-child) {
+    color: var(--text);
+    font-size: 1.2rem;
+    line-height: 1.65;
+  }
+
+  .article-shell--narrative .prose > :global(p:first-child)::first-letter {
+    float: left;
+    margin: 0.08em 0.12em 0 0;
+    color: var(--tag-ink);
+    font-family: var(--font-sans);
+    font-size: 3.5em;
+    font-weight: 700;
+    line-height: 0.78;
+  }
+
+  .article-shell--narrative .prose :global(hr) {
+    width: 48px;
+    margin: clamp(1.75rem, 4vw, 2.75rem) auto;
+    border-top-color: var(--tag-ink);
+  }
+
+  .article-shell--band-plan .article-body {
+    grid-template-columns: minmax(155px, 190px) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .article-shell--band-plan .prose {
+    max-width: none;
+  }
+
+  .article-shell--field-note .prose :global(p),
+  .article-shell--field-note .prose :global(li),
+  .article-shell--how-to .prose :global(p),
+  .article-shell--how-to .prose :global(li),
+  .article-shell--band-plan .prose :global(p),
+  .article-shell--band-plan .prose :global(li) {
+    max-width: 86ch;
+  }
+
+  @media (max-width: 900px) {
+    .article-body {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    .post-hero {
-      padding: 8px;
+    .article-rail { position: static; }
+    .article-rail nav { overflow-x: auto; }
+
+    .article-rail ol {
+      display: flex;
+      min-width: max-content;
+    }
+
+    .article-rail li {
+      width: min(240px, 70vw);
+      padding-right: 1.25rem;
+    }
+
+    .article-shell--essay .article-rail { display: none; }
+
+    .article-shell--narrative .article-rail { display: none; }
+
+    .article-shell--narrative .article-body {
+      grid-template-columns: 1fr;
+      justify-content: start;
+    }
+
+    .article-shell--band-plan .article-body {
+      grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 520px) {
-    :global(main) {
-      max-width: calc(100% - 2 * var(--space-3));
+    :global(.article-main) { padding-inline: 1rem; }
+    .article-taxonomy {
+      gap: 0.4rem 0.65rem;
     }
   }
 </style>

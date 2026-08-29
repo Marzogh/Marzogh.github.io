@@ -39,91 +39,44 @@ const inspectorPanels = panels.map((panel) => {
   };
 });
 
-const groupWeights = inspectorPanels.reduce(
-  (acc, panel) => {
-    acc[panel.selectorGroup] += panel.selectorWeight;
-    return acc;
-  },
-  { hf: 0, vhf: 0, shf: 0 },
-);
+const selectorGroups = [
+  { id: 'hf', label: 'LF / HF' },
+  { id: 'vhf', label: 'VHF / UHF' },
+  { id: 'shf', label: 'SHF' },
+] as const;
 
-function proseBlocks(lines: string[]) {
-  if (lines.length <= 1) return lines;
-  if (lines.length === 2) return [lines.join(' ')];
-  return [lines.slice(0, 2).join(' '), lines.slice(2).join(' ')];
-}
+const contextPanels = new Set(['80m', '40m', '30m', '20m', '6m', '70cm', '23cm', '13cm', '9cm', '6cm', '3cm']);
 ---
 
-<section class="bandplan-inspector panel" aria-labelledby="band-inspector-title">
-  <div class="bandplan-inspector__intro">
-    <div>
-      <p class="bandplan-inspector__eyebrow">Band Inspector</p>
-      <h2 id="band-inspector-title">Select a band</h2>
-    </div>
-    <p class="bandplan-inspector__lede">
-      Pick a band from the spectrum selector. The terminal below updates with the specific frequencies,
-      segment changes, and tradeoffs for that band.
-    </p>
-  </div>
-
-  <div class="bandplan-spectrumWrap">
-    <div class="bandplan-spectrumScroll">
-      <div class="bandplan-spectrumScale" aria-hidden="true">
-        <span style={`--group-weight:${groupWeights.hf};`}>LF / HF</span>
-        <span style={`--group-weight:${groupWeights.vhf};`}>VHF / UHF</span>
-        <span style={`--group-weight:${groupWeights.shf};`}>SHF</span>
+<section class="bandplan-inspector panel" aria-label="Band inspector">
+  <div class="bandplan-bandgroups" role="tablist" aria-label="Band selector">
+    {selectorGroups.map((group) => (
+      <div class="bandplan-bandgroup">
+        <p>{group.label}</p>
+        <div>
+          {inspectorPanels.filter((panel) => panel.selectorGroup === group.id).map((panel, index) => {
+            const panelIndex = inspectorPanels.findIndex((item) => item.id === panel.id);
+            return (
+              <button
+                type="button"
+                class={`bandplan-spectrum__band bandplan-spectrum__band--${panel.selectorGroup}`}
+                role="tab"
+                aria-selected={panelIndex === 0 ? 'true' : 'false'}
+                aria-controls={`band-panel-${panel.id}`}
+                id={`band-tab-${panel.id}`}
+                tabindex={panelIndex === 0 ? '0' : '-1'}
+                data-band-target={panel.id}
+              >
+                <span class="bandplan-spectrum__label">{panel.title}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
-
-      <div class="bandplan-spectrum" role="tablist" aria-label="Band selector">
-        {inspectorPanels.map((panel, index) => (
-          <button
-            type="button"
-            class={`bandplan-spectrum__band bandplan-spectrum__band--${panel.selectorGroup}`}
-            style={`--band-weight:${panel.selectorWeight};`}
-            role="tab"
-            aria-selected={index === 0 ? 'true' : 'false'}
-            aria-controls={`band-panel-${panel.id}`}
-            id={`band-tab-${panel.id}`}
-            tabindex={index === 0 ? '0' : '-1'}
-            data-band-target={panel.id}
-          >
-            <span class="bandplan-spectrum__label">{panel.title}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  </div>
-
-  <div class="bandplan-inspector__legend" aria-label="Chart legend">
-    <p class="bandplan-inspector__legendTitle">Chart key</p>
-    <div class="bandplan-inspector__legendItems">
-      <span class="bandplan-legendChip bandplan-legendChip--cw">CW</span>
-      <span class="bandplan-legendChip bandplan-legendChip--data">DATA</span>
-      <span class="bandplan-legendChip bandplan-legendChip--voice">VOICE</span>
-      <span class="bandplan-legendChip bandplan-legendChip--repeater">REPEATER</span>
-      <span class="bandplan-legendChip bandplan-legendChip--beacon">BEACON</span>
-      <span class="bandplan-legendChip bandplan-legendChip--all_modes">ALL MODES</span>
-      <span class="bandplan-legendChip bandplan-legendChip--atv">ATV</span>
-      <span class="bandplan-legendChip bandplan-legendChip--satellite">SATELLITE</span>
-    </div>
+    ))}
   </div>
 
   <div class="bandplan-terminal" data-band-terminal>
-    <div class="bandplan-terminal__chrome">
-      <button
-        type="button"
-        class="bandplan-terminal__beacon"
-        aria-expanded="true"
-        aria-controls="band-terminal-viewport"
-        aria-label="Collapse band inspector"
-        title="Collapse band inspector"
-        data-band-terminal-toggle
-      >
-        <span class="sr-only">Collapse band inspector</span>
-      </button>
-      <span class="bandplan-terminal__title">radio://wia-band-inspector</span>
-    </div>
-
     <div
       id="band-terminal-viewport"
       class="bandplan-terminal__viewport"
@@ -139,13 +92,6 @@ function proseBlocks(lines: string[]) {
         hidden={index !== 0}
         tabindex="0"
       >
-        <div class="bandplan-terminal__header">
-          <p class="bandplan-terminal__prompt">
-            <span>&gt;</span> inspect --band {panel.title}
-          </p>
-          <h3>{panel.summary}</h3>
-        </div>
-
         <div class="bandplan-terminal__body">
           {panel.chart ? (
             <div class="bandplan-terminal__chart">
@@ -155,25 +101,16 @@ function proseBlocks(lines: string[]) {
 
           <div class="bandplan-terminal__copy">
             <section class="bandplan-terminal__section">
-              <h4>What changed</h4>
-              {proseBlocks(panel.sections.changed).map((item) => (
-                <p>{item}</p>
-              ))}
+              <h4>What actually changed</h4>
+              <p>{[...panel.sections.changed, ...panel.sections.why].join(' ')}</p>
             </section>
 
-            <section class="bandplan-terminal__section">
-              <h4>Why this was changed</h4>
-              {proseBlocks(panel.sections.why).map((item) => (
-                <p>{item}</p>
-              ))}
-            </section>
-
-            <section class="bandplan-terminal__section">
-              <h4>What to watch for</h4>
-              {proseBlocks(panel.sections.downsides).map((item) => (
-                <p>{item}</p>
-              ))}
-            </section>
+            {contextPanels.has(panel.id) ? (
+              <aside class="bandplan-terminal__context">
+                <span>Context</span>
+                <p>{panel.sections.downsides.join(' ')}</p>
+              </aside>
+            ) : null}
           </div>
         </div>
       </section>

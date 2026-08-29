@@ -1,0 +1,283 @@
+---
+import EditorialStats from './EditorialStats.astro';
+
+interface Datum {
+  label: string;
+  value: string | number;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  lede?: string;
+  variant?: 'index' | 'index-rail' | 'article' | 'compact';
+  stats?: Datum[];
+  meta?: Datum[];
+  id?: string;
+}
+
+const {
+  kicker,
+  title,
+  lede,
+  variant = 'index',
+  stats = [],
+  meta = [],
+  id,
+} = Astro.props;
+---
+
+<header class:list={['page-header', `page-header--${variant}`]}>
+  <p class="editorial-kicker">{kicker}</p>
+  <div class="page-header__body">
+    <h1 id={id}>{title}</h1>
+    {lede ? <p class="page-header__lede">{lede}</p> : null}
+  </div>
+
+  {stats.length ? (
+    <EditorialStats
+      items={stats}
+      label={`${title} statistics`}
+      layout={variant === 'index-rail' ? 'rail' : 'row'}
+    />
+  ) : null}
+
+  {meta.length ? (
+    <dl class="page-header__data page-header__data--meta" aria-label={`${title} metadata`}>
+      {meta.map((item) => (
+        <div><dt>{item.label}</dt><dd>{item.value}</dd></div>
+      ))}
+    </dl>
+  ) : null}
+</header>
+
+<style>
+  .page-header {
+    padding: clamp(2.25rem, 4vw, 3.5rem) 0 clamp(2.5rem, 4.5vw, 4rem);
+  }
+
+  .page-header__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: end;
+    margin-top: 0.9rem;
+  }
+
+  .page-header h1 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(2.9rem, 4.4vw, 4.6rem);
+    line-height: 0.96;
+    letter-spacing: -0.052em;
+  }
+
+  .page-header__lede {
+    max-width: 50ch;
+    margin: 0;
+    color: var(--text-2);
+    font-size: clamp(1rem, 1.25vw, 1.16rem);
+    line-height: 1.55;
+  }
+
+  .page-header__data {
+    display: grid;
+    margin: clamp(1.8rem, 3vw, 2.6rem) 0 0;
+    border-top: 1px solid var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header__data div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-left: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .page-header__data div:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .page-header__data dt,
+  .page-header__data dd {
+    margin: 0;
+  }
+
+  .page-header__data dt {
+    color: var(--muted);
+  }
+
+  .page-header__data dd {
+    color: var(--text);
+    text-align: right;
+  }
+
+  .page-header--article .page-header__body {
+    grid-area: body;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .page-header--article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "kicker data"
+      "body body";
+    align-items: baseline;
+    padding: 1.5rem 0 0.65rem;
+  }
+
+  .page-header--article > :global(.editorial-kicker) {
+    grid-area: kicker;
+  }
+
+  .page-header--article .page-header__data--meta {
+    grid-area: data;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin: 0;
+    border: 0;
+  }
+
+  .page-header--article .page-header__data--meta div {
+    padding: 0 0.75rem;
+    border-left: 1px solid var(--border);
+    font-size: 0.62rem;
+  }
+
+  .page-header--article .page-header__data--meta div:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .page-header--article .page-header__data--meta dt {
+    margin-right: 0.45rem;
+  }
+
+  .page-header--index-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+    grid-template-areas:
+      "kicker kicker"
+      "body data";
+    column-gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+
+  .page-header--index-rail > :global(.editorial-kicker) {
+    grid-area: kicker;
+  }
+
+  .page-header--index-rail .page-header__body {
+    grid-area: body;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    margin-top: 0.75rem;
+  }
+
+  .page-header--index-rail h1 {
+    max-width: 760px;
+    font-size: clamp(3rem, 4.2vw, 4.5rem);
+  }
+
+  .page-header--index-rail .page-header__lede {
+    max-width: 62ch;
+  }
+
+  .page-header--index-rail > :global(.editorial-stats) {
+    grid-area: data;
+  }
+
+  .page-header--article h1 {
+    max-width: 1100px;
+    font-size: clamp(2.25rem, 3.7vw, 3.75rem);
+    line-height: 1;
+  }
+
+  .page-header--article .page-header__lede {
+    max-width: 68ch;
+  }
+
+  .page-header__data--meta {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  }
+
+  .page-header--compact {
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--text);
+  }
+
+  .page-header--compact h1 {
+    font-size: clamp(2.7rem, 5vw, 4.8rem);
+  }
+
+  @media (max-width: 820px) {
+    .page-header__body {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+    }
+
+    .page-header__data div:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .page-header--index-rail {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "kicker"
+        "body"
+        "data";
+    }
+
+    .page-header--index-rail > :global(.editorial-stats) {
+      margin-top: 2rem;
+      justify-self: end;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .page-header--article {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "kicker"
+        "data"
+        "body";
+    }
+
+    .page-header--article .page-header__data--meta {
+      justify-content: flex-start;
+      margin-top: 0.55rem;
+    }
+
+    .page-header h1 {
+      font-size: clamp(3rem, 15vw, 4.5rem);
+    }
+
+    .page-header--article h1 {
+      font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+
+    .page-header__data--meta {
+      grid-template-columns: 1fr;
+    }
+
+    .page-header__data div {
+      border-top: 1px solid var(--border);
+      border-left: 0;
+      padding-inline: 0;
+    }
+
+    .page-header__data div:first-child {
+      border-top: 0;
+    }
+  }
+</style>

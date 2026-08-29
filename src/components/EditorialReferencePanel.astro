@@ -1,0 +1,103 @@
+---
+interface ReferenceLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title?: string;
+  links: ReferenceLink[];
+}
+
+const { title = 'References', links } = Astro.props;
+---
+
+<aside class="reference-panel" aria-label={title}>
+  <div class="reference-panel__copy">
+    <p class="reference-panel__title">{title}</p>
+    <slot />
+  </div>
+
+  <nav class="reference-panel__links" aria-label={`${title} links`}>
+    <p>Documents</p>
+    <ul>
+      {links.map((link, index) => (
+        <li>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</aside>
+
+<style>
+  .reference-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
+    padding: 1rem 0;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .reference-panel__title,
+  .reference-panel__links > p {
+    margin: 0 0 0.65rem;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .reference-panel__copy :global(p:not(.reference-panel__title)) {
+    max-width: 68ch;
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.84rem;
+    line-height: 1.6;
+  }
+
+  .reference-panel__links ul {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .reference-panel__links li {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .reference-panel__links span {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+
+  .reference-panel__links a {
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .reference-panel__links a:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 760px) {
+    .reference-panel {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

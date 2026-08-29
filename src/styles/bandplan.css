@@ -1022,3 +1022,521 @@
     margin-top: 0.2rem;
   }
 }
+
+/* 2026 editorial band-plan brief */
+.bandplan-quickview {
+  margin: clamp(2.5rem, 6vw, 4.5rem) 0;
+  padding: 0.85rem 0 0;
+  border-top: 2px solid var(--text);
+  border-bottom: 1px solid var(--text);
+}
+
+.bandplan-quickview__kicker {
+  margin: 0 0 0.35rem;
+  color: var(--tag-ink);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bandplan-quickview__title {
+  margin: 0 0 1.15rem;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.bandplan-quickview__scroll {
+  overflow-x: auto;
+}
+
+.bandplan-quickview table {
+  display: table;
+  width: 100%;
+  min-width: 680px;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.79rem;
+  line-height: 1.45;
+}
+
+.bandplan-quickview th,
+.bandplan-quickview td {
+  padding: 0.72rem 0.8rem;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  vertical-align: top;
+}
+
+.bandplan-quickview thead th {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bandplan-quickview tbody th {
+  width: 5.5rem;
+  color: var(--tag-ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.bandplan-inspector.panel {
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--surface) 84%, transparent 16%);
+  box-shadow: none;
+}
+
+.bandplan-inspector__intro {
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.bandplan-inspector__intro h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+}
+
+.bandplan-spectrum {
+  gap: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.bandplan-spectrum__band {
+  min-width: max(4.5rem, calc(var(--band-weight) * 4.2rem));
+  padding: 0.68rem 0.55rem;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.bandplan-spectrum__band:first-child {
+  border-left: 1px solid var(--border);
+}
+
+.bandplan-spectrum__band:hover {
+  transform: none;
+  background: color-mix(in srgb, var(--tag-ink) 7%, transparent 93%);
+}
+
+.bandplan-spectrum__band.is-active,
+.bandplan-spectrum__band--hf.is-active,
+.bandplan-spectrum__band--vhf.is-active,
+.bandplan-spectrum__band--shf.is-active {
+  border-color: var(--border);
+  border-bottom-color: var(--tag-ink);
+  background: color-mix(in srgb, var(--tag-ink) 10%, transparent 90%);
+  box-shadow: none;
+}
+
+.bandplan-legendChip,
+.bandplan-chart__miniLegendItem {
+  border-radius: 0;
+}
+
+.bandplan-terminal {
+  border: 1px solid color-mix(in srgb, var(--text) 40%, transparent 60%);
+  border-radius: 0;
+  background: #11151a;
+  box-shadow: none;
+}
+
+.bandplan-terminal__chrome {
+  min-height: 2.35rem;
+  padding: 0.55rem 0.75rem;
+}
+
+.bandplan-terminal__beacon,
+.bandplan-terminal__beacon::before,
+.bandplan-terminal__chrome .bandplan-terminal__beacon {
+  border-radius: 0;
+}
+
+.bandplan-terminal__panel {
+  padding: clamp(0.9rem, 2vw, 1.35rem);
+}
+
+.bandplan-terminal__body {
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.bandplan-terminal__section {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.bandplan-terminal__section h4 {
+  margin-bottom: 0.55rem;
+  color: #e29a80;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.bandplan-terminal__section p {
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.bandplan-terminal__context {
+  margin-top: 0.25rem;
+  padding: 0.75rem 0 0 0.9rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.18);
+  border-left: 1px solid #e29a80;
+}
+
+.bandplan-terminal__context span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: rgba(226, 232, 240, 0.58);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.bandplan-terminal__context p {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.74);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.bandplan-chart,
+.bandplan-chart__bar,
+.bandplan-chart__segment {
+  border-radius: 0;
+}
+
+.bandplan-authority {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding: 1rem 0;
+  border-top: 2px solid var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.bandplan-authority > p {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.bandplan-authority > .bandplan-authority__title {
+  margin-bottom: 0.55rem;
+  color: var(--tag-ink);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bandplan-authority .bandplan-sources {
+  margin: 0.9rem 0 0;
+  padding-top: 0.75rem;
+}
+
+:root[data-theme="dark"] .bandplan-inspector.panel {
+  background: color-mix(in srgb, var(--surface) 92%, #000 8%);
+}
+
+:root[data-theme="dark"] .bandplan-sources__line {
+  text-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .bandplan-inspector__intro,
+  .bandplan-terminal__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .bandplan-inspector.panel {
+    padding: 0.8rem;
+  }
+}
+
+/* Compact inspector: shared editorial instrument in both themes */
+.bandplan-inspector {
+  --band-mode-cw: color-mix(in srgb, #d5a640 44%, var(--surface) 56%);
+  --band-mode-data: color-mix(in srgb, #478a78 48%, var(--surface) 52%);
+  --band-mode-voice: color-mix(in srgb, #cf765b 48%, var(--surface) 52%);
+  --band-mode-repeater: color-mix(in srgb, #836aa6 46%, var(--surface) 54%);
+  --band-mode-beacon: color-mix(in srgb, #b88b36 42%, var(--surface) 58%);
+  --band-mode-all-modes: color-mix(in srgb, #697780 42%, var(--surface) 58%);
+  --band-mode-atv: color-mix(in srgb, #b85f78 44%, var(--surface) 56%);
+  --band-mode-satellite: color-mix(in srgb, #527fa7 46%, var(--surface) 54%);
+}
+
+.bandplan-inspector.panel {
+  gap: 0.7rem;
+  padding: 0.75rem;
+  background: transparent;
+}
+
+.bandplan-inspector__intro {
+  grid-template-columns: minmax(190px, 0.65fr) minmax(0, 1.35fr);
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  padding: 0.15rem 0.2rem 0.65rem;
+}
+
+.bandplan-inspector__eyebrow {
+  margin-bottom: 0.15rem;
+  font-size: 0.6rem;
+}
+
+.bandplan-inspector__intro h3 {
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.bandplan-inspector__lede {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.bandplan-bandgroups {
+  display: grid;
+  grid-template-columns: 1.65fr 0.75fr 1fr;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.bandplan-bandgroup {
+  min-width: 0;
+  padding: 0.45rem 0.5rem 0.55rem;
+  border-right: 1px solid var(--border);
+}
+
+.bandplan-bandgroup:last-child {
+  border-right: 0;
+}
+
+.bandplan-bandgroup > p {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.bandplan-bandgroup > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.bandplan-bandgroups .bandplan-spectrum__band {
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 0.34rem 0.48rem;
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.bandplan-bandgroups .bandplan-spectrum__band:first-child {
+  border-left: 1px solid var(--border);
+}
+
+.bandplan-bandgroups .bandplan-spectrum__band.is-active,
+.bandplan-bandgroups .bandplan-spectrum__band--hf.is-active,
+.bandplan-bandgroups .bandplan-spectrum__band--vhf.is-active,
+.bandplan-bandgroups .bandplan-spectrum__band--shf.is-active {
+  border-color: var(--tag-ink);
+  background: var(--tag-ink);
+  color: var(--bg);
+}
+
+.bandplan-spectrum__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1;
+}
+
+.bandplan-terminal {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+
+.bandplan-terminal__panel {
+  padding: 0.6rem 0.2rem 0.15rem;
+}
+
+.bandplan-terminal__header {
+  gap: 0.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.bandplan-terminal__prompt {
+  color: var(--muted);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bandplan-terminal__prompt span {
+  color: var(--tag-ink);
+}
+
+.bandplan-terminal__header h3 {
+  max-width: 64rem;
+  color: var(--text);
+  font-size: clamp(0.98rem, 1.8vw, 1.2rem);
+  line-height: 1.25;
+}
+
+.bandplan-terminal__body {
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.bandplan-terminal__chart .bandplan-chart {
+  --band-chart-bg: color-mix(in srgb, var(--surface) 72%, transparent 28%);
+  --band-chart-border: var(--border);
+  --band-chart-ink: var(--text);
+  --band-chart-muted: var(--muted);
+  --band-chart-bar-border: var(--border);
+  --band-chart-bar-bg:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--border) 48%, transparent 52%) 0,
+      color-mix(in srgb, var(--border) 48%, transparent 52%) 1px,
+      transparent 1px,
+      transparent 12.5%
+    ),
+    color-mix(in srgb, var(--surface) 82%, transparent 18%);
+  --band-chart-chip-bg: transparent;
+  --band-chart-chip-border: var(--border);
+}
+
+.bandplan-chart {
+  padding: 0.7rem;
+  box-shadow: none;
+}
+
+.bandplan-chart__header {
+  margin-bottom: 0.55rem;
+}
+
+.bandplan-chart__header h4 {
+  font-size: 0.9rem;
+}
+
+.bandplan-chart__label,
+.bandplan-chart__planHeader {
+  font-size: 0.68rem;
+}
+
+.bandplan-chart__plans {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.bandplan-chart__bar {
+  min-height: 2.7rem;
+}
+
+.bandplan-chart__segment {
+  top: 0.25rem;
+  bottom: 0.25rem;
+}
+
+.bandplan-chart__segmentLabel {
+  font-size: 0.62rem;
+}
+
+.bandplan-chart__miniLegend {
+  gap: 0.3rem 0.5rem;
+}
+
+.bandplan-chart__miniLegendItem {
+  padding: 0.2rem 0.35rem;
+  font-size: 0.6rem;
+}
+
+.bandplan-terminal__copy {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.45fr);
+  gap: 0.75rem 1.2rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+
+.bandplan-terminal__section h4 {
+  color: var(--tag-ink);
+}
+
+.bandplan-terminal__section p {
+  color: var(--text-2);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.bandplan-terminal__context {
+  margin: 0;
+  padding: 0 0 0 0.75rem;
+  border-top: 0;
+  border-left-color: var(--tag-ink);
+}
+
+.bandplan-terminal__context span,
+.bandplan-terminal__context p {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .bandplan-inspector__intro {
+    grid-template-columns: 1fr;
+  }
+
+  .bandplan-bandgroups {
+    grid-template-columns: 1fr;
+  }
+
+  .bandplan-bandgroup {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bandplan-bandgroup:last-child {
+    border-bottom: 0;
+  }
+
+  .bandplan-terminal__copy {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .bandplan-chart__plans {
+    grid-template-columns: 1fr;
+  }
+}

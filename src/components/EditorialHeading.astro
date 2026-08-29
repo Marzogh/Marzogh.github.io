@@ -1,0 +1,18 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  id?: string;
+  level?: 'h1' | 'h2' | 'h3';
+  compact?: boolean;
+  align?: 'default' | 'split';
+}
+
+const { kicker, title, id, level = 'h2', compact = false, align = 'default' } = Astro.props;
+const Heading = level;
+---
+
+<div class:list={['editorial-heading', { 'editorial-heading--compact': compact, 'editorial-heading--split': align === 'split' }] }>
+  <p class="editorial-kicker">{kicker}</p>
+  <Heading id={id}>{title}</Heading>
+</div>

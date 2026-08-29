@@ -2,7 +2,7 @@ import type { BandChart, BandPanel, KeyChange, SourceLink } from './types';
 
 export const sourceLinks: SourceLink[] = [
   {
-    label: 'WIA Band Plans page',
+    label: 'WIA Band Plans',
     href: 'https://www.wia.org.au/members/bandplans/data/',
   },
   {
@@ -10,7 +10,7 @@ export const sourceLinks: SourceLink[] = [
     href: 'https://www.wia.org.au/members/bandplans/data/documents/WIA%20Australian%20Band%20Plan%202026.pdf',
   },
   {
-    label: 'WIA Australian Band Plan Review - Consultation OUTCOMES - v1.3.2 PDF',
+    label: 'WIA Australian Band Plan Review: Consultation Outcomes',
     href: 'https://www.wia.org.au/members/tac/consultation/documents/WIA%20Australian%20Band%20Plan%20Review%20-%20Consultation%20OUTCOMES%20-%20v1.3.2.pdf',
   },
 ];
