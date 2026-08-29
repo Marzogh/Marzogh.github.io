@@ -2,7 +2,9 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
+import { poetry } from '../../data/poetry';
 ---
 
 <!doctype html>
@@ -17,17 +19,35 @@ import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
     <Header />
 
     <main class="curator-note-page">
-      <article class="curator-note panel">
-        <a href="/poetry" class="curator-note__back">← Back to the poetry archive</a>
+      <article class="curator-note">
+        <a href="/poetry" class="curator-note__back">← Poetry archive</a>
 
-        <header class="curator-note__head">
-          <div class="curator-note__titleBlock">
-            <p class="curator-note__eyebrow">Poetry Archive</p>
-            <h1>Curator’s Note</h1>
-          </div>
-        </header>
+        <PageHeader
+          kicker="Poetry / collection essay"
+          title="Curator’s Note"
+          lede="On the continuities running through this archive: attention, wilderness, grief, joy, moral seriousness, myth, and learning to live without looking away."
+          variant="article"
+          meta={[
+            { label: 'Collection', value: `${poetry.length} poems` },
+            { label: 'Span', value: '2002–2023' },
+            { label: 'Reading', value: 'Long-form' },
+          ]}
+        />
 
-        <div class="curator-note__body">
+        <div class="curator-note__layout">
+          <nav class="curator-note__rail" aria-label="On this page" data-scrollspy-nav>
+            <span>On this page</span>
+            <a href="#attention" data-scrollspy-link="attention">Attention and continuity</a>
+            <a href="#nature" data-scrollspy-link="nature">Nature, solitude and joy</a>
+            <a href="#grief" data-scrollspy-link="grief">Grief, rage and less harm</a>
+            <a href="#place" data-scrollspy-link="place">Place and belonging</a>
+            <a href="#reading" data-scrollspy-link="reading">Reading, myth and archive</a>
+          </nav>
+
+          <div class="curator-note__body">
+          <section class="curator-movement" id="attention" aria-label="Attention and continuity">
+            <div class="curator-movement__separator" aria-hidden="true"><span></span></div>
+            <div class="curator-movement__copy">
           <p>
             I wrote these poems in childhood and youth, but I do not place them in a glass case and call them evidence of a vanished self. The person writing them is recognisably the same person writing this note: the same hunger for peace, the same wholehearted love of the natural world, the same instinct to look the horror in the face and name it without flinching, and the same refusal to make cynicism sound like wisdom. These poems were written before I had much armour, which is part of why they say things so directly. They want beauty, escape, stillness, and transcendence. They want a way of living rightly in a wounded world.
           </p>
@@ -37,38 +57,59 @@ import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
           <p>
             I was not, even then, "just" a nature poet. Systems are everywhere in these poems, because systems are everywhere in life. The weather is a system. A forest is a system. A classroom is a system. A city is a system. An economy is a system. The carbon age is a system. So is denial. So is the smooth little social machinery by which people repaint catastrophe in polite colours and congratulate themselves for having done so. If the poems keep turning from private feeling to atmosphere, from individual sorrow to wider damage, from one life to the habits of a species, that is not me wandering off topic. That is me following the pattern where it actually leads. A poem about rain, sea, leaves, or hills is also a poem about scale, dependence, consequence, and what sort of creature a human being has decided to be.
           </p>
+            </div>
+            <blockquote>“A field survey, a poem, a lesson, and a piece of code all begin in attention.”</blockquote>
+          </section>
+
+          <section class="curator-movement" id="nature" aria-label="Nature, solitude and joy">
+            <div class="curator-movement__separator" aria-hidden="true"><span></span></div>
+            <div class="curator-movement__copy">
           <p>
-            Junior college in India did not help. It was pressure to perform, learning without the joy I found in it, rage at a life being spent in pursuit of a fraction of a fraction of a percent while the world was already beginning to fray at the seams. That pressure is in the poems written from classroom windows and from the edges of institutions that felt smaller than the world outside them. When The Butterfly watches a butterfly head into the sunset, or A Wish longs to leave a life of strife behind, or The Doom of Man names judgement without euphemism, the natural world is not serving as decorative contrast. It is the real world against which so much human busyness, ambition, vanity, and institutional nonsense shows itself to be trivial.
+            Junior college in India did not help. It was pressure to perform, learning without the joy I found in it, rage at a life being spent in pursuit of a fraction of a fraction of a percent while the world was already beginning to fray at the seams. That pressure is in the poems written from classroom windows and from the edges of institutions that felt smaller than the world outside them. When <a href="/poetry/butterfly">The Butterfly</a> watches a butterfly head into the sunset, or <a href="/poetry/wish">A Wish</a> longs to leave a life of strife behind, or <a href="/poetry/doom">The Doom of Man</a> names judgement without euphemism, the natural world is not serving as decorative contrast. It is the real world against which so much human busyness, ambition, vanity, and institutional nonsense shows itself to be trivial.
           </p>
           <p>
-            Nature is everywhere in these poems, but it is never scenery. It is refuge, witness, teacher, measure, and beloved. The Lord of the Eagles, for all its obvious Tolkien paraphrasing, is probably the earliest poem in this archive that is fully me: the eagle already standing for witness, nobility, and moral compass; the non-human world already treated as presence rather than backdrop; the scale already larger than the little human dramas around it. A Rainy Day, Wandering Streams, A Mountain’s Advice, The Song of the Sea, Dawn’s Breeze, and Of Enchanted Woods and Singing Streams all do something similar in different registers. They kneel before weather, water, birds, mountains, and starlight, not because I confuse reverence for life with religion, but because the living world is worthy of reverence. If one listens properly to wind and water long enough, the world will tell you what is wrong with it and what is right with it. These poems are full of that listening.
+            Nature is everywhere in these poems, but it is never scenery. It is refuge, witness, teacher, measure, and beloved. <a href="/poetry/eagles">The Lord of the Eagles</a>, for all its obvious Tolkien paraphrasing, is probably the earliest poem in this archive that is fully me: the eagle already standing for witness, nobility, and moral compass; the non-human world already treated as presence rather than backdrop; the scale already larger than the little human dramas around it. <a href="/poetry/rainy">A Rainy Day</a>, <a href="/poetry/streams">Wandering Streams</a>, <a href="/poetry/mountain">A Mountain’s Advice</a>, <a href="/poetry/sea">The Song of the Sea</a>, <a href="/poetry/dawn-s-breeze">Dawn’s Breeze</a>, and <a href="/poetry/of-enchanted-woods-and-singing-streams">Of Enchanted Woods and Singing Streams</a> all do something similar in different registers. They kneel before weather, water, birds, mountains, and starlight, not because I confuse reverence for life with religion, but because the living world is worthy of reverence. If one listens properly to wind and water long enough, the world will tell you what is wrong with it and what is right with it. These poems are full of that listening.
           </p>
           <p>
-            That is also why solitude matters so much here. Solitude is not loneliness. People are too quick to flatten the two into one another. Bliss, Hidden Paths, Lingering Dreams, My Own Little Corner, Here Lies a Good Man, Musings on Life, The Whisper of the Night, and Of Enchanted Woods and Singing Streams are not asking to be rescued from aloneness. They are making room for contemplation, for joy, for self-possession, for standing still in the company of the world without needing noise or audience. Even To a Little Wave, which some readers might try to sentimentalise into a plea for comfort, is really an offering of awe in return for knowledge: joy at being out in nature, joy at meeting something larger than the self without wanting to dissolve into it or flee from one's own mind.
+            That is also why solitude matters so much here. Solitude is not loneliness. People are too quick to flatten the two into one another. <a href="/poetry/bliss">Bliss</a>, <a href="/poetry/paths">Hidden Paths</a>, <a href="/poetry/lingering">Lingering Dreams</a>, <a href="/poetry/corner">My Own Little Corner</a>, <a href="/poetry/man">Here Lies a Good Man</a>, <a href="/poetry/musings">Musings on Life</a>, <a href="/poetry/the-whisper-of-the-night">The Whisper of the Night</a>, and <a href="/poetry/of-enchanted-woods-and-singing-streams">Of Enchanted Woods and Singing Streams</a> are not asking to be rescued from aloneness. They are making room for contemplation, for joy, for self-possession, for standing still in the company of the world without needing noise or audience. Even <a href="/poetry/to-a-little-wave">To a Little Wave</a>, which some readers might try to sentimentalise into a plea for comfort, is really an offering of awe in return for knowledge: joy at being out in nature, joy at meeting something larger than the self without wanting to dissolve into it or flee from one's own mind.
           </p>
           <p>
-            The same is true of simple pleasure. Not every poem here is carrying a wound that needs decoding. Leaves in the Wind matters to me precisely because it is not straining toward catastrophe or transcendence; it is a song of plain delight in autumn leaves, a reminder that attention itself can be enough. Ripples matters to me for much the same reason. If there is one poem here that most plainly shows the child and the adult being the same person, it may be that one: the same delight in simple things, the same refusal to treat ordinary beauty as somehow too small to matter. Bliss pushes that instinct further. Its beauty is not in the sanctioned picturesque, not in the places everyone is trained to admire, but in the places hardly anyone bothers to look. That capacity for uncomplicated joy sits beside the darker poems, not beneath them. The archive only makes sense if both are allowed to stand. I have never believed that seeing clearly requires one to become joyless. The world is full of damage, yes, but it is also full of beauty so immediate that to refuse delight would itself be a kind of blindness.
+            The same is true of simple pleasure. Not every poem here is carrying a wound that needs decoding. <a href="/poetry/leaves">Leaves in the Wind</a> matters to me precisely because it is not straining toward catastrophe or transcendence; it is a song of plain delight in autumn leaves, a reminder that attention itself can be enough. <a href="/poetry/ripples">Ripples</a> matters to me for much the same reason. If there is one poem here that most plainly shows the child and the adult being the same person, it may be that one: the same delight in simple things, the same refusal to treat ordinary beauty as somehow too small to matter. <a href="/poetry/bliss">Bliss</a> pushes that instinct further. Its beauty is not in the sanctioned picturesque, not in the places everyone is trained to admire, but in the places hardly anyone bothers to look. That capacity for uncomplicated joy sits beside the darker poems, not beneath them. The archive only makes sense if both are allowed to stand. I have never believed that seeing clearly requires one to become joyless. The world is full of damage, yes, but it is also full of beauty so immediate that to refuse delight would itself be a kind of blindness.
           </p>
+            </div>
+            <blockquote>“Nature is everywhere in these poems, but it is never scenery.”</blockquote>
+          </section>
+
+          <section class="curator-movement" id="grief" aria-label="Grief, rage and less harm">
+            <div class="curator-movement__separator" aria-hidden="true"><span></span></div>
+            <div class="curator-movement__copy">
           <p>
-            But the poems are never only acts of praise. Even very early there is grief in them, and not abstract grief either. There is strife in A Wish. There is judgement in The Doom of Man, which won an award for naming exactly what it names. There is the longing for a world not wrecked by greed, fear, and violence in A Year Goes By, written while the Kyoto era staggered on and adults performed concern as though performance itself might alter atmospheric chemistry. There is the pressure of moral failure in Within Life or Without. There is unrequited love deepening longing and then, later, helping to heal it. Unnamed remains unfinished for that reason. There is no clean line between private grief and planetary grief here, because there was no clean line in life either.
+            But the poems are never only acts of praise. Even very early there is grief in them, and not abstract grief either. There is strife in <a href="/poetry/wish">A Wish</a>. There is judgement in <a href="/poetry/doom">The Doom of Man</a>, which won an award for naming exactly what it names. There is the longing for a world not wrecked by greed, fear, and violence in <a href="/poetry/year">A Year Goes By</a>, written while the Kyoto era staggered on and adults performed concern as though performance itself might alter atmospheric chemistry. There is the pressure of moral failure in <a href="/poetry/life">Within Life or Without</a>. There is unrequited love deepening longing and then, later, helping to heal it. <a href="/poetry/unnamed">Unnamed</a> remains unfinished for that reason. There is no clean line between private grief and planetary grief here, because there was no clean line in life either.
           </p>
           <p>
             I was a well-read child with no blinkers on. Climate change and the extinction crisis were not remote abstractions. They were already part of the moral texture of the world. I do not care for the niceties of civilisation when those niceties become a coat of paint over mass harm. I call a spade a spade. I see the inexorable rise of CO2 while others congratulate themselves over accounting deals and symbolic gestures. The poems carry that knowledge. They are not doomer writing, and they are not optimistic writing either, at least not in the cheap sense of optimism. They are trying to do something harder: to love life wholeheartedly while knowing how much is being destroyed, to refuse both denial and despair, and to learn how to live rightly afterward. Realism about humanity is not pessimism, however often people try to confuse the two. I do not think the species is improved by flattering it.
           </p>
           <p>
-            Rage belongs here too, but not the theatrical kind people recognise easily. Not the bright flare that burns out in public and calls itself courage. The rage in these poems is usually slower than that, deeper than that. It sits under the praise and under the grief, not opposed to them but driving them. It is there in the refusal to prettify destruction, in the refusal to call harm by softer names, in the refusal to let civility masquerade as moral seriousness. In My Own Little Corner that anger does not flare; it wears. It is weary rage, the kind that has already seen enough to distrust noise, but not enough to stop caring. It is there because love without anger at damage is only partial love. If I sound severe in places, that is why. The poems know what they cherish, and so they know what is being betrayed.
+            Rage belongs here too, but not the theatrical kind people recognise easily. Not the bright flare that burns out in public and calls itself courage. The rage in these poems is usually slower than that, deeper than that. It sits under the praise and under the grief, not opposed to them but driving them. It is there in the refusal to prettify destruction, in the refusal to call harm by softer names, in the refusal to let civility masquerade as moral seriousness. In <a href="/poetry/corner">My Own Little Corner</a> that anger does not flare; it wears. It is weary rage, the kind that has already seen enough to distrust noise, but not enough to stop caring. It is there because love without anger at damage is only partial love. If I sound severe in places, that is why. The poems know what they cherish, and so they know what is being betrayed.
           </p>
           <p>
-            That ethical pressure is in the poems about goodness as well. Here Lies a Good Man is not, to my mind, a sermon about some fixed category called Good. Good and evil are relative, history is crowded with people who were certain they stood on the right side of both, and I have no interest in flattering either myself or the species on that point. What matters more to me is minimising harm. That is the more useful compass. Not moral vanity, not self-congratulation, not easy innocence, but the serious daily work of doing less damage in a damaged world. Readers looking for clean binaries in these poems will miss them, because I do not trust clean binaries in life.
+            That ethical pressure is in the poems about goodness as well. <a href="/poetry/man">Here Lies a Good Man</a> is not, to my mind, a sermon about some fixed category called Good. Good and evil are relative, history is crowded with people who were certain they stood on the right side of both, and I have no interest in flattering either myself or the species on that point. What matters more to me is minimising harm. That is the more useful compass. Not moral vanity, not self-congratulation, not easy innocence, but the serious daily work of doing less damage in a damaged world. Readers looking for clean binaries in these poems will miss them, because I do not trust clean binaries in life.
           </p>
           <p>
             That is also why I do not find entropy, finitude, or damage in themselves to be arguments for cynicism. The world is unruly. It always was. We do not honour it by lying about that. We honour it by paying attention, by reducing harm where we can, by learning what kind of creature we are inside the systems we have made and the larger systems we never made at all, and by refusing to let either despair or sentimentality do our thinking for us. If these poems have any lasting value beyond being mine, I think it lies there: in the attempt to make wonder and grief speak to one another without flinching.
           </p>
+            </div>
+            <blockquote>“Love without anger at damage is only partial love.”</blockquote>
+          </section>
+
+          <section class="curator-movement" id="place" aria-label="Place and belonging">
+            <div class="curator-movement__separator" aria-hidden="true"><span></span></div>
+            <div class="curator-movement__copy">
           <p>
             Place matters too, often very specifically. A butterfly leaving a classroom window at sunset. The Tirupati, Katpadi passenger train heading west through a tropical evening with the Tirumala and Chandragiri hills in shadow. Brisbane landscapes entering the imagination after migration. A full moon in Scorpio on a particular night. The slopes of Mount Ossa after days on the Overland Track, with Cradle Mountain already behind and Lake St. Clair still days away. These are not generic backdrops. They are coordinates in a moral and emotional geography. The poems return to them because they were places where the world felt legible.
           </p>
           <p>
-            Where My Heart Lives is from that same track, literally. I wrote it at Waldheim Cabins as I was about to begin my fourth Overland Track walk, and my sixth climb up to the ridge between Cradle Mountain and Barn Bluff. That place is not metaphor to me. If I could choose where to live and where to die, it would be there. The poem carries the ache of knowing that time does not stand still, that landscapes alter, that what we love can be damaged or lost while we are still learning how to name why it matters. But it also refuses the cheap finality of that ache. It returns to Country as presence, memory, witness, and home; not as postcard, not as nostalgia, but as living relation.
+            <a href="/poetry/where-my-heart-lives">Where My Heart Lives</a> is from that same track, literally. I wrote it at Waldheim Cabins as I was about to begin my fourth Overland Track walk, and my sixth climb up to the ridge between Cradle Mountain and Barn Bluff. That place is not metaphor to me. If I could choose where to live and where to die, it would be there. The poem carries the ache of knowing that time does not stand still, that landscapes alter, that what we love can be damaged or lost while we are still learning how to name why it matters. But it also refuses the cheap finality of that ache. It returns to Country as presence, memory, witness, and home; not as postcard, not as nostalgia, but as living relation.
           </p>
           <p>
             Moving to Brisbane changed the field of view. The world opened up, not because one country is somehow more real than another, but because I was suddenly exposed to hundreds of new perspectives at once. The poems absorb that change in atmosphere and distance, but they do not become rootless because of it. By the time I was writing them, the phrase वसुधैव कुटुम्बकम् was already part of my mental furniture: the world is one family. That did not make me softer in my judgement of what humanity does. If anything, it made the standard harder. The circle of concern was always meant to be wider than tribe, nation, convenience, or the small vanity of one's own kind.
@@ -76,24 +117,33 @@ import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
           <p>
             That is the same argument that runs through the rest of this site. The biology, the ecology, the field notebook habits, the refusal to separate beauty from responsibility, the insistence on paying attention properly, the systems thinking, the belief that the best thing one can do is live by example without waiting to see whether anyone follows it, all of that is already here in seed form. In fact, the worst thing one can do is merely hope someone follows the example. One lives rightly because it is right, because the world is worth that effort, and because anything less is another kind of surrender.
           </p>
+            </div>
+            <blockquote>“These are not generic backdrops. They are coordinates in a moral and emotional geography.”</blockquote>
+          </section>
+
+          <section class="curator-movement" id="reading" aria-label="Reading, myth and archive">
+            <div class="curator-movement__separator" aria-hidden="true"><span></span></div>
+            <div class="curator-movement__copy">
           <p>
             I read everything I could get my hands on, and that matters here too. Yes, there are the visible poetic and mythic lineages: Tolkien for scale, moral clarity, and longing for the unfallen world; Tagore for lyric seriousness; Sarojini Naidu for life, colour, rhythm, and the evocative beauty of descriptive text; Wordsworth and Frost for the discipline of attending to simple things until they disclose more than they first seem to hold. But the reading life around these poems was never narrow. It sprawled across adventure, mystery, history, travel, natural history, fantasy, science fiction, and moral fable. That is one reason the poems keep reaching beyond pretty description. Even when the line is simple, the mind behind it is already trying to place a moment inside a larger pattern.
           </p>
           <p>
-            Myth matters here for that same reason. It is not escapism. It is one of the oldest ways of staring directly at reality. In poems like The Moon and the Scorpion, myth is symbolic language and enlargement at once: a way to make visible the stakes that ordinary realism often hides under habit. Likewise, when The Song of the Sea takes something from the apparition of Orome to Tuor, or when eagle-lords and forests and old powers enter the poems, they are not attempts to leave the world. They are attempts to tell the truth about the world in a scale it deserves, and to remember that the human world is not the only frame in which meaning can be measured.
+            Myth matters here for that same reason. It is not escapism. It is one of the oldest ways of staring directly at reality. In poems like <a href="/poetry/the-moon-and-the-scorpion">The Moon and the Scorpion</a>, myth is symbolic language and enlargement at once: a way to make visible the stakes that ordinary realism often hides under habit. Likewise, when <a href="/poetry/sea">The Song of the Sea</a> takes something from the apparition of Orome to Tuor, or when eagle-lords and forests and old powers enter the poems, they are not attempts to leave the world. They are attempts to tell the truth about the world in a scale it deserves, and to remember that the human world is not the only frame in which meaning can be measured.
           </p>
           <p>
             I have kept the old title graphics too. They were made by teenage me with GIF Construction Set, and they carry the same handmade intensity as the poems: dramatic, sincere, a little excessive, completely unembarrassed. I would rather preserve that than tidy it into something more "respectable." If there is a hope for this archive, it is not that a reader will merely think these are precocious or nostalgic or charmingly overfull. It is that they might take the blinkers off, begin to see the world for what it is, revel in its beauty, grieve for what it has lost, and decide that clear sight is worth more than either optimism or despair.
           </p>
+            </div>
+            <blockquote>“Myth is not escapism. It is one of the oldest ways of staring directly at reality.”</blockquote>
+          </section>
         </div>
 
-        <div class="curator-note__rights panel panel--soft">
-          <PoetryRightsNotice compact={true} />
+          <footer class="curator-note__colophon">
+            <p class="editorial-kicker">Archive colophon</p>
+            <PoetryRightsNotice compact={true} />
+            <a href="/poetry">Return to the poetry archive →</a>
+          </footer>
         </div>
-
-        <p class="curator-note__footerLink">
-          <a href="/poetry">Return to the poetry archive</a>
-        </p>
       </article>
     </main>
 
@@ -103,79 +153,267 @@ import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
 
 <style>
   .curator-note-page {
-    max-width: min(1100px, calc(100% - 2 * var(--space-5)));
+    width: min(100% - 48px, 1500px);
+    max-width: none;
+    padding-top: 0;
   }
 
   .curator-note {
     display: grid;
-    gap: var(--space-5);
-    background:
-      radial-gradient(760px 240px at top left, rgba(180, 83, 9, 0.08), transparent 72%),
-      radial-gradient(520px 220px at top right, rgba(30, 64, 175, 0.07), transparent 74%),
-      linear-gradient(180deg, rgba(255, 252, 244, 0.97), rgba(250, 248, 242, 0.99));
+    gap: 0;
   }
 
   .curator-note__back,
-  .curator-note__footerLink a {
+  .curator-note__colophon > a {
     width: fit-content;
-    text-decoration: none;
     color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .curator-note__back {
+    margin-top: 1rem;
   }
 
   .curator-note__back:hover,
-  .curator-note__footerLink a:hover {
+  .curator-note__colophon > a:hover {
     text-decoration: underline;
     text-underline-offset: 0.16em;
   }
 
-  .curator-note__head {
+  .curator-note :global(.page-header) {
+    border-bottom: 1px solid var(--text);
+  }
+
+  .curator-note__layout {
     display: grid;
-    gap: 0.75rem;
+    grid-template-columns: 170px minmax(0, 1fr);
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
-  .curator-note__eyebrow {
-    margin: 0 0 0.9rem;
+  .curator-note__rail {
+    position: sticky;
+    top: calc(var(--header-height, 4.5rem) + 1rem);
+    display: grid;
+    border-top: 1px solid var(--text);
+  }
+
+  .curator-note__rail span,
+  .curator-note__rail a {
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-2);
+    font-size: 0.68rem;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
   }
 
-  .curator-note__head h1 {
-    margin: 0;
-    max-width: 12ch;
+  .curator-note__rail span {
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .curator-note__rail a {
+    color: var(--text-2);
+    text-decoration: none;
+  }
+
+  .curator-note__rail a:hover,
+  .curator-note__rail a.is-active {
+    color: var(--text);
+  }
+
+  .curator-note__rail a.is-active {
+    padding-left: 0.55rem;
+    background: color-mix(in srgb, var(--tag-ink) 6%, transparent);
+    box-shadow: inset 2px 0 0 var(--tag-ink);
   }
 
   .curator-note__body {
     display: grid;
-    gap: 1.25rem;
-    max-width: 76ch;
+    grid-column: 2;
+    gap: clamp(3rem, 6vw, 5.5rem);
+    min-width: 0;
   }
 
-  .curator-note__body p,
-  .curator-note__footerLink {
+  .curator-movement {
+    display: grid;
+    grid-template-columns: minmax(0, 88ch) minmax(190px, 260px);
+    grid-template-areas:
+      "separator separator"
+      "copy quote";
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+    scroll-margin-top: calc(var(--header-height, 4.5rem) + 1rem);
+  }
+
+  .curator-movement + .curator-movement {
+    padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
+  }
+
+  .curator-movement__separator {
+    grid-area: separator;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1.15rem, 2vw, 1.75rem);
+  }
+
+  .curator-movement:first-child .curator-movement__separator {
+    display: none;
+  }
+
+  .curator-movement__separator::before,
+  .curator-movement__separator::after {
+    content: '';
+    height: 1px;
+    background: color-mix(in srgb, var(--border) 72%, transparent);
+  }
+
+  .curator-movement__separator::before {
+    width: clamp(2rem, 5vw, 4.5rem);
+  }
+
+  .curator-movement__separator::after {
+    flex: 1;
+  }
+
+  .curator-movement__separator span {
+    width: 0.3rem;
+    height: 0.3rem;
+    border: 1px solid color-mix(in srgb, var(--tag-ink) 68%, transparent);
+    transform: rotate(45deg);
+  }
+
+  .curator-movement__copy {
+    grid-area: copy;
+    display: grid;
+    gap: 1.2rem;
+    max-width: 88ch;
+  }
+
+  .curator-movement__copy p {
     margin: 0;
     color: var(--text-2);
-    font-size: clamp(1.02rem, 1.05vw, 1.1rem);
-    line-height: 1.85;
+    font-size: clamp(1.05rem, 1.15vw, 1.16rem);
+    line-height: 1.78;
   }
 
-  .curator-note__rights {
-    max-width: 76ch;
-    padding: 1rem 1.1rem;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(249, 250, 251, 0.98));
+  .curator-movement__copy a {
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--tag-ink) 65%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
   }
 
-  .curator-note__footerLink {
-    font-family: var(--font-mono);
-    font-size: 0.92rem;
+  .curator-movement__copy a:hover {
+    color: var(--accent);
+  }
+
+  .curator-movement blockquote {
+    grid-area: quote;
+    position: sticky;
+    top: calc(var(--header-height, 4.5rem) + 1.25rem);
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--tag-ink);
+    color: var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.08rem, 1.4vw, 1.3rem);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .curator-note__colophon {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.8rem 2rem;
+    align-items: end;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding: 1.25rem 0;
+    border-block: 1px solid var(--text);
+  }
+
+  .curator-note__colophon > :global(.poetry-rights) {
+    grid-column: 1;
+  }
+
+  .curator-note__colophon > a {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+
+  @media (max-width: 1150px) {
+    .curator-movement {
+      grid-template-columns: minmax(0, 1fr) minmax(170px, 220px);
+    }
   }
 
   @media (max-width: 900px) {
-    .curator-note__body {
-      max-width: none;
+    .curator-note__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .curator-note__rail {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .curator-note__rail span,
+    .curator-note__rail a {
+      flex: 0 0 auto;
+      padding: 0.6rem 0.75rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 0;
+    }
+
+    .curator-note__rail a.is-active {
+      padding-left: 0.75rem;
+      box-shadow: inset 0 -2px 0 var(--tag-ink);
+    }
+
+    .curator-note__body,
+    .curator-note__colophon {
+      grid-column: 1;
+    }
+
+    .curator-movement {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "separator"
+        "copy"
+        "quote";
+    }
+
+    .curator-movement blockquote {
+      position: static;
+      margin-top: 1.5rem;
+      max-width: 34ch;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .curator-note-page {
+      width: min(100% - 28px, 1500px);
+    }
+
+    .curator-note__colophon {
+      grid-template-columns: 1fr;
+    }
+
+    .curator-note__colophon > a {
+      grid-column: 1;
+      grid-row: auto;
     }
   }
 </style>

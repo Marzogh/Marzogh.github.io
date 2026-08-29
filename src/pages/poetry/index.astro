@@ -3,6 +3,8 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import EditorialHeading from '../../components/EditorialHeading.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
 import { poetry } from '../../data/poetry';
 
@@ -16,6 +18,7 @@ const poemsByYear = poetry.reduce((acc, entry) => {
   return acc;
 }, new Map<number, typeof poetry>());
 const years = [...poemsByYear.keys()].sort((a, b) => b - a);
+const illustratedCount = poetry.filter((entry) => entry.headerImage).length;
 ---
 
 <!doctype html>
@@ -30,115 +33,93 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
     <Header />
 
     <main class="poetry-index">
-      <section class="poetry-hero" aria-label="Poetry introduction">
-        <p class="poetry-hero__eyebrow">Verse</p>
-        <h1 class="poetry-hero__title">Poetry</h1>
+      <PageHeader
+        kicker="Poetry / archive"
+        title="Poetry"
+        lede="Work written across childhood and youth, kept in sequence so the recurring weather, wilderness, grief, joy and longing remain visible."
+        variant="index-rail"
+        stats={[
+          { label: 'Poems', value: poetry.length },
+          { label: 'Span', value: earliest && latest ? `${earliest.pubDateValue.getUTCFullYear()}–${latest.pubDateValue.getUTCFullYear()}` : 'n/a' },
+          { label: 'Original art', value: illustratedCount },
+          { label: 'Order', value: 'Newest first' },
+        ]}
+      />
 
-        <article class="poetry-curator">
-          <div class="poetry-curator__intro">
-            <p class="poetry-curator__lede">
-              These poems are kept here as an archive rather than a feed: work written across childhood and youth, arranged
-              so the recurrences are visible in sequence rather than hidden by summary.
-            </p>
-
-            <p class="poetry-curator__paragraph">
-              The same concerns return again and again in different light: weather, stars, wilderness, solitude, joy,
-              grief, damage, longing, and the attempt to live with a clear eye in a wounded world. Read straight
-              through and the poems start speaking to one another.
-            </p>
-
-            <p class="poetry-curator__paragraph">
-              The natural world is not decoration in this archive. It is witness, refuge, teacher, and measure. That
-              is why so many pieces turn toward rain, sea, birds, hills, wind, and starlight when they are really
-              trying to say something about scale, consequence, and how a human life ought to be lived.
-            </p>
-
-            <p class="poetry-curator__paragraph poetry-curator__paragraph--continue">
-              <a href="/poetry/curators-note">Continue to read the full curator’s note</a>
-            </p>
-          </div>
-
-          <aside class="poetry-ledger" aria-label="Collection note">
-            <p class="poetry-ledger__eyebrow">Collection</p>
-            <dl class="poetry-ledger__grid">
-              <div class="poetry-ledger__row">
-                <dt>Poems</dt>
-                <dd>{poetry.length}</dd>
-              </div>
-              <div class="poetry-ledger__row">
-                <dt>Span</dt>
-                <dd>{earliest ? earliest.pubDate : 'n/a'} to {latest ? latest.pubDate : 'n/a'}</dd>
-              </div>
-              <div class="poetry-ledger__row">
-                <dt>Structure</dt>
-                <dd>Chronological archive</dd>
-              </div>
-              <div class="poetry-ledger__row">
-                <dt>Source</dt>
-                <dd>Original pages and text files</dd>
-              </div>
-            </dl>
-            <p class="poetry-ledger__note">
-              This is laid out as an archive rather than a gallery. Read straight through if you want to watch the same
-              concerns return in different light: weather, stars, wilderness, myth, solitude, joy, grief, damage, and
-              the long attempt to work out what it means to live well without looking away.
-            </p>
-          </aside>
-
-          <div class="poetry-curator__rights">
-            <PoetryRightsNotice compact={true} />
-          </div>
-        </article>
+      <section class="poetry-curator" aria-labelledby="collection-note-title">
+        <div class="poetry-curator__lead">
+          <p class="editorial-kicker">Collection note</p>
+          <h2 id="collection-note-title">An archive, not a feed.</h2>
+        </div>
+        <div class="poetry-curator__copy">
+          <p>
+            The same concerns return again and again in different light: weather, stars, wilderness, solitude, joy,
+            grief, damage, longing, and the attempt to live with a clear eye in a wounded world. Read straight through
+            and the poems start speaking to one another.
+          </p>
+          <p>
+            The natural world is not decoration here. It is witness, refuge, teacher, and measure: rain, sea, birds,
+            hills, wind and starlight carrying questions about scale, consequence, and how a human life ought to be lived.
+          </p>
+          <a href="/poetry/curators-note">Read the full curator’s note →</a>
+        </div>
+        <aside class="poetry-curator__rights">
+          <PoetryRightsNotice compact={true} />
+        </aside>
       </section>
 
       <section class="poetry-archive" aria-label="Poetry archive">
-        <div class="poetry-archive__head">
-          <p class="poetry-archive__eyebrow">Archive</p>
-          <h2 class="poetry-archive__title">Chronology</h2>
+        <EditorialHeading kicker="Archive" title="Chronology" id="poetry-chronology" align="split" />
+
+        <div class="poetry-archive__shell">
+          <nav
+            class="poetry-years"
+            aria-label="Jump to year"
+            data-scrollspy-nav
+            data-scrollspy-container="#poetry-archive-scroll"
+          >
+            <span>Jump to</span>
+            {years.map((year) => <a href={`#poetry-year-${year}`} data-scrollspy-link={`poetry-year-${year}`}>{year}</a>)}
+          </nav>
+
+          <div id="poetry-archive-scroll" class="poetry-archive__scroll" tabindex="0" aria-labelledby="poetry-chronology">
+            {years.map((year) => (
+              <section class="poetry-year" aria-labelledby={`poetry-year-${year}`}>
+                <div class="poetry-year__head">
+                  <h3 id={`poetry-year-${year}`}>{year}</h3>
+                  <p>{poemsByYear.get(year)?.length ?? 0} poem{(poemsByYear.get(year)?.length ?? 0) === 1 ? '' : 's'}</p>
+                </div>
+
+                <div class="poetry-list">
+                  {poemsByYear.get(year)?.map((entry) => (
+                    <article class="poetry-row">
+                      <div class="poetry-row__meta">
+                        <span class="poetry-row__date"><FormattedDate date={entry.pubDateValue} /></span>
+                        <span class="poetry-row__artifact">{entry.headerImage ? 'Original art' : 'Text only'}</span>
+                      </div>
+
+                      <div class="poetry-row__body">
+                        <h4 class="poetry-row__title"><a href={`/poetry/${entry.slug}`}>{entry.title}</a></h4>
+                        <p class="poetry-row__excerpt">{entry.excerpt}</p>
+                      </div>
+
+                      {entry.headerImage ? (
+                        <a class="poetry-row__graphic" href={`/poetry/${entry.slug}`} aria-label={`Open poem: ${entry.title}`}>
+                          <img src={entry.headerImage} alt="" loading="lazy" decoding="async" />
+                        </a>
+                      ) : <span class="poetry-row__arrow" aria-hidden="true">→</span>}
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
-
-        {years.map((year) => (
-          <section class="poetry-year" aria-labelledby={`poetry-year-${year}`}>
-            <div class="poetry-year__head">
-              <h3 id={`poetry-year-${year}`}>{year}</h3>
-              <p>{poemsByYear.get(year)?.length ?? 0} poem{(poemsByYear.get(year)?.length ?? 0) === 1 ? '' : 's'}</p>
-            </div>
-
-            <div class="poetry-list">
-              {poemsByYear.get(year)?.map((entry) => (
-                <article class="poetry-row">
-                  <div class="poetry-row__meta">
-                    <span class="poetry-row__date">
-                      <FormattedDate date={entry.pubDateValue} />
-                    </span>
-                    <span class="poetry-row__artifact">{entry.headerImage ? 'Original title graphic preserved' : 'Text archive entry'}</span>
-                  </div>
-
-                  <div class="poetry-row__body">
-                    <h4 class="poetry-row__title">
-                      <a href={`/poetry/${entry.slug}`}>{entry.title}</a>
-                    </h4>
-                    <p class="poetry-row__excerpt">{entry.excerpt}</p>
-                  </div>
-
-                  {entry.headerImage ? (
-                    <a class="poetry-row__graphic" href={`/poetry/${entry.slug}`} aria-label={`Open poem: ${entry.title}`}>
-                      <img src={entry.headerImage} alt="" loading="lazy" decoding="async" />
-                    </a>
-                  ) : (
-                    <div class="poetry-row__graphicNote" aria-hidden="true">
-                      <span>Text only</span>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          </section>
-        ))}
       </section>
     </main>
 
     <Footer />
+
   </body>
 </html>
 
@@ -459,6 +440,270 @@ const years = [...poemsByYear.keys()].sort((a, b) => b - a);
     .poetry-row__graphicNote {
       justify-self: start;
       justify-content: flex-start;
+    }
+  }
+
+  /* Poetry index: shared editorial language with an archive-specific rhythm. */
+  .poetry-index {
+    width: min(100% - 48px, 1500px);
+    max-width: none;
+    padding-top: 0;
+  }
+
+  .poetry-curator {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr) minmax(220px, 0.6fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: start;
+    margin-bottom: clamp(2.2rem, 4vw, 3.5rem);
+    padding: 1.25rem 0;
+    border-block: 1px solid var(--border);
+  }
+
+  .poetry-curator__lead h2 {
+    max-width: 10ch;
+    margin: 0.5rem 0 0;
+    font-size: clamp(1.8rem, 2.8vw, 2.7rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .poetry-curator__copy {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 70ch;
+  }
+
+  .poetry-curator__copy p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.98rem;
+    line-height: 1.68;
+  }
+
+  .poetry-curator__copy a {
+    width: fit-content;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .poetry-curator__rights {
+    grid-column: auto;
+    padding: 0 0 0 clamp(1rem, 2vw, 1.5rem);
+    border-top: 0;
+    border-left: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+
+  .poetry-archive {
+    gap: 0.8rem;
+  }
+
+  .poetry-archive__shell {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    align-items: start;
+  }
+
+  .poetry-years {
+    position: sticky;
+    top: calc(var(--header-height, 4.5rem) + 1rem);
+    display: grid;
+    border-top: 1px solid var(--text);
+  }
+
+  .poetry-years span,
+  .poetry-years a {
+    padding: 0.48rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  .poetry-years span {
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .poetry-years a {
+    color: var(--text-2);
+  }
+
+  .poetry-years a:hover {
+    color: var(--accent);
+    padding-left: 0.25rem;
+  }
+
+  .poetry-years a.is-active {
+    padding-left: 0.45rem;
+    color: var(--text);
+    background: color-mix(in srgb, var(--tag-ink) 6%, transparent 94%);
+    box-shadow: inset 2px 0 0 var(--tag-ink);
+  }
+
+  .poetry-archive__scroll {
+    max-height: min(72vh, 850px);
+    overflow-y: auto;
+    overscroll-behavior: auto;
+    border-block: 1px solid var(--text);
+    scrollbar-color: var(--border-2) transparent;
+  }
+
+  .poetry-archive__scroll:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .poetry-year {
+    gap: 0;
+  }
+
+  .poetry-year__head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 0.38rem 0.65rem;
+    border-bottom: 1px solid var(--text);
+    background: color-mix(in srgb, var(--paper) 94%, transparent 6%);
+    backdrop-filter: blur(10px);
+  }
+
+  .poetry-year__head h3 {
+    font-size: 1rem;
+  }
+
+  .poetry-year__head p {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .poetry-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-left: 1px solid var(--border);
+  }
+
+  .poetry-row {
+    grid-template-columns: 84px minmax(0, 1fr) clamp(130px, 10vw, 180px);
+    gap: 0.7rem;
+    min-height: 108px;
+    padding: 0.58rem 0.65rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .poetry-row__date {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+
+  .poetry-row__artifact {
+    font-size: 0.62rem;
+  }
+
+  .poetry-row__title {
+    font-size: clamp(1.08rem, 1.15vw, 1.24rem);
+    line-height: 1.18;
+  }
+
+  .poetry-row__excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: clamp(0.86rem, 0.9vw, 0.98rem);
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .poetry-row__graphic {
+    align-self: start;
+  }
+
+  .poetry-row__graphic img {
+    width: 100%;
+    max-width: 180px;
+    max-height: 82px;
+    object-fit: contain;
+    object-position: right top;
+  }
+
+  .poetry-row__arrow {
+    justify-self: end;
+    align-self: center;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 1100px) {
+    .poetry-curator {
+      grid-template-columns: minmax(200px, 0.65fr) minmax(0, 1.35fr);
+    }
+
+    .poetry-curator__rights {
+      grid-column: 1 / -1;
+      padding: 0.75rem 0 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
+    }
+
+    .poetry-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .poetry-index {
+      width: min(100% - 28px, 1500px);
+    }
+
+    .poetry-curator {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .poetry-curator__lead h2 {
+      max-width: none;
+    }
+
+    .poetry-archive__shell {
+      grid-template-columns: 1fr;
+    }
+
+    .poetry-years {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .poetry-years span,
+    .poetry-years a {
+      flex: 0 0 auto;
+      padding: 0.45rem 0.65rem;
+      border-bottom: 0;
+      border-right: 1px solid var(--border);
+    }
+
+    .poetry-years a.is-active {
+      padding-left: 0.65rem;
+      box-shadow: inset 0 -2px 0 var(--tag-ink);
+    }
+
+    .poetry-row {
+      grid-template-columns: 74px minmax(0, 1fr) 112px;
+    }
+
+    .poetry-row__graphic img {
+      width: 112px;
+      max-width: 112px;
+      max-height: 68px;
     }
   }
  </style>

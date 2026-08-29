@@ -86,12 +86,12 @@ const meta = [
             {sectionHeadings.length ? (
               <>
                 <p class="editorial-kicker">On this page</p>
-                <nav data-article-nav>
+                <nav data-article-nav data-scrollspy-nav>
                   <ol>
                     {sectionHeadings.map((heading, index) => (
                       <li>
                         <span>{String(index + 1).padStart(2, '0')}</span>
-                        <a href={`#${heading.slug}`} data-section-link={heading.slug}>{heading.text}</a>
+                        <a href={`#${heading.slug}`} data-section-link={heading.slug} data-scrollspy-link={heading.slug}>{heading.text}</a>
                       </li>
                     ))}
                   </ol>
@@ -128,55 +128,6 @@ const meta = [
     <Footer />
 
     <script>
-      const nav = document.querySelector('[data-article-nav]');
-
-      if (nav) {
-        const links = Array.from(nav.querySelectorAll('[data-section-link]'));
-        const sections = links
-          .map((link) => {
-            const id = link.getAttribute('data-section-link');
-            const heading = id ? document.getElementById(id) : null;
-            return heading ? { heading, link } : null;
-          })
-          .filter(Boolean);
-
-        const setActive = (activeLink) => {
-          links.forEach((link) => {
-            const active = link === activeLink;
-            link.classList.toggle('is-active', active);
-            if (active) link.setAttribute('aria-current', 'location');
-            else link.removeAttribute('aria-current');
-          });
-        };
-
-        if (sections.length) {
-          setActive(sections[0].link);
-
-          const observer = new IntersectionObserver((entries) => {
-            const visible = entries
-              .filter((entry) => entry.isIntersecting)
-              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-            if (visible[0]) {
-              const match = sections.find(({ heading }) => heading === visible[0].target);
-              if (match) setActive(match.link);
-            }
-          }, {
-            rootMargin: '-18% 0px -68% 0px',
-            threshold: 0,
-          });
-
-          sections.forEach(({ heading }) => observer.observe(heading));
-
-          window.addEventListener('scroll', () => {
-            const current = [...sections]
-              .reverse()
-              .find(({ heading }) => heading.getBoundingClientRect().top <= window.innerHeight * 0.28);
-            if (current) setActive(current.link);
-          }, { passive: true });
-        }
-      }
-
       const pullQuoteItems = Array.from(document.querySelectorAll('[data-pull-quote]'));
 
       if (pullQuoteItems.length) {

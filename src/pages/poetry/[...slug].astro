@@ -1,8 +1,8 @@
 ---
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import PoetryRightsNotice from '../../components/PoetryRightsNotice.astro';
 import { poetry, poetryBySlug } from '../../data/poetry';
 
@@ -20,6 +20,9 @@ if (!entry) throw new Error(`Poem not found: ${slug}`);
 
 const previous = poetry.find((item) => item.pubDateValue.getTime() < entry.pubDateValue.getTime()) ?? null;
 const next = [...poetry].reverse().find((item) => item.pubDateValue.getTime() > entry.pubDateValue.getTime()) ?? null;
+const archivePosition = poetry.findIndex((item) => item.slug === entry.slug) + 1;
+const displayDate = new Intl.DateTimeFormat('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).format(entry.pubDateValue);
+const titleMark = entry.title.replace(/^[^A-Za-z]+/, '').charAt(0) || 'P';
 ---
 
 <!doctype html>
@@ -37,48 +40,53 @@ const next = [...poetry].reverse().find((item) => item.pubDateValue.getTime() > 
       <article class="poem-entry">
         <a href="/poetry" class="poem-back">← Back to Poetry</a>
 
+        <PageHeader
+          kicker="Poetry / archive"
+          title={entry.title}
+          variant="article"
+          meta={[
+            { label: 'Written', value: displayDate },
+            { label: 'Entry', value: `${String(archivePosition).padStart(2, '0')} / ${poetry.length}` },
+            { label: 'Source', value: entry.headerImage ? 'Original page' : 'Text archive' },
+          ]}
+        />
+
         <div class="poem-layout">
-          <header class="poem-record">
-            <div class="poem-record__copy">
-              <p class="poem-record__eyebrow">Poetry Archive</p>
-              <h1 class="poem-title">{entry.title}</h1>
-
-              <dl class="poem-record__meta">
-                <div class="poem-record__metaRow">
-                  <dt>Date</dt>
-                  <dd><FormattedDate date={entry.pubDateValue} /></dd>
-                </div>
-              </dl>
-
-              <p class="poem-record__note">Text preserved from the archive.</p>
-            </div>
-
-          {entry.headerImage ? (
-            <aside class="poem-record__artifact" aria-label="Original title graphic">
-              <p class="poem-record__artifactLabel">Original title graphic</p>
+          <aside class="poem-artifact" aria-label={entry.headerImage ? 'Original title graphic' : 'Text archive marker'}>
+            <p class="editorial-kicker">Surviving artifact</p>
+            {entry.headerImage ? (
+              <figure class="poem-artifact__image">
                 <img src={entry.headerImage} alt="" loading="eager" decoding="async" />
-              </aside>
-            ) : null}
-          </header>
+                <figcaption>Original title graphic, preserved as part of the archive.</figcaption>
+              </figure>
+            ) : (
+              <div class="poem-artifact__textOnly">
+                <span aria-hidden="true">{titleMark}</span>
+                <p>No original title graphic survives for this entry.</p>
+              </div>
+            )}
+          </aside>
 
           <section class="poem-body" aria-label="Poem text">
+            <header class="poem-body__head">
+              <span>Poem</span>
+              <span>{entry.lines.filter(Boolean).length} lines</span>
+            </header>
             <div class="poem-text" aria-label="Poem text">
               {entry.lines.map((line) =>
                 line ? <div class="poem-line">{line}</div> : <div class="poem-gap" aria-hidden="true"></div>
               )}
             </div>
           </section>
-        </div>
 
-        <section class="poem-provenance" aria-label="Archive note">
-          <p class="poem-provenance__note">
-            This poem belongs to the poetry archive on Chips’nCode. Where surviving legacy material exists, the original
-            title graphic is kept with the poem as part of the record rather than rebuilt into something newer.
-          </p>
-          <div class="poem-provenance__rights">
-            <PoetryRightsNotice compact={true} />
-          </div>
-        </section>
+          <aside class="poem-marginalia" aria-label="Archive note">
+            <div>
+              <p class="editorial-kicker">Provenance</p>
+              <p>This text is preserved from the poetry archive. Surviving legacy material remains with the poem rather than being rebuilt into something newer.</p>
+            </div>
+            <div class="poem-marginalia__rights"><PoetryRightsNotice compact={true} /></div>
+          </aside>
+        </div>
 
         <nav class="poem-nav" aria-label="Poem navigation">
           {next ? (
@@ -386,6 +394,242 @@ const next = [...poetry].reverse().find((item) => item.pubDateValue.getTime() > 
 
     .poem-nav__link--next {
       text-align: left;
+    }
+  }
+
+  /* Shared poem template: artifact, verse and provenance. */
+  .poem-page {
+    width: min(100% - 48px, 1500px);
+    max-width: none;
+    padding-top: 1.25rem;
+  }
+
+  .poem-page__wash {
+    opacity: 0.075;
+    filter: saturate(0.72) contrast(0.92);
+  }
+
+  .poem-page__wash::after {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--paper) 90%, transparent), color-mix(in srgb, var(--paper) 97%, transparent)),
+      radial-gradient(900px 280px at top left, color-mix(in srgb, var(--accent) 8%, transparent), transparent 72%);
+  }
+
+  .poem-entry {
+    gap: 1rem;
+  }
+
+  .poem-entry :global(.page-header--article) {
+    padding-top: 0.65rem;
+  }
+
+  .poem-entry :global(.page-header--article h1) {
+    max-width: 18ch;
+    font-size: clamp(2.2rem, 3.4vw, 3.5rem);
+  }
+
+  .poem-back {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .poem-layout {
+    display: grid;
+    grid-template-columns: minmax(180px, 230px) minmax(360px, 1fr) minmax(200px, 250px);
+    gap: 0;
+    align-items: start;
+    padding: 0;
+    border-block: 1px solid var(--text);
+  }
+
+  .poem-layout::before {
+    display: none;
+  }
+
+  .poem-artifact,
+  .poem-marginalia {
+    position: sticky;
+    top: calc(var(--header-height, 4.5rem) + 1.25rem);
+    align-self: start;
+  }
+
+  .poem-artifact {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 1.25rem 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .poem-artifact__image {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .poem-artifact__image img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    object-position: left top;
+  }
+
+  .poem-artifact__image figcaption,
+  .poem-artifact__textOnly p,
+  .poem-marginalia p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  .poem-artifact__textOnly {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .poem-artifact__textOnly > span {
+    color: var(--accent);
+    font-family: var(--font-filigree);
+    font-size: clamp(2.35rem, 3vw, 3rem);
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: 1;
+  }
+
+  .poem-body {
+    min-width: 0;
+    padding: 1.25rem clamp(1.5rem, 4vw, 4rem) 2.5rem;
+  }
+
+  .poem-body__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .poem-text {
+    max-width: 38em;
+    margin-inline: auto;
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.08rem, 1.18vw, 1.24rem);
+    line-height: 1.88;
+  }
+
+  .poem-gap {
+    height: 1.35rem;
+  }
+
+  .poem-marginalia {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.25rem 0 1.25rem 1.25rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .poem-marginalia > div {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .poem-marginalia__rights {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+
+  .poem-nav {
+    gap: 0;
+    padding-top: 0;
+    border-block: 1px solid var(--border);
+  }
+
+  .poem-nav__link {
+    min-height: 92px;
+    padding: 0.85rem 1rem;
+  }
+
+  .poem-nav__link + .poem-nav__link,
+  .poem-nav > span + .poem-nav__link {
+    border-left: 1px solid var(--border);
+  }
+
+  @media (max-width: 1100px) {
+    .poem-layout {
+      grid-template-columns: minmax(160px, 210px) minmax(0, 1fr);
+    }
+
+    .poem-marginalia {
+      position: static;
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.7fr);
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
+    }
+
+    .poem-marginalia__rights {
+      padding: 0 0 0 1rem;
+      border-top: 0;
+      border-left: 1px solid var(--border);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .poem-page {
+      width: min(100% - 28px, 1500px);
+    }
+
+    .poem-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .poem-artifact,
+    .poem-marginalia {
+      position: static;
+    }
+
+    .poem-artifact {
+      padding: 1rem 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .poem-artifact__image img {
+      max-height: 90px;
+    }
+
+    .poem-body {
+      padding: 1rem 0 2rem;
+    }
+
+    .poem-text {
+      margin-inline: 0;
+      font-size: 1.05rem;
+      line-height: 1.82;
+    }
+
+    .poem-marginalia {
+      grid-template-columns: 1fr;
+    }
+
+    .poem-marginalia__rights {
+      padding: 0.75rem 0 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
     }
   }
 </style>

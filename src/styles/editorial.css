@@ -11,6 +11,15 @@
   text-transform: uppercase;
 }
 
+/* Shared active-state contract for any editorial navigation rail. */
+[data-scrollspy-link] {
+  transition: color 140ms ease, padding 140ms ease, background-color 140ms ease;
+}
+
+[data-scrollspy-link].is-active {
+  color: var(--text);
+}
+
 .editorial-heading {
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr);
