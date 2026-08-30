@@ -1,157 +1,80 @@
 ---
-title: "SPIMemory Docs"
-description: "SPIMemory is an Arduino library for SPI Flash and SPI FRAM chips, with typed read/write APIs, erase controls, and diagnostics."
+title: "SPIMemory"
+description: "An Arduino library for SPI Flash and FRAM that takes care of the repetitive memory-management work I would rather not rebuild in every project."
 pubDate: 2018-04-26
 draft: false
 featured: true
-type: Documentation
+type: Library
 tags: [spimemory, arduino, docs, mkdocs, github-pages, technical-writing, information-architecture, developer-experience]
 demo: https://chipsncode.com/SPIMemory/
 demoLabel: Latest Documentation
 github: https://github.com/Marzogh/SPIMemory
 ---
 
-## What SPIMemory Is
+SPIMemory grew out of a fairly ordinary embedded problem. Adding external SPI memory to an Arduino project is not particularly difficult, but actually using it well means dealing with rather more than sending bytes over SPI. Different chips have different capacities and capabilities, flash has erase requirements that FRAM does not, writes can cross page boundaries, addresses need to be managed properly, and sooner or later you need to know whether the value you thought you stored is actually the value that came back.
 
-SPIMemory is an Arduino library for external SPI memory chips (SPI Flash and SPI FRAM). It wraps low-level memory commands into direct APIs that are practical in production firmware.
+None of those problems is especially interesting when the thing I actually want to build is somewhere further up the stack, so SPIMemory exists to deal with them once.
 
-<div className="spec-grid">
-  <div className="spec-card">
-    <h3>Memory Types</h3>
-    <p>SPI Flash + SPI FRAM</p>
-  </div>
-  <div className="spec-card">
-    <h3>Primary API Surface</h3>
-    <p>Typed read/write + erase + diagnostics</p>
-  </div>
-  <div className="spec-card">
-    <h3>Published Docs</h3>
-    <p><a href="https://chipsncode.com/SPIMemory/">chipsncode.com/SPIMemory</a></p>
-  </div>
-  <div className="spec-card">
-    <h3>Source</h3>
-    <p><a href="https://github.com/Marzogh/SPIMemory">Marzogh/SPIMemory</a></p>
-  </div>
-</div>
+The library provides a common interface for SPI Flash and SPI FRAM while retaining the differences that actually matter between the two technologies. At application level, that means I can work with ordinary values and data structures rather than repeatedly rebuilding low-level transactions around them, while the library takes responsibility for communicating with the device correctly.
 
-<div className="quote-strip">
-  <p><strong>Quoted:</strong> "SPIMemory is an Arduino library for SPI Flash and SPI FRAM chips."</p>
-  <p>Source: <a href="https://chipsncode.com/SPIMemory/">SPIMemory docs home</a></p>
-</div>
+Over time it has grown considerably beyond the handful of convenience functions that started it.
 
-## Core Capability Set
+## What SPIMemory takes care of
 
-<div className="cap-grid">
-  <div className="cap-card">
-    <h3>Identity and Setup</h3>
-    <ul>
-      <li>`begin()` initialization</li>
-      <li>Manufacturer and JEDEC identification</li>
-      <li>Capacity and page introspection</li>
-    </ul>
-  </div>
-  <div className="cap-card">
-    <h3>Typed Data IO</h3>
-    <ul>
-      <li>Primitives: `byte`, `word`, `short`, `long`, `float`</li>
-      <li>Buffers: byte/char arrays</li>
-      <li>Structured payloads via `writeAnything` / `readAnything`</li>
-    </ul>
-  </div>
-  <div className="cap-card">
-    <h3>Flash Operations</h3>
-    <ul>
-      <li>`eraseSector`</li>
-      <li>`eraseBlock32K`, `eraseBlock64K`</li>
-      <li>`eraseChip`</li>
-    </ul>
-  </div>
-  <div className="cap-card">
-    <h3>Reliability and Debugging</h3>
-    <ul>
-      <li>Write verification controls</li>
-      <li>`error()` and `error(VERBOSE)` diagnostics</li>
-      <li>Power and runtime helper functions</li>
-    </ul>
-  </div>
-</div>
+The most obvious part of the library is typed reading and writing. SPIMemory can store and retrieve the usual integer and floating-point types, along with strings, arrays and other data, without requiring the application to manually turn everything into individual SPI transactions. That makes fairly mundane jobs such as storing configuration values, calibration data, counters or larger blocks of application data considerably less tedious.
 
-## Where It Helps in Real Projects
+Underneath that interface, though, the library still has to respect how the memory itself works. Flash writes have to account for page boundaries and the existing state of the memory, while erasing happens in sectors, blocks or across the whole chip rather than byte by byte. FRAM behaves differently again because it does not require the erase cycle that flash does. I wanted the public API to make the common operations straightforward without pretending that the underlying devices are interchangeable when they are not.
 
-In embedded projects, SPI command plumbing becomes repetitive quickly. SPIMemory keeps that out of your business logic.
+Device identification became increasingly important as the number of supported parts grew. SPIMemory can use JEDEC information and, where available, SFDP data to work out what it is talking to and configure itself appropriately. The library also carries device information for supported parts, which means application code does not need to know the geometry of every flash chip it might encounter before it can do something useful with it.
 
-Common use cases:
+There is also a fair amount of checking around those basic operations. Write verification, diagnostics and error reporting are not especially exciting features until something fails, at which point they become rather useful. A storage library that silently returns the wrong value is considerably harder to debug than one that can tell you that an operation failed or that the data written to the device did not verify correctly.
 
-<div className="usecase-grid">
-  <div className="usecase-card">
-    <h3>Persistent Settings</h3>
-    <p>Store calibration, user prefs, and feature flags outside MCU internal EEPROM limits.</p>
-  </div>
-  <div className="usecase-card">
-    <h3>Telemetry and Logging</h3>
-    <p>Log compact binary records with predictable address management for long-running nodes.</p>
-  </div>
-  <div className="usecase-card">
-    <h3>Field Firmware</h3>
-    <p>Keep post-write checks enabled during bring-up to catch bus noise and wiring faults early.</p>
-  </div>
-  <div className="usecase-card">
-    <h3>External Memory Expansion</h3>
-    <p>Add structured storage to boards where on-chip non-volatile memory is limited.</p>
-  </div>
-</div>
+That combination is really the part of SPIMemory I care about. It is not intended to hide the existence of the memory device, but it does remove a lot of the repetitive work between deciding that a project needs external storage and actually being able to use that storage.
 
-## Hardware Coverage
+## Where it runs
 
-From the upstream compatibility list, SPIMemory has been tested across common MCU families and boards including:
+SPIMemory started in the Arduino world and still follows that model, but the range of hardware it has been used with has grown substantially. The current library supports SPI Flash and FRAM across AVR, SAMD, STM32, ESP8266, ESP32 and nRF52-class boards, along with devices from a number of memory manufacturers.
 
-- AVR (ATmega328P/32u4/2560)
-- SAMD21 / SAMD51
-- STM32
-- ESP8266 / ESP32
-- nRF52
+I would not, however, treat a broad statement like that as a guarantee that every possible board and memory combination behaves identically. The exact device matters, as does the architecture and sometimes the particular SPI implementation underneath it, which is why the documentation maintains a proper compatibility matrix rather than trying to compress all of that into a sentence here.
 
-It has also been tested with multiple flash families (Winbond, Microchip SST25/26, Cypress/Spansion S25FL, Macronix, Micron, and others), plus Cypress FM25W FRAM.
+The same applies to Flash and FRAM support. They share enough of the surrounding interface for it to make sense to support them in the same library, but their behaviour is not identical and the documentation keeps those distinctions visible. If I were checking whether SPIMemory supports a particular chip or board before designing it into something, the **[compatibility documentation](https://chipsncode.com/SPIMemory/compatibility/)** is where I’d recommend looking rather than relying on a general list on this page.
 
-<div className="quote-strip">
-  <p><strong>Quoted:</strong> "Should work with any flash memory that is compatible with the SFDP standard as defined in JESD216B"</p>
-  <p>Source: <a href="https://github.com/Marzogh/SPIMemory">SPIMemory README</a></p>
-</div>
+## Using the library
 
-## Docs and Source
-
-**[https://chipsncode.com/SPIMemory/](https://chipsncode.com/SPIMemory/)**
-
-Use the docs for quick start wiring, API lookup, and troubleshooting flow.
+At its simplest, SPIMemory is intended to make external memory feel reasonably unsurprising from application code. A typical operation is little more than starting the device and then reading or writing the type of value you actually care about:
 
 ```cpp
 #include <SPIMemory.h>
-SPIFlash flash(10);  // CS pin
+
+SPIFlash flash;
 
 void setup() {
-  Serial.begin(115200);
+    Serial.begin(115200);
 
-  if (!flash.begin()) {
-    Serial.print("begin failed, err=0x");
-    Serial.println(flash.error(VERBOSE), HEX);
-    return;
-  }
+    if (!flash.begin()) {
+        Serial.println("Flash initialisation failed");
+        return;
+    }
 
-  Serial.print("JEDEC ID: 0x");
-  Serial.println(flash.getJEDECID(), HEX);
+    uint32_t address = 0;
+    uint32_t writtenValue = 123456;
 
-  uint32_t addr = flash.getAddress(sizeof(uint32_t));
-  flash.eraseSector(addr);
+    flash.writeULong(address, writtenValue);
 
-  flash.writeULong(addr, 123456789UL);      // typed write
-  uint32_t out = flash.readULong(addr);     // typed read
+    uint32_t readValue = flash.readULong(address);
+    Serial.println(readValue);
+}
 
-  Serial.print("Read back: ");
-  Serial.println(out);
+void loop() {
 }
 ```
 
-## Live links
+That is deliberately only a small example. There are decisions around wiring, chip selection, addressing, erasing, data layout and error handling that matter in a real project, and reproducing all of them here would simply turn this page into a second copy of the documentation.
 
-- Live docs: [chipsncode.com/SPIMemory](https://chipsncode.com/SPIMemory/)
-- Repository: [Marzogh/SPIMemory](https://github.com/Marzogh/SPIMemory)
+The **[SPIMemory documentation](https://chipsncode.com/SPIMemory/)** is where I’d recommend starting if you actually want to use the library. It begins with getting a device wired and performing the first read and write, then moves through common tasks and examples before getting into the deeper material. If you already know what you are looking for, the API reference, compatibility information and troubleshooting material are there without having to work through the introductory material first.
+
+I have also separated the maintainer material from the normal user path. Someone trying to store a value in an SPI Flash chip does not need to know how I build the documentation or prepare a release, while somebody working on SPIMemory itself does. Keeping those paths separate has made the documentation considerably easier to use without having to strip out the technical material needed to maintain the project.
+
+The documentation has consequently become a fairly substantial part of SPIMemory in its own right. Rather than relying on a README and generated API output to explain a library that has accumulated quite a lot of capability over time, it now has a proper path from first use through to the implementation and maintenance detail.
+
+If you are looking to use SPIMemory in a project, **[the documentation](https://chipsncode.com/SPIMemory/)** is where I’d recommend you go next. The source itself, along with the issue tracker and development history, remains in the **[project repository](https://github.com/Marzogh/SPIMemory)**.

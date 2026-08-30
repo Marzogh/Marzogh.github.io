@@ -15,30 +15,6 @@ const skillAbility = {
   religion: 'int', sleight_of_hand: 'dex', stealth: 'dex', survival: 'wis'
 };
 
-const CAMPAIGN_NOTES_TEXT = `Generally rich population. Library of Ermack, fabled for knowledge, not open to public, takes up half the town and fountain. Body just appeared, might be magic. Bookkeeper's guild maintains order. Little child hears splash in fountain in town square and finds a man's corpse with a note pinned to the body: 'Next one at midnight'. Radall Tolstagg, local jeweller, found by Kara, daughter of local apothecary Katernin. We were at the bookkeeper's guild, 9 pm. Divination was blocked; priests could not work divination.
-
-Necklace is a teleport and sends a person to safety after a short chant.
-
-Jeweller records: nothing strange in ledger, but a letter was found. Customers include Katenin and Flint Fyreforge with inconsistencies in jewel pricing.
-
-Kara saw the body after the splash but missed clothing, necklace, and note details. Kara is apprentice at the library. Mr Tolstagg was not kind to her mother. Mother had a high-interest loan from him. Handwriting on the note matched Tolstagg. Handwriting in the letter matched Tolstagg and Katenin.
-
-Open cathedral altar had nothing; temple of many gods. Second high priest missing, maybe drunk in nearest tavern by residential district.
-
-Tavern is Tortly Drunk. Halfling and dwarf sharing drinks. Tortle barkeep. Broken furniture in back matched tavern stock.
-
-Behind the tavern was impossible geometry, turning 270 degrees away from the building.
-
-Mothos, tiefling warlock and shop owner. Entangled warlock escaped; circumference lost memory of school days.
-
-Ended in alley with blood stain; divination block gone. Returned to temple to ask cleric.
-
-Cleric divination showed hooded woman stabbing Randall. Knife under bed in bedroom, second room.
-
-Thea brought in and conflicted about what to do with Katenin.
-
-Tortle pickpocketed me. No GP.`;
-
 function abilityMod(score) { return Math.floor((Number(score || 10) - 10) / 2); }
 function fmtBonus(n) { const v = Number(n || 0); return `${v >= 0 ? '+' : ''}${v}`; }
 
@@ -504,20 +480,23 @@ async function render() {
   });
 
   // CAMPAIGN NOTES
-  const noteParas = CAMPAIGN_NOTES_TEXT.split(/\n\n/);
-  const noteLines = noteParas.flatMap((p) => [...wrapWords(p, 110), '']);
-  const noteChunks = chunk(noteLines, 66).map((lines) => lines.join('\n').trim());
-  noteChunks.forEach((text) => {
-    const p = createPage(title, 'Campaign notes', 'CAMPAIGN NOTES');
-    const b = p.querySelector('.lcx-body');
-    const sec = addSection(b, 'Campaign Notes');
-    const n = document.createElement('div');
-    n.className = 'notes';
-    n.style.minHeight = '214mm';
-    n.textContent = text;
-    sec.append(n);
-    pages.append(p);
-  });
+  const campaignNotes = String(character?.play_state?.session_notes || '').trim();
+  if (campaignNotes) {
+    const noteParas = campaignNotes.split(/\n\s*\n/);
+    const noteLines = noteParas.flatMap((paragraph) => [...wrapWords(paragraph, 110), '']);
+    const noteChunks = chunk(noteLines, 66).map((lines) => lines.join('\n').trim()).filter(Boolean);
+    noteChunks.forEach((text) => {
+      const p = createPage(title, 'Campaign notes', 'CAMPAIGN NOTES');
+      const b = p.querySelector('.lcx-body');
+      const sec = addSection(b, 'Campaign Notes');
+      const n = document.createElement('div');
+      n.className = 'notes';
+      n.style.minHeight = '214mm';
+      n.textContent = text;
+      sec.append(n);
+      pages.append(p);
+    });
+  }
 
   // Stable-table behavior: move Currency/Quick Notes to continuation after CORE.
   moveCoreCurrencyToContinuation(pages);

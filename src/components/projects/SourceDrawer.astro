@@ -1,0 +1,124 @@
+---
+import { readFileSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
+import { codeToHtml } from 'shiki';
+
+interface Props {
+  title: string;
+  sourcePath: string;
+  lang: string;
+  note?: string;
+}
+
+const { title, sourcePath, lang, note } = Astro.props;
+const source = readFileSync(resolve(process.cwd(), sourcePath), 'utf8');
+const filename = basename(sourcePath);
+const highlightedSource = await codeToHtml(source, {
+  lang,
+  themes: { light: 'github-light', dark: 'github-dark' },
+});
+---
+
+<details class="source-drawer" data-source-drawer>
+  <summary>
+    <span>{title}</span>
+    {note && <small>{note}</small>}
+  </summary>
+  <div class="source-drawer__meta">
+    <code>{filename}</code>
+    <div>
+      <button type="button" data-copy-source>Copy</button>
+      <button type="button" data-download-source data-filename={filename}>Download</button>
+    </div>
+  </div>
+  <div class="source-drawer__source" data-source-content set:html={highlightedSource} />
+</details>
+
+<script>
+  document.querySelectorAll('[data-source-drawer]').forEach((drawer) => {
+    if (!(drawer instanceof HTMLElement) || drawer.dataset.ready === 'true') return;
+    drawer.dataset.ready = 'true';
+    const source = drawer.querySelector('[data-source-content]')?.textContent || '';
+    const copy = drawer.querySelector('[data-copy-source]');
+    const download = drawer.querySelector('[data-download-source]');
+    copy?.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(source);
+      const label = copy.textContent;
+      copy.textContent = 'Copied';
+      window.setTimeout(() => { copy.textContent = label; }, 1400);
+    });
+    download?.addEventListener('click', () => {
+      const blob = new Blob([source], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = download.getAttribute('data-filename') || 'example.txt';
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+</script>
+
+<style>
+  .source-drawer { margin: 1rem 0; border-block: 1px solid var(--border); }
+  .source-drawer summary {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.8rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 650;
+  }
+  .source-drawer summary::-webkit-details-marker { display: none; }
+  .source-drawer summary::before { content: '+'; color: var(--tag-ink); font-family: var(--font-mono); }
+  .source-drawer[open] summary::before { content: '−'; }
+  .source-drawer summary small {
+    margin-left: auto;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .source-drawer__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.68rem;
+  }
+  .source-drawer__meta div { display: flex; gap: 0.4rem; }
+  button {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text);
+    font: 0.62rem var(--font-mono);
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--tag-ink); color: var(--tag-ink); }
+  .source-drawer__source :global(.shiki) {
+    max-height: min(60vh, 620px);
+    margin: 0;
+    padding: 1rem;
+    overflow: auto;
+    overscroll-behavior: auto;
+    border: 1px solid var(--border);
+    background-color: color-mix(in srgb, var(--surface-raised) 70%, var(--surface) 30%) !important;
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+  :global(html[data-theme='dark']) .source-drawer__source :global(.shiki),
+  :global(html[data-theme='dark']) .source-drawer__source :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+</style>

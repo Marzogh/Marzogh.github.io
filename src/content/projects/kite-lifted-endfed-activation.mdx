@@ -1,645 +1,220 @@
 ---
-title: "Kite-Lifted 40m End-Fed Activation: Field Deployment & Hard Lessons"
-description: "A detailed field write-up of a kite-lifted 40 m end-fed on Coochiemudlo Island, including the mechanical setup, RF chain, static bleed, and what changed once the wire stopped sitting still."
+title: "Kite-Lifted 40 m End-Fed Activation"
+description: "Taking a very predictable 40 m EFHW, hanging it under a kite, and finding out what happens once the antenna refuses to sit still."
 pubDate: 2025-09-21
 draft: false
+type: Field Report
 tags: [amateur-radio, ham-radio, pota, activation-reports, hf, 40m, endfed, kite, portable, portable-ops, grounding, field-ops, marine-park]
 image: /images/projects/kite-activation/vk4klb-operating.jpg
 ---
 
-On Sunday 21 September 2025, VK4KLB and I headed out to Main State Beach (AU-8924) at Coochiemudlo to do a two-fer with Moreton Bay Marine Park (AU-7027). It was September in Queensland, so 0600z translated to just after 4 pm local time. Good solid afternoon sea breeze. Enough wind to make the long-standing kite antenna idea feel worth trying for real.
+import ActivationLog from '../../components/projects/ActivationLog.astro';
 
-I’ve wanted to hang this 40 m EFHW under a kite for years. Not because it looks cool, though it definitely does, but because I’ve always wondered how much of an antenna’s good behaviour comes from the fact that we force it to sit still. In the backyard this antenna is very predictable. Put it up as a normal sloper and it just works. Put the same wire under a moving kite and all the parts you can normally ignore start mattering very quickly.
+On Sunday 21 September 2025, `VK4KLB` and I headed out to Main State Beach on Coochiemudlo Island for a two-fer activation of AU-8924 and Moreton Bay Marine Park, AU-7027. By 0600z it was just after 4 pm local time, with a solid Queensland afternoon sea breeze and enough wind to finally justify trying an antenna idea I had been carrying around for years.
 
-<section className="postStats">
-  <div className="statCard"><div className="statNum">42</div><div className="statLbl">QSOs Logged</div></div>
-  <div className="statCard"><div className="statNum">37m 3s</div><div className="statLbl">On-Air Duration</div></div>
-  <div className="statCard"><div className="statNum">AU-8924</div><div className="statLbl">Main State Beach</div></div>
-  <div className="statCard"><div className="statNum">AU-7027</div><div className="statLbl">Moreton Bay Marine Park</div></div>
-  <div className="statCard"><div className="statNum">~22 m</div><div className="statLbl">Peak Antenna Height</div></div>
-  <div className="statCard"><div className="statNum">&gt;3 kV</div><div className="statLbl">Static Observed</div></div>
+I have a 40 m EFHW that I know very well. In its normal portable configuration it is tuned around 7.074 MHz and goes up as a sloper from roughly 9 metres at the high end to about 2 metres at the feedpoint. The transformer is a 56:1 autotransformer wound on an FT82-43 with an FT50-43 nested inside, built on the UniBalun PCB from DG1JAN, and the wire is insulated SOTABeams. Put it up normally and it is very predictable, sitting comfortably below 1.5:1 SWR across the resonant bands and practically 1:1 on 15 metres.
+
+Which made it an excellent candidate for doing something unreasonable to.
+
+I had wanted to hang the same wire under a kite for years, partly because it looks fantastic and partly because I was genuinely curious about how much of an antenna’s nice behaviour comes from forcing it to stay in one geometry. A fixed sloper does not change much once it is up. A kite-lifted wire changes height, angle and tension every time the wind does something, so all of the things I can normally ignore become rather more visible.
+
+<section className="project-facts" aria-label="Activation summary">
+  <div><span>Contacts</span><strong>42 QSOs</strong></div>
+  <div><span>Two-fer</span><strong>AU-8924 + AU-7027</strong></div>
+  <div><span>Peak height</span><strong>About 22 metres</strong></div>
+  <div><span>Static measured</span><strong>More than 3 kV</strong></div>
 </section>
 
-<section className="callout qsoDash" data-adif-a="/logs/2025-09-21-au-7027.adi" data-adif-b="/logs/2025-09-21-au-8924.adi">
-  <h2>Log Summary</h2>
-  <p className="qsoDashIntro">These figures combine both park logs for the two-fer, so the total here is higher than the single-log count in the project stats above.</p>
+## Getting it into the air
 
-  <div className="qsoLayout">
-    <div className="qsoMain">
-      <div className="qsoKpis" aria-label="QSO summary statistics">
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="total">—</div><div className="qsoKpiLbl">Total QSOs</div></div>
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="duration">—</div><div className="qsoKpiLbl">On-air duration</div></div>
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="first">—</div><div className="qsoKpiLbl">First QSO (UTC)</div></div>
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="last">—</div><div className="qsoKpiLbl">Last QSO (UTC)</div></div>
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="bands">—</div><div className="qsoKpiLbl">Bands</div></div>
-        <div className="qsoKpi"><div className="qsoKpiNum" data-kpi="modes">—</div><div className="qsoKpiLbl">Modes</div></div>
-      </div>
+We chose a position well clear of anyone walking along the beach because a long tensioned wire under wind load is not something I wanted drifting over people if the kite decided to misbehave.
 
-      <div className="qsoGrid">
-        <div className="qsoPanel">
-          <h3>Band breakdown</h3>
-          <div className="tableWrap">
-            <table aria-label="Band breakdown table">
-              <thead><tr><th>Band</th><th>QSOs</th><th>%</th></tr></thead>
-              <tbody data-band-table></tbody>
-            </table>
-          </div>
-        </div>
+The lifter was a Rainbow LS-17.5 sled on Dyneema rated to 200 kg. Wind was under about 15 km/h, with gusts below 25 km/h, so it was steady enough to work with rather than the sort of day where the kite spends its time alternating between trying to leave Queensland and trying to bury itself in the sand.
 
-        <div className="qsoPanel">
-          <h3>Contact rate</h3>
-          <div className="qsoChartWrap">
-            <canvas id="qsoRateChart" width="920" height="260" aria-label="Contact rate chart" role="img"></canvas>
-          </div>
-          <div className="qsoChartMeta" data-rate-meta>—</div>
-        </div>
-      </div>
-    </div>
-
-    <aside className="qsoPanel propagationPanel">
-      <h3>Propagation Snapshot</h3>
-      <p>Ham2K Portable Logger map from Main State Beach into VK-land and Europe.</p>
-      <figure className="propagationFigure">
-        <img src="/images/projects/kite-activation/ham2k-map.png" alt="Ham2K map showing QSO distribution including Europe path" />
-      </figure>
-    </aside>
-  </div>
-
-  <details className="qsoDetails">
-    <summary>Full QSO table (from ADIF)</summary>
-    <div className="qsoControls">
-      <label className="qsoControl">Filter: <input type="text" data-qso-filter placeholder="Callsign, band, mode…" /></label>
-      <label className="qsoControl">Band: <select data-qso-band><option value="">All</option></select></label>
-      <label className="qsoControl">Mode: <select data-qso-mode><option value="">All</option></select></label>
-    </div>
-
-    <div className="tableWrap">
-      <table aria-label="Full QSO table">
-        <thead>
-          <tr>
-            <th>UTC</th>
-            <th>Call</th>
-            <th>Band</th>
-            <th>Mode</th>
-            <th>RST S</th>
-            <th>RST R</th>
-            <th>Grid</th>
-            <th>Ref</th>
-          </tr>
-        </thead>
-        <tbody data-qso-table></tbody>
-      </table>
-    </div>
-  </details>
-
-  <div className="qsoError" data-qso-error hidden></div>
-</section>
-
-## Why This Was Worth Trying
-
-The fixed version of this antenna is tuned for 7.074 MHz as a sloper from roughly 9 m down to about 2 m. The transformer is a 56:1 autotransformer wound on an FT82-43 with an FT50-43 nested inside, built on the UniBalun PCB from DG1JAN. The wire is insulated SOTABeams. In a normal deployment it sits comfortably under 1.5:1 SWR across the resonant bands and is practically 1:1 on 15 m. It behaves so predictably that you stop thinking about it.
-
-Which made it the perfect candidate to disturb.
-
-## Deployment Geometry
-
-We chose our position carefully, well clear of anyone walking the beach. A long tensioned wire under wind load is not something you casually let drift over people. The Rainbow LS-17.5 Lifter Sled went up cleanly on Dyneema rated for 200 kg. Wind was under 15 kph with gusts below 25 kph — steady rather than erratic — and once it found height the antenna was sitting somewhere around 22 metres above the sand, sloping down toward the operating position.
-
-<div className="mediaGrid mediaGrid--halves">
-  <figure>
-    <img src="/images/projects/kite-activation/operating-position-wide.jpg" alt="Wide operating position on the beach with the kite overhead and feedpoint in view" />
-    <figcaption>Once it was all up, you could see the whole system at a glance: radio on the sand, feedpoint at the stake, and the line climbing away to the kite.</figcaption>
-  </figure>
-
-  <figure>
-    <img src="/images/projects/kite-activation/kite-line-attachment.jpg" alt="Kite line and attachment point on the beach before full lift" />
-    <figcaption>The mechanical chain mattered: kite line, attachment point, and elastic isolation all had jobs to do.</figcaption>
-  </figure>
-</div>
-
-The antenna was tied into a loop in the kite string about two metres below the bridle attachment, with a short section of bungee between the kite line and the antenna wire. That small elastic section mattered far more than it looks on paper. Dyneema does not stretch, and without something to absorb gust energy every change in wind speed would transmit directly into the transformer and connectors. The rope carried the load. The antenna followed the slope. The RF hardware was left to do RF work rather than structural work.
-
-If you build one of these yourself, that is the first design rule I would push hard: do not make your transformer enclosure, studs, or solder joints part of the gust-management system. Let the kite line take the real load. Let the antenna hang. Put something elastic between the two if the wind is going to have opinions.
-
-## RF Chain And Static Management
-
-The feedline chain was unchanged from my normal portable configuration. About 5.6 metres of RG58 CU ran from the transformer into a bleed resistor array made from five 1 MΩ resistors in parallel inside a sealed enclosure with SO-239 connectors. From there it passed through a ferrite choke, into the AT-100M Pro tuner, and finally into the FX-4CR. The ground strap from the bleed enclosure to a 1.3 metre steel ground rod was kept under 30 centimetres to keep that path as short as possible. Yes, the rod went into sand. That is what the beach provides.
-
-Static built quickly. At one point I measured over 3 kV on the wire, which is a good way to become very happy that you bothered building the bleed network properly. The resistors did exactly what they were meant to do and nothing made it through to the radio, but seeing that voltage on a moving airborne conductor is a good reminder that wind and long wires generate charge very efficiently.
-
-<div className="mediaGrid mediaGrid--halves">
-  <figure>
-    <img src="/images/projects/kite-activation/feedpoint-on-stake.jpg" alt="Feedpoint, radial connection, and bleed path mounted on a beach stake" />
-    <figcaption>Feedpoint end on the beach: transformer, radial, and feedline chain all close enough to inspect and service.</figcaption>
-  </figure>
-
-  <figure>
-    <img src="/images/projects/kite-activation/bleed-array-detail.jpg" alt="Close-up of the bleed resistor array inside its enclosure" />
-    <figcaption>The bleed array was five 1 MΩ resistors in parallel. Boring little box. Extremely good box to have.</figcaption>
-  </figure>
-</div>
+Once it had some height, the antenna was sitting somewhere around 22 metres above the beach at the top end and sloping back toward the operating position.
 
 <figure>
-  <img src="/images/projects/kite-activation/full-kit-layout.jpg" alt="Complete activation kit laid out on the sand before or after deployment" />
-  <figcaption>Full field kit. Nothing especially exotic, but every piece had a reason to be there.</figcaption>
+  <img src="/images/projects/kite-activation/operating-position-wide.jpg" alt="Wide operating position on the beach with the kite overhead and feedpoint in view." />
+  <figcaption>Once it was up, the whole arrangement was easy to see: feedpoint on the beach, wire climbing away, and the kite doing the actual lifting.</figcaption>
 </figure>
 
-The bleed box is worth spelling out because it is the bit people are most likely to skip until the first unpleasant surprise. A long wire under motion accumulates charge. A long wire under motion on a windy beach accumulates charge very happily. The job of the bleed network was not to make the antenna somehow immune to static. It was to give that charge a path to leak away continuously instead of waiting for a more exciting path through the radio.
+The antenna was attached into a loop in the kite line about two metres below the bridle, with a short section of bungee between the Dyneema and the antenna wire. That little bit of elasticity was deliberate. Dyneema has almost no stretch, which is excellent for a kite line but less wonderful if every gust is being transmitted directly into an antenna transformer, stud or solder joint.
 
-Just as important was the ground strap length. Keeping it under 30 cm was deliberate. If the whole job is to get the static away from the radio and into the ground, there is no point giving it a long detour first.
+So the kite line carried the mechanical load while the antenna simply followed the slope. The bungee took the edge off the gusts, and the RF hardware was left to do RF work rather than moonlighting as part of the rigging.
 
-## On-Air Behaviour
+If I were building the same system again, I would make exactly the same decision. I would not use the transformer box or antenna terminals as part of the load path because there is no good reason to ask them to be structural components. Let the rope take the pull. Let the antenna hang from it. Give the wind something elastic to argue with.
 
-We started calling at 0601z, just after 4 pm local time. The first entries in the log are VK4DTS and VK4CYA at 06:01:56z, both 59. By 06:05z VK2OKR, VK2BXB and VK2AUS were in the log with 55–56 reports. The band was open and cooperative.
+<figure>
+  <img src="/images/projects/kite-activation/kite-line-attachment.jpg" alt="Kite line and antenna attachment point on the beach before full lift." />
+  <figcaption>The antenna attachment point below the bridle, with the bungee providing some isolation from the kite line.</figcaption>
+</figure>
 
-The sloper angle shifted constantly between roughly 60° and 25° as the wind varied, and the SWR reflected that movement. There was no single stable resonant point to admire. The tuner spent the entire activation adjusting to a geometry that refused to stay put. Whenever a gust lifted the kite a few extra metres you could hear the tuner respond, and when the kite dipped the numbers shifted again.
+The radial remained independent of the kite system. It was about 7.8 metres long and sat roughly 1.5 to 2 metres above ground, so the moving part of the setup was the main wire rather than the whole antenna changing shape in every possible direction at once.
 
-At 06:13:29z F5PYI came in, 59 both ways on 40 metres. From a beach in Moreton Bay into France under a wire that was still moving around in the wind. That was the contact where I looked up at the kite and thought, yep, this was worth doing.
+## The RF chain and the static problem
 
-The useful lesson here is that a moving antenna does not have to be a failed antenna. It does mean you stop thinking in terms of one fixed resonant point. The geometry was changing all the time, which meant the tuner was working all the time too. If you try this with no tuner, or with a setup that only behaves when the wire is parked at one exact angle, you are setting yourself up for disappointment.
+The RF side was mostly my usual portable setup. About 5.6 metres of RG58 CU ran from the transformer into a static bleed box, then through a ferrite choke and AT-100M Pro tuner before reaching the FX-4CR.
 
-## Failure Mode
+The bleed box contained five 1 MΩ resistors in parallel, giving an effective resistance of 200 kΩ, with a short ground strap running to a 1.3 metre steel ground rod.
 
-VK3PF appears in the log at 06:36:11z, also 59 both ways, and that was the QSO during which the kite came down. It didn’t drift gently; it simply lost lift and returned to the sand mid-contact. The rope took the load as intended and nothing tore out of the transformer. The heavy-duty dog stake anchoring the line had already been vibrating under sustained pull, and when the kite dropped everything relaxed in one go. Almost immediately a dog decided the bright nylon sled was the most interesting object on the beach and ran toward it with enthusiasm that suggested we had provided afternoon entertainment. We retrieved it, reset, and put it back in the air without drama.
+Yes, the rod went into sand. That is what the beach provides.
 
-<div className="videoEmbed">
+I kept the ground strap under 30 cm because if the whole point is to give static a short path away from the radio, there is not much sense in making that path wander around first.
+
+The bleed network also turned out to be rather less optional than it might look when drawn as a little box in the signal chain.
+
+Static built quickly. At one point I measured more than 3 kV on the wire, which is a very effective way of confirming that the box full of resistors you bothered to build was a good use of your time.
+
+<div className="project-media-pair">
+  <figure>
+    <img src="/images/projects/kite-activation/feedpoint-on-stake.jpg" alt="Feedpoint, radial connection and bleed path mounted on a beach stake." />
+    <figcaption>Feedpoint end of the system, with the transformer, radial and feedline chain all within reach.</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/kite-activation/bleed-array-detail.jpg" alt="Close-up of the bleed resistor array inside its enclosure." />
+    <figcaption>Five 1 MΩ resistors in parallel. Boring little box. Extremely good box to have.</figcaption>
+  </figure>
+</div>
+
+The purpose of the bleed network was not to somehow prevent the antenna from accumulating charge. A long wire moving in dry coastal air is going to do that whether I approve or not. The point was to let that charge leak away continuously instead of waiting until the radio offered a more interesting route to ground.
+
+Nothing made it through to the radio, and after seeing the voltage on the wire I was perfectly happy for the resistor box to remain the least exciting piece of equipment on the beach.
+
+<figure>
+  <img src="/images/projects/kite-activation/full-kit-layout.jpg" alt="Complete activation kit laid out on the sand." />
+  <figcaption>The full kit. Nothing especially exotic, but every piece had a reason to be there.</figcaption>
+</figure>
+
+## Once we started calling
+
+We started at 0601z, just after 4 pm local time, and the band was behaving well from the beginning. `VK4DTS` and `VK4CYA` were both in the log at 06:01:56z with 59 reports, followed a few minutes later by `VK2OKR`, `VK2BXB` and `VK2AUS` with reports around 55 to 56.
+
+The antenna, meanwhile, had no intention of behaving like the nice fixed sloper I was used to.
+
+As the wind changed, the angle moved constantly between roughly 60° and 25°, and the SWR moved with it. There was no one resonant point to find and admire because the geometry rarely stayed the same long enough to deserve one.
+
+The AT-100M Pro spent the activation following those changes. A gust would lift the kite, the wire angle and height would change, and the tuner would respond. When the kite dipped again, the numbers moved back. It was not unstable in the sense of being unusable; it was simply a system whose geometry was continuously changing.
+
+That distinction matters because I do not think a moving antenna needs to be treated as a failed antenna. It does mean that the normal expectation of tuning something once and then forgetting about it no longer applies. With this setup, the tuner was doing useful work throughout the activation rather than simply cleaning up one fixed mismatch at the start.
+
+At 06:13:29z, `F5PYI` came back from France, 59 both ways on 40 metres. Standing on a beach in Moreton Bay, looking at a wire wandering around under a kite while working into Europe, I was quite happy with that.
+
+The contact did not prove some sweeping new point about antenna theory. It did establish that the continually changing geometry was not preventing the system from doing its actual job.
+
+<ActivationLog
+  adifA="/logs/2025-09-21-au-7027.adi"
+  adifB="/logs/2025-09-21-au-8924.adi"
+  mapSrc="/images/projects/kite-activation/ham2k-map.png"
+  mapAlt="Ham2K map showing the QSO distribution from Main State Beach, including the path to France."
+/>
+
+## The kite comes down
+
+The system continued working until `VK3PF` at 06:36:11z, also 59 both ways, when the kite stopped participating in the experiment.
+
+It did not descend gracefully. It lost lift and came back to the sand during the QSO.
+
+Mechanically, though, the system behaved the way I had hoped. The Dyneema and anchor took the load, the bungee isolated the antenna, and nothing tore itself out of the transformer. The heavy-duty dog stake holding the kite line had been vibrating under the sustained pull, but when the kite dropped the whole system simply relaxed rather than transferring a final shock into the RF hardware.
+
+Almost immediately, a dog on the beach decided that the bright collapsed sled kite was clearly the most interesting thing that had happened all afternoon and ran toward it at speed.
+
+We retrieved the kite before it acquired a new owner, reset everything and put it back into the air.
+
+<div className="project-video">
   <iframe
     src="https://www.youtube.com/embed/Fu6_WNSBXKg"
-    title="Kite-Lifted 40m EFHW Activation Video"
-    frameBorder="0"
+    title="Kite-Lifted 40 m EFHW Activation"
     loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
   />
 </div>
 
-## What Actually Held Together
+By the final QSO at 06:39:00z, we had logged 42 contacts across AU-8924 and AU-7027 in just over 37 minutes. The antenna angle had spent the entire activation moving around, the SWR had followed it, the kite had come down once and the static had exceeded 3 kV, but the system kept making contacts.
 
-The final QSO in the log is at 06:39:00z. From 06:01:56z to 06:39:00z — just over 37 minutes — we logged 42 QSOs across AU-8924 and AU-7027. Despite the continuously changing angle, the wandering SWR, and the brief unscheduled descent, the system kept functioning. The tuner worked continuously, the bleed resistors handled static, the choke prevented RF from coming back into the operating position, and the antenna radiated consistently enough to produce solid reports, including the path into Europe.
+Looking back at it later, what interested me most was not any one component. The whole thing worked because the mechanical and RF parts had been treated as one system. The Dyneema carried the load, the bungee absorbed gusts, the tuner followed the changing geometry, the choke kept RF out of the operating position and the bleed network gave static somewhere less expensive to go.
 
-Looking back over the log later, what stays with me isn’t a grand lesson about antenna theory. It’s simply that the whole thing behaved like a system rather than a single component. Mechanical decisions mattered. The bleed network mattered. The elasticity in the line mattered. The geometry never stayed the same for more than a few seconds, and yet the radio kept making contacts.
+Remove one of those assumptions and it becomes a different experiment.
 
-The big takeaway for me was that the antenna only worked as well as it did because the support system, RF chain, static handling, and operating expectations were all built as one system. Take one of those away and it becomes a very different exercise.
+That was probably the main thing I took from the activation. A kite-lifted antenna is not simply an antenna mounted higher than usual. Once the wire is moving, the support system, static management and matching become part of how the antenna behaves, and pretending otherwise does not make them go away.
 
 <figure>
-  <img src="/images/projects/kite-activation/kite-efhw-system.svg" alt="System overview diagram of kite-lifted EFHW" />
-  <figcaption>System overview — kite-lifted EFHW deployment.</figcaption>
+  <img src="/images/projects/kite-activation/kite-efhw-system.svg" alt="System overview diagram of the kite-lifted EFHW from mechanical isolation to radio." />
+  <figcaption>The complete system, from kite and mechanical isolation through to the radio.</figcaption>
 </figure>
 
-## If You Want To Try This Yourself
+## Field setup
 
-<div className="fieldSheet">
-  <div className="fieldSheetHeader">
-    <div className="fieldSheetTitle">Field Spec Sheet</div>
-    <div className="fieldSheetSubtitle">Build notes and expectations, formatted for quick scanning.</div>
-  </div>
+If I were setting this up again, these are the details I would want in front of me.
 
-  <div className="buildGrid">
-
-    <div className="buildCard">
-      <h3>Antenna</h3>
-<ul>
-  <li>40 m EFHW tuned for 7.074 MHz (fixed sloper baseline ~9 m to 2 m)</li>
-  <li>56:1 autotransformer</li>
-  <li>FT82-43 core with FT50-43 nested inside</li>
-  <li>Built on UniBalun PCB (DG1JAN)</li>
-  <li>Insulated SOTABeams wire</li>
-</ul>
-    </div>
-
-    <div className="buildCard">
-      <h3>Radial</h3>
-<ul>
-  <li>Elevated radial: 7.8 m</li>
-  <li>Height: ~1.5–2 m above ground</li>
-  <li>Supported independently of the kite system</li>
-</ul>
-    </div>
-
-    <div className="buildCard">
-      <h3>Feedline &amp; RF Chain</h3>
-<p><strong>Signal path:</strong></p>
-<p>Antenna + elevated radial → Bleed resistor array → Ferrite choke → AT-100M Pro tuner → FX-4CR</p>
-<ul>
-  <li>5.6 m RG58 CU</li>
-  <li>Bleed array: 5 × 1 MΩ resistors in parallel (200 kΩ effective)</li>
-  <li>Sealed enclosure with SO-239 connectors</li>
-  <li>Ground strap &lt; 30 cm</li>
-  <li>1.3 m steel ground rod</li>
-</ul>
-    </div>
-
-    <div className="buildCard">
-      <h3>Kite &amp; Mechanical</h3>
-<ul>
-  <li>Rainbow LS-17.5 Lifter Sled (~1.6 m²)</li>
-  <li>Dyneema line rated 200 kg</li>
-  <li>Antenna tied ~2 m below bridle</li>
-  <li>Short bungee section between kite string and antenna</li>
-  <li>Heavy-duty dog stake anchor</li>
-</ul>
-    </div>
-
-  </div>
-
-  <div className="buildCard fullWidth">
-    <h3>What to Expect</h3>
-<ul>
-  <li>Height will vary (ours peaked ~22 m)</li>
-  <li>Sloper angle will continuously change</li>
-  <li>SWR will move with wind and height</li>
-  <li>A capable tuner is essential</li>
-  <li>Static accumulation in coastal wind can exceed 3 kV</li>
-  <li>Mechanical isolation matters just as much as RF matching</li>
-</ul>
-  </div>
-
+<div className="field-ledger">
+  <section>
+    <h3>Antenna</h3>
+    <ul>
+      <li>40 m EFHW tuned for 7.074 MHz</li>
+      <li>Normal fixed-sloper baseline about 9 m to 2 m</li>
+      <li>56:1 autotransformer</li>
+      <li>FT82-43 core with FT50-43 nested inside</li>
+      <li>UniBalun PCB by DG1JAN</li>
+      <li>Insulated SOTABeams wire</li>
+    </ul>
+  </section>
+  <section>
+    <h3>Radial</h3>
+    <ul>
+      <li>7.8 m elevated radial</li>
+      <li>Roughly 1.5 to 2 m above ground</li>
+      <li>Supported independently of the kite system</li>
+    </ul>
+  </section>
+  <section>
+    <h3>RF chain</h3>
+    <p><code>Antenna + elevated radial → bleed resistor array → ferrite choke → AT-100M Pro tuner → FX-4CR</code></p>
+    <ul>
+      <li>5.6 m RG58 CU</li>
+      <li>Five 1 MΩ bleed resistors in parallel, 200 kΩ effective</li>
+      <li>Sealed enclosure with SO-239 connectors</li>
+      <li>Ground strap under 30 cm</li>
+      <li>1.3 m steel ground rod</li>
+    </ul>
+  </section>
+  <section>
+    <h3>Kite and mechanics</h3>
+    <ul>
+      <li>Rainbow LS-17.5 Lifter Sled, about 1.6 m²</li>
+      <li>200 kg Dyneema line</li>
+      <li>Antenna attached about 2 m below the bridle</li>
+      <li>Short bungee between kite line and antenna</li>
+      <li>Heavy-duty dog stake anchor</li>
+    </ul>
+  </section>
+  <section className="field-ledger__wide">
+    <h3>What I would expect</h3>
+    <ul>
+      <li>Height will move. Ours peaked at about 22 m.</li>
+      <li>Sloper angle will move continuously.</li>
+      <li>SWR will change with height and wind.</li>
+      <li>I would use a capable tuner.</li>
+      <li>Coastal wind and a long moving wire can generate substantial static. We measured more than 3 kV.</li>
+      <li>Mechanical isolation matters just as much as RF matching.</li>
+      <li>The kite will eventually come down. Have a plan for that before it does.</li>
+    </ul>
+  </section>
 </div>
 
-If you decide to build your own, treat it as a full field system, not just an antenna. Work out the load path. Work out the static bleed. Work out what you are going to do when the kite drops, because at some point it probably will. Do that properly and the whole thing works surprisingly well. It just never really sits still.
+If I were recommending one thing to somebody wanting to try this, it would be to think of it as a complete field system rather than an antenna with a kite tied to it. Work out where the load goes, where the static goes and what happens when the wind stops cooperating.
 
-<div className="mediaGrid mediaGrid--halves">
+Do that properly and it works remarkably well.
+
+It just never really sits still.
+
+<div className="project-media-pair">
   <figure>
-    <img src="/images/projects/kite-activation/sunset-silhouette.jpg" alt="Sunset silhouette on the shoreline after the activation" />
-    <figcaption>End of session light after we wrapped up.</figcaption>
+    <img src="/images/projects/kite-activation/sunset-silhouette.jpg" alt="Sunset silhouette on the shoreline after the activation." />
   </figure>
-
   <figure>
-    <img src="/images/projects/kite-activation/sunset-shoreline.jpg" alt="Sunset shoreline at the end of the activation" />
-    <figcaption>Pack-up view from the edge of the water after the activation wound down.</figcaption>
+    <img src="/images/projects/kite-activation/sunset-shoreline.jpg" alt="Sunset shoreline at the end of the activation." />
   </figure>
 </div>
 
-73 for now, and thanks for the QSOs folks!
-
-VK4MPB / VK7MPB
-
-<style>{String.raw`
-/* Page-specific width/whitespace overrides (keeps readability, reduces dead space on wide screens) */
-:global(article){
-  max-width: 1180px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
-/* Some Astro themes wrap markdown in .prose (or similar) with a narrow max-width. Remove that constraint here. */
-:global(article .prose){
-  max-width: none;
-}
-
-/* Keep paragraphs readable, but wider than the default so the page doesn’t look “lost” in whitespace */
-:global(article p),
-:global(article li){
-  max-width: 92ch;
-}
-
-/* Allow headings, figures, tables, and callouts to use the full article width */
-:global(article h1),
-:global(article h2),
-:global(article h3),
-:global(article h4),
-:global(article figure),
-:global(article .callout),
-:global(article .qsoDash),
-:global(article .fieldSheet),
-:global(article .tableWrap){
-  max-width: none;
-}
-
-:global(article .mediaGrid),
-:global(article .videoEmbed),
-:global(article .projectNote){
-  max-width: none;
-}
-
-@media (min-width: 1400px){
-  :global(article){
-    max-width: 1320px;
-    padding-left: 22px;
-    padding-right: 22px;
-  }
-  :global(article p),
-  :global(article li){
-    max-width: 102ch;
-  }
-}
-
-.postStats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px;
-  margin:22px 0 30px;
-}
-.statCard{
-  border:1px solid var(--border);
-  background:var(--surface-glass);
-  border-radius:16px;
-  padding:14px 16px;
-}
-.statNum{
-  font-size:1.4rem;
-  font-weight:700;
-  line-height:1.1;
-}
-.statLbl{
-  opacity:.8;
-  font-size:.9rem;
-  margin-top:6px;
-}
-.callout{
-  margin:32px 0;
-  padding:18px 18px 14px;
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:var(--surface-raised);
-}
-
-.tableWrap{
-  overflow-x:auto;
-  margin-top:10px;
-}
-.qsoPanel .tableWrap{
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.qsoPanel .tableWrap table{
-  min-width: 360px;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-th,td{
-  text-align:left;
-  padding:10px 10px;
-  border-bottom:1px solid var(--border);
-}
-th{
-  font-weight:600;
-  color: var(--text);
-}
-figure img{
-  width:100%;
-  border-radius:14px;
-}
-
-.mediaGrid{
-  display:grid;
-  gap:18px;
-  margin:22px 0 26px;
-}
-
-.mediaGrid--halves{
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 880px){
-  .mediaGrid--halves{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.projectNote{
-  margin: 18px 0 28px;
-  padding: 1rem 1.1rem;
-  border-radius: 16px;
-  border: 1px dashed var(--border-2);
-  background: color-mix(in srgb, var(--surface) 92%, var(--surface-raised) 8%);
-  color: var(--text-2);
-}
-
-.projectNote strong{
-  color: var(--text);
-}
-
-.videoEmbed{
-  position: relative;
-  margin: 2rem 0;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 92%, #000 8%);
-  box-shadow: var(--shadow-sm);
-}
-
-.videoEmbed iframe{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.propagationFigure{
-  margin: 0;
-}
-
-.propagationFigure img{
-  display: block;
-  width: 100%;
-}
-
-.qsoDash .qsoNote{
-  margin-top: 6px;
-  color: var(--muted);
-}
-.qsoDashIntro{
-  margin: 6px 0 0;
-  color: var(--muted);
-  max-width: 72ch;
-}
-.qsoLayout{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  align-items: start;
-  margin: 14px 0 18px;
-}
-.qsoMain{
-  display: grid;
-  gap: 14px;
-}
-.qsoKpis{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-  margin: 0;
-}
-.qsoKpi{
-  border: 1px solid var(--border);
-  background: var(--surface-glass);
-  border-radius: 16px;
-  padding: 12px 14px;
-}
-.qsoKpiNum{
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-.qsoKpiLbl{
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-top: 6px;
-}
-.propagationPanel{
-  padding-bottom: 14px;
-}
-.propagationPanel h3{
-  margin: 0 0 8px;
-}
-.propagationPanel p{
-  margin: 0 0 12px;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-.propagationPanel .propagationFigure{
-  width: min(100%, 170px);
-}
-.qsoGrid{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin: 10px 0 6px;
-}
-@media (min-width: 980px){
-  .qsoLayout{
-    grid-template-columns: minmax(0, 1fr) 210px;
-    align-items: start;
-  }
-  .qsoGrid{ grid-template-columns: 0.9fr 1.1fr; }
-}
-.qsoPanel{
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 94%, var(--surface-raised) 6%);
-  border-radius: 18px;
-  padding: 14px 14px 10px;
-}
-.qsoPanel h3{
-  margin: 0 0 10px;
-}
-.qsoChartWrap{
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 88%, #000 12%);
-}
-#qsoRateChart{
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.qsoChartMeta{
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-.qsoDetails{
-  margin-top: 14px;
-}
-.qsoDetails summary{
-  cursor: pointer;
-  font-weight: 600;
-}
-.qsoDetails .tableWrap{
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.qsoDetails .tableWrap table{
-  min-width: 760px;
-}
-.qsoControls{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin: 12px 0 10px;
-}
-.qsoControl{
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 0.95rem;
-  color: var(--text-2);
-}
-.qsoControl input, .qsoControl select{
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 90%, var(--surface-raised) 10%);
-  color: var(--text);
-}
-.qsoError{
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--coral) 45%, var(--border) 55%);
-  background: color-mix(in srgb, var(--coral) 10%, var(--surface-raised) 90%);
-}
-
-  .fieldSheet{
-    margin: 18px 0 28px;
-    padding: 18px 18px 20px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--surface-raised) 96%, transparent 4%),
-      color-mix(in srgb, var(--surface) 90%, var(--surface-raised) 10%)
-    );
-  }
-
-  .fieldSheetHeader{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 2px 2px 14px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-  }
-
-  .fieldSheetTitle{
-    font-weight: 800;
-    letter-spacing: 0.2px;
-    font-size: 1.1rem;
-  }
-
-  .fieldSheetSubtitle{
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  .buildGrid{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    margin: 0 0 18px;
-  }
-
-  @media (min-width: 980px){
-    .buildGrid{ grid-template-columns: 1fr 1fr; }
-  }
-
-  .buildCard{
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface) 94%, var(--surface-raised) 6%);
-    border-radius: 18px;
-    padding: 18px 18px 16px;
-  }
-
-  .buildCard h3{
-    margin: 0 0 10px;
-  }
-
-  .buildCard.fullWidth{
-    width: 100%;
-  }
-
-  .buildCard.fullWidth ul{
-    margin-bottom: 0;
-  }
-`}</style>
-<script type="module" src="/scripts/adif-qso-dashboard.js"></script>
+<p className="project-signoff">73 for now, and thanks for the QSOs folks!<br /><code>VK4MPB / VK7MPB</code></p>

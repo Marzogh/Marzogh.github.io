@@ -37,6 +37,32 @@ const compareRows = (left, right) => {
   return left.dt - right.dt;
 };
 
+function deduplicateTwoFerRows(rows) {
+  const unique = new Map();
+
+  rows.forEach((row) => {
+    const key = [
+      row.dt?.getTime() || row.utc,
+      safeUpper(row.call),
+      safeLower(row.band),
+      safeUpper(row.mode),
+    ].join('|');
+
+    const existing = unique.get(key);
+    if (!existing) {
+      unique.set(key, { ...row, refs: new Set(row.ref ? [row.ref] : []) });
+      return;
+    }
+
+    if (row.ref) existing.refs.add(row.ref);
+  });
+
+  return [...unique.values()].map((row) => ({
+    ...row,
+    ref: [...row.refs].sort().join(' / '),
+  }));
+}
+
 function drawRateChart(canvas, bins, labels) {
   const context = canvas.getContext('2d');
   if (!context) return;
@@ -127,10 +153,7 @@ function renderRows(tableBody, rows) {
   }
 }
 
-async function initDash() {
-  const dash = document.querySelector('.qsoDash');
-  if (!dash) return;
-
+async function initDash(dash) {
   const aUrl = dash.getAttribute('data-adif-a');
   const bUrl = dash.getAttribute('data-adif-b');
   const errBox = dash.querySelector('[data-qso-error]');
@@ -150,10 +173,10 @@ async function initDash() {
       parseAdi(await bRes.text()),
     ]);
 
-    rows = parsed.records
+    rows = deduplicateTwoFerRows(parsed.records
       .map((record) => normaliseQso(record))
       .filter((row) => row.call || row.dt)
-      .sort(compareRows);
+      .sort(compareRows));
   } catch (error) {
     console.error(error);
     setErr('Could not load ADIF logs. Place the two .adi files in /public/logs/ using the filenames shown in the note above.');
@@ -194,7 +217,7 @@ async function initDash() {
       });
   }
 
-  const chart = dash.querySelector('#qsoRateChart');
+  const chart = dash.querySelector('[data-rate-chart]');
   if (chart && first && last) {
     const startMs = first.getTime();
     const endMs = last.getTime();
@@ -256,8 +279,12 @@ async function initDash() {
   update();
 }
 
+const initAllDashes = () => {
+  document.querySelectorAll('.qsoDash').forEach((dash) => initDash(dash));
+};
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initDash, { once: true });
+  document.addEventListener('DOMContentLoaded', initAllDashes, { once: true });
 } else {
-  initDash();
+  initAllDashes();
 }

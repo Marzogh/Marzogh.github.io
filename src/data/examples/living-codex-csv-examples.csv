@@ -1,0 +1,11 @@
+# inventory.csv
+id,name,category,qty,weight_each,weight_unit,value,value_currency,attunement,container,equipped,notes
+quarterstaff,Quarterstaff,weapon,1,4,lb,2,sp,false,carried,true,Druidic focus
+
+# spells_known.csv / spells_prepared.csv
+id,name,level,school,source,ritual,concentration,casting_time,range,components,duration,spell_id,page,notes
+guidance,Guidance,0,divination,druid,false,true,1 action,Touch,V S,1 minute,guidance,PHB 248,
+
+# log.csv
+timestamp_utc,type,label,data_json
+2026-05-02T10:30:00Z,note,Session begins,"{""location"":""High Forest""}"

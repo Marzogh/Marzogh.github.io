@@ -1,8 +1,8 @@
 ---
-title: "Lightning Warning Box: Field Build Journal + Technical Guide"
-description: "A running build journal for the XIAO ESP32-C6 + AS3935 lightning warning box, with full wiring, build decisions, troubleshooting notes, and current firmware state."
+title: "Lightning Warning Box"
+description: "A field warning box built around a XIAO ESP32-C6 and AS3935, with a local display and alarm first, and networking added only after the basic warning path behaved itself."
 pubDate: 2026-03-07
-updatedDate: 2026-03-08
+updatedDate: 2026-08-30
 draft: false
 featured: true
 type: Hardware + Firmware
@@ -11,2601 +11,292 @@ image: /images/projects/lightning-warning-box/hero-breadboard-rotated.jpeg
 headerStyle: plain
 ---
 
-This project is a lightning warning box for radio operations, built on the bench and tested for field use. The goal has stayed simple from day one: detect nearby electrical activity reliably, show status clearly on-device, and keep an audible alert path that still works when bench conditions get noisy.
+import FirmwareDrawer from '../../components/projects/FirmwareDrawer.astro';
 
-<div className="buildRibbon" role="status" aria-label="Build progress">
-  <span className="buildRibbon__label">Build In Progress</span>
-  <div className="buildRibbon__track">
-    <div className="buildRibbon__fill" />
-  </div>
-  <span className="buildRibbon__meta">M1 complete, M2 accepted on hardware, M3 connected features underway</span>
+<aside className="project-note">
+  <p><strong>Project note:</strong> This version of the lightning warning box has now been superseded by <strong>BrambleNet</strong>, a broader project that takes the same basic idea and folds it into a self-reporting home and field sensor network. Rather than operating as a completely standalone warning device, the newer version is being developed as one node in a mesh of devices that can report their own state, observations and alerts across the local network. I’m keeping this page because it documents the original AS3935/ESP32-C6 build, the hardware decisions behind it, and the firmware stages that eventually led me toward BrambleNet.</p>
+</aside>
+
+I started this because I wanted a small lightning warning box I could use around radio operations without depending on a phone, a browser or an internet connection to tell me that nearby electrical activity might be worth paying attention to.
+
+The sensor is an AS3935, with a XIAO ESP32-C6 doing the rest of the work. The AS3935 can distinguish between `NOISE`, `DISTURBER` and `LIGHTNING` events and, for lightning events, provide an estimated storm distance and an energy value. The ESP32-C6 gives me enough room around that to add a proper local interface, physical controls, persistent logging and eventually network access without turning the basic detector into a much larger computer than it needs to be.
+
+The important bit, though, was the order I built it in. I did not want Wi-Fi, web pages and logging sitting on top of a sensor path I had never properly proved. So the project has grown in three stages: get the AS3935 working reliably first, turn that into something I could actually operate second, and only then start adding connected features.
+
+<div className="project-milestones" aria-label="Build progress">
+  <div><span>M1</span><strong>Sensor path</strong><small>Complete</small></div>
+  <div><span>M2</span><strong>Operator interface</strong><small>Accepted on hardware</small></div>
+  <div><span>M3</span><strong>Connected features</strong><small>Final prototype</small></div>
 </div>
 
-<section className="statusDeck">
-  <article className="statusCard">
-    <h3>M1: Sensor Path Locked</h3>
-    <p>SPI + IRQ bring-up is stable. Event decode for <code>NOISE</code>, <code>DISTURBER</code>, and <code>LIGHTNING</code> is confirmed.</p>
-    <p className="statusMeta">Reference: <code>firmware/m1_bringup/m1_bringup.ino</code></p>
-  </article>
+## First, make the sensor behave
 
-  <article className="statusCard">
-    <h3>M2: Operator UX Verified</h3>
-    <p>OLED status, ARM/MUTE/RESET debounce, profile switching, and event buffer behavior were all confirmed on real hardware (2026-03-08 00:19 AEST).</p>
-    <p className="statusMeta">Reference: <code>firmware/m2_core/m2_core.ino</code> (<code>M2_CORE_R3_2026-03-07</code>)</p>
-  </article>
+M1 was deliberately boring. The job was to get SPI communication, the AS3935 interrupt line and event decoding working repeatedly on the actual XIAO ESP32-C6 hardware.
 
-  <article className="statusCard">
-    <h3>M3: Connectivity Started</h3>
-    <p>Wi-Fi + NTP + NVS strike logging + HTTP endpoints are in the first connected build (started 2026-03-08 00:44 AEST).</p>
-    <p className="statusMeta">Reference: <code>firmware/m3_connected/m3_connected.ino</code> (<code>M3_CONNECTED_R1_2026-03-08</code>)</p>
-  </article>
+That also meant dealing with calibration properly rather than relying on whatever happened to work in the first sketch. The MOD-1016 module I am using came with a factory `TUNE_CAP` value, so the firmware applies that explicitly and then runs oscillator calibration at startup. The current module value is `7`, which corresponds to 56 pF.
 
-  <article className="statusCard">
-    <h3>What We Learned on the Bench</h3>
-    <p>NOISY profile is essential on high-EMI benches. Passive piezo alert path required a collector pull-up; <code>+5V -&gt; 4.7k -&gt; collector</code> is current recommendation.</p>
-    <p className="statusMeta">These two changes removed most false negatives during validation.</p>
-  </article>
-</section>
+The other early lesson was that the bench itself is a fairly hostile place to test a lightning detector.
 
-## Build Journal (From the Project Log)
+USB supplies, computers, displays and assorted electronics generate plenty of electrical rubbish, and the sensitive settings that are useful when looking for weak events can produce a stream of `NOISE` interrupts in that environment. Rather than continually editing constants while testing, I added two sensor profiles.
 
-Open each `M1 / M2 / M3` block to read the notes and inspect the full code used in that stage.
+`SENSITIVE` uses the AS3935 indoor AFE with a lower noise floor and permissive watchdog and spike-rejection settings. `NOISY` uses the outdoor AFE, maximum noise floor and much stricter filtering. MUTE held on during boot originally became the quick way of selecting the latter.
 
-<div className="journalGrid">
-  <details className="stageFold">
-    <summary>
-      <span>M1: Sensor Bring-Up and Bench Stability</span>
-      <span className="stageTag">Complete</span>
-    </summary>
-    <div className="stageCols">
-      <div>
-        <p>M1 locked in the electrical and firmware basics: SPI + IRQ wiring, stable event decoding, and repeatable bring-up behavior on the XIAO ESP32-C6 + AS3935 setup.</p>
-        <p>Most of this milestone was cleanup work. Board targeting was tightened, calibration and tuning were made explicit, and fault output was standardized so failures are easier to diagnose.</p>
-      </div>
-      <div>
-        <ul>
-          <li>Board profile corrected for clean compile/upload flow.</li>
-          <li>AS3935 tuning and oscillator calibration integrated.</li>
-          <li>Profiles introduced for noisy vs sensitive benches.</li>
-          <li>Hex fault code base (<code>0x1XX</code>).</li>
-        </ul>
-      </div>
-    </div>
-    <details className="codeFold">
-      <summary>Open M1 Code: <code>m1_bringup.ino</code></summary>
-      <div className="ideWindow">
-        <div className="ideChrome">
-          <span className="dot red"></span><span className="dot amber"></span><span className="dot green"></span>
-          <span className="ideTitle">Code Terminal • m1_bringup.ino</span>
-        </div>
-```cpp
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-#include "SparkFun_AS3935.h"
+That proved useful enough that the profile system survived into the later firmware rather than being thrown away as a bench hack.
 
-// AS3935 event bits
-#define LIGHTNING_INT 0x08
-#define DISTURBER_INT 0x04
-#define NOISE_INT 0x01
-#define INDOOR 0x12
-#define OUTDOOR 0x0E
-// MOD-1016 documentation provides a factory calibration number as TUNE_CAP bits
-// (Register 0x08 bits [3:0]), typically noted on the anti-static package.
-// Valid range: 0..15, where pF value = bits * 8.
-static constexpr uint8_t SENSOR_TUNE_CAP_BITS = 7;  // manufacturer-provided value
-
-// Optional boot-time profile select:
-// false = always use default profile below
-// true  = if MUTE switch is ON at boot, use noisy-bench profile
-static constexpr bool ENABLE_PROFILE_SELECT_SWITCH = true;
-
-enum SensorProfile : uint8_t {
-  PROFILE_SENSITIVE = 0,  // preferred for detecting weak nearby bench triggers
-  PROFILE_NOISY = 1       // preferred when ambient EMI is flooding NOISE IRQ
-};
-
-// Default deployment profile (no switch required).
-static constexpr SensorProfile SENSOR_PROFILE_DEFAULT = PROFILE_SENSITIVE;
-
-struct SensorParams {
-  uint8_t afe_mode;
-  uint8_t noise_floor;
-  uint8_t watchdog;
-  uint8_t spike;
-  uint8_t min_lightnings;
-  const char* name;
-};
-
-const SensorParams PARAM_SENSITIVE = {
-    INDOOR,  // higher gain
-    2,       // lower threshold
-    1,       // higher sensitivity
-    1,       // higher sensitivity
-    1,       // fastest trigger
-    "SENSITIVE"};
-
-const SensorParams PARAM_NOISY = {
-    OUTDOOR,  // lower gain
-    7,        // tolerate ambient noise
-    6,        // stricter
-    6,        // stricter
-    1,        // keep single-event trigger for now
-    "NOISY"};
-
-SensorParams g_sensor = PARAM_SENSITIVE;
-
-// Pin map (XIAO ESP32-C6 lean SPI build)
-static constexpr uint8_t PIN_ARM_SW = D0;      // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_MUTE_SW = D1;     // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_AS3935_IRQ = D2;  // external interrupt pin
-static constexpr uint8_t PIN_AS3935_CS = D3;   // SPI CS
-static constexpr uint8_t PIN_BUZZER = D6;      // PN2222A base via resistor
-static constexpr uint8_t PIN_RESET_BTN = D7;   // INPUT_PULLUP, pressed = GND
-static constexpr uint8_t PIN_SPI_SCK = D8;     // SPI SCK
-static constexpr uint8_t PIN_SPI_MISO = D9;    // SPI MISO
-static constexpr uint8_t PIN_SPI_MOSI = D10;   // SPI MOSI
-static constexpr uint8_t PIN_STATUS_LED = LED_BUILTIN;  // onboard LED
-static constexpr bool BUZZER_ACTIVE_HIGH = true;
-static constexpr bool BUZZER_IS_PASSIVE = true;
-
-enum FaultHex : uint16_t {
-  FAULT_NONE = 0x000,
-  FAULT_AS3935_INIT = 0x101,
-  FAULT_AS3935_CONFIG = 0x102,
-  FAULT_AS3935_IRQ_ATTACH = 0x103
-};
-
-SparkFun_AS3935 lightning;
-
-volatile bool g_irq_flag = false;
-volatile uint32_t g_irq_seen_ms = 0;
-
-uint32_t g_last_heartbeat_ms = 0;
-uint32_t g_buzzer_off_ms = 0;
-uint32_t g_last_event_ms = 0;
-
-uint32_t g_count_lightning = 0;
-uint32_t g_count_noise = 0;
-uint32_t g_count_disturber = 0;
-
-bool g_latched_lightning = false;
-FaultHex g_fault = FAULT_NONE;
-bool g_prev_arm = false;
-bool g_prev_mute = false;
-bool g_prev_reset_pressed = false;
-
-static inline bool armEnabled() {
-  return digitalRead(PIN_ARM_SW) == LOW;
-}
-
-static inline bool muteEnabled() {
-  return digitalRead(PIN_MUTE_SW) == LOW;
-}
-
-void startBuzzer(uint32_t duration_ms) {
-  if (BUZZER_IS_PASSIVE) {
-    tone(PIN_BUZZER, 2400);
-  } else {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? HIGH : LOW);
-  }
-  g_buzzer_off_ms = millis() + duration_ms;
-}
-
-void updateBuzzer(uint32_t now_ms) {
-  if (g_buzzer_off_ms != 0 && (int32_t)(now_ms - g_buzzer_off_ms) >= 0) {
-    if (BUZZER_IS_PASSIVE) {
-      noTone(PIN_BUZZER);
-    } else {
-      digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? LOW : HIGH);
-    }
-    g_buzzer_off_ms = 0;
-  }
-}
-
-void IRAM_ATTR onAs3935Irq() {
-  g_irq_flag = true;
-  g_irq_seen_ms = millis();
-}
-
-void faultHalt(FaultHex fault, const char* msg) {
-  g_fault = fault;
-  Serial.println();
-  Serial.println(F("FATAL FAULT"));
-  Serial.print(F("fault_hex=0x"));
-  Serial.println(static_cast<uint16_t>(fault), HEX);
-  Serial.println(msg);
-
-  while (true) {
-    digitalWrite(PIN_STATUS_LED, HIGH);
-    delay(120);
-    digitalWrite(PIN_STATUS_LED, LOW);
-    delay(280);
-  }
-}
-
-void printBanner() {
-  Serial.println();
-  Serial.println(F("=== Lightning Box M1 Bring-Up ==="));
-  Serial.println(F("Board: XIAO ESP32-C6"));
-  Serial.println(F("Mode: AS3935 SPI + IRQ"));
-  Serial.println(F("Fault code format: hex (0x...)"));
-}
-
-void startupBuzzerTest(bool muted_at_boot) {
-  if (muted_at_boot) {
-    Serial.println(F("buzzer_test=SKIPPED (mute switch ON at boot)"));
-    return;
-  }
-
-  Serial.println(F("buzzer_test=START"));
-  if (BUZZER_IS_PASSIVE) {
-    // Short audible tone sweep for passive piezo elements.
-    const uint16_t freq_hz[] = {1568, 1976, 2637, 3136};
-    for (size_t i = 0; i < 4; i++) {
-      tone(PIN_BUZZER, freq_hz[i], 140);
-      delay(170);
-    }
-    noTone(PIN_BUZZER);
-  } else {
-    // Pulse pattern for active buzzers.
-    const uint16_t on_ms[] = {120, 120, 180, 240};
-    const uint16_t off_ms[] = {80, 80, 100, 0};
-    for (size_t i = 0; i < 4; i++) {
-      digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? HIGH : LOW);
-      delay(on_ms[i]);
-      digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? LOW : HIGH);
-      if (off_ms[i] > 0) {
-        delay(off_ms[i]);
-      }
-    }
-  }
-  Serial.println(F("buzzer_test=PASS"));
-}
-
-void sensorConfigure(const SensorParams& p) {
-  lightning.setIndoorOutdoor(p.afe_mode);
-  lightning.tuneCap(SENSOR_TUNE_CAP_BITS * 8);
-  lightning.setNoiseLevel(p.noise_floor);
-  lightning.watchdogThreshold(p.watchdog);
-  lightning.spikeRejection(p.spike);
-  lightning.lightningThreshold(p.min_lightnings);
-  lightning.maskDisturber(false);
-}
-
-void setup() {
-  pinMode(PIN_STATUS_LED, OUTPUT);
-  pinMode(PIN_BUZZER, OUTPUT);
-  if (!BUZZER_IS_PASSIVE) {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? LOW : HIGH);
-  }
-
-  pinMode(PIN_ARM_SW, INPUT_PULLUP);
-  pinMode(PIN_MUTE_SW, INPUT_PULLUP);
-  pinMode(PIN_RESET_BTN, INPUT_PULLUP);
-  pinMode(PIN_AS3935_IRQ, INPUT);
-
-  Serial.begin(115200);
-  delay(200);
-  printBanner();
-  g_prev_arm = armEnabled();
-  g_prev_mute = muteEnabled();
-  g_prev_reset_pressed = (digitalRead(PIN_RESET_BTN) == LOW);
-  Serial.printf("startup arm=%d mute=%d\n", g_prev_arm ? 1 : 0, g_prev_mute ? 1 : 0);
-  startupBuzzerTest(g_prev_mute);
-
-  SensorProfile profile = SENSOR_PROFILE_DEFAULT;
-  if (ENABLE_PROFILE_SELECT_SWITCH && g_prev_mute) {
-    profile = PROFILE_NOISY;
-  }
-  g_sensor = (profile == PROFILE_NOISY) ? PARAM_NOISY : PARAM_SENSITIVE;
-  Serial.printf("profile=%s (switch_select=%d)\n", g_sensor.name,
-                ENABLE_PROFILE_SELECT_SWITCH ? 1 : 0);
-  if (ENABLE_PROFILE_SELECT_SWITCH) {
-    Serial.println(F("profile_hint: set MUTE switch ON before boot to force NOISY profile"));
-  }
-
-  SPI.begin(PIN_SPI_SCK, PIN_SPI_MISO, PIN_SPI_MOSI, PIN_AS3935_CS);
-
-  if (!lightning.beginSPI(PIN_AS3935_CS, 2000000)) {
-    faultHalt(FAULT_AS3935_INIT, "AS3935 beginSPI failed");
-  }
-
-  sensorConfigure(g_sensor);
-  if (!lightning.calibrateOsc()) {
-    faultHalt(FAULT_AS3935_CONFIG, "AS3935 calibrateOsc failed");
-  }
-  Serial.printf(
-      "AS3935 cfg: profile=%s afe=%s tuneCap_bits=%u tuneCap_pf=%u noise=%u watchdog=%u spike=%u minLight=%u\n",
-      g_sensor.name, (g_sensor.afe_mode == INDOOR) ? "INDOOR" : "OUTDOOR",
-      SENSOR_TUNE_CAP_BITS, lightning.readTuneCap(), g_sensor.noise_floor,
-      g_sensor.watchdog, g_sensor.spike, g_sensor.min_lightnings);
-
-  const int irq_num = digitalPinToInterrupt(PIN_AS3935_IRQ);
-  if (irq_num == NOT_AN_INTERRUPT) {
-    faultHalt(FAULT_AS3935_IRQ_ATTACH, "Invalid IRQ pin for attachInterrupt");
-  }
-  attachInterrupt(irq_num, onAs3935Irq, RISING);
-
-  Serial.println(F("M1 init complete. Waiting for AS3935 events..."));
-}
-
-void handleAs3935Event(uint32_t now_ms) {
-  // AS3935 datasheet recommends waiting >=2ms after IRQ.
-  if (!g_irq_flag || (uint32_t)(now_ms - g_irq_seen_ms) < 2) {
-    return;
-  }
-
-  g_irq_flag = false;
-  const int intVal = lightning.readInterruptReg();
-  g_last_event_ms = now_ms;
-
-  if (intVal == NOISE_INT) {
-    g_count_noise++;
-    Serial.printf("[%lu] event=NOISE count=%lu\r\n", now_ms, g_count_noise);
-  } else if (intVal == DISTURBER_INT) {
-    g_count_disturber++;
-    Serial.printf("[%lu] event=DISTURBER count=%lu\r\n", now_ms, g_count_disturber);
-  } else if (intVal == LIGHTNING_INT) {
-    g_count_lightning++;
-    g_latched_lightning = true;
-    const byte distance = lightning.distanceToStorm();
-    const long energy = lightning.lightningEnergy();
-
-    Serial.printf(
-        "[%lu] event=LIGHTNING count=%lu distance_km=%u energy=%ld arm=%d mute=%d\r\n",
-        now_ms, g_count_lightning, distance, energy, armEnabled() ? 1 : 0,
-        muteEnabled() ? 1 : 0);
-
-    if (!muteEnabled()) {
-      startBuzzer(80);
-    }
-  } else {
-    // intVal can be 0 when only distance estimate changed.
-    Serial.printf("[%lu] event=OTHER int=0x%02X\r\n", now_ms, intVal);
-  }
-}
-
-void loop() {
-  const uint32_t now_ms = millis();
-  const bool arm_now = armEnabled();
-  const bool mute_now = muteEnabled();
-  const bool reset_pressed_now = (digitalRead(PIN_RESET_BTN) == LOW);
-
-  if (arm_now != g_prev_arm) {
-    g_prev_arm = arm_now;
-    Serial.printf("[%lu] switch=ARM state=%s\n", now_ms, arm_now ? "ON" : "OFF");
-  }
-
-  if (mute_now != g_prev_mute) {
-    g_prev_mute = mute_now;
-    Serial.printf("[%lu] switch=MUTE state=%s\n", now_ms, mute_now ? "ON" : "OFF");
-  }
-
-  if (reset_pressed_now != g_prev_reset_pressed) {
-    Serial.printf("[%lu] switch=RESET state=%s\n", now_ms,
-                  reset_pressed_now ? "DOWN" : "UP");
-    // Act only on press edge.
-    if (reset_pressed_now) {
-      g_latched_lightning = false;
-      g_count_lightning = 0;
-      g_count_noise = 0;
-      g_count_disturber = 0;
-      Serial.printf("[%lu] action=RESET_ACK counters_cleared\r\n", now_ms);
-      if (!mute_now) {
-        startBuzzer(180);  // manual buzzer path test
-      }
-    }
-    g_prev_reset_pressed = reset_pressed_now;
-  }
-
-  // Heartbeat LED: slow blink when armed, off when standby.
-  if ((uint32_t)(now_ms - g_last_heartbeat_ms) >= 500) {
-    g_last_heartbeat_ms = now_ms;
-    if (arm_now) {
-      digitalWrite(PIN_STATUS_LED, !digitalRead(PIN_STATUS_LED));
-    } else {
-      digitalWrite(PIN_STATUS_LED, LOW);
-    }
-  }
-
-  if (arm_now) {
-    handleAs3935Event(now_ms);
-  }
-
-  updateBuzzer(now_ms);
-}
-```
-      </div>
-    </details>
-  </details>
-
-  <details className="stageFold">
-    <summary>
-      <span>M2: Operator UX, Debounce, and Hardware Checks</span>
-      <span className="stageTag">Accepted on hardware</span>
-    </summary>
-    <div className="stageCols">
-      <div>
-        <p>M2 shifted from detection-only behavior to day-to-day usability: readable OLED state, stable control input handling, and a clearer event stream while keeping M1 reliability.</p>
-        <p>This milestone also confirmed key buzzer-path wiring and verified final bench behavior under both SENSITIVE and NOISY profiles.</p>
-      </div>
-      <div>
-        <ul>
-          <li>OLED event UX + ring buffer integrated.</li>
-          <li>Debounce for ARM/MUTE/RESET paths verified.</li>
-          <li>Buzzer/transistor path verified on hardware.</li>
-          <li>M2 signed off as the stable base for connected features.</li>
-        </ul>
-      </div>
-    </div>
-    <details className="codeFold">
-      <summary>Open M2 Code: <code>m2_core.ino</code></summary>
-      <div className="ideWindow">
-        <div className="ideChrome">
-          <span className="dot red"></span><span className="dot amber"></span><span className="dot green"></span>
-          <span className="ideTitle">Code Terminal • m2_core.ino</span>
-        </div>
-```cpp
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-#include <stdarg.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include "SparkFun_AS3935.h"
-
-// AS3935 event bits
-#define LIGHTNING_INT 0x08
-#define DISTURBER_INT 0x04
-#define NOISE_INT 0x01
-#define INDOOR 0x12
-#define OUTDOOR 0x0E
-
-static constexpr const char* FW_REV = "M2_CORE_R3_2026-03-07";
-
-// Display config (0.91" modules are commonly 128x32)
-static constexpr int OLED_W = 128;
-static constexpr int OLED_H_32 = 32;
-static constexpr int OLED_H_64 = 64;
-static constexpr uint8_t OLED_ADDR_A = 0x3C;
-static constexpr uint8_t OLED_ADDR_B = 0x3D;
-static constexpr uint8_t PIN_OLED_SDA = D4;
-static constexpr uint8_t PIN_OLED_SCL = D5;
-Adafruit_SSD1306 display32(OLED_W, OLED_H_32, &Wire, -1);
-Adafruit_SSD1306 display64(OLED_W, OLED_H_64, &Wire, -1);
-Adafruit_SSD1306* g_display = nullptr;
-uint8_t g_oled_addr = 0x00;
-uint8_t g_oled_h = 0;
-
-// MOD-1016 factory calibration number (register 0x08 bits [3:0]).
-static constexpr uint8_t SENSOR_TUNE_CAP_BITS = 7;
-static constexpr bool ENABLE_PROFILE_SELECT_SWITCH = true;  // MUTE ON at boot => NOISY
-
-enum SensorProfile : uint8_t { PROFILE_SENSITIVE = 0, PROFILE_NOISY = 1 };
-static constexpr SensorProfile SENSOR_PROFILE_DEFAULT = PROFILE_SENSITIVE;
-
-struct SensorParams {
-  uint8_t afe_mode;
-  uint8_t noise_floor;
-  uint8_t watchdog;
-  uint8_t spike;
-  uint8_t min_lightnings;
-  const char* name;
-};
-
-const SensorParams PARAM_SENSITIVE = {INDOOR, 2, 1, 1, 1, "SENSITIVE"};
-const SensorParams PARAM_NOISY = {OUTDOOR, 7, 6, 6, 1, "NOISY"};
-SensorParams g_sensor = PARAM_SENSITIVE;
-
-// Pin map (XIAO ESP32-C6)
-static constexpr uint8_t PIN_ARM_SW = D0;      // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_MUTE_SW = D1;     // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_AS3935_IRQ = D2;  // interrupt
-static constexpr uint8_t PIN_AS3935_CS = D3;   // SPI CS
-static constexpr uint8_t PIN_BUZZER = D6;      // PN2222A base via 1k
-static constexpr uint8_t PIN_RESET_BTN = D7;   // INPUT_PULLUP, pressed = GND
-static constexpr uint8_t PIN_SPI_SCK = D8;
-static constexpr uint8_t PIN_SPI_MISO = D9;
-static constexpr uint8_t PIN_SPI_MOSI = D10;
-static constexpr uint8_t PIN_STATUS_LED = LED_BUILTIN;
-
-// Buzzer mode
-static constexpr bool BUZZER_IS_PASSIVE = true;
-static constexpr bool BUZZER_ACTIVE_HIGH = true;
-
-enum FaultHex : uint16_t {
-  FAULT_NONE = 0x000,
-  FAULT_AS3935_INIT = 0x101,
-  FAULT_AS3935_CONFIG = 0x102,
-  FAULT_AS3935_IRQ_ATTACH = 0x103,
-  FAULT_OLED_INIT = 0x201
-};
-
-struct DebouncedInput {
-  uint8_t pin;
-  bool active_low;
-  bool stable_active;
-  bool last_raw_active;
-  uint32_t raw_changed_ms;
-};
-
-SparkFun_AS3935 lightning;
-volatile bool g_irq_flag = false;
-volatile uint32_t g_irq_seen_ms = 0;
-
-DebouncedInput g_in_arm{PIN_ARM_SW, true, false, false, 0};
-DebouncedInput g_in_mute{PIN_MUTE_SW, true, false, false, 0};
-DebouncedInput g_in_reset{PIN_RESET_BTN, true, false, false, 0};
-
-uint32_t g_last_heartbeat_ms = 0;
-uint32_t g_last_oled_ms = 0;
-uint32_t g_buzzer_off_ms = 0;
-uint32_t g_last_event_ms = 0;
-uint32_t g_boot_ms = 0;
-
-uint32_t g_count_lightning = 0;
-uint32_t g_count_noise = 0;
-uint32_t g_count_disturber = 0;
-uint8_t g_last_distance = 0;
-uint32_t g_last_energy = 0;
-char g_last_event_name[12] = "NONE";
-uint32_t g_last_lightning_ms = 0;
-
-static constexpr uint8_t EVENT_BUF_SIZE = 8;
-static constexpr uint8_t EVENT_LINE_LEN = 24;
-char g_event_buf[EVENT_BUF_SIZE][EVENT_LINE_LEN];
-uint8_t g_event_head = 0;   // next write slot
-uint8_t g_event_count = 0;  // number of valid entries
-uint8_t g_oled_roll_offset = 0;
-uint32_t g_last_oled_roll_ms = 0;
-
-bool g_latched_lightning = false;
-FaultHex g_fault = FAULT_NONE;
-bool g_oled_ok = false;
-
-Adafruit_SSD1306& oled() { return *g_display; }
-
-bool i2cPing(uint8_t addr) {
-  Wire.beginTransmission(addr);
-  return Wire.endTransmission() == 0;
-}
-
-void pushEventLine(const char* fmt, ...) {
-  char line[EVENT_LINE_LEN];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(line, sizeof(line), fmt, args);
-  va_end(args);
-
-  strncpy(g_event_buf[g_event_head], line, EVENT_LINE_LEN - 1);
-  g_event_buf[g_event_head][EVENT_LINE_LEN - 1] = '\0';
-  g_event_head = (g_event_head + 1) % EVENT_BUF_SIZE;
-  if (g_event_count < EVENT_BUF_SIZE) g_event_count++;
-}
-
-const char* getRecentEvent(uint8_t offset_from_newest) {
-  if (g_event_count == 0) return "none";
-  if (offset_from_newest >= g_event_count) offset_from_newest %= g_event_count;
-  int idx = static_cast<int>(g_event_head) - 1 - static_cast<int>(offset_from_newest);
-  while (idx < 0) idx += EVENT_BUF_SIZE;
-  return g_event_buf[idx];
-}
-
-bool readActive(const DebouncedInput& in) {
-  const bool level = digitalRead(in.pin);
-  return in.active_low ? (level == LOW) : (level == HIGH);
-}
-
-void initDebounce(DebouncedInput& in, uint32_t now_ms) {
-  in.last_raw_active = readActive(in);
-  in.stable_active = in.last_raw_active;
-  in.raw_changed_ms = now_ms;
-}
-
-bool updateDebounce(DebouncedInput& in, uint32_t now_ms, uint32_t debounce_ms) {
-  const bool raw = readActive(in);
-  if (raw != in.last_raw_active) {
-    in.last_raw_active = raw;
-    in.raw_changed_ms = now_ms;
-  }
-  if (in.stable_active != raw && (now_ms - in.raw_changed_ms) >= debounce_ms) {
-    in.stable_active = raw;
-    return true;
-  }
-  return false;
-}
-
-void buzzerOff() {
-  if (BUZZER_IS_PASSIVE) {
-    noTone(PIN_BUZZER);
-  } else {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? LOW : HIGH);
-  }
-}
-
-void startBuzzer(uint32_t duration_ms, uint16_t freq_hz = 2400) {
-  if (BUZZER_IS_PASSIVE) {
-    tone(PIN_BUZZER, freq_hz);
-  } else {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? HIGH : LOW);
-  }
-  g_buzzer_off_ms = millis() + duration_ms;
-}
-
-void updateBuzzer(uint32_t now_ms) {
-  if (g_buzzer_off_ms != 0 && (int32_t)(now_ms - g_buzzer_off_ms) >= 0) {
-    buzzerOff();
-    g_buzzer_off_ms = 0;
-  }
-}
-
-void IRAM_ATTR onAs3935Irq() {
-  g_irq_flag = true;
-  g_irq_seen_ms = millis();
-}
-
-void faultHalt(FaultHex fault, const char* msg) {
-  g_fault = fault;
-  Serial.println();
-  Serial.println(F("FATAL FAULT"));
-  Serial.print(F("fault_hex=0x"));
-  Serial.println(static_cast<uint16_t>(fault), HEX);
-  Serial.println(msg);
-
-  while (true) {
-    digitalWrite(PIN_STATUS_LED, HIGH);
-    delay(120);
-    digitalWrite(PIN_STATUS_LED, LOW);
-    delay(280);
-  }
-}
-
-void printBanner() {
-  Serial.println();
-  Serial.println(F("=== Lightning Box M2 Core ==="));
-  Serial.println(F("Board: XIAO ESP32-C6"));
-  Serial.println(F("Mode: AS3935 SPI + IRQ + OLED + Debounce"));
-  Serial.print(F("FW: "));
-  Serial.println(FW_REV);
-  Serial.println(F("Fault code format: hex (0x...)"));
-}
-
-void startupBuzzerTest(bool muted_at_boot) {
-  if (muted_at_boot) {
-    Serial.println(F("buzzer_test=SKIPPED (mute ON at boot)"));
-    return;
-  }
-  Serial.println(F("buzzer_test=START"));
-  const uint16_t freq_hz[] = {1568, 1976, 2637, 3136};
-  for (size_t i = 0; i < 4; i++) {
-    tone(PIN_BUZZER, freq_hz[i], 120);
-    delay(150);
-  }
-  noTone(PIN_BUZZER);
-  Serial.println(F("buzzer_test=PASS"));
-}
-
-void sensorConfigure(const SensorParams& p) {
-  lightning.setIndoorOutdoor(p.afe_mode);
-  lightning.tuneCap(SENSOR_TUNE_CAP_BITS * 8);
-  lightning.setNoiseLevel(p.noise_floor);
-  lightning.watchdogThreshold(p.watchdog);
-  lightning.spikeRejection(p.spike);
-  lightning.lightningThreshold(p.min_lightnings);
-  lightning.maskDisturber(false);
-}
-
-void i2cScan() {
-  uint8_t found = 0;
-  for (uint8_t addr = 1; addr < 127; addr++) {
-    if (i2cPing(addr)) {
-      Serial.printf("i2c_found=0x%02X\n", addr);
-      found++;
-    }
-  }
-  if (!found) {
-    Serial.println(F("i2c_found=NONE"));
-  }
-}
-
-bool tryOledInit(Adafruit_SSD1306& panel, uint8_t addr, uint8_t height) {
-  if (!panel.begin(SSD1306_SWITCHCAPVCC, addr)) return false;
-  if (!i2cPing(addr)) return false;
-  g_display = &panel;
-  g_oled_addr = addr;
-  g_oled_h = height;
-  return true;
-}
-
-void oledPanelFlash() {
-  if (!g_oled_ok) return;
-  oled().clearDisplay();
-  oled().fillRect(0, 0, OLED_W, g_oled_h, SSD1306_WHITE);
-  oled().display();
-  delay(120);
-  oled().clearDisplay();
-  oled().display();
-}
-
-void oledBoot(const char* line1, const char* line2) {
-  if (!g_oled_ok) return;
-  oled().clearDisplay();
-  oled().setTextSize(1);
-  oled().setTextColor(SSD1306_WHITE);
-  oled().setCursor(0, 0);
-  oled().println(F("Lightning M2"));
-  oled().println(line1);
-  if (line2 && line2[0]) oled().println(line2);
-  oled().display();
-}
-
-void oledLive(uint32_t now_ms) {
-  if (!g_oled_ok) return;
-  if ((now_ms - g_last_oled_roll_ms) >= 1200) {
-    g_last_oled_roll_ms = now_ms;
-    if (g_event_count > 0) {
-      g_oled_roll_offset = (g_oled_roll_offset + 1) % g_event_count;
-    } else {
-      g_oled_roll_offset = 0;
-    }
-  }
-
-  oled().clearDisplay();
-  oled().setTextSize(1);
-  oled().setTextColor(SSD1306_WHITE);
-  oled().setCursor(0, 0);
-  oled().printf("P:%c A:%d M:%d\n", (g_sensor.name[0] == 'N') ? 'N' : 'S',
-                g_in_arm.stable_active ? 1 : 0, g_in_mute.stable_active ? 1 : 0);
-  oled().printf("L:%lu D:%lu N:%lu\n", g_count_lightning, g_count_disturber, g_count_noise);
-  if (g_count_lightning > 0) {
-    oled().printf("LTG:%lus %uk e%lu\n", (now_ms - g_last_lightning_ms) / 1000UL, g_last_distance,
-                  g_last_energy);
-  } else {
-    oled().println(F("LTG:none"));
-  }
-  oled().printf("EV:%s", getRecentEvent(g_oled_roll_offset));
-  oled().display();
-}
-
-void handleAs3935Event(uint32_t now_ms) {
-  if (!g_irq_flag || (uint32_t)(now_ms - g_irq_seen_ms) < 2) return;
-  g_irq_flag = false;
-
-  const int intVal = lightning.readInterruptReg();
-  g_last_event_ms = now_ms;
-
-  if (intVal == NOISE_INT) {
-    g_count_noise++;
-    strncpy(g_last_event_name, "NOISE", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=NOISE count=%lu\r\n", now_ms, g_count_noise);
-    pushEventLine("NOISE #%lu", g_count_noise);
-  } else if (intVal == DISTURBER_INT) {
-    g_count_disturber++;
-    strncpy(g_last_event_name, "DISTURBER", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=DISTURBER count=%lu\r\n", now_ms, g_count_disturber);
-    pushEventLine("DIST #%lu", g_count_disturber);
-  } else if (intVal == LIGHTNING_INT) {
-    g_count_lightning++;
-    g_latched_lightning = true;
-    g_last_distance = lightning.distanceToStorm();
-    g_last_energy = lightning.lightningEnergy();
-    g_last_lightning_ms = now_ms;
-    strncpy(g_last_event_name, "LIGHTNING", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=LIGHTNING count=%lu distance_km=%u energy=%lu arm=%d mute=%d\r\n",
-                  now_ms, g_count_lightning, g_last_distance, g_last_energy,
-                  g_in_arm.stable_active ? 1 : 0, g_in_mute.stable_active ? 1 : 0);
-    pushEventLine("LTG #%lu %uk", g_count_lightning, g_last_distance);
-    if (!g_in_mute.stable_active) startBuzzer(130, 2400);
-  } else {
-    strncpy(g_last_event_name, "OTHER", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=OTHER int=0x%02X\r\n", now_ms, intVal);
-    pushEventLine("OTHER 0x%02X", intVal);
-  }
-}
-
-void setup() {
-  pinMode(PIN_STATUS_LED, OUTPUT);
-  pinMode(PIN_BUZZER, OUTPUT);
-  buzzerOff();
-
-  pinMode(PIN_ARM_SW, INPUT_PULLUP);
-  pinMode(PIN_MUTE_SW, INPUT_PULLUP);
-  pinMode(PIN_RESET_BTN, INPUT_PULLUP);
-  pinMode(PIN_AS3935_IRQ, INPUT);
-
-  Serial.begin(115200);
-  const uint32_t serial_wait_start = millis();
-  while (!Serial && (millis() - serial_wait_start) < 2500) {
-    delay(10);
-  }
-  delay(120);
-  g_boot_ms = millis();
-  printBanner();
-  //Serial.flush();
-
-  Wire.begin(PIN_OLED_SDA, PIN_OLED_SCL);
-  Wire.setClock(100000);
-  delay(30);
-  Serial.printf("oled_i2c_pins sda=D4 scl=D5 (gpio=%u,%u)\n", PIN_OLED_SDA, PIN_OLED_SCL);
-  i2cScan();
-  const bool have_3c = i2cPing(OLED_ADDR_A);
-  const bool have_3d = i2cPing(OLED_ADDR_B);
-  if (!have_3c && !have_3d) {
-    Serial.println(F("warn: no OLED address responded on I2C (0x3C/0x3D)"));
-    g_oled_ok = false;
-  } else {
-    g_oled_ok = tryOledInit(display32, OLED_ADDR_A, OLED_H_32) ||
-                tryOledInit(display32, OLED_ADDR_B, OLED_H_32) ||
-                tryOledInit(display64, OLED_ADDR_A, OLED_H_64) ||
-                tryOledInit(display64, OLED_ADDR_B, OLED_H_64);
-  }
-  if (!g_oled_ok) {
-    Serial.println(F("warn: OLED init failed (tried 0x3C/0x3D, 128x32/128x64), continuing headless"));
-  } else {
-    Serial.printf("oled=ok addr=0x%02X size=128x%u\n", g_oled_addr, g_oled_h);
-    oledPanelFlash();
-    oledBoot("OLED init OK", "");
-  }
-
-  initDebounce(g_in_arm, millis());
-  initDebounce(g_in_mute, millis());
-  initDebounce(g_in_reset, millis());
-  Serial.printf("startup arm=%d mute=%d reset=%d\n", g_in_arm.stable_active ? 1 : 0,
-                g_in_mute.stable_active ? 1 : 0, g_in_reset.stable_active ? 1 : 0);
-  startupBuzzerTest(g_in_mute.stable_active);
-
-  SensorProfile profile = SENSOR_PROFILE_DEFAULT;
-  if (ENABLE_PROFILE_SELECT_SWITCH && g_in_mute.stable_active) profile = PROFILE_NOISY;
-  g_sensor = (profile == PROFILE_NOISY) ? PARAM_NOISY : PARAM_SENSITIVE;
-  Serial.printf("profile=%s (switch_select=%d)\n", g_sensor.name,
-                ENABLE_PROFILE_SELECT_SWITCH ? 1 : 0);
-  if (ENABLE_PROFILE_SELECT_SWITCH) {
-    Serial.println(F("profile_hint: set MUTE ON before boot to force NOISY"));
-  }
-  pushEventLine("BOOT %s", g_sensor.name);
-
-  SPI.begin(PIN_SPI_SCK, PIN_SPI_MISO, PIN_SPI_MOSI, PIN_AS3935_CS);
-  if (!lightning.beginSPI(PIN_AS3935_CS, 2000000)) {
-    faultHalt(FAULT_AS3935_INIT, "AS3935 beginSPI failed");
-  }
-  sensorConfigure(g_sensor);
-  if (!lightning.calibrateOsc()) {
-    faultHalt(FAULT_AS3935_CONFIG, "AS3935 calibrateOsc failed");
-  }
-
-  Serial.printf(
-      "AS3935 cfg: profile=%s afe=%s tuneCap_bits=%u tuneCap_pf=%u noise=%u watchdog=%u spike=%u minLight=%u\n",
-      g_sensor.name, (g_sensor.afe_mode == INDOOR) ? "INDOOR" : "OUTDOOR",
-      SENSOR_TUNE_CAP_BITS, lightning.readTuneCap(), g_sensor.noise_floor,
-      g_sensor.watchdog, g_sensor.spike, g_sensor.min_lightnings);
-
-  const int irq_num = digitalPinToInterrupt(PIN_AS3935_IRQ);
-  if (irq_num == NOT_AN_INTERRUPT) {
-    faultHalt(FAULT_AS3935_IRQ_ATTACH, "Invalid IRQ pin for attachInterrupt");
-  }
-  attachInterrupt(irq_num, onAs3935Irq, RISING);
-
-  Serial.println(F("M2 init complete. Waiting for events..."));
-  oledBoot("M2 init complete", "Waiting for events");
-  pushEventLine("M2 READY");
-  delay(400);
-}
-
-void loop() {
-  const uint32_t now_ms = millis();
-  const uint32_t debounce_ms = 25;
-
-  if (updateDebounce(g_in_arm, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=ARM state=%s\n", now_ms, g_in_arm.stable_active ? "ON" : "OFF");
-    pushEventLine("ARM %s", g_in_arm.stable_active ? "ON" : "OFF");
-  }
-  if (updateDebounce(g_in_mute, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=MUTE state=%s\n", now_ms, g_in_mute.stable_active ? "ON" : "OFF");
-    pushEventLine("MUTE %s", g_in_mute.stable_active ? "ON" : "OFF");
-  }
-  if (updateDebounce(g_in_reset, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=RESET state=%s\n", now_ms,
-                  g_in_reset.stable_active ? "DOWN" : "UP");
-    pushEventLine("RESET %s", g_in_reset.stable_active ? "DN" : "UP");
-    if (g_in_reset.stable_active) {
-      g_latched_lightning = false;
-      g_count_lightning = 0;
-      g_count_noise = 0;
-      g_count_disturber = 0;
-      strncpy(g_last_event_name, "RESET", sizeof(g_last_event_name) - 1);
-      g_last_lightning_ms = 0;
-      Serial.printf("[%lu] action=RESET_ACK counters_cleared\r\n", now_ms);
-      pushEventLine("COUNTERS CLR");
-      if (!g_in_mute.stable_active) startBuzzer(180, 2200);
-    }
-  }
-
-  if ((now_ms - g_last_heartbeat_ms) >= 500) {
-    g_last_heartbeat_ms = now_ms;
-    if (g_in_arm.stable_active) {
-      digitalWrite(PIN_STATUS_LED, !digitalRead(PIN_STATUS_LED));
-    } else {
-      digitalWrite(PIN_STATUS_LED, LOW);
-    }
-  }
-
-  if (g_in_arm.stable_active) {
-    handleAs3935Event(now_ms);
-  }
-
-  updateBuzzer(now_ms);
-
-  if ((now_ms - g_last_oled_ms) >= 180) {
-    g_last_oled_ms = now_ms;
-    oledLive(now_ms);
-  }
-}
-```
-      </div>
-    </details>
-  </details>
-
-  <details className="stageFold">
-    <summary>
-      <span>M3: Connected Features (In Progress)</span>
-      <span className="stageTag">Active development</span>
-    </summary>
-    <div className="stageCols">
-      <div>
-        <p>M3 extends the accepted M2 local behaviour into a connected node with NTP time sync, persistent strike logging, and a small HTTP surface for status/history access.</p>
-        <p>The key design constraint for M3 is to add network/storage features without regressing the core local warning behaviour.</p>
-      </div>
-      <div>
-        <ul>
-          <li>Wi-Fi STA + NTP sync path added.</li>
-          <li>NVS ring buffer for strike history added.</li>
-          <li><code>/</code>, <code>/api/status</code>, and <code>/api/strikes</code> endpoints added.</li>
-          <li>Credentials in this public block are placeholder values.</li>
-        </ul>
-      </div>
-    </div>
-    <details className="codeFold">
-      <summary>Open M3 Code: <code>m3_connected.ino</code></summary>
-      <div className="ideWindow">
-        <div className="ideChrome">
-          <span className="dot red"></span><span className="dot amber"></span><span className="dot green"></span>
-          <span className="ideTitle">Code Terminal • m3_connected.ino</span>
-        </div>
-```cpp
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-#include <stdarg.h>
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Preferences.h>
-#include <time.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include "SparkFun_AS3935.h"
-
-// AS3935 event bits
-#define LIGHTNING_INT 0x08
-#define DISTURBER_INT 0x04
-#define NOISE_INT 0x01
-#define INDOOR 0x12
-#define OUTDOOR 0x0E
-
-static constexpr const char* FW_REV = "M3_CONNECTED_R2_2026-03-08";
-
-// Display config (0.91" modules are commonly 128x32)
-static constexpr int OLED_W = 128;
-static constexpr int OLED_H_32 = 32;
-static constexpr int OLED_H_64 = 64;
-static constexpr uint8_t OLED_ADDR_A = 0x3C;
-static constexpr uint8_t OLED_ADDR_B = 0x3D;
-static constexpr uint8_t PIN_OLED_SDA = D4;
-static constexpr uint8_t PIN_OLED_SCL = D5;
-Adafruit_SSD1306 display32(OLED_W, OLED_H_32, &Wire, -1);
-Adafruit_SSD1306 display64(OLED_W, OLED_H_64, &Wire, -1);
-Adafruit_SSD1306* g_display = nullptr;
-uint8_t g_oled_addr = 0x00;
-uint8_t g_oled_h = 0;
-
-// MOD-1016 factory calibration number (register 0x08 bits [3:0]).
-static constexpr uint8_t SENSOR_TUNE_CAP_BITS = 7;
-static constexpr bool ENABLE_PROFILE_SELECT_SWITCH = true;  // MUTE ON at boot => NOISY
-
-enum SensorProfile : uint8_t { PROFILE_SENSITIVE = 0, PROFILE_NOISY = 1 };
-static constexpr SensorProfile SENSOR_PROFILE_DEFAULT = PROFILE_SENSITIVE;
-
-struct SensorParams {
-  uint8_t afe_mode;
-  uint8_t noise_floor;
-  uint8_t watchdog;
-  uint8_t spike;
-  uint8_t min_lightnings;
-  const char* name;
-};
-
-const SensorParams PARAM_SENSITIVE = {INDOOR, 2, 1, 1, 1, "SENSITIVE"};
-const SensorParams PARAM_NOISY = {OUTDOOR, 7, 6, 6, 1, "NOISY"};
-SensorParams g_sensor = PARAM_SENSITIVE;
-
-// Pin map (XIAO ESP32-C6)
-static constexpr uint8_t PIN_ARM_SW = D0;      // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_MUTE_SW = D1;     // INPUT_PULLUP, ON = GND
-static constexpr uint8_t PIN_AS3935_IRQ = D2;  // interrupt
-static constexpr uint8_t PIN_AS3935_CS = D3;   // SPI CS
-static constexpr uint8_t PIN_BUZZER = D6;      // PN2222A base via 1k
-static constexpr uint8_t PIN_RESET_BTN = D7;   // INPUT_PULLUP, pressed = GND
-static constexpr uint8_t PIN_SPI_SCK = D8;
-static constexpr uint8_t PIN_SPI_MISO = D9;
-static constexpr uint8_t PIN_SPI_MOSI = D10;
-static constexpr uint8_t PIN_STATUS_LED = LED_BUILTIN;
-
-// Buzzer mode
-static constexpr bool BUZZER_IS_PASSIVE = true;
-static constexpr bool BUZZER_ACTIVE_HIGH = true;
-
-enum FaultHex : uint16_t {
-  FAULT_NONE = 0x000,
-  FAULT_AS3935_INIT = 0x101,
-  FAULT_AS3935_CONFIG = 0x102,
-  FAULT_AS3935_IRQ_ATTACH = 0x103,
-  FAULT_OLED_INIT = 0x201,
-  FAULT_STORE_LOAD = 0x301,
-  FAULT_STORE_SAVE = 0x302
-};
-
-struct DebouncedInput {
-  uint8_t pin;
-  bool active_low;
-  bool stable_active;
-  bool last_raw_active;
-  uint32_t raw_changed_ms;
-};
-
-SparkFun_AS3935 lightning;
-WebServer web(80);
-Preferences prefs;
-volatile bool g_irq_flag = false;
-volatile uint32_t g_irq_seen_ms = 0;
-
-DebouncedInput g_in_arm{PIN_ARM_SW, true, false, false, 0};
-DebouncedInput g_in_mute{PIN_MUTE_SW, true, false, false, 0};
-DebouncedInput g_in_reset{PIN_RESET_BTN, true, false, false, 0};
-
-uint32_t g_last_heartbeat_ms = 0;
-uint32_t g_last_oled_ms = 0;
-uint32_t g_buzzer_off_ms = 0;
-uint32_t g_last_event_ms = 0;
-uint32_t g_boot_ms = 0;
-
-uint32_t g_count_lightning = 0;
-uint32_t g_count_noise = 0;
-uint32_t g_count_disturber = 0;
-uint8_t g_last_distance = 0;
-uint32_t g_last_energy = 0;
-char g_last_event_name[12] = "NONE";
-uint32_t g_last_lightning_ms = 0;
-
-static constexpr uint8_t EVENT_BUF_SIZE = 8;
-static constexpr uint8_t EVENT_LINE_LEN = 24;
-static constexpr uint32_t RESET_LONG_PRESS_MS = 1500;
-static constexpr uint32_t BOOT_PROFILE_ASSIST_MS = 15000;
-static constexpr uint32_t STARTUP_STABILIZE_MS = 30000;
-static constexpr uint32_t PROFILE_SWITCH_QUIET_MS = 2500;
-static constexpr uint8_t BOOT_TERM_BUF_SIZE = 10;
-static constexpr uint8_t BOOT_TERM_LINE_LEN = 22;
-static constexpr uint32_t BOOT_TERM_TYPE_MS = 22;
-char g_event_buf[EVENT_BUF_SIZE][EVENT_LINE_LEN];
-uint8_t g_event_head = 0;   // next write slot
-uint8_t g_event_count = 0;  // number of valid entries
-uint8_t g_oled_roll_offset = 0;
-uint32_t g_last_oled_roll_ms = 0;
-uint32_t g_last_wifi_retry_ms = 0;
-bool g_wifi_ok = false;
-bool g_time_synced = false;
-
-// --- M3 config ---
-static constexpr const char* WIFI_SSID = "YOUR_SSID_HERE";
-static constexpr const char* WIFI_PASS = "YOUR_PASSWORD_HERE";
-static constexpr const char* NTP_SERVER_1 = "pool.ntp.org";
-static constexpr const char* NTP_SERVER_2 = "time.nist.gov";
-static constexpr long TZ_OFFSET_SEC = 0;
-static constexpr int DST_OFFSET_SEC = 0;
-
-// NVS strike history ring
-static constexpr uint16_t STRIKE_MAX = 128;
-struct StrikeRecord {
-  uint32_t epoch_s;
-  uint16_t distance_km;
-  uint32_t energy;
-};
-StrikeRecord g_strikes[STRIKE_MAX];
-uint16_t g_strike_head = 0;   // next write slot
-uint16_t g_strike_count = 0;  // valid record count
-
-bool g_latched_lightning = false;
-FaultHex g_fault = FAULT_NONE;
-bool g_oled_ok = false;
-bool g_reset_press_active = false;
-bool g_reset_long_handled = false;
-uint32_t g_reset_press_start_ms = 0;
-bool g_boot_profile_assist_done = false;
-bool g_irq_attached = false;
-bool g_event_logging_enabled = false;
-uint32_t g_profile_quiet_until_ms = 0;
-
-char g_boot_term[BOOT_TERM_BUF_SIZE][BOOT_TERM_LINE_LEN];
-uint8_t g_boot_term_head = 0;
-uint8_t g_boot_term_count = 0;
-uint8_t g_boot_term_reveal = 0;
-uint32_t g_boot_term_last_ms = 0;
-bool g_boot_term_anim = false;
-
-Adafruit_SSD1306& oled() { return *g_display; }
-
-bool i2cPing(uint8_t addr) {
-  Wire.beginTransmission(addr);
-  return Wire.endTransmission() == 0;
-}
-
-void pushEventLine(const char* fmt, ...) {
-  char line[EVENT_LINE_LEN];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(line, sizeof(line), fmt, args);
-  va_end(args);
-
-  strncpy(g_event_buf[g_event_head], line, EVENT_LINE_LEN - 1);
-  g_event_buf[g_event_head][EVENT_LINE_LEN - 1] = '\0';
-  g_event_head = (g_event_head + 1) % EVENT_BUF_SIZE;
-  if (g_event_count < EVENT_BUF_SIZE) g_event_count++;
-}
-
-const char* getRecentEvent(uint8_t offset_from_newest) {
-  if (g_event_count == 0) return "none";
-  if (offset_from_newest >= g_event_count) offset_from_newest %= g_event_count;
-  int idx = static_cast<int>(g_event_head) - 1 - static_cast<int>(offset_from_newest);
-  while (idx < 0) idx += EVENT_BUF_SIZE;
-  return g_event_buf[idx];
-}
-
-bool isSwitchEventLine(const char* s) {
-  return (strncmp(s, "MUTE ", 5) == 0) || (strncmp(s, "ARM ", 4) == 0) ||
-         (strncmp(s, "RESET ", 6) == 0);
-}
-
-const char* getRecentDisplayEvent(uint8_t offset_from_newest) {
-  if (g_event_count == 0) return "none";
-  uint8_t matched = 0;
-  for (uint8_t i = 0; i < g_event_count; i++) {
-    const char* s = getRecentEvent(i);
-    if (!isSwitchEventLine(s)) {
-      if (matched == offset_from_newest) return s;
-      matched++;
-    }
-  }
-  return getRecentEvent(0);
-}
-
-void bootTermAdd(const char* fmt, ...) {
-  char line[BOOT_TERM_LINE_LEN];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(line, sizeof(line), fmt, args);
-  va_end(args);
-
-  strncpy(g_boot_term[g_boot_term_head], line, BOOT_TERM_LINE_LEN - 1);
-  g_boot_term[g_boot_term_head][BOOT_TERM_LINE_LEN - 1] = '\0';
-  g_boot_term_head = (g_boot_term_head + 1) % BOOT_TERM_BUF_SIZE;
-  if (g_boot_term_count < BOOT_TERM_BUF_SIZE) g_boot_term_count++;
-
-  g_boot_term_reveal = 0;
-  g_boot_term_last_ms = millis();
-  g_boot_term_anim = true;
-}
-
-const char* getBootTermRecent(uint8_t offset_from_newest) {
-  if (g_boot_term_count == 0) return "";
-  if (offset_from_newest >= g_boot_term_count) return "";
-  int idx = static_cast<int>(g_boot_term_head) - 1 - static_cast<int>(offset_from_newest);
-  while (idx < 0) idx += BOOT_TERM_BUF_SIZE;
-  return g_boot_term[idx];
-}
-
-bool readActive(const DebouncedInput& in) {
-  const bool level = digitalRead(in.pin);
-  return in.active_low ? (level == LOW) : (level == HIGH);
-}
-
-void initDebounce(DebouncedInput& in, uint32_t now_ms) {
-  in.last_raw_active = readActive(in);
-  in.stable_active = in.last_raw_active;
-  in.raw_changed_ms = now_ms;
-}
-
-bool updateDebounce(DebouncedInput& in, uint32_t now_ms, uint32_t debounce_ms) {
-  const bool raw = readActive(in);
-  if (raw != in.last_raw_active) {
-    in.last_raw_active = raw;
-    in.raw_changed_ms = now_ms;
-  }
-  if (in.stable_active != raw && (now_ms - in.raw_changed_ms) >= debounce_ms) {
-    in.stable_active = raw;
-    return true;
-  }
-  return false;
-}
-
-void buzzerOff() {
-  if (BUZZER_IS_PASSIVE) {
-    noTone(PIN_BUZZER);
-  } else {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? LOW : HIGH);
-  }
-}
-
-void startBuzzer(uint32_t duration_ms, uint16_t freq_hz = 2400) {
-  if (BUZZER_IS_PASSIVE) {
-    tone(PIN_BUZZER, freq_hz);
-  } else {
-    digitalWrite(PIN_BUZZER, BUZZER_ACTIVE_HIGH ? HIGH : LOW);
-  }
-  g_buzzer_off_ms = millis() + duration_ms;
-}
-
-void updateBuzzer(uint32_t now_ms) {
-  if (g_buzzer_off_ms != 0 && (int32_t)(now_ms - g_buzzer_off_ms) >= 0) {
-    buzzerOff();
-    g_buzzer_off_ms = 0;
-  }
-}
-
-void IRAM_ATTR onAs3935Irq() {
-  g_irq_flag = true;
-  g_irq_seen_ms = millis();
-}
-
-void faultHalt(FaultHex fault, const char* msg) {
-  g_fault = fault;
-  Serial.println();
-  Serial.println(F("FATAL FAULT"));
-  Serial.print(F("fault_hex=0x"));
-  Serial.println(static_cast<uint16_t>(fault), HEX);
-  Serial.println(msg);
-
-  while (true) {
-    digitalWrite(PIN_STATUS_LED, HIGH);
-    delay(120);
-    digitalWrite(PIN_STATUS_LED, LOW);
-    delay(280);
-  }
-}
-
-void printBanner() {
-  Serial.println();
-  Serial.println(F("=== Lightning Box M3 Connected ==="));
-  Serial.println(F("Board: XIAO ESP32-C6"));
-  Serial.println(F("Mode: AS3935 + OLED + WiFi/NTP + Flash Log + Web"));
-  Serial.print(F("FW: "));
-  Serial.println(FW_REV);
-  Serial.println(F("Fault code format: hex (0x...)"));
-}
-
-void formatIsoTime(uint32_t epoch_s, char* out, size_t out_len) {
-  if (epoch_s == 0) {
-    snprintf(out, out_len, "unsynced");
-    return;
-  }
-  time_t t = static_cast<time_t>(epoch_s);
-  struct tm tmv;
-  gmtime_r(&t, &tmv);
-  strftime(out, out_len, "%Y-%m-%dT%H:%M:%SZ", &tmv);
-}
-
-void addStrikeRecord(uint32_t epoch_s, uint16_t distance_km, uint32_t energy) {
-  g_strikes[g_strike_head] = {epoch_s, distance_km, energy};
-  g_strike_head = (g_strike_head + 1) % STRIKE_MAX;
-  if (g_strike_count < STRIKE_MAX) g_strike_count++;
-}
-
-bool saveStrikeStore() {
-  if (!prefs.begin("m3log", false)) return false;
-  bool ok = true;
-  ok &= prefs.putUShort("head", g_strike_head) == sizeof(g_strike_head);
-  ok &= prefs.putUShort("count", g_strike_count) == sizeof(g_strike_count);
-  ok &= prefs.putBytes("records", g_strikes, sizeof(g_strikes)) == sizeof(g_strikes);
-  prefs.end();
-  return ok;
-}
-
-bool loadStrikeStore() {
-  if (!prefs.begin("m3log", true)) return false;
-  const uint16_t head = prefs.getUShort("head", 0);
-  const uint16_t count = prefs.getUShort("count", 0);
-  const size_t got = prefs.getBytes("records", g_strikes, sizeof(g_strikes));
-  prefs.end();
-  if (head >= STRIKE_MAX || count > STRIKE_MAX) return false;
-  if (got != sizeof(g_strikes) && got != 0) return false;
-  g_strike_head = head;
-  g_strike_count = count;
-  if (got == 0) {
-    memset(g_strikes, 0, sizeof(g_strikes));
-    g_strike_head = 0;
-    g_strike_count = 0;
-  }
-  return true;
-}
-
-bool maybeSyncTime(uint32_t timeout_ms) {
-  if (WiFi.status() != WL_CONNECTED) return false;
-  configTime(TZ_OFFSET_SEC, DST_OFFSET_SEC, NTP_SERVER_1, NTP_SERVER_2);
-  bootTermAdd("NTP %s", NTP_SERVER_1);
-  const uint32_t start = millis();
-  while ((millis() - start) < timeout_ms) {
-    time_t now = time(nullptr);
-    if (now > 1700000000) {  // sanity threshold
-      g_time_synced = true;
-      char ts[32];
-      formatIsoTime(static_cast<uint32_t>(now), ts, sizeof(ts));
-      bootTermAdd("TIME OK %.20s", ts);
-      return true;
-    }
-    delay(100);
-  }
-  bootTermAdd("TIME FAIL");
-  return false;
-}
-
-void handleRoot() {
-  String html;
-  html.reserve(2200);
-  html += F("<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>");
-  html += F("<title>Lightning Box M3</title><style>body{font-family:ui-monospace,monospace;background:#0f172a;color:#e2e8f0;padding:16px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #334155;padding:6px;text-align:left}a{color:#7dd3fc}</style></head><body>");
-  html += F("<h2>Lightning Box M3</h2>");
-  html += F("<p><a href='/api/status'>/api/status</a> | <a href='/api/strikes'>/api/strikes</a></p>");
-  html += F("<table><tr><th>#</th><th>Time (UTC)</th><th>Dist (km)</th><th>Energy</th></tr>");
-
-  for (uint16_t i = 0; i < g_strike_count; i++) {
-    int idx = static_cast<int>(g_strike_head) - 1 - static_cast<int>(i);
-    while (idx < 0) idx += STRIKE_MAX;
-    char ts[32];
-    formatIsoTime(g_strikes[idx].epoch_s, ts, sizeof(ts));
-    html += "<tr><td>" + String(i + 1) + "</td><td>" + String(ts) + "</td><td>" +
-            String(g_strikes[idx].distance_km) + "</td><td>" + String(g_strikes[idx].energy) + "</td></tr>";
-  }
-  html += F("</table></body></html>");
-  web.send(200, "text/html", html);
-}
-
-void handleStatusApi() {
-  char now_iso[32];
-  time_t now_epoch = time(nullptr);
-  formatIsoTime(now_epoch > 1700000000 ? static_cast<uint32_t>(now_epoch) : 0, now_iso, sizeof(now_iso));
-  String json;
-  json.reserve(512);
-  json += "{";
-  json += "\"fw\":\"" + String(FW_REV) + "\",";
-  json += "\"profile\":\"" + String(g_sensor.name) + "\",";
-  json += "\"wifi\":" + String(g_wifi_ok ? "true" : "false") + ",";
-  json += "\"time_synced\":" + String(g_time_synced ? "true" : "false") + ",";
-  json += "\"now_utc\":\"" + String(now_iso) + "\",";
-  json += "\"counts\":{\"lightning\":" + String(g_count_lightning) + ",\"disturber\":" +
-          String(g_count_disturber) + ",\"noise\":" + String(g_count_noise) + "},";
-  json += "\"strike_log_count\":" + String(g_strike_count);
-  json += "}";
-  web.send(200, "application/json", json);
-}
-
-void handleStrikesApi() {
-  String json;
-  json.reserve(2400);
-  json += "{\"count\":";
-  json += String(g_strike_count);
-  json += ",\"items\":[";
-  for (uint16_t i = 0; i < g_strike_count; i++) {
-    int idx = static_cast<int>(g_strike_head) - 1 - static_cast<int>(i);
-    while (idx < 0) idx += STRIKE_MAX;
-    char ts[32];
-    formatIsoTime(g_strikes[idx].epoch_s, ts, sizeof(ts));
-    if (i) json += ",";
-    json += "{\"n\":";
-    json += String(i + 1);
-    json += ",\"epoch\":";
-    json += String(g_strikes[idx].epoch_s);
-    json += ",\"utc\":\"";
-    json += String(ts);
-    json += "\",\"distance_km\":";
-    json += String(g_strikes[idx].distance_km);
-    json += ",\"energy\":";
-    json += String(g_strikes[idx].energy);
-    json += "}";
-  }
-  json += "]}";
-  web.send(200, "application/json", json);
-}
-
-void setupWebServer() {
-  web.on("/", HTTP_GET, handleRoot);
-  web.on("/api/status", HTTP_GET, handleStatusApi);
-  web.on("/api/strikes", HTTP_GET, handleStrikesApi);
-  web.begin();
-}
-
-void setupWiFiAndTime() {
-  if (strlen(WIFI_SSID) == 0) {
-    Serial.println(F("wifi=SKIPPED (WIFI_SSID empty)"));
-    bootTermAdd("WIFI OFFLINE");
-    return;
-  }
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  Serial.print(F("wifi=CONNECTING ssid="));
-  Serial.println(WIFI_SSID);
-  bootTermAdd("WIFI %s", WIFI_SSID);
-  const uint32_t start = millis();
-  while (WiFi.status() != WL_CONNECTED && (millis() - start) < 12000) {
-    delay(200);
-  }
-  if (WiFi.status() == WL_CONNECTED) {
-    g_wifi_ok = true;
-    Serial.print(F("wifi=OK ip="));
-    Serial.println(WiFi.localIP());
-    bootTermAdd("IP %s", WiFi.localIP().toString().c_str());
-    if (maybeSyncTime(6000)) {
-      Serial.println(F("time_sync=OK"));
-    } else {
-      Serial.println(F("time_sync=FAIL"));
-    }
-  } else {
-    Serial.println(F("wifi=FAIL"));
-    bootTermAdd("WIFI FAIL");
-  }
-}
-
-void updateWiFiAndTimeRetry(uint32_t now_ms) {
-  if (strlen(WIFI_SSID) == 0) return;
-  if (g_wifi_ok && g_time_synced) return;
-  if ((now_ms - g_last_wifi_retry_ms) < 15000) return;
-  g_last_wifi_retry_ms = now_ms;
-
-  if (WiFi.status() != WL_CONNECTED) {
-    WiFi.disconnect();
-    WiFi.begin(WIFI_SSID, WIFI_PASS);
-    Serial.println(F("wifi=RETRY"));
-    bootTermAdd("WIFI RETRY");
-    return;
-  }
-  g_wifi_ok = true;
-  if (!g_time_synced && maybeSyncTime(2000)) {
-    Serial.println(F("time_sync=OK (retry)"));
-  }
-}
-
-void startupBuzzerTest(bool muted_at_boot) {
-  if (muted_at_boot) {
-    Serial.println(F("buzzer_test=SKIPPED (mute ON at boot)"));
-    return;
-  }
-  Serial.println(F("buzzer_test=START"));
-  const uint16_t freq_hz[] = {1568, 1976, 2637, 3136};
-  for (size_t i = 0; i < 4; i++) {
-    tone(PIN_BUZZER, freq_hz[i], 120);
-    delay(150);
-  }
-  noTone(PIN_BUZZER);
-  Serial.println(F("buzzer_test=PASS"));
-}
-
-void sensorConfigure(const SensorParams& p) {
-  lightning.setIndoorOutdoor(p.afe_mode);
-  lightning.tuneCap(SENSOR_TUNE_CAP_BITS * 8);
-  lightning.setNoiseLevel(p.noise_floor);
-  lightning.watchdogThreshold(p.watchdog);
-  lightning.spikeRejection(p.spike);
-  lightning.lightningThreshold(p.min_lightnings);
-  lightning.maskDisturber(false);
-}
-
-uint8_t profileCode() { return (g_sensor.name[0] == 'N') ? 1 : 0; }
-
-void applyProfileRuntime(SensorProfile profile, bool runtime_switch) {
-  g_sensor = (profile == PROFILE_NOISY) ? PARAM_NOISY : PARAM_SENSITIVE;
-  sensorConfigure(g_sensor);
-  // Clear pending IRQ state and hold event processing briefly to avoid transients
-  // during/after profile register writes.
-  (void)lightning.readInterruptReg();
-  g_irq_flag = false;
-  g_profile_quiet_until_ms = millis() + PROFILE_SWITCH_QUIET_MS;
-  Serial.printf("[%lu] profile=%s (runtime_switch=%d)\n", millis(), g_sensor.name, runtime_switch ? 1 : 0);
-  pushEventLine("PROFILE %s", g_sensor.name[0] == 'N' ? "NOISY" : "SENS");
-}
-
-void maybeApplyBootProfileAssist(uint32_t now_ms) {
-  if (g_boot_profile_assist_done) return;
-  if ((now_ms - g_boot_ms) > BOOT_PROFILE_ASSIST_MS) {
-    g_boot_profile_assist_done = true;
-    return;
-  }
-
-  // If MUTE becomes active shortly after boot, honor NOISY profile intent.
-  if (g_in_mute.stable_active && profileCode() == 0) {
-    applyProfileRuntime(PROFILE_NOISY, true);
-    Serial.printf("[%lu] action=BOOT_PROFILE_ASSIST mute=ON window_ms=%lu\n", now_ms,
-                  static_cast<unsigned long>(BOOT_PROFILE_ASSIST_MS));
-    g_boot_profile_assist_done = true;
-  }
-}
-
-void maybeEnableAs3935Events(uint32_t now_ms) {
-  if (g_event_logging_enabled) return;
-  if ((now_ms - g_boot_ms) < STARTUP_STABILIZE_MS) return;
-
-  if (!g_irq_attached) {
-    const int irq_num = digitalPinToInterrupt(PIN_AS3935_IRQ);
-    if (irq_num == NOT_AN_INTERRUPT) {
-      faultHalt(FAULT_AS3935_IRQ_ATTACH, "Invalid IRQ pin for attachInterrupt");
-    }
-    attachInterrupt(irq_num, onAs3935Irq, RISING);
-    g_irq_attached = true;
-  }
-
-  // Clear any stale pending IRQ status before opening event logging.
-  (void)lightning.readInterruptReg();
-  g_irq_flag = false;
-  g_event_logging_enabled = true;
-  Serial.printf("[%lu] startup_guard=END events_enabled=1 stabilize_ms=%lu\n", now_ms,
-                static_cast<unsigned long>(STARTUP_STABILIZE_MS));
-  pushEventLine("EVENTS ENABLED");
-  bootTermAdd("EVENTS ENABLED");
-}
-
-void i2cScan() {
-  uint8_t found = 0;
-  for (uint8_t addr = 1; addr < 127; addr++) {
-    if (i2cPing(addr)) {
-      Serial.printf("i2c_found=0x%02X\n", addr);
-      found++;
-    }
-  }
-  if (!found) {
-    Serial.println(F("i2c_found=NONE"));
-  }
-}
-
-bool tryOledInit(Adafruit_SSD1306& panel, uint8_t addr, uint8_t height) {
-  if (!panel.begin(SSD1306_SWITCHCAPVCC, addr)) return false;
-  if (!i2cPing(addr)) return false;
-  g_display = &panel;
-  g_oled_addr = addr;
-  g_oled_h = height;
-  return true;
-}
-
-void oledPanelFlash() {
-  if (!g_oled_ok) return;
-  oled().clearDisplay();
-  oled().fillRect(0, 0, OLED_W, g_oled_h, SSD1306_WHITE);
-  oled().display();
-  delay(120);
-  oled().clearDisplay();
-  oled().display();
-}
-
-void oledBoot(const char* line1, const char* line2) {
-  if (!g_oled_ok) return;
-  oled().clearDisplay();
-  oled().setTextSize(1);
-  oled().setTextColor(SSD1306_WHITE);
-  oled().setCursor(0, 0);
-  oled().println(F("Lightning M3"));
-  oled().println(line1);
-  if (line2 && line2[0]) oled().println(line2);
-  oled().display();
-}
-
-void oledLive(uint32_t now_ms) {
-  if (!g_oled_ok) return;
-  if ((now_ms - g_last_oled_roll_ms) >= 1200) {
-    g_last_oled_roll_ms = now_ms;
-    if (g_event_count > 0) {
-      g_oled_roll_offset = (g_oled_roll_offset + 1) % g_event_count;
-    } else {
-      g_oled_roll_offset = 0;
-    }
-  }
-
-  oled().clearDisplay();
-  oled().setTextSize(1);
-  oled().setTextColor(SSD1306_WHITE);
-  oled().setCursor(0, 0);
-  oled().printf("P:%d A:%d M:%d W:%d\n", profileCode(),
-                g_in_arm.stable_active ? 1 : 0, g_in_mute.stable_active ? 1 : 0, g_wifi_ok ? 1 : 0);
-  oled().printf("L:%lu D:%lu N:%lu\n", g_count_lightning, g_count_disturber, g_count_noise);
-  if (g_count_lightning > 0) {
-    oled().printf("LTG:%lus %uk e%lu\n", (now_ms - g_last_lightning_ms) / 1000UL, g_last_distance,
-                  g_last_energy);
-  } else {
-    oled().println(F("LTG:none"));
-  }
-  oled().printf("EV:%s", getRecentDisplayEvent(g_oled_roll_offset));
-  oled().display();
-}
-
-void oledBootDiag(uint32_t now_ms) {
-  if (!g_oled_ok) return;
-  const uint32_t elapsed = now_ms - g_boot_ms;
-  const uint32_t remain = (elapsed >= STARTUP_STABILIZE_MS) ? 0 : (STARTUP_STABILIZE_MS - elapsed);
-  if (g_boot_term_anim && (now_ms - g_boot_term_last_ms) >= BOOT_TERM_TYPE_MS) {
-    g_boot_term_last_ms = now_ms;
-    const char* newest = getBootTermRecent(0);
-    const uint8_t newest_len = static_cast<uint8_t>(strlen(newest));
-    if (g_boot_term_reveal < newest_len) {
-      g_boot_term_reveal++;
-    } else {
-      g_boot_term_anim = false;
-    }
-  }
-
-  char l1[BOOT_TERM_LINE_LEN];
-  char l2[BOOT_TERM_LINE_LEN];
-  char l3[BOOT_TERM_LINE_LEN];
-  strncpy(l1, getBootTermRecent(2), sizeof(l1) - 1);
-  l1[sizeof(l1) - 1] = '\0';
-  strncpy(l2, getBootTermRecent(1), sizeof(l2) - 1);
-  l2[sizeof(l2) - 1] = '\0';
-  strncpy(l3, getBootTermRecent(0), sizeof(l3) - 1);
-  l3[sizeof(l3) - 1] = '\0';
-  if (g_boot_term_anim) {
-    const uint8_t n = (g_boot_term_reveal < strlen(l3)) ? g_boot_term_reveal : strlen(l3);
-    l3[n] = '\0';
-  }
-
-  oled().clearDisplay();
-  oled().setTextSize(1);
-  oled().setTextColor(SSD1306_WHITE);
-  oled().setCursor(0, 0);
-  oled().printf("G:%lus P:%d\n", remain / 1000UL, profileCode());
-  oled().println(l1);
-  oled().println(l2);
-  oled().print(l3);
-  if (g_boot_term_anim && ((now_ms / 250UL) % 2UL == 0UL)) oled().print("_");
-  oled().display();
-}
-
-void handleAs3935Event(uint32_t now_ms) {
-  if (!g_irq_flag || (uint32_t)(now_ms - g_irq_seen_ms) < 2) return;
-  g_irq_flag = false;
-
-  const int intVal = lightning.readInterruptReg();
-  g_last_event_ms = now_ms;
-
-  if (intVal == NOISE_INT) {
-    g_count_noise++;
-    strncpy(g_last_event_name, "NOISE", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=NOISE count=%lu\r\n", now_ms, g_count_noise);
-    pushEventLine("NOISE #%lu", g_count_noise);
-  } else if (intVal == DISTURBER_INT) {
-    g_count_disturber++;
-    strncpy(g_last_event_name, "DISTURBER", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=DISTURBER count=%lu\r\n", now_ms, g_count_disturber);
-    pushEventLine("DIST #%lu", g_count_disturber);
-  } else if (intVal == LIGHTNING_INT) {
-    g_count_lightning++;
-    g_latched_lightning = true;
-    g_last_distance = lightning.distanceToStorm();
-    g_last_energy = lightning.lightningEnergy();
-    g_last_lightning_ms = now_ms;
-    const time_t now_epoch = time(nullptr);
-    const uint32_t ts_epoch = (now_epoch > 1700000000) ? static_cast<uint32_t>(now_epoch) : 0;
-    addStrikeRecord(ts_epoch, g_last_distance, g_last_energy);
-    if (!saveStrikeStore()) {
-      Serial.println(F("warn: strike_store_save_failed"));
-    }
-    strncpy(g_last_event_name, "LIGHTNING", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=LIGHTNING count=%lu distance_km=%u energy=%lu arm=%d mute=%d\r\n",
-                  now_ms, g_count_lightning, g_last_distance, g_last_energy,
-                  g_in_arm.stable_active ? 1 : 0, g_in_mute.stable_active ? 1 : 0);
-    pushEventLine("LTG #%lu %uk", g_count_lightning, g_last_distance);
-    if (!g_in_mute.stable_active) startBuzzer(130, 2400);
-  } else {
-    strncpy(g_last_event_name, "OTHER", sizeof(g_last_event_name) - 1);
-    Serial.printf("[%lu] event=OTHER int=0x%02X\r\n", now_ms, intVal);
-    pushEventLine("OTHER 0x%02X", intVal);
-  }
-}
-
-void setup() {
-  pinMode(PIN_STATUS_LED, OUTPUT);
-  pinMode(PIN_BUZZER, OUTPUT);
-  buzzerOff();
-
-  pinMode(PIN_ARM_SW, INPUT_PULLUP);
-  pinMode(PIN_MUTE_SW, INPUT_PULLUP);
-  pinMode(PIN_RESET_BTN, INPUT_PULLUP);
-  pinMode(PIN_AS3935_IRQ, INPUT);
-
-  Serial.begin(115200);
-  const uint32_t serial_wait_start = millis();
-  while (!Serial && (millis() - serial_wait_start) < 2500) {
-    delay(10);
-  }
-  delay(120);
-  g_boot_ms = millis();
-  printBanner();
-  //Serial.flush();
-  bootTermAdd("FW %s", FW_REV);
-
-  if (!loadStrikeStore()) {
-    Serial.println(F("warn: strike_store_load_failed"));
-    memset(g_strikes, 0, sizeof(g_strikes));
-    g_strike_head = 0;
-    g_strike_count = 0;
-    bootTermAdd("LOG LOAD FAIL");
-  } else {
-    Serial.printf("strike_store_loaded count=%u\n", g_strike_count);
-    bootTermAdd("LOG %u", g_strike_count);
-  }
-
-  Wire.begin(PIN_OLED_SDA, PIN_OLED_SCL);
-  Wire.setClock(100000);
-  delay(30);
-  Serial.printf("oled_i2c_pins sda=D4 scl=D5 (gpio=%u,%u)\n", PIN_OLED_SDA, PIN_OLED_SCL);
-  i2cScan();
-  const bool have_3c = i2cPing(OLED_ADDR_A);
-  const bool have_3d = i2cPing(OLED_ADDR_B);
-  if (!have_3c && !have_3d) {
-    Serial.println(F("warn: no OLED address responded on I2C (0x3C/0x3D)"));
-    g_oled_ok = false;
-  } else {
-    g_oled_ok = tryOledInit(display32, OLED_ADDR_A, OLED_H_32) ||
-                tryOledInit(display32, OLED_ADDR_B, OLED_H_32) ||
-                tryOledInit(display64, OLED_ADDR_A, OLED_H_64) ||
-                tryOledInit(display64, OLED_ADDR_B, OLED_H_64);
-  }
-  if (!g_oled_ok) {
-    Serial.println(F("warn: OLED init failed (tried 0x3C/0x3D, 128x32/128x64), continuing headless"));
-  } else {
-    Serial.printf("oled=ok addr=0x%02X size=128x%u\n", g_oled_addr, g_oled_h);
-    oledPanelFlash();
-    oledBoot("OLED init OK", "");
-    bootTermAdd("OLED 0x%02X", g_oled_addr);
-  }
-
-  initDebounce(g_in_arm, millis());
-  initDebounce(g_in_mute, millis());
-  initDebounce(g_in_reset, millis());
-  Serial.printf("startup arm=%d mute=%d reset=%d\n", g_in_arm.stable_active ? 1 : 0,
-                g_in_mute.stable_active ? 1 : 0, g_in_reset.stable_active ? 1 : 0);
-  startupBuzzerTest(g_in_mute.stable_active);
-
-  SensorProfile profile = SENSOR_PROFILE_DEFAULT;
-  if (ENABLE_PROFILE_SELECT_SWITCH && g_in_mute.stable_active) profile = PROFILE_NOISY;
-  g_sensor = (profile == PROFILE_NOISY) ? PARAM_NOISY : PARAM_SENSITIVE;
-  Serial.printf("profile=%s (switch_select=%d)\n", g_sensor.name,
-                ENABLE_PROFILE_SELECT_SWITCH ? 1 : 0);
-  if (ENABLE_PROFILE_SELECT_SWITCH) {
-    Serial.println(F("profile_hint: set MUTE ON before boot to force NOISY"));
-  }
-  pushEventLine("BOOT %s", g_sensor.name);
-  bootTermAdd("PROFILE %s", g_sensor.name);
-  setupWiFiAndTime();
-  setupWebServer();
-  if (g_wifi_ok) {
-    Serial.println(F("web=READY port=80"));
-    bootTermAdd("WEB http://%s", WiFi.localIP().toString().c_str());
-    pushEventLine("WEB %s", WiFi.localIP().toString().c_str());
-  } else {
-    Serial.println(F("web=READY (local/offline)"));
-    bootTermAdd("WEB LOCAL");
-  }
-
-  SPI.begin(PIN_SPI_SCK, PIN_SPI_MISO, PIN_SPI_MOSI, PIN_AS3935_CS);
-  if (!lightning.beginSPI(PIN_AS3935_CS, 2000000)) {
-    faultHalt(FAULT_AS3935_INIT, "AS3935 beginSPI failed");
-  }
-  sensorConfigure(g_sensor);
-  if (!lightning.calibrateOsc()) {
-    faultHalt(FAULT_AS3935_CONFIG, "AS3935 calibrateOsc failed");
-  }
-
-  Serial.printf(
-      "AS3935 cfg: profile=%s afe=%s tuneCap_bits=%u tuneCap_pf=%u noise=%u watchdog=%u spike=%u minLight=%u\n",
-      g_sensor.name, (g_sensor.afe_mode == INDOOR) ? "INDOOR" : "OUTDOOR",
-      SENSOR_TUNE_CAP_BITS, lightning.readTuneCap(), g_sensor.noise_floor,
-      g_sensor.watchdog, g_sensor.spike, g_sensor.min_lightnings);
-
-  Serial.printf("startup_guard=ACTIVE stabilize_ms=%lu\n", static_cast<unsigned long>(STARTUP_STABILIZE_MS));
-  bootTermAdd("GUARD %lus", STARTUP_STABILIZE_MS / 1000UL);
-  Serial.println(F("M3 init complete. Waiting for startup guard..."));
-  oledBoot("M3 init complete", "Startup guard...");
-  pushEventLine("M3 READY");
-  g_boot_profile_assist_done = false;
-  delay(400);
-}
-
-void loop() {
-  const uint32_t now_ms = millis();
-  const uint32_t debounce_ms = 25;
-
-  if (updateDebounce(g_in_arm, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=ARM state=%s\n", now_ms, g_in_arm.stable_active ? "ON" : "OFF");
-    pushEventLine("ARM %s", g_in_arm.stable_active ? "ON" : "OFF");
-  }
-  if (updateDebounce(g_in_mute, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=MUTE state=%s\n", now_ms, g_in_mute.stable_active ? "ON" : "OFF");
-    pushEventLine("MUTE %s", g_in_mute.stable_active ? "ON" : "OFF");
-  }
-  if (updateDebounce(g_in_reset, now_ms, debounce_ms)) {
-    Serial.printf("[%lu] switch=RESET state=%s\n", now_ms,
-                  g_in_reset.stable_active ? "DOWN" : "UP");
-    pushEventLine("RESET %s", g_in_reset.stable_active ? "DN" : "UP");
-    if (g_in_reset.stable_active) {
-      g_reset_press_active = true;
-      g_reset_long_handled = false;
-      g_reset_press_start_ms = now_ms;
-    } else if (g_reset_press_active) {
-      g_reset_press_active = false;
-      if (!g_reset_long_handled) {
-        g_latched_lightning = false;
-        g_count_lightning = 0;
-        g_count_noise = 0;
-        g_count_disturber = 0;
-        strncpy(g_last_event_name, "RESET", sizeof(g_last_event_name) - 1);
-        g_last_lightning_ms = 0;
-        Serial.printf("[%lu] action=RESET_ACK counters_cleared\r\n", now_ms);
-        pushEventLine("COUNTERS CLR");
-        if (!g_in_mute.stable_active) startBuzzer(180, 2200);
-      }
-    }
-  }
-
-  if (g_reset_press_active && g_in_reset.stable_active && !g_reset_long_handled &&
-      (now_ms - g_reset_press_start_ms) >= RESET_LONG_PRESS_MS) {
-    g_reset_long_handled = true;
-    const SensorProfile new_profile = (profileCode() == 1) ? PROFILE_SENSITIVE : PROFILE_NOISY;
-    applyProfileRuntime(new_profile, true);
-    Serial.printf("[%lu] action=PROFILE_TOGGLE via_reset_long_press_ms=%lu\n", now_ms,
-                  static_cast<unsigned long>(RESET_LONG_PRESS_MS));
-    if (!g_in_mute.stable_active) {
-      startBuzzer(130, (profileCode() == 1) ? 2800 : 1800);
-    }
-  }
-
-  if ((now_ms - g_last_heartbeat_ms) >= 500) {
-    g_last_heartbeat_ms = now_ms;
-    if (g_in_arm.stable_active) {
-      digitalWrite(PIN_STATUS_LED, !digitalRead(PIN_STATUS_LED));
-    } else {
-      digitalWrite(PIN_STATUS_LED, LOW);
-    }
-  }
-
-  maybeEnableAs3935Events(now_ms);
-
-  const bool event_path_allowed = g_event_logging_enabled && g_in_arm.stable_active &&
-                                  !g_in_reset.stable_active &&
-                                  (int32_t)(now_ms - g_profile_quiet_until_ms) >= 0;
-  if (event_path_allowed) {
-    handleAs3935Event(now_ms);
-  }
-
-  web.handleClient();
-  updateWiFiAndTimeRetry(now_ms);
-  maybeApplyBootProfileAssist(now_ms);
-  updateBuzzer(now_ms);
-
-  if ((now_ms - g_last_oled_ms) >= 180) {
-    g_last_oled_ms = now_ms;
-    if (g_event_logging_enabled) {
-      oledLive(now_ms);
-    } else {
-      oledBootDiag(now_ms);
-    }
-  }
-}
-```
-      </div>
-    </details>
-  </details>
-</div>
-
-## Bench Walk-Through (Current Prototype)
-
-<div className="buildGallery">
-  <figure className="buildGallery__hero">
-    <img src="/images/projects/lightning-warning-box/hero-breadboard.jpg" alt="Full breadboard prototype of the lightning warning box with XIAO ESP32-C6, AS3935, OLED, and buzzer stage" />
-    <figcaption>Full bench layout used for M2 sign-off and the M3 starting point.</figcaption>
-  </figure>
-
+<div className="project-media-pair">
   <figure>
-    <img src="/images/projects/lightning-warning-box/mcu-wiring-close.jpg" alt="Close-up of XIAO ESP32-C6 wiring on breadboard" />
-    <figcaption>XIAO integration and control wiring density.</figcaption>
+    <img src="/images/projects/lightning-warning-box/sensor-close.jpg" alt="AS3935 sensor module and its bench wiring" />
+    <figcaption>The MOD-1016 / AS3935 sensor wiring remained accessible throughout bring-up.</figcaption>
   </figure>
-
   <figure>
-    <img src="/images/projects/lightning-warning-box/sensor-close.jpg" alt="AS3935 sensor module close-up showing pin labels and bench wiring" />
-    <figcaption>AS3935 wiring and pin visibility for quick checks.</figcaption>
-  </figure>
-
-  <figure>
-    <img src="/images/projects/lightning-warning-box/oled-live-status.jpg" alt="OLED status output during bench run" />
-    <figcaption>Live OLED screen with profile/counter/event output.</figcaption>
-  </figure>
-
-  <figure>
-    <img src="/images/projects/lightning-warning-box/buzzer-driver-close.jpg" alt="Passive piezo and transistor-stage wiring close-up" />
-    <figcaption>Buzzer driver section used during transistor-stage validation.</figcaption>
-  </figure>
-
-  <figure>
-    <img src="/images/projects/lightning-warning-box/switch-hardware.jpg" alt="Panel toggle and pushbutton controls for arm mute and reset" />
-    <figcaption>Switch hardware selected for ARM, MUTE, and RESET/ACK.</figcaption>
+    <img src="/images/projects/lightning-warning-box/mcu-wiring-close.jpg" alt="XIAO ESP32-C6 and control wiring on the breadboard" />
+    <figcaption>The XIAO ESP32-C6 with the SPI, interrupt and control wiring around it.</figcaption>
   </figure>
 </div>
 
-## Build It Yourself: Step-by-Step
+M1 also established a simple fault-code scheme. If sensor initialisation, configuration or interrupt attachment fails, the firmware stops and reports a `0x1XX` code instead of carrying on in a half-working state and making me debug whatever nonsense happens afterwards.
 
-Use this as a step-by-step guide. Each step has three parts: what to do, what you should see, and where to look if it does not behave.
+By the end of M1, `NOISE`, `DISTURBER` and `LIGHTNING` events were being decoded reliably and the basic alert path was working.
 
-<div className="playbook">
-  <details className="playStep" open>
-    <summary>Step 1: Build the core hardware setup</summary>
-    <div className="playCols">
-      <div>
-        <h4>Do</h4>
-        <ul>
-          <li>Wire MCU + AS3935 SPI + IRQ first.</li>
-          <li>Add OLED I2C next (<code>D4/D5</code>).</li>
-          <li>Add ARM/MUTE/RESET with active-low pull-up logic.</li>
-          <li>Add buzzer transistor stage and collector pull-up used in this build.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>Expect</h4>
-        <ul>
-          <li>No thermal issues at first power-on.</li>
-          <li>Stable 3.3V and 5V rails under idle load.</li>
-          <li>No floating control input behaviour.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>If Not</h4>
-        <ul>
-          <li>Re-check common ground across all sub-circuits.</li>
-          <li>Confirm AS3935 <code>SI</code> is tied correctly for SPI mode.</li>
-          <li>Verify PN2222A pinout orientation before firmware debugging.</li>
-        </ul>
-      </div>
-    </div>
-  </details>
+<FirmwareDrawer stage="M1" title="Sensor bring-up" sourcePath="firmware/m1_bringup/m1_bringup.ino" status="Complete" />
 
-  <details className="playStep">
-    <summary>Step 2: Run pre-power and continuity gates</summary>
-    <div className="playCols">
-      <div>
-        <h4>Do</h4>
-        <ul>
-          <li>Check for <code>3V3</code> to <code>GND</code> shorts.</li>
-          <li>Check IRQ continuity from AS3935 to <code>D2</code>.</li>
-          <li>Check buzzer path continuity from <code>D6</code> through transistor stage.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>Expect</h4>
-        <ul>
-          <li>No hard short conditions.</li>
-          <li>Consistent continuity on signal paths that matter for bring-up.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>If Not</h4>
-        <ul>
-          <li>Stop before flashing firmware.</li>
-          <li>Resolve continuity and rail issues first, then restart from this step.</li>
-        </ul>
-      </div>
-    </div>
-  </details>
+## Turning it into an actual warning box
 
-  <details className="playStep">
-    <summary>Step 3: Flash M1 and validate event classification</summary>
-    <div className="playCols">
-      <div>
-        <h4>Do</h4>
-        <ul>
-          <li>Flash <code>m1_bringup.ino</code>.</li>
-          <li>Open serial monitor at <code>115200</code>.</li>
-          <li>Trigger bench events (piezo click + local EMI source).</li>
-        </ul>
-      </div>
-      <div>
-        <h4>Expect</h4>
-        <ul>
-          <li>Boot banner and profile line.</li>
-          <li>Classified event output for <code>NOISE</code>/<code>DISTURBER</code>/<code>LIGHTNING</code>.</li>
-          <li>Hex fault output if startup fails (<code>0x1XX</code> family).</li>
-        </ul>
-      </div>
-      <div>
-        <h4>If Not</h4>
-        <ul>
-          <li>If flooded with noise, boot with MUTE ON to force NOISY profile.</li>
-          <li>If no events, verify tune cap and oscillator calibration path.</li>
-          <li>If no serial behaviour, re-check board target and upload port.</li>
-        </ul>
-      </div>
-    </div>
-  </details>
+M2 was where the breadboard stopped being just a sensor test.
 
-  <details className="playStep">
-    <summary>Step 4: Flash M2 and validate operator UX paths</summary>
-    <div className="playCols">
-      <div>
-        <h4>Do</h4>
-        <ul>
-          <li>Flash <code>m2_core.ino</code>.</li>
-          <li>Test ARM/MUTE/RESET transitions.</li>
-          <li>Test buzzer startup and reset chirp behaviour.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>Expect</h4>
-        <ul>
-          <li>OLED ACK/detection at <code>0x3C</code> or <code>0x3D</code>.</li>
-          <li>Debounced input edge logs.</li>
-          <li>OLED counters and recent-event line update correctly.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>If Not</h4>
-        <ul>
-          <li>If OLED reports odd success, trust I2C ACK checks over init alone.</li>
-          <li>If buzzer is silent, run <code>buzzer_test.ino</code> before touching sensor code.</li>
-          <li>If reset behaviour is inconsistent, probe switch line transitions at pin level.</li>
-        </ul>
-      </div>
-    </div>
-  </details>
+I added the OLED, ARM and MUTE switches, RESET/ACK button, proper input debounce, an event buffer and the buzzer path. That sounds like a pile of small additions, but together they changed the way the device could be used. I no longer needed a serial terminal open to know what the sensor thought was happening.
 
-  <details className="playStep">
-    <summary>Step 5: Move to M3 only after M2 is stable</summary>
-    <div className="playCols">
-      <div>
-        <h4>Do</h4>
-        <ul>
-          <li>Flash <code>m3_connected.ino</code> with local credentials.</li>
-          <li>Validate Wi-Fi connect and NTP sync.</li>
-          <li>Trigger strikes and query API endpoints.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>Expect</h4>
-        <ul>
-          <li>Network status and sync state in startup output.</li>
-          <li>Strike persistence in NVS ring buffer.</li>
-          <li>HTTP responses from <code>/</code>, <code>/api/status</code>, <code>/api/strikes</code>.</li>
-        </ul>
-      </div>
-      <div>
-        <h4>If Not</h4>
-        <ul>
-          <li>First verify M2 local behaviour is still stable.</li>
-          <li>Then isolate network issues (credentials, AP reachability, time servers).</li>
-          <li>Finally verify persistence independently from API serving.</li>
-        </ul>
-      </div>
-    </div>
-  </details>
+The OLED shows the active profile, ARM and MUTE state, event counters and recent events. Lightning detections retain the distance and energy values from the AS3935, while the small ring buffer lets the display roll through recent activity instead of showing only whatever happened last.
+
+The physical controls are deliberately simple. ARM decides whether AS3935 events are being acted on, MUTE suppresses the audible warning, and RESET/ACK clears the current counters and latched lightning state. All three use active-low inputs with the ESP32 pull-ups enabled, and M2 added debounce because switches are mechanical devices and therefore quite capable of lying several times in a few milliseconds.
+
+<figure>
+  <img src="/images/projects/lightning-warning-box/hero-breadboard.jpg" alt="Complete breadboard prototype with the XIAO ESP32-C6, AS3935, OLED and buzzer stage" />
+  <figcaption>The complete M2/M3 bench prototype, still open enough to probe and rearrange.</figcaption>
+</figure>
+
+<div className="project-media-pair">
+  <figure>
+    <img src="/images/projects/lightning-warning-box/oled-live-status.jpg" alt="OLED showing the live detector status" />
+    <figcaption>Local status, control states, counters and recent-event display.</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/lightning-warning-box/switch-hardware.jpg" alt="ARM, MUTE and RESET controls for the warning box" />
+    <figcaption>The deliberately simple ARM, MUTE and RESET/ACK controls.</figcaption>
+  </figure>
 </div>
 
-## Wiring Matrix
+The buzzer managed to consume more bench time than its complexity really justified.
 
-| Signal | XIAO Pin | Direction | Wiring Rule |
-|---|---|---|---|
-| ARM switch | <code>D0</code> | Input | <code>INPUT_PULLUP</code>, active low |
-| MUTE switch | <code>D1</code> | Input | <code>INPUT_PULLUP</code>, active low |
-| AS3935 IRQ | <code>D2</code> | Input | External interrupt source |
-| AS3935 CS | <code>D3</code> | Output | SPI CS |
-| OLED SDA / SCL | <code>D4</code> / <code>D5</code> | I/O / Output | I2C bus |
-| Buzzer drive | <code>D6</code> | Output | 1k base resistor into PN2222A |
-| RESET/ACK | <code>D7</code> | Input | <code>INPUT_PULLUP</code>, active low |
-| SPI SCK/MISO/MOSI | <code>D8</code> / <code>D9</code> / <code>D10</code> | SPI | AS3935 bus |
+The passive piezo is driven through a PN2222A transistor from `D6`, and the final bench arrangement includes a 4.7 kOhm collector pull-up to +5 V. Without that, the alert path was inconsistent enough to make firmware debugging misleading. Once the transistor stage was wired properly, the same firmware that had appeared suspicious suddenly became rather less mysterious.
 
-## Firmware Snapshot (Current)
+That is why there is still a separate `buzzer_test.ino` in the project. If the buzzer stops working, I would much rather test three components and a transistor in isolation than immediately start excavating the lightning-detection code.
 
-<div className="spec-grid">
-  <div className="spec-card">
-    <h3>M2 Revision</h3>
-    <p><code>M2_CORE_R3_2026-03-07</code></p>
-  </div>
-  <div className="spec-card">
-    <h3>M3 Revision</h3>
-    <p><code>M3_CONNECTED_R1_2026-03-08</code></p>
-  </div>
-  <div className="spec-card">
-    <h3>Tune Cap</h3>
-    <p><code>bits=7</code> (<code>56 pF</code>)</p>
-  </div>
-  <div className="spec-card">
-    <h3>Boot Profile Rule</h3>
-    <p>MUTE ON at boot -&gt; <code>NOISY</code></p>
-  </div>
+<figure>
+  <img src="/images/projects/lightning-warning-box/buzzer-driver-close.jpg" alt="Passive piezo and PN2222A transistor driver stage" />
+  <figcaption>The passive piezo and PN2222A driver stage that eventually made the warning path predictable.</figcaption>
+</figure>
+
+M2 was accepted on the real hardware at 00:19 AEST on 8 March 2026. At that point the local detector did what I needed it to do: it started cleanly, displayed its state, handled the switches properly, classified sensor events and made noise when it was supposed to.
+
+Only then did I let it onto the network.
+
+<FirmwareDrawer stage="M2" title="Operator interface and core behaviour" sourcePath="firmware/m2_core/m2_core.ino" revision="M2_CORE_R3_2026-03-07" status="Accepted on hardware" />
+
+## Adding networking without breaking the useful bit
+
+M3 started shortly afterwards, at about 00:44 AEST on 8 March.
+
+The main rule for this stage is that none of the connected features gets to become a dependency of the local warning system. A lightning detector that stops being useful because the access point has disappeared would be an impressively stupid improvement over M2.
+
+So Wi-Fi, NTP, persistent logging and HTTP access sit around the existing local behaviour rather than replacing it.
+
+The final M3 firmware connects as a Wi-Fi station when credentials are configured, attempts an NTP time sync, and keeps retrying if either the network or clock is unavailable. If Wi-Fi is not configured or cannot connect, the box can still continue locally.
+
+Lightning strikes are stored in an NVS-backed ring buffer so the recent history survives a restart. Each record can contain the timestamp, estimated distance and energy reported for the event. When the network is available, that information is exposed through a very small HTTP interface:
+
+- `/` for a basic status page
+- `/api/status` for the current device state
+- `/api/strikes` for stored strike history
+
+The credentials in the public firmware are deliberately placeholders.
+
+M3 has also accumulated a few changes that came directly out of bench use. Startup now has a stabilisation period before AS3935 event logging is enabled, which stops the detector treating its own startup activity as something meteorological. Profile changes briefly quiet the event path for the same reason.
+
+The RESET button now does two jobs without adding another control to the box. A normal press still acknowledges the state and clears the counters, while a long press switches between `SENSITIVE` and `NOISY`. There is also a short boot-time assist window so moving MUTE on just after power-up can still select the noisy profile rather than requiring perfectly choreographed switch timing.
+
+The OLED has become useful during startup too. Instead of sitting blank while the firmware initialises everything, it shows the boot process, including the firmware revision, stored-log state, OLED detection, selected profile, Wi-Fi state and startup guard. This was mainly added because watching a little black rectangle and wondering whether it had crashed was getting old.
+
+Once startup is finished, it returns to the normal live event display.
+
+<FirmwareDrawer stage="M3" title="Connected build" sourcePath="firmware/m3_connected/m3_connected.ino" revision="M3_CONNECTED_R5_2026-03-08" status="Final connected prototype" />
+
+## The current prototype
+
+The present build is still on the bench rather than in its final enclosure, which is useful at this stage because everything I am likely to probe is still visible.
+
+<div className="build-gallery">
+  <figure className="build-gallery__wide"><img src="/images/projects/lightning-warning-box/hero-breadboard.jpg" alt="Full lightning warning box breadboard prototype" /><figcaption>Complete M2/M3 bench prototype.</figcaption></figure>
+  <figure><img src="/images/projects/lightning-warning-box/mcu-wiring-close.jpg" alt="XIAO ESP32-C6 and dense control wiring" /><figcaption>ESP32-C6 and the rather dense control wiring around it.</figcaption></figure>
+  <figure><img src="/images/projects/lightning-warning-box/sensor-close.jpg" alt="MOD-1016 AS3935 sensor wiring" /><figcaption>MOD-1016 / AS3935 sensor wiring.</figcaption></figure>
+  <figure><img src="/images/projects/lightning-warning-box/oled-live-status.jpg" alt="OLED live status display" /><figcaption>Local status, counters and recent-event display.</figcaption></figure>
+  <figure><img src="/images/projects/lightning-warning-box/buzzer-driver-close.jpg" alt="Passive piezo and transistor driver" /><figcaption>Passive piezo and PN2222A driver stage.</figcaption></figure>
+  <figure><img src="/images/projects/lightning-warning-box/switch-hardware.jpg" alt="ARM MUTE and RESET controls" /><figcaption>ARM, MUTE and RESET/ACK controls.</figcaption></figure>
 </div>
 
-### AS3935 Working Profiles
+The breadboard is not pretty, but that is not its current job. At the moment I want to be able to reach the signal lines, swap a resistor, meter a rail or disconnect one subsystem without dismantling an enclosure every time I change the firmware.
 
-| Profile | AFE | Noise Floor | Watchdog | Spike Rejection | Min Lightning |
-|---|---:|---:|---:|---:|---:|
-| <code>SENSITIVE</code> | Indoor | 2 | 1 | 1 | 1 |
-| <code>NOISY</code> | Outdoor | 7 | 6 | 6 | 1 |
+At the time, the plan was to put M3 through proper station-network testing and repeated power cycles before making it presentable. Those questions eventually became part of the broader BrambleNet work instead.
 
-### Active Firmware Files
-
-| Stage | File | Status |
-|---|---|---|
-| M1 bring-up | <code>firmware/m1_bringup/m1_bringup.ino</code> | Complete base build |
-| M2 core UX | <code>firmware/m2_core/m2_core.ino</code> | Signed off on hardware |
-| M3 connected | <code>firmware/m3_connected/m3_connected.ino</code> | In active development |
-| Buzzer isolation | <code>firmware/buzzer_test/buzzer_test.ino</code> | Test utility |
-
-## Troubleshooting by Symptom
-
-<div className="cap-grid">
-  <article className="cap-card">
-    <h3>Build Fails Before Compile</h3>
-    <ul>
-      <li>Use explicit XIAO ESP32-C6 board target.</li>
-      <li>Avoid generic family FQBN profiles that break partition expansion.</li>
-    </ul>
-  </article>
-
-  <article className="cap-card">
-    <h3>Flood of Noise Events</h3>
-    <ul>
-      <li>Boot with MUTE ON to force <code>NOISY</code>.</li>
-      <li>Confirm tune cap and calibration are applied.</li>
-    </ul>
-  </article>
-
-  <article className="cap-card">
-    <h3>OLED Says Nothing</h3>
-    <ul>
-      <li>Check I2C ACK presence at <code>0x3C</code>/<code>0x3D</code>.</li>
-      <li>Do not trust init success alone without ACK confirmation.</li>
-    </ul>
-  </article>
-
-  <article className="cap-card">
-    <h3>Buzzer Not Audible</h3>
-    <ul>
-      <li>Validate PN2222A pinout and resistor continuity.</li>
-      <li>In this build, keep the <code>+5V -&gt; 4.7k -&gt; collector</code> pull-up.</li>
-    </ul>
-  </article>
+<div className="reference-transition">
+  <span>Build reference</span>
+  <p>The sections below are deliberately more procedural: this is the part I would want in front of me while rebuilding the box or finding out why one subsystem had stopped behaving.</p>
 </div>
 
-### Fault Code Groups
+## Core hardware
+
+Start with the XIAO ESP32-C6 and AS3935 only. Use SPI for the sensor and connect its IRQ line to `D2`.
+
+Once that works, add the OLED on I2C using `D4` for SDA and `D5` for SCL. Then add the ARM and MUTE switches and RESET/ACK button as active-low inputs using the internal pull-ups.
+
+Add the buzzer stage last. In the current build, `D6` drives a PN2222A through a 1 kOhm base resistor, with the passive piezo on the transistor stage and a 4.7 kOhm pull-up from +5 V to the collector.
+
+Before applying power, make sure every section shares a common ground and check the PN2222A pinout against the actual transistor you have. Transistor pinouts are sufficiently inconsistent between packages and manufacturers that assuming yours matches the diagram is an excellent way to waste an evening.
+
+Expected result:
+
+- stable 3.3 V and 5 V rails
+- no components getting warm
+- no floating control inputs
+- AS3935 correctly strapped for SPI operation
+
+If any of those are wrong, fix the hardware before introducing firmware as another variable.
+
+## Continuity and bring-up
+
+Check for a hard short between `3V3` and ground. Then verify the paths that matter for initial bring-up:
+
+- AS3935 IRQ to `D2`
+- AS3935 SPI lines to `D8`, `D9` and `D10`
+- chip select to `D3`
+- buzzer drive from `D6` through the transistor stage
+- common ground across the complete breadboard
+
+If one of those paths is wrong, stop there. Firmware cannot repair copper.
+
+## Proving M1
+
+Flash `firmware/m1_bringup/m1_bringup.ino` and open the serial monitor at `115200`.
+
+The startup output should identify the board and active sensor profile, apply the AS3935 tune capacitance, calibrate the oscillator and then report that it is waiting for events.
+
+For bench testing I used a combination of piezo clicks and nearby electrical interference to exercise the sensor. The important result is not that every improvised trigger gets labelled `LIGHTNING`; it is that the interrupt path works and the firmware is correctly reporting the AS3935 classifications as `NOISE`, `DISTURBER` or `LIGHTNING`.
+
+If the bench produces an endless stream of noise events, start with the `NOISY` profile rather than immediately assuming the detector is broken. MUTE on during boot selects `NOISY` in the current firmware.
+
+If M1 does not start:
+
+- check the correct XIAO ESP32-C6 board target and upload port
+- confirm the module tune-cap value and oscillator calibration
+- check `SI` and the SPI wiring
+- use the `0x1XX` fault code to identify which part of AS3935 startup failed
+
+## Proving M2
+
+Flash `firmware/m2_core/m2_core.ino`. M2 should retain the working sensor behaviour from M1 and add the operator interface.
+
+Check each physical control individually:
+
+- **ARM:** state changes once per operation, OLED and serial output agree, and event handling is active only when armed
+- **MUTE:** state changes cleanly, warnings are suppressed, and sensor events continue to be counted
+- **RESET/ACK:** the press is debounced, counters and latched state clear, and the acknowledgement chirp occurs when not muted
+
+The OLED should respond at `0x3C` or `0x3D`, show the current profile and control states, then update its counters and recent-event line as activity occurs.
+
+If the display behaves strangely, check for an actual I2C ACK rather than trusting an apparently successful library initialisation call. If the buzzer does not work, flash `firmware/buzzer_test/buzzer_test.ino` and prove the buzzer/transistor circuit independently before changing the detector firmware.
+
+## Testing M3
+
+Flash `firmware/m3_connected/m3_connected.ino` and set local Wi-Fi credentials before testing the connected functions. The credentials shown in the public source are placeholders.
+
+During startup, check:
+
+- OLED initialisation and stored strike-log load
+- selected sensor profile
+- Wi-Fi connection and assigned IP address
+- NTP time synchronisation
+- startup guard completion and AS3935 events becoming enabled afterwards
+
+Then trigger test events and check the local interface again before worrying about the network. M3 is supposed to extend M2, not quietly break it.
+
+Once local behaviour is confirmed, test `http://DEVICE-IP/`, `http://DEVICE-IP/api/status` and `http://DEVICE-IP/api/strikes`. Trigger and store several lightning events, restart the board and confirm that the NVS ring buffer survives the power cycle.
+
+If the network side fails, separate the problem into Wi-Fi association, NTP and HTTP rather than debugging all three at once. Likewise, test persistence independently of the web API.
+
+## Wiring and firmware reference
+
+### Wiring matrix
+
+| Signal | XIAO ESP32-C6 | Direction | Current wiring |
+| --- | --- | --- | --- |
+| ARM switch | `D0` | Input | `INPUT_PULLUP`, active low |
+| MUTE switch | `D1` | Input | `INPUT_PULLUP`, active low |
+| AS3935 IRQ | `D2` | Input | External interrupt |
+| AS3935 CS | `D3` | Output | SPI chip select |
+| OLED SDA | `D4` | I/O | I2C SDA |
+| OLED SCL | `D5` | Output | I2C SCL |
+| Buzzer drive | `D6` | Output | 1 kOhm into PN2222A base |
+| RESET / ACK | `D7` | Input | `INPUT_PULLUP`, active low |
+| SPI SCK | `D8` | Output | AS3935 SPI |
+| SPI MISO | `D9` | Input | AS3935 SPI |
+| SPI MOSI | `D10` | Output | AS3935 SPI |
+
+### Current sensor profiles
+
+The current MOD-1016 tune-cap setting is `bits = 7`, or `7 × 8 pF = 56 pF`.
+
+| Profile | AFE | Noise floor | Watchdog | Spike rejection | Minimum lightning |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `SENSITIVE` | Indoor | 2 | 1 | 1 | 1 |
+| `NOISY` | Outdoor | 7 | 6 | 6 | 1 |
+
+`SENSITIVE` is the normal starting point. `NOISY` is there for electrically ugly environments, particularly the bench where half the equipment around the detector seems determined to participate in the experiment.
+
+### Firmware
+
+| Stage | File | Current state |
+| --- | --- | --- |
+| M1 bring-up | `firmware/m1_bringup/m1_bringup.ino` | Complete |
+| M2 core | `firmware/m2_core/m2_core.ino` | Accepted on hardware |
+| M3 connected | `firmware/m3_connected/m3_connected.ino` | Final prototype; superseded |
+| Buzzer test | `firmware/buzzer_test/buzzer_test.ino` | Hardware test utility |
+
+M2 reports `M2_CORE_R3_2026-03-07`. The embedded M3 source reports `M3_CONNECTED_R5_2026-03-08`.
+
+## Troubleshooting
+
+<div className="troubleshooting-index">
+  <details><summary>It will not compile or upload</summary><p>Use the explicit XIAO ESP32-C6 board target. Do not use a generic ESP32 family profile if it produces partition or upload problems. Also check the selected serial port before spending time inspecting code that never reached the board.</p></details>
+  <details><summary>The AS3935 reports noise constantly</summary><p>Try the <code>NOISY</code> profile. Also confirm that the module tune-cap value is being applied and oscillator calibration succeeds at startup. A busy electronics bench is a poor imitation of a quiet outdoor RF environment, so some adjustment is expected.</p></details>
+  <details><summary>The OLED is blank</summary><p>Check for I2C acknowledgement at <code>0x3C</code> and <code>0x3D</code>. Do not rely only on the display library returning success. The current firmware checks that a device actually answers on the bus and can continue headless if the OLED is absent.</p></details>
+  <details><summary>The buzzer is silent</summary><p>Check the PN2222A orientation, 1 kOhm base-resistor path, passive-piezo wiring, common ground and the <code>+5V → 4.7 kOhm → collector</code> pull-up. Then use <code>buzzer_test.ino</code>. Do that before changing anything in the AS3935 code. The sensor is not responsible for a transistor wired backwards.</p></details>
+</div>
+
+### Fault codes
 
 | Code | Meaning |
-|---|---|
-| <code>0x101</code> | AS3935 initialization failure |
-| <code>0x102</code> | AS3935 configuration/calibration failure |
-| <code>0x103</code> | AS3935 IRQ attach failure |
-| <code>0x201</code> | OLED initialization failure |
-| <code>0x301</code> | Strike-log load failure (M3) |
-| <code>0x302</code> | Strike-log save failure (M3) |
+| --- | --- |
+| `0x101` | AS3935 initialisation failure |
+| `0x102` | AS3935 configuration or calibration failure |
+| `0x103` | AS3935 IRQ attachment failure |
+| `0x201` | OLED initialisation failure |
+| `0x301` | M3 strike-log load failure |
+| `0x302` | M3 strike-log save failure |
 
-## Still To Do
+## Where this led
 
-- Finish M3 web/API behavior under real station network conditions.
-- Replace bench credential constants with a safer deployment configuration path.
-- Verify strike ring persistence behavior through repeated power cycles.
-- Package enclosure and service layout so field maintenance is simpler.
+The standalone warning box proved the part I most needed to understand: the local sensor path could classify events, present useful state and raise an alarm without depending on anything beyond the device itself.
 
-<script type="module" src="/scripts/code-window.js"></script>
+The work that once sat on this page as a list of things still to do—network testing, safer deployment configuration, persistent reporting and field-ready packaging—eventually pointed beyond a single enclosed detector. Those concerns now live in BrambleNet, where the lightning sensor becomes one self-reporting node among a broader home and field network.
 
-<style>{String.raw`
-:global(article){
-  max-width: 1220px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
-:global(article .prose){
-  max-width: none;
-}
-
-:global(article .project-prose p),
-:global(article .project-prose li){
-  max-width: 94ch;
-}
-
-:global(article .project-prose h2){
-  margin-top: 1.3rem;
-  padding-top: 0.35rem;
-}
-
-:global(article .project-prose h3){
-  margin-top: 0.92rem;
-}
-
-:global(article .project-prose table){
-  margin: 0.55rem 0 0.95rem;
-  font-size: 0.94rem;
-}
-
-.buildRibbon{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:10px;
-  margin:6px 0 12px;
-  padding:10px 12px;
-  border:1px solid color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
-  border-radius:14px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 12%, var(--surface-raised) 88%), color-mix(in srgb, var(--coral) 9%, var(--surface-raised) 91%));
-}
-
-.buildRibbon__label{
-  font-weight:800;
-  font-size:0.84rem;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-}
-
-.buildRibbon__track{
-  position:relative;
-  height:10px;
-  border-radius:999px;
-  background:color-mix(in srgb, var(--surface) 78%, #000 22%);
-  overflow:hidden;
-}
-
-.buildRibbon__fill{
-  width:72%;
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg, var(--accent), var(--coral));
-  box-shadow:0 0 0 1px color-mix(in srgb, var(--surface-raised) 55%, transparent 45%);
-}
-
-.buildRibbon__meta{
-  font-size:0.82rem;
-  color:var(--text-2);
-  white-space:nowrap;
-}
-
-.statusDeck{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-  margin:0 0 16px;
-}
-
-.statusCard{
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:color-mix(in srgb, var(--surface-raised) 91%, transparent 9%);
-  padding:12px 14px;
-}
-
-.statusCard h3{
-  margin:0 0 0.4rem;
-  font-size:1rem;
-}
-
-.statusCard p{
-  margin:0 0 0.45rem;
-}
-
-.statusMeta{
-  margin:0;
-  font-size:0.84rem;
-  color:var(--muted);
-}
-
-.stageFold,
-.codeFold{
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:color-mix(in srgb, var(--surface) 92%, var(--surface-raised) 8%);
-  margin:0 0 10px;
-}
-
-.playbook{
-  display:grid;
-  gap:10px;
-  margin:0.5rem 0 1rem;
-}
-
-.playStep{
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:color-mix(in srgb, var(--surface) 94%, var(--surface-raised) 6%);
-}
-
-.playStep > summary{
-  cursor:pointer;
-  font-weight:700;
-  padding:10px 12px;
-  list-style:none;
-}
-
-.playStep > summary::-webkit-details-marker{
-  display:none;
-}
-
-.playCols{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  padding:0 12px 12px;
-}
-
-.playCols h4{
-  margin:0 0 0.35rem;
-  font-size:0.86rem;
-  letter-spacing:0.03em;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-
-.playCols ul{
-  margin:0;
-}
-
-.stageFold > summary,
-.codeFold > summary{
-  cursor:pointer;
-  font-weight:700;
-  padding:10px 12px;
-  list-style:none;
-}
-
-.stageFold > summary{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid color-mix(in srgb, var(--border) 85%, transparent 15%);
-}
-
-.codeFold > summary{
-  font-size:0.92rem;
-  color:var(--text-2);
-  border-top:1px dashed color-mix(in srgb, var(--border) 85%, transparent 15%);
-}
-
-.stageFold > summary::-webkit-details-marker,
-.codeFold > summary::-webkit-details-marker{
-  display:none;
-}
-
-.stageTag{
-  font-size:0.78rem;
-  font-weight:700;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:0.04em;
-}
-
-.stageCols{
-  padding:10px 12px 6px;
-}
-
-.ideWindow{
-  margin:0 10px 12px;
-  border:1px solid color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
-  border-radius:10px;
-  overflow:hidden;
-  background:#1f2430;
-}
-
-.ideChrome{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border-bottom:1px solid #39435a;
-  background:linear-gradient(180deg,#2a3242,#242c3a);
-}
-
-.ideTitle{
-  margin-left:8px;
-  font-size:0.78rem;
-  color:#d7deea;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-.codeLangBadge{
-  margin-left:auto;
-  padding:3px 9px;
-  border-radius:999px;
-  font-size:0.72rem;
-  font-weight:700;
-  letter-spacing:0.02em;
-  color:#f5fbff;
-  border:1px solid color-mix(in srgb, var(--lang-accent, #7eb3d3) 58%, #9fb1cc 42%);
-  background:color-mix(in srgb, var(--lang-accent, #7eb3d3) 28%, #0f172a 72%);
-  line-height:1.1;
-}
-
-.codeCopyBtn{
-  margin-left:8px;
-  padding:3px 9px;
-  border-radius:7px;
-  border:1px solid #5f7397;
-  background:linear-gradient(180deg, #2b3a53, #25324a);
-  color:#eef5ff;
-  font:600 0.72rem/1.15 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-  cursor:pointer;
-}
-
-.codeCopyBtn:hover{
-  background:linear-gradient(180deg, #344768, #2a3a59);
-}
-
-.codeCopyBtn[data-state="ok"]{
-  border-color:#2dc17a;
-  background:linear-gradient(180deg, #1f4f3a, #1a3f2f);
-  color:#ddffe9;
-}
-
-.codeCopyBtn[data-state="err"]{
-  border-color:#e56a7c;
-  background:linear-gradient(180deg, #5f2732, #4f1f29);
-  color:#ffe8ec;
-}
-
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  display:inline-block;
-}
-
-.dot.red{ background:#ff5f56; }
-.dot.amber{ background:#ffbd2e; }
-.dot.green{ background:#27c93f; }
-
-.ideWindow :global(pre){
-  margin:0 !important;
-  border-radius:0 !important;
-}
-
-.ideWindow :global(code){
-  white-space:pre;
-}
-
-.termViewport{
-  max-height:340px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-}
-
-.spec-grid,
-.cap-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-  margin:0.55rem 0 1rem;
-}
-
-.spec-card,
-.cap-card{
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:color-mix(in srgb, var(--surface-raised) 90%, transparent 10%);
-  padding:12px 14px;
-}
-
-.spec-card h3,
-.cap-card h3{
-  margin:0 0 0.45rem;
-  font-size:0.95rem;
-}
-
-.spec-card h3{
-  text-transform:uppercase;
-  color:var(--muted);
-  letter-spacing:0.01em;
-}
-
-.spec-card p,
-.cap-card ul{
-  margin:0;
-}
-
-.buildGallery{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin:0.65rem 0 1rem;
-}
-
-.buildGallery figure{
-  margin:0;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:6px;
-  background:color-mix(in srgb, var(--surface) 92%, var(--surface-raised) 8%);
-}
-
-.buildGallery img{
-  width:100%;
-  display:block;
-  border-radius:8px;
-}
-
-:global(.project-hero-media){
-  width:100%;
-  max-width:100% !important;
-  margin-left:0 !important;
-  margin-right:0 !important;
-  border:0 !important;
-  border-radius:var(--radius-lg) !important;
-  background:none !important;
-  box-shadow:none !important;
-  overflow:hidden !important;
-  min-height: 320px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-:global(.project-hero-media img){
-  width:100% !important;
-  max-width:100%;
-  height:auto;
-  border-radius:0 !important;
-}
-
-.buildGallery figcaption{
-  margin-top:0.4rem;
-  font-size:0.83rem;
-  color:var(--muted);
-}
-
-@media (min-width: 900px){
-  .statusDeck,
-  .spec-grid,
-  .cap-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-
-  .playCols{
-    grid-template-columns:1fr 1fr 1fr;
-  }
-
-  .buildGallery{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
-  .buildGallery__hero{
-    grid-column:span 2;
-    grid-row:span 2;
-  }
-}
-
-@media (max-width: 840px){
-  .buildRibbon{
-    grid-template-columns:1fr;
-    gap:6px;
-  }
-
-  .buildRibbon__meta{
-    white-space:normal;
-  }
-
-  :global(.project-hero-media){
-    min-height: 220px;
-  }
-
-  :global(.project-hero-media img){
-    width:100% !important;
-    height:auto;
-  }
-}
-`}</style>
+This prototype therefore stays as a record of the decisions that got me there. It captures the original AS3935 and ESP32-C6 hardware, the deliberately staged firmware work, and the point where a useful standalone warning box began turning into a rather larger idea.

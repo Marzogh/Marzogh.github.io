@@ -1,0 +1,179 @@
+---
+interface Props {
+  adifA: string;
+  adifB: string;
+  mapSrc: string;
+  mapAlt?: string;
+}
+
+const {
+  adifA,
+  adifB,
+  mapSrc,
+  mapAlt = 'Contact map from the activation',
+} = Astro.props;
+---
+
+<section class="activation-log qsoDash" data-adif-a={adifA} data-adif-b={adifB} aria-labelledby="activation-log-title">
+  <header class="activation-log__header">
+    <p>Field instrument / two-fer log</p>
+    <h2 id="activation-log-title">Activation log</h2>
+    <span>Unique contacts from both park records</span>
+  </header>
+
+  <div class="activation-log__readout" aria-label="Activation summary">
+    <div><span data-kpi="total">—</span><small>QSOs</small></div>
+    <div><span data-kpi="duration">—</span><small>Elapsed</small></div>
+    <div><span data-kpi="first">—</span><small>First UTC</small></div>
+    <div><span data-kpi="last">—</span><small>Last UTC</small></div>
+    <div><span data-kpi="bands">—</span><small>Bands</small></div>
+    <div><span data-kpi="modes">—</span><small>Modes</small></div>
+  </div>
+
+  <div class="activation-log__body">
+    <figure class="activation-log__map">
+      <img src={mapSrc} alt={mapAlt} loading="lazy" />
+      <figcaption>Map of QSOs from Ham2K PoLo.</figcaption>
+    </figure>
+
+    <div class="activation-log__analysis">
+      <section aria-labelledby="band-breakdown-title">
+        <h3 id="band-breakdown-title">Band breakdown</h3>
+        <div class="activation-log__table-wrap">
+          <table aria-label="Band breakdown table">
+            <thead><tr><th>Band</th><th>QSOs</th><th>Share</th></tr></thead>
+            <tbody data-band-table></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section aria-labelledby="contact-rate-title">
+        <h3 id="contact-rate-title">Contact rate</h3>
+        <div class="activation-log__chart">
+          <canvas data-rate-chart width="920" height="220" aria-label="Contacts per minute during the activation" role="img"></canvas>
+        </div>
+        <p class="activation-log__chart-meta" data-rate-meta>—</p>
+      </section>
+    </div>
+  </div>
+
+  <details class="activation-log__details">
+    <summary>Inspect the complete QSO log</summary>
+    <div class="activation-log__controls">
+      <label>Search <input type="text" data-qso-filter placeholder="Callsign, band, mode…" /></label>
+      <label>Band <select data-qso-band><option value="">All</option></select></label>
+      <label>Mode <select data-qso-mode><option value="">All</option></select></label>
+    </div>
+
+    <div class="activation-log__table-wrap activation-log__table-wrap--full">
+      <table aria-label="Complete QSO table">
+        <thead>
+          <tr><th>UTC</th><th>Call</th><th>Band</th><th>Mode</th><th>RST S</th><th>RST R</th><th>Grid</th><th>References</th></tr>
+        </thead>
+        <tbody data-qso-table></tbody>
+      </table>
+    </div>
+  </details>
+
+  <p class="activation-log__error" data-qso-error hidden></p>
+</section>
+
+<script type="module" src="/scripts/adif-qso-dashboard.js"></script>
+
+<style>
+  .activation-log {
+    margin: clamp(2rem, 5vw, 4rem) 0;
+    border-block: 1px solid var(--text);
+    color: var(--text);
+  }
+
+  .activation-log__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem 1.5rem;
+    align-items: end;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .activation-log__header p,
+  .activation-log__header span {
+    margin: 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .activation-log__header p { grid-column: 1 / -1; color: var(--tag-ink); }
+  .activation-log__header h2 { margin: 0; padding: 0; border: 0; font-size: clamp(1.5rem, 2.5vw, 2.15rem); }
+  .activation-log__header span { padding-bottom: 0.22rem; text-align: right; }
+
+  .activation-log__readout {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-bottom: 1px solid var(--border);
+  }
+
+  .activation-log__readout div {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+    padding: 0.75rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .activation-log__readout div:first-child { padding-left: 0; border-left: 0; }
+  .activation-log__readout span { overflow: hidden; font-family: var(--font-mono); font-size: clamp(0.9rem, 1.5vw, 1.15rem); text-overflow: ellipsis; white-space: nowrap; }
+  .activation-log__readout small { color: var(--muted); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .activation-log__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .activation-log__map { margin: 0; padding: 1rem 1.25rem 1rem 0; border-right: 1px solid var(--border); }
+  .activation-log__map img { display: block; width: 100%; max-height: 390px; object-fit: contain; object-position: left center; }
+  .activation-log__map figcaption { margin-top: 0.6rem; color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+
+  .activation-log__analysis { display: grid; align-content: start; }
+  .activation-log__analysis section { padding: 1rem 0 1rem 1.25rem; }
+  .activation-log__analysis section + section { border-top: 1px solid var(--border); }
+  .activation-log h3 { margin: 0 0 0.65rem; font-size: 0.75rem; font-family: var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .activation-log table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+  .activation-log th,
+  .activation-log td { padding: 0.42rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .activation-log th { color: var(--muted); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .activation-log__chart canvas { display: block; width: 100%; height: 155px; color: var(--tag-ink); }
+  .activation-log__chart-meta { margin: 0.45rem 0 0; color: var(--muted); font-family: var(--font-mono); font-size: 0.58rem; }
+
+  .activation-log__details { padding: 0.85rem 0; }
+  .activation-log__details summary { cursor: pointer; color: var(--tag-ink); font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .activation-log__controls { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 1rem 0 0.75rem; }
+  .activation-log__controls label { display: grid; gap: 0.25rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .activation-log__controls input,
+  .activation-log__controls select { min-height: 2rem; padding: 0.25rem 0.45rem; border: 1px solid var(--border); border-radius: 0; background: var(--surface); color: var(--text); font: inherit; letter-spacing: 0; text-transform: none; }
+  .activation-log__table-wrap--full { max-height: 430px; overflow: auto; overscroll-behavior: auto; }
+  .activation-log__error { margin: 0; padding: 0.75rem 0; border-top: 1px solid var(--border); color: var(--accent); }
+
+  @media (max-width: 850px) {
+    .activation-log__readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .activation-log__readout div:nth-child(4) { padding-left: 0; border-left: 0; }
+    .activation-log__readout div:nth-child(n + 4) { border-top: 1px solid var(--border); }
+    .activation-log__body { grid-template-columns: 1fr; }
+    .activation-log__map { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--border); }
+    .activation-log__analysis section { padding-left: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .activation-log__header { grid-template-columns: 1fr; }
+    .activation-log__header span { text-align: left; }
+    .activation-log__readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .activation-log__readout div:nth-child(3),
+    .activation-log__readout div:nth-child(5) { padding-left: 0; border-left: 0; }
+    .activation-log__readout div:nth-child(n + 3) { border-top: 1px solid var(--border); }
+  }
+</style>

@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "schema": "living-codex-character",
+    "schema_version": "2.0.0",
+    "id": "uuid",
+    "name": "Tarakesh",
+    "ruleset_id": "dnd5e_2014",
+    "created_utc": "2026-05-02T00:00:00Z",
+    "modified_utc": "2026-05-02T00:00:00Z"
+  },
+  "core": {
+    "rulesetId": "dnd5e_2014",
+    "speciesId": "dragonborn",
+    "classes": [
+      { "id": "druid", "level": 3, "isPrimary": true, "subclassId": "circle_of_stars" }
+    ]
+  },
+  "abilities": { "str": 10, "dex": 14, "con": 12, "int": 10, "wis": 18, "cha": 8 },
+  "combat": {
+    "ac": 15,
+    "initiative_bonus": 2,
+    "speed": 30,
+    "hp": { "max": 24, "current": 24, "temp": 0 },
+    "conditions": [],
+    "concentration": { "active": false, "source": "", "notes": "" }
+  },
+  "saving_throws": {
+    "wis": { "proficient": true, "bonus": 0, "bonus_mode": "auto", "manual_total": 0 }
+  },
+  "skills": {
+    "perception": { "proficient": true, "expertise": false, "bonus": 0, "bonus_mode": "auto", "manual_total": 0 }
+  },
+  "spellcasting": {
+    "class_id": "druid",
+    "ability": "wis",
+    "save_dc_mode": "auto",
+    "attack_bonus_mode": "auto"
+  },
+  "spells_known": [],
+  "spells_prepared": [],
+  "spell_slots": { "auto": true, "levels": { "1": { "max": 4, "used": 0 }, "2": { "max": 2, "used": 0 } } },
+  "trackers": [],
+  "inventory": [],
+  "attacks": [],
+  "log": [],
+  "ui": {},
+  "play_state": { "session_notes": "", "recent_actions": [] }
+}

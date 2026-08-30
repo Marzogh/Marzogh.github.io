@@ -1,0 +1,178 @@
+---
+import { readFileSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
+import { codeToHtml } from 'shiki';
+
+interface Props {
+  stage: string;
+  title: string;
+  sourcePath: string;
+  revision?: string;
+  status?: string;
+}
+
+const { stage, title, sourcePath, revision, status } = Astro.props;
+const absolutePath = resolve(process.cwd(), sourcePath);
+const source = readFileSync(absolutePath, 'utf8');
+const filename = basename(sourcePath);
+const highlightedSource = await codeToHtml(source, {
+  lang: 'cpp',
+  themes: {
+    light: 'github-light',
+    dark: 'github-dark',
+  },
+});
+---
+
+<details class="firmware-drawer" data-firmware-drawer>
+  <summary>
+    <span class="firmware-drawer__stage">{stage}</span>
+    <span class="firmware-drawer__title">{title}</span>
+    {status && <span class="firmware-drawer__status">{status}</span>}
+  </summary>
+
+  <div class="firmware-drawer__meta">
+    <span>{filename}</span>
+    {revision && <code>{revision}</code>}
+    <div class="firmware-drawer__actions">
+      <button type="button" data-copy-source>Copy source</button>
+      <button type="button" data-download-source data-filename={filename}>Download .ino</button>
+    </div>
+  </div>
+
+  <div class="firmware-drawer__source" data-firmware-source set:html={highlightedSource} />
+</details>
+
+<script>
+  document.querySelectorAll('[data-firmware-drawer]').forEach((drawer) => {
+    if (!(drawer instanceof HTMLElement) || drawer.dataset.ready === 'true') return;
+    drawer.dataset.ready = 'true';
+
+    const source = drawer.querySelector('[data-firmware-source]')?.textContent || '';
+    const copyButton = drawer.querySelector('[data-copy-source]');
+    const downloadButton = drawer.querySelector('[data-download-source]');
+
+    copyButton?.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(source);
+      const original = copyButton.textContent;
+      copyButton.textContent = 'Copied';
+      window.setTimeout(() => { copyButton.textContent = original; }, 1400);
+    });
+
+    downloadButton?.addEventListener('click', () => {
+      const blob = new Blob([source], { type: 'text/x-arduino;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = downloadButton.getAttribute('data-filename') || 'firmware.ino';
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+</script>
+
+<style>
+  .firmware-drawer {
+    margin: 1rem 0;
+    border-block: 1px solid var(--border);
+  }
+
+  .firmware-drawer summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.8rem 0;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 0;
+  }
+
+  .firmware-drawer summary::-webkit-details-marker { display: none; }
+  .firmware-drawer summary::before {
+    content: '+';
+    grid-column: 1;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+  }
+
+  .firmware-drawer[open] summary::before { content: '−'; }
+  .firmware-drawer__stage {
+    grid-column: 1;
+    padding-left: 1.25rem;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .firmware-drawer summary::before,
+  .firmware-drawer__stage { grid-row: 1; }
+  .firmware-drawer__title { grid-column: 2; font-weight: 650; }
+  .firmware-drawer__status {
+    grid-column: 3;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .firmware-drawer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+  }
+
+  .firmware-drawer__actions { display: flex; gap: 0.4rem; margin-left: auto; }
+  .firmware-drawer button {
+    padding: 0.34rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .firmware-drawer button:hover { border-color: var(--tag-ink); color: var(--tag-ink); }
+  .firmware-drawer__source :global(.shiki) {
+    max-height: min(68vh, 720px);
+    margin: 0;
+    padding: 1rem;
+    overflow: auto;
+    overscroll-behavior: auto;
+    border: 1px solid var(--border);
+    background-color: color-mix(in srgb, var(--surface-raised) 70%, var(--surface) 30%) !important;
+    color: var(--text);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  .firmware-drawer__source :global(.shiki code) { color: inherit; }
+
+  :global(html[data-theme='dark']) .firmware-drawer__source :global(.shiki),
+  :global(html[data-theme='dark']) .firmware-drawer__source :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+
+  @media (max-width: 620px) {
+    .firmware-drawer summary { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+    .firmware-drawer summary::before { display: none; }
+    .firmware-drawer__stage,
+    .firmware-drawer__title,
+    .firmware-drawer__status { grid-column: 1; padding-left: 0; }
+    .firmware-drawer__actions { width: 100%; margin-left: 0; }
+  }
+</style>
