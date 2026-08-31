@@ -23,117 +23,84 @@ import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-t
     <Header />
 
     <main class="about-page">
-      <section class="about-hero panel">
-        <div class="about-hero__copy">
-          <p class="about-kicker">About</p>
-          <h1 class="about-title">A life organised around learning from the universe and the conviction that life is magic.</h1>
-          <p class="about-lede">
-            I am a teacher, biologist, molecular biologist, ecologist, environmentalist, tinkerer, photographer, poet,
-            radio tragic, space enthusiast, computer geek, and painter of 3D printed miniatures. More to the point, I
-            am someone who thinks living things are magic, joy is the core of existence, and the universe is far too
-            interesting to be broken into neat little boxes just to make human filing systems feel more comfortable.
-          </p>
-          <p class="about-lede about-lede--small">
-            I was also born at 349.19 ppm of atmospheric CO<sub>2</sub>, which matters to me because it places my life
-            right on the edge of 350 ppm: one of those numbers that marks the point where we should have stopped and
-            absolutely did not.
-          </p>
+      <article class="about-shell">
+        <header class="about-hero">
+          <div class="about-hero__copy">
+            <p class="about-kicker">About</p>
+            <h1>A life organised around learning from the universe and the conviction that life is magic.</h1>
+            <p class="about-lede">
+              I am a teacher, biologist, molecular biologist, ecologist, environmentalist, tinkerer, photographer, poet,
+              radio tragic, space enthusiast, computer geek, and painter of 3D printed miniatures. More to the point, I
+              am someone who thinks living things are magic, joy is the core of existence, and the universe is far too
+              interesting to be broken into neat little boxes just to make human filing systems feel more comfortable.
+            </p>
+            <p class="about-lede about-lede--small">
+              I was also born at <span class="about-ppm">349.19 ppm</span> of atmospheric CO<sub>2</sub>, which matters to me because it places my life
+              right on the edge of 350 ppm: one of those numbers that marks the point where we should have stopped and
+              absolutely did not.
+            </p>
+          </div>
+
+          <div class="about-gallery" aria-label="A visual index of the interests described on this page">
+            <figure class="about-gallery__portrait">
+              <Image src={personImage} alt="Portrait in a field landscape." widths={[460, 720]} sizes="(max-width: 800px) 42vw, 18vw" />
+            </figure>
+            <figure class="about-gallery__radio">
+              <Image src={potaImage} alt="Portable amateur radio equipment set up outdoors." widths={[720, 1100]} sizes="(max-width: 800px) 58vw, 28vw" />
+            </figure>
+            <figure class="about-gallery__field">
+              <Image src={fieldImage} alt="Fieldwork in an open landscape." widths={[720, 1100]} sizes="(max-width: 800px) 62vw, 30vw" />
+            </figure>
+            <figure class="about-gallery__moon">
+              <Image src={moonImage} alt="The International Space Station crossing the Moon." widths={[360, 560]} sizes="(max-width: 800px) 34vw, 14vw" />
+            </figure>
+          </div>
+        </header>
+
+        <div class="about-body">
+          <aside class="about-rail" aria-label="On this page">
+            <p class="about-kicker">On this page</p>
+            <nav data-scrollspy-nav>
+              <a href="#connections" data-scrollspy-link="connections"><span>01</span> Connections</a>
+              <a href="#perspective" data-scrollspy-link="perspective"><span>02</span> Perspective</a>
+              <a href="#responsibility" data-scrollspy-link="responsibility"><span>03</span> Responsibility</a>
+              <a href="#practice" data-scrollspy-link="practice"><span>04</span> Practice</a>
+            </nav>
+          </aside>
+
+          <div class="about-story">
+            <section class="about-chapter" id="connections">
+              <p>Chips&rsquo;nCode is mixed because the universe is mixed. Biology leaks into teaching, teaching leaks into code, code leaks into radio, radio leaks into astrophotography, fieldwork leaks into poetry, and all of it ends up sharing bench space, notebook space, and brain space. Trying to sort that into neat sealed compartments would be tidier, but it would also be false. I do not think humanity stands apart from nature, and I do not think my own interests stand apart from one another either.</p>
+              <p>What all of these pursuits give me is the chance to learn more about the universe. Sometimes that means cells, ecosystems, and succession. Sometimes it means firmware, propagation, optics, signal paths, or the practical consequences of bad assumptions. Sometimes it means painting tiny goblins because patience, light, colour, and absurdly fine detail are transferable skills. Technology, in that sense, is a tool. To borrow from Nakor in Raymond E. Feist&rsquo;s books, if humans are part of the baby universe&rsquo;s way of learning about itself, then tools are one more way that process gets extended.</p>
+            </section>
+
+            <section class="about-chapter" id="perspective">
+              <p>A good field survey, a good lesson, a good antenna deployment, and a good imaging session all rely on much the same instincts. You look carefully. You notice patterns. You make a plan. The world edits that plan without consulting you. Then you adapt with whatever dignity remains and, if you are sensible, you write down what actually happened so Future You has some chance of being less foolish next time. That is probably the real connective tissue here: attention, pattern, systems, and the discipline of not pretending the world is simpler than it is.</p>
+              <p>I think intelligence is overrated, those who claim wisdom generally are not, and expertise is a journey rather than a destination. I do not matter in the scale of the universe, and I find that comforting rather than bleak. If I do not matter at that scale, then I am free to be different to the general trend without imagining myself the hinge on which reality turns. That is not nihilism. It is perspective. It is a useful antidote to vanity.</p>
+            </section>
+
+            <aside class="about-fieldnote">
+              <figure>
+                <Image src={deskImage} alt="A crowded workbench with radio gear, notes, painting tools, a snake, and chickens outside." widths={[720, 1080, 1440]} sizes="(max-width: 800px) 100vw, 46vw" />
+              </figure>
+              <div class="about-fieldnote__copy">
+                <p>The desk photo is not metaphorical. It really does look like that sometimes. Yes, there is a snake. Yes, there are chickens. No, I will not pretend my life arrives in neat thematic categories. Yes it is AI generated. No I will NOT show you my real desk.</p>
+                <p>On the code side, you can find me on <a href="https://github.com/Marzogh">GitHub</a>, and I keep a live-ish local telemetry page at <a href="/live">Local Signals</a>. On the radio side, I answer to <strong>VK4MPB</strong>, <strong>VK7MPB</strong>, <strong>VK4ETA</strong>, and <strong>VK4GOD</strong>, which still looks like a callsign that ought to summon lightning or require a cooldown timer.</p>
+              </div>
+            </aside>
+
+            <section class="about-chapter" id="responsibility">
+              <p>None of that excuses us from harm. In fact, it sharpens the question of harm. Climate collapse and the extinction crisis are not background scenery to me, and never were. Humanity is very good at fencing itself in and calling the rest of life outside. I think that is one of our great civilisational mistakes. The point is not to flatter our species or assume it sits above the rest of life. The point is to minimise harm, pay attention properly, and live in a way that sets an example whether or not anyone follows it.</p>
+              <p>Beauty matters here too, and not as decoration. Beauty is for joy. It is one of the reasons existence is worth the effort. It lives everywhere, especially in the places most people do not bother to look. That is as true of a field notebook, a good poem, or a faint astronomical target as it is of a hillside, a moth, a radio contact, or a student suddenly understanding something in a new way.</p>
+            </section>
+
+            <section class="about-chapter about-chapter--last" id="practice">
+              <p>Teaching may be the clearest example of that. My students often think I am there to teach them. Really, I am there to learn from them as well. Every day they show me new angles on how minds work, how curiosity survives, how people approach truth, error, joy, fear, effort, and surprise. That reciprocity matters to me more than any performance of authority ever could.</p>
+              <p>So this place ends up being part field notebook, part lab bench, part observatory log, part classroom prep book, part poetry archive, and part workbench covered in cables, maps, lenses, paint, and whatever else the current problem has demanded. If it feels a little unruly, good. The world is unruly. The interesting part is learning from it anyway, refusing to lie about it, and occasionally leaving better notes behind.</p>
+            </section>
+          </div>
         </div>
-
-        <div class="about-collage" aria-hidden="true">
-          <figure class="about-shot about-shot--portrait">
-            <Image src={personImage} alt="" widths={[520, 760]} sizes="(max-width: 900px) 80vw, 24vw" />
-          </figure>
-          <figure class="about-shot about-shot--radio">
-            <Image src={potaImage} alt="" widths={[640, 960]} sizes="(max-width: 900px) 90vw, 32vw" />
-          </figure>
-          <figure class="about-shot about-shot--field">
-            <Image src={fieldImage} alt="" widths={[640, 960]} sizes="(max-width: 900px) 86vw, 26vw" />
-          </figure>
-          <figure class="about-shot about-shot--moon">
-            <Image src={moonImage} alt="" widths={[360, 560]} sizes="(max-width: 900px) 45vw, 14vw" />
-          </figure>
-          <div class="about-scribble about-scribble--one">cells ↔ circuits ↔ classrooms ↔ galaxies</div>
-          <div class="about-scribble about-scribble--two">everything leaks into everything else</div>
-        </div>
-      </section>
-
-      <section class="about-spread">
-        <aside class="about-margin panel panel--soft">
-          <figure class="margin-photo">
-            <Image src={deskImage} alt="A crowded workbench with radio gear, notes, painting tools, a snake, and chickens outside." widths={[720, 1080]} sizes="(max-width: 980px) 100vw, 28vw" />
-          </figure>
-          <p class="margin-note">
-            The desk photo is not metaphorical. It really does look like that sometimes. Yes, there is a snake. Yes,
-            there are chickens. No, I will not pretend my life arrives in neat thematic categories. Yes it is AI
-            generated. No I will NOT show you my real desk.
-          </p>
-          <p class="margin-note">
-            On the code side, you can find me on <a href="https://github.com/Marzogh">GitHub</a>, and I keep a
-            live-ish local telemetry page at <a href="/live">Local Signals</a>. On the radio side, I answer to
-            <strong>VK4MPB</strong>, <strong>VK7MPB</strong>, <strong>VK4ETA</strong>, and <strong>VK4GOD</strong>,
-            which still looks like a callsign that ought to summon lightning or require a cooldown timer.
-          </p>
-        </aside>
-
-        <article class="about-story panel">
-          <p>
-            Chips&rsquo;nCode is mixed because the universe is mixed. Biology leaks into teaching, teaching leaks into
-            code, code leaks into radio, radio leaks into astrophotography, fieldwork leaks into poetry, and all of it
-            ends up sharing bench space, notebook space, and brain space. Trying to sort that into neat sealed
-            compartments would be tidier, but it would also be false. I do not think humanity stands apart from nature,
-            and I do not think my own interests stand apart from one another either.
-          </p>
-          <p>
-            What all of these pursuits give me is the chance to learn more about the universe. Sometimes that means
-            cells, ecosystems, and succession. Sometimes it means firmware, propagation, optics, signal paths, or the
-            practical consequences of bad assumptions. Sometimes it means painting tiny goblins because patience, light,
-            colour, and absurdly fine detail are transferable skills. Technology, in that sense, is a tool. To borrow
-            from Nakor in Raymond E. Feist&rsquo;s books, if humans are part of the baby universe&rsquo;s way of
-            learning about itself, then tools are one more way that process gets extended.
-          </p>
-          <p>
-            A good field survey, a good lesson, a good antenna deployment, and a good imaging session all rely on much
-            the same instincts. You look carefully. You notice patterns. You make a plan. The world edits that plan
-            without consulting you. Then you adapt with whatever dignity remains and, if you are sensible, you write
-            down what actually happened so Future You has some chance of being less foolish next time. That is probably
-            the real connective tissue here: attention, pattern, systems, and the discipline of not pretending the
-            world is simpler than it is.
-          </p>
-          <p>
-            I think intelligence is overrated, those who claim wisdom generally are not, and expertise is a journey
-            rather than a destination. I do not matter in the scale of the universe, and I find that comforting rather
-            than bleak. If I do not matter at that scale, then I am free to be different to the general trend without
-            imagining myself the hinge on which reality turns. That is not nihilism. It is perspective. It is a useful
-            antidote to vanity.
-          </p>
-          <p>
-            None of that excuses us from harm. In fact, it sharpens the question of harm. Climate collapse and the
-            extinction crisis are not background scenery to me, and never were. Humanity is very good at fencing itself
-            in and calling the rest of life outside. I think that is one of our great civilisational mistakes. The
-            point is not to flatter our species or assume it sits above the rest of life. The point is to minimise
-            harm, pay attention properly, and live in a way that sets an example whether or not anyone follows it.
-          </p>
-          <p>
-            Beauty matters here too, and not as decoration. Beauty is for joy. It is one of the reasons existence is
-            worth the effort. It lives everywhere, especially in the places most people do not bother to look. That is
-            as true of a field notebook, a good poem, or a faint astronomical target as it is of a hillside, a moth, a
-            radio contact, or a student suddenly understanding something in a new way.
-          </p>
-          <p>
-            Teaching may be the clearest example of that. My students often think I am there to teach them. Really, I
-            am there to learn from them as well. Every day they show me new angles on how minds work, how curiosity
-            survives, how people approach truth, error, joy, fear, effort, and surprise. That reciprocity matters to
-            me more than any performance of authority ever could.
-          </p>
-          <p>
-            So this place ends up being part field notebook, part lab bench, part observatory log, part classroom prep
-            book, part poetry archive, and part workbench covered in cables, maps, lenses, paint, and whatever else
-            the current problem has demanded. If it feels a little unruly, good. The world is unruly. The interesting
-            part is learning from it anyway, refusing to lie about it, and occasionally leaving better notes behind.
-          </p>
-        </article>
-      </section>
+      </article>
     </main>
 
     <Footer />
@@ -141,236 +108,77 @@ import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-t
 </html>
 
 <style>
-  .about-page {
-    max-width: min(1200px, calc(100% - 2 * var(--space-5)));
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+  :global(.about-page) { width: min(100%, 1380px); max-width: 1380px; padding-top: 1.5rem; padding-bottom: clamp(4rem, 8vw, 7rem); }
+  .about-shell { min-width: 0; }
+  .about-hero { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(440px, 1.08fr); align-items: stretch; border-block: 1px solid var(--text); }
+  .about-hero__copy { display: flex; flex-direction: column; justify-content: center; min-width: 0; padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 4vw, 4rem) clamp(2rem, 5vw, 5rem) 0; }
+  .about-kicker { margin: 0 0 0.85rem; color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .about-hero h1 { max-width: 13ch; margin: 0; font-size: clamp(2.75rem, 5.4vw, 5.6rem); line-height: 0.94; letter-spacing: -0.055em; text-wrap: balance; }
+  .about-lede { max-width: 62ch; margin: 1.5rem 0 0; color: var(--text-2); font-size: clamp(1.02rem, 1.35vw, 1.18rem); line-height: 1.65; }
+  .about-lede--small { max-width: 58ch; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.98rem; }
+  .about-ppm { color: var(--accent); font-family: var(--font-mono); font-weight: 700; white-space: nowrap; }
+
+  .about-gallery { position: relative; display: grid; grid-template-columns: 0.72fr 1.28fr; grid-template-rows: 0.9fr 1.1fr; min-height: clamp(480px, 52vw, 700px); background: var(--text); border-left: 1px solid var(--text); }
+  .about-gallery figure { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; background: var(--surface-2); }
+  .about-gallery figure::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 30%, transparent); }
+  .about-gallery :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.88) contrast(1.04); transition: filter 180ms ease, transform 500ms ease; }
+  .about-gallery figure:hover :global(img) { filter: saturate(1) contrast(1.02); transform: scale(1.015); }
+  .about-gallery__portrait { grid-column: 1; grid-row: 1; border-right: 1px solid var(--paper); border-bottom: 1px solid var(--paper); }
+  .about-gallery__radio { grid-column: 2; grid-row: 1; border-bottom: 1px solid var(--paper); }
+  .about-gallery__field { grid-column: 1 / -1; grid-row: 2; }
+  .about-gallery__moon { position: absolute !important; z-index: 2; right: clamp(0.75rem, 2vw, 1.5rem); bottom: clamp(0.75rem, 2vw, 1.5rem); width: clamp(112px, 16vw, 205px); aspect-ratio: 1; border: clamp(5px, 0.7vw, 9px) solid var(--paper); box-shadow: 0 0 0 1px var(--text); }
+
+  .about-body { display: grid; grid-template-columns: minmax(170px, 210px) minmax(0, 920px); justify-content: start; gap: clamp(2rem, 6vw, 6rem); align-items: start; margin-top: clamp(3rem, 7vw, 6rem); }
+  .about-rail { position: sticky; top: calc(var(--header-height, 4.5rem) + 1rem); }
+  .about-rail nav { display: grid; border-top: 1px solid var(--text); }
+  .about-rail a { display: grid; grid-template-columns: 2rem 1fr; gap: 0.5rem; padding: 0.72rem 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 0.76rem; line-height: 1.35; text-decoration: none; }
+  .about-rail a span { color: var(--muted); font-family: var(--font-mono); font-size: 0.66rem; }
+  .about-rail a:hover, .about-rail a.is-active { color: var(--text); }
+  .about-rail a.is-active { padding-left: 0.6rem; background: color-mix(in srgb, var(--accent) 6%, transparent); box-shadow: inset 2px 0 0 var(--accent); }
+
+  .about-story { min-width: 0; }
+  .about-chapter { scroll-margin-top: calc(var(--header-height, 4.5rem) + 1.5rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3.5rem); padding: 1rem 0 clamp(3rem, 7vw, 5.5rem); border-top: 1px solid var(--text); }
+  .about-chapter p, .about-fieldnote p { margin: 0; color: var(--text-2); }
+  .about-chapter p { font-size: clamp(1.04rem, 1.35vw, 1.18rem); line-height: 1.78; }
+  .about-chapter p:first-child::first-letter { float: left; margin: 0.08em 0.08em 0 0; color: var(--accent); font-family: var(--font-filigree); font-size: 4.2em; font-weight: 400; line-height: 0.72; }
+
+  .about-fieldnote { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); margin: 0 0 clamp(3rem, 7vw, 5.5rem); border-block: 1px solid var(--text); background: var(--surface-raised); }
+  .about-fieldnote figure { min-height: 420px; margin: 0; overflow: hidden; border-right: 1px solid var(--text); }
+  .about-fieldnote figure :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .about-fieldnote__copy { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: clamp(1.25rem, 3vw, 2.25rem); }
+  .about-fieldnote__copy p { font-size: 0.93rem; line-height: 1.62; }
+  .about-fieldnote__copy p + p { padding-top: 1.4rem; border-top: 1px solid var(--border); }
+  .about-fieldnote a { color: var(--accent); }
+  .about-chapter--last { padding-bottom: 0; }
+
+  @media (max-width: 1040px) {
+    :global(.about-page) { padding-inline: 1rem; }
+    .about-hero { grid-template-columns: 1fr; }
+    .about-hero__copy { padding-right: 0; }
+    .about-hero h1 { max-width: 15ch; }
+    .about-gallery { min-height: min(78vw, 680px); border-top: 1px solid var(--text); border-left: 0; }
+    .about-body { grid-template-columns: 170px minmax(0, 1fr); gap: 2.5rem; }
   }
 
-  .about-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 1fr);
-    gap: var(--space-5);
-    align-items: center;
-    background:
-      radial-gradient(820px 260px at top right, rgba(37, 99, 235, 0.10), transparent 72%),
-      radial-gradient(620px 220px at bottom left, rgba(34, 197, 94, 0.08), transparent 78%),
-      radial-gradient(460px 160px at 60% 10%, rgba(251, 113, 133, 0.08), transparent 76%),
-      #fff;
+  @media (max-width: 760px) {
+    :global(.about-page) { width: 100%; padding-inline: 0; padding-top: 0; }
+    .about-hero { border-top: 0; }
+    .about-hero__copy { padding: 2.5rem 1rem; }
+    .about-gallery { min-height: 125vw; grid-template-columns: 0.9fr 1.1fr; }
+    .about-gallery__field :global(img) { object-position: 40% center; }
+    .about-body { display: block; margin-top: 0; }
+    .about-rail { position: sticky; top: var(--header-height, 4.5rem); z-index: 20; overflow-x: auto; padding: 0 1rem; background: color-mix(in srgb, var(--paper) 95%, transparent); backdrop-filter: blur(12px); }
+    .about-rail > .about-kicker { display: none; }
+    .about-rail nav { display: flex; width: max-content; min-width: 100%; border-top: 0; border-bottom: 1px solid var(--border); }
+    .about-rail a { display: block; flex: 0 0 auto; padding: 0.75rem 0.9rem; border: 0; white-space: nowrap; }
+    .about-rail a span { margin-right: 0.35rem; }
+    .about-rail a.is-active { padding-left: 0.9rem; background: transparent; box-shadow: inset 0 -2px 0 var(--accent); }
+    .about-story { padding: 2.5rem 1rem 0; }
+    .about-chapter { grid-template-columns: 1fr; gap: 1.3rem; padding-bottom: 3.5rem; }
+    .about-fieldnote { grid-template-columns: 1fr; margin-inline: -1rem; }
+    .about-fieldnote figure { min-height: 64vw; border-right: 0; border-bottom: 1px solid var(--text); }
+    .about-chapter--last { padding-bottom: 0; }
   }
 
-  .about-hero__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .about-kicker {
-    margin: 0;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .about-title,
-  .about-lede,
-  .margin-note,
-  .about-story p {
-    margin: 0;
-  }
-
-  .about-title {
-    max-width: 14ch;
-  }
-
-  .about-lede {
-    max-width: 62ch;
-    font-size: 1.08rem;
-    color: var(--text-2);
-  }
-
-  .about-lede--small {
-    font-size: 1rem;
-  }
-
-  .about-collage {
-    position: relative;
-    min-height: 520px;
-  }
-
-  .about-shot {
-    position: absolute;
-    margin: 0;
-    padding: 10px;
-    border-radius: 24px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(10px);
-    overflow: hidden;
-  }
-
-  .about-shot :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .about-shot--portrait {
-    top: 0;
-    left: 8px;
-    width: min(250px, 42%);
-    transform: rotate(-3deg);
-  }
-
-  .about-shot--radio {
-    top: 26px;
-    right: 0;
-    width: min(430px, 72%);
-    transform: rotate(3deg);
-  }
-
-  .about-shot--field {
-    left: 74px;
-    bottom: 0;
-    width: min(390px, 66%);
-    transform: rotate(-2deg);
-  }
-
-  .about-shot--moon {
-    right: 28px;
-    bottom: 50px;
-    width: min(170px, 26%);
-    transform: rotate(4deg);
-  }
-
-  .about-scribble {
-    position: absolute;
-    z-index: 3;
-    font-size: 0.84rem;
-    font-style: italic;
-    letter-spacing: 0.02em;
-    color: color-mix(in srgb, var(--text-2) 82%, white 18%);
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-  }
-
-  .about-scribble--one {
-    top: 10px;
-    right: 54px;
-    transform: rotate(-2deg);
-  }
-
-  .about-scribble--two {
-    left: 20px;
-    bottom: 18px;
-    transform: rotate(2deg);
-  }
-
-  .about-spread {
-    display: grid;
-    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .about-margin {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    position: sticky;
-    top: 92px;
-  }
-
-  .margin-photo {
-    margin: 0;
-    overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .margin-photo :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .margin-note {
-    color: var(--text-2);
-  }
-
-  .about-story {
-    column-count: 2;
-    column-gap: var(--space-6);
-    background:
-      linear-gradient(135deg, rgba(11, 18, 32, 0.03), rgba(37, 99, 235, 0.05)),
-      #fff;
-  }
-
-  .about-story p {
-    break-inside: avoid;
-    margin-bottom: 1.2rem;
-    color: var(--text-2);
-  }
-
-  .about-story p:last-child {
-    margin-bottom: 0;
-  }
-
-  @media (max-width: 1020px) {
-    .about-page {
-      max-width: calc(100% - 2 * var(--space-4));
-    }
-
-    .about-hero,
-    .about-spread {
-      grid-template-columns: 1fr;
-    }
-
-    .about-margin {
-      position: static;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .about-collage {
-      min-height: 740px;
-    }
-
-    .about-shot--portrait {
-      left: 0;
-      width: min(260px, 70%);
-    }
-
-    .about-shot--radio {
-      top: 170px;
-      right: 0;
-      width: min(420px, 88%);
-    }
-
-    .about-shot--field {
-      left: 8px;
-      bottom: 0;
-      width: min(390px, 82%);
-    }
-
-    .about-shot--moon {
-      right: 14px;
-      bottom: 214px;
-      width: min(170px, 34%);
-    }
-
-    .about-scribble--one {
-      top: 142px;
-      right: 16px;
-    }
-
-    .about-story {
-      column-count: 1;
-    }
-  }
+  @media (prefers-reduced-motion: reduce) { .about-gallery :global(img) { transition: none; } }
 </style>
