@@ -1,0 +1,138 @@
+---
+const manuals = [
+  {
+    id: 'repair',
+    label: 'Repair',
+    title: 'Repair manual',
+    description: 'Disassembly, adjustment, repair procedures, mechanisms and their accompanying diagrams.',
+    pdf: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_repair-manual_en.pdf',
+    markdown: '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_repair-manual_en.md',
+  },
+  {
+    id: 'user',
+    label: 'User',
+    title: 'User manual',
+    description: 'Operating instructions covering loading, metering, exposure, focusing and normal camera use.',
+    pdf: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_user-manual_en.pdf',
+    markdown: '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_user-manual_en.md',
+  },
+  {
+    id: 'parts',
+    label: 'Parts',
+    title: 'Parts catalogue',
+    description: 'Exploded assemblies and component references for identifying parts during repair.',
+    pdf: '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_parts-catalogue_en.pdf',
+    markdown: '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_parts-catalogue_en.md',
+  },
+];
+---
+
+<section class="zenit-viewer" data-zenit-viewer aria-label="Restored Zenit manuals">
+  <nav class="zenit-viewer__tabs" role="tablist" aria-label="Choose a manual">
+    {manuals.map((manual, index) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? '0' : '-1'}
+        data-manual-tab={manual.id}
+        data-title={manual.title}
+        data-description={manual.description}
+        data-pdf={manual.pdf}
+        data-markdown={manual.markdown}
+      >
+        <span>{manual.label}</span>
+        <small>{manual.title}</small>
+      </button>
+    ))}
+  </nav>
+
+  <div class="zenit-viewer__frame">
+    <iframe
+      title="Zenit-12XP repair manual preview"
+      src={manuals[0].pdf}
+      data-manual-frame
+      loading="lazy"
+    ></iframe>
+  </div>
+
+  <footer class="zenit-viewer__footer">
+    <div>
+      <p class="zenit-viewer__eyebrow">Selected document</p>
+      <h3 data-manual-title>{manuals[0].title}</h3>
+      <p data-manual-description>{manuals[0].description}</p>
+    </div>
+    <div class="zenit-viewer__links">
+      <a href={manuals[0].pdf} data-manual-pdf>Open PDF ↗</a>
+      <a href={manuals[0].markdown} data-manual-markdown>Markdown ↗</a>
+    </div>
+  </footer>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-zenit-viewer]').forEach((viewer) => {
+    const tabs = Array.from(viewer.querySelectorAll<HTMLButtonElement>('[data-manual-tab]'));
+    const frame = viewer.querySelector<HTMLIFrameElement>('[data-manual-frame]');
+    const title = viewer.querySelector<HTMLElement>('[data-manual-title]');
+    const description = viewer.querySelector<HTMLElement>('[data-manual-description]');
+    const pdf = viewer.querySelector<HTMLAnchorElement>('[data-manual-pdf]');
+    const markdown = viewer.querySelector<HTMLAnchorElement>('[data-manual-markdown]');
+
+    const select = (tab: HTMLButtonElement) => {
+      tabs.forEach((item) => {
+        const active = item === tab;
+        item.setAttribute('aria-selected', String(active));
+        item.tabIndex = active ? 0 : -1;
+      });
+      if (frame && tab.dataset.pdf) {
+        frame.src = tab.dataset.pdf;
+        frame.title = `Zenit-12XP ${tab.dataset.title ?? 'manual'} preview`;
+      }
+      if (title) title.textContent = tab.dataset.title ?? '';
+      if (description) description.textContent = tab.dataset.description ?? '';
+      if (pdf && tab.dataset.pdf) pdf.href = tab.dataset.pdf;
+      if (markdown && tab.dataset.markdown) markdown.href = tab.dataset.markdown;
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let next = index;
+        if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = tabs.length - 1;
+        tabs[next]?.focus();
+        if (tabs[next]) select(tabs[next]);
+      });
+    });
+  });
+</script>
+
+<style>
+  .zenit-viewer { margin: 1.5rem 0 2rem; border: 1px solid var(--border); background: var(--surface-raised); }
+  .zenit-viewer__tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--border); }
+  .zenit-viewer__tabs button { display: grid; gap: 0.15rem; min-height: 3.9rem; padding: 0.7rem 0.85rem; border: 0; border-right: 1px solid var(--border); border-radius: 0; background: transparent; color: var(--text-2); text-align: left; }
+  .zenit-viewer__tabs button:last-child { border-right: 0; }
+  .zenit-viewer__tabs button[aria-selected='true'] { background: var(--surface-accent-soft); box-shadow: inset 0 -3px 0 var(--accent); color: var(--text); }
+  .zenit-viewer__tabs span { font-weight: 700; }
+  .zenit-viewer__tabs small { color: var(--muted); font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; }
+  .zenit-viewer__frame { height: min(70vh, 680px); min-height: 440px; background: color-mix(in srgb, var(--surface) 88%, var(--text) 12%); }
+  .zenit-viewer__frame iframe { width: 100%; height: 100%; border: 0; background: white; }
+  .zenit-viewer__footer { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; padding: 1rem; border-top: 1px solid var(--border); }
+  .zenit-viewer__footer h3 { margin: 0.1rem 0 0.25rem !important; font-size: 1.1rem; }
+  .zenit-viewer__footer p { max-width: 58ch; margin: 0; }
+  .zenit-viewer__eyebrow { color: var(--accent); font: 0.62rem var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .zenit-viewer__links { display: flex; flex: 0 0 auto; gap: 0.5rem; }
+  .zenit-viewer__links a { padding: 0.55rem 0.7rem; border: 1px solid var(--border); font: 0.68rem var(--font-mono); text-decoration: none; text-transform: uppercase; }
+  .zenit-viewer__links a:first-child { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+
+  @media (max-width: 640px) {
+    .zenit-viewer__tabs small { display: none; }
+    .zenit-viewer__frame { min-height: 360px; }
+    .zenit-viewer__footer { align-items: stretch; flex-direction: column; }
+    .zenit-viewer__links { flex-wrap: wrap; }
+  }
+</style>

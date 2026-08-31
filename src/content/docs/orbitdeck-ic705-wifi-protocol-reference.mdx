@@ -16,7 +16,7 @@ This page documents the session flow and packet behaviour that OrbitDeck uses su
 
 The evidence base for this write-up is OrbitDeck’s native IC-705 UDP transport in [OrbitDeck’s `app/radio/icom_udp.py`](https://github.com/Marzogh/OrbitDeck/blob/main/app/radio/icom_udp.py), its CI-V framing in [OrbitDeck’s `app/radio/civ.py`](https://github.com/Marzogh/OrbitDeck/blob/main/app/radio/civ.py), its IC-705 controller logic in [OrbitDeck’s `app/radio/controllers/ic705.py`](https://github.com/Marzogh/OrbitDeck/blob/main/app/radio/controllers/ic705.py), its threaded wrapper around the vendored [`icom-lan`](https://github.com/morozsm/icom-lan) API in [OrbitDeck’s `app/radio/icom_lan_session.py`](https://github.com/Marzogh/OrbitDeck/blob/main/app/radio/icom_lan_session.py), and the vendored upstream reference material under [OrbitDeck’s `references/icom-lan`](https://github.com/Marzogh/OrbitDeck/tree/main/references/icom-lan). Where a statement is directly represented in code, I treat it as observed behaviour. Where the code suggests a rule but does not prove it for every radio or firmware revision, I call that an inference.
 
-## What This Covers
+## Scope and operating model
 
 OrbitDeck talks to the IC-705 using two layers.
 
@@ -26,7 +26,7 @@ The outer layer is a proprietary UDP session protocol used for discovery, authen
 
 Reducing this to “send CI-V over UDP” is not enough.
 
-## Ports And Channels
+### Ports and channels
 
 OrbitDeck starts from the following default assumptions:
 
@@ -38,7 +38,7 @@ OrbitDeck starts from the following default assumptions:
 
 OrbitDeck begins with `control + 1` and `control + 2` for CI-V and audio, then updates its stored remote port targets if the radio reports non-zero CI-V and audio ports back in status traffic. A robust implementation should do the same.
 
-## Packet Header
+### Packet header
 
 Every outer Icom LAN UDP packet begins with the same 16-byte header:
 
@@ -62,7 +62,7 @@ OrbitDeck uses the following packet types in practice:
 | `0x06` | “Are You Ready” |
 | `0x07` | ping |
 
-## Connection IDs
+### Connection IDs
 
 The protocol uses two 32-bit IDs for each channel:
 
@@ -71,11 +71,11 @@ The protocol uses two 32-bit IDs for each channel:
 
 OrbitDeck’s native transport chooses `my_id` as a random 32-bit integer whenever a `_UdpChannel` is opened. The vendored `icom-lan` code derives its own ID differently in some paths. Both approaches can work. What matters is that the IDs remain stable for the life of the channel and that replies swap sender and receiver fields correctly.
 
-## Channel model
+### Channel model
 
 The control channel handles login, token flow, `ConnInfo`, status, keepalive, and retransmit traffic. The serial channel carries wrapped CI-V frames. Audio belongs to the same general protocol family, but OrbitDeck’s native transport does not try to be a full audio stack. For APRS and audio-capable workflows the project uses the vendored `icom-lan` code through a wrapper instead.
 
-## Control Handshake
+## Session establishment
 
 OrbitDeck’s control-channel bring-up follows a fixed order.
 
@@ -239,7 +239,7 @@ These values are application choices, not protocol requirements.
 
 OrbitDeck waits for a 144-byte reply from the radio where `packet[0x29] == 0`. It captures the GUID again from `0x20:0x30`, swaps sender and receiver IDs, sets `packet[0x29] = 1`, and sends the reply back. At that point the control channel is considered established.
 
-## Credential Encoding
+### Credential encoding
 
 Icom does not send username and password in plain ASCII. It uses a position-dependent substitution table.
 
@@ -282,7 +282,7 @@ def encode_icom_credential(text: str) -> bytes:
 
 This is not encryption. It is only a fixed obfuscation scheme.
 
-## CI-V Channel
+## CI-V transport
 
 Once the control channel is ready, OrbitDeck opens a second UDP socket for the CI-V stream. The bring-up is shorter:
 
@@ -314,7 +314,7 @@ The observed format for the serial stream open/close packet is:
 
 This packet turns the CI-V-over-UDP stream on or off.
 
-## CI-V Framing
+### CI-V framing
 
 ### Raw CI-V frame
 
@@ -348,7 +348,7 @@ On the serial UDP channel, OrbitDeck wraps each CI-V frame inside a UDP data pac
 
 On receive, OrbitDeck treats any packet with `len(packet) > 0x15` and `packet[0x10] == 0xC1` as CI-V payload and pushes `packet[0x15:]` into its frame extractor.
 
-## Keepalive And Retransmit
+## Session maintenance
 
 OrbitDeck tracks outgoing packets by the 16-bit sequence number at outer-header offset `0x06`.
 
@@ -356,7 +356,7 @@ The native transport stores a small replay buffer of sent packets. If the radio 
 
 In practice, OrbitDeck preserves sequence continuity even when it can no longer replay the original payload.
 
-## Keepalive rules
+### Keepalive rules
 
 OrbitDeck runs separate keepalive loops on the control and serial channels.
 
@@ -395,7 +395,7 @@ OrbitDeck replies to a valid ping by swapping sender and receiver IDs and flippi
 
 This is an empty tracked data packet used to keep the session alive.
 
-## Disconnect Behaviour
+### Disconnect behaviour
 
 On shutdown, OrbitDeck tears the session down explicitly rather than just dropping sockets.
 
@@ -412,7 +412,7 @@ For the control channel it sends:
 
 If you are writing your own client, it is worth preserving this order. The radio appears to cache state across attempts.
 
-## CI-V Commands
+## CI-V commands
 
 Once the UDP scaffolding is in place, OrbitDeck speaks ordinary CI-V.
 
@@ -509,7 +509,9 @@ OrbitDeck treats these CI-V commands specially:
 
 For write operations, OrbitDeck often accepts either ACK or NAK as the immediate response, then raises an error if the radio chose NAK.
 
-## OrbitDeck-Specific Choices
+## Implementation notes
+
+### OrbitDeck-specific choices
 
 These are implementation choices that work for OrbitDeck. They are not universal protocol requirements.
 
@@ -517,7 +519,7 @@ OrbitDeck generates `my_id` randomly for each native `_UdpChannel`. It begins fr
 
 OrbitDeck also applies a set of controller defaults that are application-driven. In the current IC-705 controller path, it opens squelch, enables the scope display, sets centre mode, and uses a one-megahertz scope span. In APRS WiFi work it goes further: it snapshots the radio, forces a predictable FM/data configuration, verifies that state, starts RX audio, feeds that audio into a local decode sidecar, manages TX audio in chunks, and then restores state afterwards. Those choices are not the protocol itself.
 
-## Minimal Implementation Path
+### Minimal implementation path
 
 If you want basic CAT control from scratch, the minimum viable sequence is:
 
@@ -542,7 +544,7 @@ If you want basic CAT control from scratch, the minimum viable sequence is:
 19. handle retransmit requests
 20. on shutdown, close the serial channel first and tear down the control channel cleanly
 
-## Implementation Traps
+### Implementation traps
 
 There are a few places where first implementations tend to fail.
 
@@ -560,7 +562,7 @@ The sixth is retransmit support. Both OrbitDeck and the vendored `icom-lan` mate
 
 None of those issues are especially complicated on their own. The trouble is that they stack. A client can be mostly right and still fail if it gets byte order wrong in one place, skips the GUID echo, ignores negotiated ports, or treats keepalive and retransmit handling as optional.
 
-## Implementation Summary
+### Implementation summary
 
 The Icom network protocol OrbitDeck uses is a proprietary UDP session layer carrying standard CI-V inside a second UDP data channel. For the IC-705, a useful implementation is not merely “CI-V over UDP”. You must first reproduce the control-plane handshake, token flow, `ConnInfo` exchange, serial-channel open sequence, and ongoing keepalive and retransmit behaviour. Once that scaffolding is right, the inner CAT layer becomes ordinary Icom CI-V.
 

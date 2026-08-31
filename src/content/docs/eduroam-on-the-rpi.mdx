@@ -10,29 +10,35 @@ type: "docs"
 featured: false
 ---
 
-I've had to try and connect a Raspberry Pi to my work's eduroam a few times now, and each time I need to do it its just been long enough from when I'd last managed it that I don't remember enough and I end up working it all out again.
+I've had to connect a Raspberry Pi to my work's eduroam a few times, and each attempt has been just far enough from the previous one that I end up working it out again.
 
-No more!
+This is the configuration I used with `wpa_supplicant` at the University of Queensland.
 
-For all of you who are trying to connect to Eduroam networks on your Raspberry Pi, here's how you do it!
+<div class="callout callout--warning">
+  <strong>Archive warning:</strong> this guide documents a 2016 Raspberry Pi networking stack and UQ configuration. Eduroam authentication details, certificate requirements and Raspberry Pi network management have changed over time. Use your institution's current IT instructions as the authority, and do not disable working network services unless the older setup described here actually applies.
+</div>
 
-P.S. This is not for those of you who are not comfortable with the command line interface. You must have your terminal open and follow the following steps - changing some of the text as and when indicated.
+## Before you start
 
-<h3> Disable the network service </h3>
-Type the following into terminal
+You will need command-line access, your institutional username and password, and the CA certificate specified by your institution. Protect `wpa_supplicant.conf`: the example below stores the password in that file.
 
-``` shell
+## Stop the network service
+
+On the older networking setup this guide was written for, stop the networking service before editing its configuration:
+
+```shell
 sudo service networking stop
 ```
 
-<h3> Configure your wpa_supplicant file </h3>
- - In terminal type the following command
-``` shell
+## Configure `wpa_supplicant`
+
+Open the configuration file:
+
+```shell
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 ```
-If you are not comfortable working with nano, just replace the word nano in the previous command with leafpad - that should make it easy for those of you who are used to having a friendly GUI around.
 
- - Add the following section to the bottom of your wpa_supplicant.conf file
+Add the following network block, replacing the example identity, password, certificate and institution-specific settings:
 
 ```ini
 network={
@@ -99,17 +105,22 @@ network={
 }
 ```
 
-<h4> Getting a CA certificate </h4>
- - You should be able to get this from your university - just ask your IT department. For those of you from UQ, get the certificate here (Right click and Save Link As'): [UQ CA cert](/assets/downloads/uq-net-ca.pem)
- - Move the certificate that you just downloaded to /etc/ssl/certs/ by entering the following command in terminal. (DO NOT RENAME THE FILE!)
+### Install the CA certificate
 
-``` shell
+Get the correct certificate from your institution's IT department. The certificate preserved with this older UQ guide is available here: [UQ CA certificate](/assets/downloads/uq-net-ca.pem).
+
+The original setup moved it into `/etc/ssl/certs/` without renaming it:
+
+```shell
 sudo mv ~/Downloads/uq-net-ca.pem /etc/ssl/certs/uq-net-ca.pem
 ```
 
-<h3> Restart wlan0 </h3>
-- Once this is done, kickstart wpa_supplicant with the following command in terminal
+## Start `wpa_supplicant`
 
-``` shell
+On the older setup, start `wpa_supplicant` directly against `wlan0`:
+
+```shell
 sudo wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -B
 ```
+
+If your Raspberry Pi uses NetworkManager or another current network-management layer, configure eduroam through that system instead of running this command alongside it.

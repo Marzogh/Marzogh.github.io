@@ -11,8 +11,10 @@ import {
   getEducationLevelLabel,
   getEducationSubjectLabel,
 } from '../../utils/education';
+import { EDUCATION_VISIBLE } from '../../utils/siteVisibility';
 
 export async function getStaticPaths() {
+  if (!EDUCATION_VISIBLE) return [];
   const entries = await getCollection('education', ({ data }) => !data.draft);
   const subjects = new Set(entries.map((entry) => entry.data.subject).filter(Boolean));
   subjects.add('digital-technologies');

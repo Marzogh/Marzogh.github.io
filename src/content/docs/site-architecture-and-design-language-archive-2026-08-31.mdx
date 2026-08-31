@@ -1,0 +1,1111 @@
+---
+title: Design Language Archive — 2026-08-31
+description: "Archived March-era Chips'nCode design-system specification, preserved before the 2026 editorial redesign was documented."
+pubDate: 2026-03-01
+updatedDate: 2026-08-31
+draft: false
+section: Site Meta
+order: 90
+tags: [website, design, architecture, astro, docs, design-system, archive]
+type: docs
+featured: false
+headerStyle: plain
+---
+
+<div class="dsl-page">
+
+<div class="callout callout--warm">
+  <strong>Archived specification:</strong> this page records the system that preceded the 2026 editorial redesign.
+  The active specification is <a href="/docs/site-architecture-and-design-language">Current Design Language</a>.
+</div>
+
+<section class="dsl-hero" id="top">
+  <div class="dsl-hero__copy">
+    <p class="dsl-kicker">Design Guide</p>
+    <h1>Chips'nCode Design System</h1>
+    <p>
+      A living design-language spec for a multi-mode website: one visual grammar, many page archetypes,
+      zero tolerance for generic template cloning.
+    </p>
+  </div>
+  <div class="dsl-state" aria-label="Design system state">
+    <p class="dsl-state__title">system://status</p>
+    <dl>
+      <div><dt>updated</dt><dd>2026-03-08</dd></div>
+      <div><dt>site modes</dt><dd>7</dd></div>
+      <div><dt>header modes</dt><dd>2</dd></div>
+      <div><dt>interaction rule</dt><dd>enhance, never block</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="callout callout--note">
+  <strong>Archive:</strong> previous working version is preserved as
+  <a href="/docs/site-architecture-and-design-language-archive-2026-03-08">Design Language Archive - 2026-03-08</a>.
+</div>
+
+<nav class="dsl-nav" aria-label="Design spec sections">
+  <a href="#principles">principles</a>
+  <a href="#references">references</a>
+  <a href="#foundations">foundations</a>
+  <a href="#diagrams">diagrams</a>
+  <a href="#archetypes">archetypes</a>
+  <a href="#patterns">patterns</a>
+  <a href="#specimens">specimens</a>
+  <a href="#anatomy">anatomy</a>
+  <a href="#quality">quality</a>
+  <a href="#governance">governance</a>
+  <a href="#history">history</a>
+</nav>
+
+<section id="principles">
+
+## 1) North Star Principles
+
+<div class="dsl-grid dsl-grid--2">
+  <article class="dsl-card">
+    <h3>Cohesive, not uniform</h3>
+    <p>Every section should feel related. No section should feel copy-pasted.</p>
+  </article>
+  <article class="dsl-card">
+    <h3>Scanning first, depth second</h3>
+    <p>Indexes optimize orientation. Detail pages optimize comprehension.</p>
+  </article>
+  <article class="dsl-card">
+    <h3>Frame follows content</h3>
+    <p>Header strength (`plain` vs `panel`) should match content behavior, not fashion.</p>
+  </article>
+  <article class="dsl-card">
+    <h3>Enhance, never gate</h3>
+    <p>Interactive layers are optional. Core reading/navigation always works without them.</p>
+  </article>
+</div>
+
+<div class="dsl-rulebar" role="note" aria-label="Rule strip">
+  <div>
+    <p class="dsl-rulebar__label">Bad rule</p>
+    <p>One template for every page.</p>
+  </div>
+  <div>
+    <p class="dsl-rulebar__label">Better rule</p>
+    <p>One voice, section-specific pacing.</p>
+  </div>
+  <div>
+    <p class="dsl-rulebar__label">Actual rule</p>
+    <p>Shared primitives + archetype-aware composition.</p>
+  </div>
+</div>
+
+</section>
+
+<section id="references">
+
+## 2) Documentation References
+
+Structure inspiration for this page and this system was taken from mature design docs patterns:
+
+- [Atlassian Design System Foundations](https://atlassian.design/foundations/): clear split between foundations, guidelines, and styles.
+- [Atlassian Design Tokens](https://atlassian.design/foundations/tokens/design-tokens/): semantic naming and token governance model.
+- [Radix Primitives Introduction](https://www.radix-ui.com/primitives/docs/overview/introduction): accessibility-first component philosophy.
+- [Radix Accessibility Overview](https://www.radix-ui.com/primitives/docs/overview/accessibility): explicit focus/keyboard/aria contract.
+- [IBM Carbon](https://carbondesignsystem.com/): foundation + pattern + governance framing.
+- [Primer Foundations](https://primer.style/product/getting-started/foundations/): practical, implementation-oriented foundations docs.
+
+<div class="callout callout--note">
+  <strong>Important:</strong> this page is inspired by documentation architecture, not visual identity.
+  Chips'nCode keeps its own visual language.
+</div>
+
+</section>
+
+<section id="foundations">
+
+## 3) Foundations
+
+### 3.1 Site topology
+
+```text
+/                        switchboard
+/notebook                editorial index
+/projects                build index
+/tools                   utility index
+/docs                    manual index
+/education               teaching index
+/astrophotography        image-led index
+/poetry                  literary archive
+/tags/[tag]              cross-collection relationship index
+```
+
+### 3.2 Foundation stack
+
+<div class="dsl-grid dsl-grid--3">
+  <article class="dsl-card">
+    <h3>Type and voice</h3>
+    <ul>
+      <li>technical but human</li>
+      <li>concise metadata, generous prose</li>
+      <li>clear heading hierarchy</li>
+    </ul>
+  </article>
+  <article class="dsl-card">
+    <h3>Surface language</h3>
+    <ul>
+      <li><code>panel</code> and <code>panel--soft</code> as primary grouping surfaces</li>
+      <li>borders carry structure; shadows are secondary</li>
+      <li>gradients used to signal section character</li>
+    </ul>
+  </article>
+  <article class="dsl-card">
+    <h3>Interaction model</h3>
+    <ul>
+      <li>link-first navigation baseline</li>
+      <li>optional query drawers for power users</li>
+      <li>keyboard and focus contracts are mandatory</li>
+    </ul>
+  </article>
+</div>
+
+### 3.3 Theme contract
+
+| Rule | Current behavior | Why |
+| --- | --- | --- |
+| Global default | Light-first with toggle | broad readability baseline |
+| Persisted choice | stored in `localStorage` | continuity across visits |
+| Astrophotography exception | forced dark mode | image contrast and section intent |
+| System preference fallback | used when no explicit selection | user-respectful default |
+
+### 3.4 Header decision matrix
+
+| Context | Use | Expected result |
+| --- | --- | --- |
+| text-first longform | `headerStyle: plain` | reduced chrome, reading priority |
+| artifact/build/demo lead | `headerStyle: panel` | stronger metadata + media framing |
+| panel without hero media | panel text-only fallback | stable visual rhythm |
+| education clarity-sensitive page | plain or low-noise panel | cognitive load control |
+
+</section>
+
+<section id="diagrams">
+
+## 3.5 Architecture Diagrams
+
+### System path map
+
+```text
+Home (/)
+  -> section indexes
+      -> /notebook
+      -> /projects
+      -> /tools
+      -> /docs
+      -> /education
+      -> /astrophotography
+      -> /poetry
+  -> detail pages ([slug] routes)
+  -> relationship layer (/tags/[tag])
+```
+
+### Interaction stack
+
+```text
+[L3] Optional query layer     edge drawers + CLI shell
+[L2] Enhanced browse layer    sorting + related tags + quick panels
+[L1] Core navigation layer    links + lists + heading hierarchy
+[L0] Content baseline         semantic HTML + readable prose
+```
+
+### Theme resolution flow
+
+```text
+Route = /astrophotography ?  yes -> force dark mode
+                              no -> check saved theme
+                                         -> if missing, use system preference
+```
+
+<div class="dsl-diagramLegend" aria-label="Diagram legend">
+  <span><strong>L0-L3</strong>: layered interaction model</span>
+  <span><strong>force dark mode</strong>: route-level exception, not user toggle failure</span>
+</div>
+
+</section>
+
+<section id="archetypes">
+
+## 4) Archetypes by Section
+
+<div class="dsl-arch-grid">
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Switchboard</p>
+      <h3>Homepage</h3>
+    </header>
+    <p><strong>Signature:</strong> migration banner + thematic routing chips + mixed masonry signal.</p>
+    <ul>
+      <li>cross-collection highlights</li>
+      <li>high-level route affordances</li>
+      <li>latest-entry pull-through</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Editorial</p>
+      <h3>Notebook</h3>
+    </header>
+    <p><strong>Signature:</strong> lead story + support rail + dense archive.</p>
+    <ul>
+      <li>featured semantics</li>
+      <li>date/tag readable at scan speed</li>
+      <li>optional query drawer</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Artifact</p>
+      <h3>Projects</h3>
+    </header>
+    <p><strong>Signature:</strong> featured build + archive grid + detail pages with flexible hero framing.</p>
+    <ul>
+      <li>strong metadata strips</li>
+      <li>spec/status/journal content blocks</li>
+      <li>project detail pages can be `plain` or `panel`</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Utility</p>
+      <h3>Tools</h3>
+    </header>
+    <p><strong>Signature:</strong> lead utility + compact deck + function-forward metadata.</p>
+    <ul>
+      <li>quick-identification glyphing</li>
+      <li>short descriptions with high information density</li>
+      <li>optional query drawer</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Manual</p>
+      <h3>Docs</h3>
+    </header>
+    <p><strong>Signature:</strong> quick panels + directory grouped by section.</p>
+    <ul>
+      <li>start-here path</li>
+      <li>latest + popular tags visibility</li>
+      <li>query drawer with man-page behavior</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Teaching</p>
+      <h3>Education</h3>
+    </header>
+    <p><strong>Signature:</strong> teaching shelf layout with taxonomy-first metadata.</p>
+    <ul>
+      <li>subject/level/type pills</li>
+      <li>featured + support + archive flow</li>
+      <li>legacy route compatibility where required</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Relationship</p>
+      <h3>Tag Pages</h3>
+    </header>
+    <p><strong>Signature:</strong> cross-collection archive with sorting and related-tag context.</p>
+    <ul>
+      <li>collection mix strip</li>
+      <li>related tags module</li>
+      <li>client-side sort controls</li>
+    </ul>
+  </article>
+
+  <article class="dsl-arch">
+    <header>
+      <p class="dsl-arch__kicker">Image / Literary</p>
+      <h3>Astro + Poetry</h3>
+    </header>
+    <p><strong>Signature:</strong> pace-sensitive sections with reduced chrome and stronger mood control.</p>
+    <ul>
+      <li>astro dark-mode lock</li>
+      <li>poetry archival cadence</li>
+      <li>minimal UI noise in reading zones</li>
+    </ul>
+  </article>
+</div>
+
+</section>
+
+<section id="patterns">
+
+## 5) Shared Pattern Library (Operational)
+
+### 5.1 Reuse-first primitives
+
+| Primitive | Intent | Anti-pattern |
+| --- | --- | --- |
+| `Header` | global orientation, route access, theme control | per-section nav forks with divergent behavior |
+| `IndexHeader` | section identity + status framing | bespoke hero wrappers per index |
+| `panel` / `panel--soft` | content grouping and visual rhythm | custom one-off card wrappers |
+| `pill` / `pill--link` | compact metadata and taxonomy | ad-hoc tag styling across sections |
+| `edge-drawer-*` | optional side-utilities | modal-only query tools that block reading |
+| `CliShell` | command-style discovery for dense indexes | shell UX without link-based fallback |
+
+### 5.2 Drawer pattern contract
+
+<div class="dsl-grid dsl-grid--2">
+  <article class="dsl-card">
+    <h3>Do</h3>
+    <ul>
+      <li>keep drawer optional</li>
+      <li>include close/backdrop affordances</li>
+      <li>hide query overlays on constrained mobile breakpoints</li>
+      <li>keep equivalent content discoverable through page structure</li>
+    </ul>
+  </article>
+  <article class="dsl-card">
+    <h3>Do not</h3>
+    <ul>
+      <li>hide critical navigation inside drawers</li>
+      <li>require shell commands for core discovery</li>
+      <li>ship keyboard-inaccessible overlays</li>
+      <li>duplicate taxonomy logic between drawer and page with mismatch</li>
+    </ul>
+  </article>
+</div>
+
+### 5.3 Metadata and taxonomy contract
+
+- Tags must be meaningful across collections, not collection-local aliases.
+- `featured` marks editorial priority, not simply recency.
+- Date signals should consistently resolve from `updatedDate` then `pubDate` where applicable.
+- Taxonomy pills in education should map to tag routes only when actual tag data exists.
+
+</section>
+
+<section id="specimens">
+
+## 5.4 Pattern Specimens (Before and After)
+
+<div class="dsl-specimens">
+  <article class="dsl-specimen">
+    <h3>Index Header Pattern</h3>
+    <div class="dsl-specimen__grid">
+      <div class="dsl-specimen__bad">
+        <p class="dsl-specimen__label">Before</p>
+        <ul>
+          <li>single generic heading block</li>
+          <li>no section-specific status framing</li>
+          <li>weak scan affordance above fold</li>
+        </ul>
+      </div>
+      <div class="dsl-specimen__good">
+        <p class="dsl-specimen__label">After</p>
+        <ul>
+          <li>`IndexHeader` with eyebrow + lede + optional status lines</li>
+          <li>immediate section identity and purpose</li>
+          <li>consistent entry frame across index archetypes</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="dsl-specimen">
+    <h3>Discovery Pattern</h3>
+    <div class="dsl-specimen__grid">
+      <div class="dsl-specimen__bad">
+        <p class="dsl-specimen__label">Before</p>
+        <ul>
+          <li>single browse path only</li>
+          <li>dense indexes become hard to query</li>
+          <li>no power-user interaction layer</li>
+        </ul>
+      </div>
+      <div class="dsl-specimen__good">
+        <p class="dsl-specimen__label">After</p>
+        <ul>
+          <li>optional edge-drawer query layer</li>
+          <li>CLI-style search remains additive</li>
+          <li>core link-based browsing always intact</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="dsl-specimen">
+    <h3>Detail Hero Pattern</h3>
+    <div class="dsl-specimen__grid">
+      <div class="dsl-specimen__bad">
+        <p class="dsl-specimen__label">Before</p>
+        <ul>
+          <li>single hero treatment for all detail pages</li>
+          <li>media-first layout forced on text-first entries</li>
+          <li>inconsistent reading rhythm</li>
+        </ul>
+      </div>
+      <div class="dsl-specimen__good">
+        <p class="dsl-specimen__label">After</p>
+        <ul>
+          <li>`headerStyle` controlled per entry</li>
+          <li>`plain` and `panel` map to content behavior</li>
+          <li>stable fallback when hero media is absent</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</div>
+
+</section>
+
+<section id="anatomy">
+
+## 5.5 Component Anatomy
+
+<div class="dsl-anatomy">
+  <article class="dsl-anatomyCard">
+    <h3>Global Header Anatomy</h3>
+    <ol>
+      <li><strong>Brand anchor:</strong> stable home return point.</li>
+      <li><strong>Primary route rail:</strong> section-level navigation.</li>
+      <li><strong>Theme control:</strong> explicit user preference override.</li>
+      <li><strong>Utility link:</strong> source / external utility access.</li>
+      <li><strong>Sticky frame:</strong> persistent orientation while scrolling.</li>
+    </ol>
+  </article>
+
+  <article class="dsl-anatomyCard">
+    <h3>Index Card Anatomy</h3>
+    <ol>
+      <li><strong>Kicker/meta:</strong> type, featured state, date.</li>
+      <li><strong>Primary title:</strong> strongest click target.</li>
+      <li><strong>Description:</strong> one-paragraph scan summary.</li>
+      <li><strong>Tag row:</strong> relationship routing to related content.</li>
+      <li><strong>Media slot:</strong> optional visual context, never required for function.</li>
+    </ol>
+  </article>
+
+  <article class="dsl-anatomyCard">
+    <h3>Edge Drawer Anatomy</h3>
+    <ol>
+      <li><strong>Tab handle:</strong> discoverable but low-noise trigger.</li>
+      <li><strong>Backdrop:</strong> explicit close affordance.</li>
+      <li><strong>Panel shell:</strong> isolated utility context.</li>
+      <li><strong>Query engine:</strong> filter/open behavior on indexed content.</li>
+      <li><strong>Manual layer:</strong> command help without leaving current page.</li>
+    </ol>
+  </article>
+</div>
+
+</section>
+
+<section id="quality">
+
+## 6) Accessibility and Quality Gates
+
+<table class="dsl-checklist">
+  <thead>
+    <tr>
+      <th>Gate</th>
+      <th>Minimum requirement</th>
+      <th>Ship decision</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Semantic structure</td>
+      <td>single `h1`, logical heading tree, landmark clarity</td>
+      <td>block if violated</td>
+    </tr>
+    <tr>
+      <td>Keyboard flow</td>
+      <td>all interactive controls reachable and operable by keyboard</td>
+      <td>block if violated</td>
+    </tr>
+    <tr>
+      <td>Focus visibility</td>
+      <td>focus indicator visible against all surfaces</td>
+      <td>block if violated</td>
+    </tr>
+    <tr>
+      <td>Color semantics</td>
+      <td>state/meaning not encoded by color alone</td>
+      <td>block if violated</td>
+    </tr>
+    <tr>
+      <td>No-JS resilience</td>
+      <td>core browse/read path still works without client scripts</td>
+      <td>block if violated</td>
+    </tr>
+    <tr>
+      <td>Responsive integrity</td>
+      <td>no clipped content or unusable controls at narrow viewport widths</td>
+      <td>block if violated</td>
+    </tr>
+  </tbody>
+</table>
+
+### 6.1 Pre-merge design QA
+
+1. Archetype identified and respected.
+2. Existing primitive reused where possible.
+3. Theme behavior verified on both light and dark modes.
+4. Route-specific theme exceptions verified (astrophotography).
+5. Keyboard and screen-reader basic pass completed.
+6. Mobile breakpoint pass completed.
+7. Spec updated if behavior changed materially.
+
+</section>
+
+<section id="governance">
+
+## 7) Governance, Versioning, and Change Control
+
+<div class="dsl-grid dsl-grid--2">
+  <article class="dsl-card dsl-card--accent">
+    <h3>Spec status</h3>
+    <p>This page is the active design-system specification for Chips'nCode.</p>
+  </article>
+  <article class="dsl-card">
+    <h3>Archive policy</h3>
+    <p>Before major rewrites, duplicate active spec to a dated archive and cross-link both versions.</p>
+  </article>
+</div>
+
+### 7.1 Required process for major design updates
+
+1. Create archive snapshot: `site-architecture-and-design-language-archive-YYYY-MM-DD.mdx`.
+2. Add archive link callout at top of active spec.
+3. Update the history section with concrete date and scope.
+4. Confirm route build succeeds for both active and archive pages.
+
+### 7.2 Planned improvements
+
+- formal token registry page for `--space-*`, surface, and semantic color usage
+- explicit motion guidelines per interaction type
+- component-level accessibility checklists by primitive
+- screenshot-backed examples for each archetype pattern
+
+</section>
+
+<section id="history">
+
+## 8) History
+
+<div class="dsl-timeline" aria-label="Design system history timeline">
+  <article class="dsl-timeline__item">
+    <p class="dsl-timeline__date">2026-03-01</p>
+    <h3>Initial Architecture Spec</h3>
+    <p>
+      The first design-language page established the multi-section model and the core rule:
+      cohesive design language over cloned templates.
+    </p>
+  </article>
+
+  <article class="dsl-timeline__item">
+    <p class="dsl-timeline__date">2026-03-02</p>
+    <h3>Archetype Refinement</h3>
+    <p>
+      Section-level archetypes were clarified, including index behavior, header modes, and early
+      route-specific pacing rules.
+    </p>
+  </article>
+
+  <article class="dsl-timeline__item">
+    <p class="dsl-timeline__date">2026-03-08</p>
+    <h3>System Alignment Pass</h3>
+    <p>
+      Documentation was aligned to live behavior: edge query drawers, theme contracts, taxonomy
+      interactions, and cross-collection relationships.
+    </p>
+  </article>
+
+  <article class="dsl-timeline__item dsl-timeline__item--current">
+    <p class="dsl-timeline__date">2026-03-08 (rev B)</p>
+    <h3>Documentation Design Upgrade</h3>
+    <p>
+      The spec became a richer public design document with architecture diagrams, before/after
+      specimens, and component anatomy maps.
+    </p>
+  </article>
+</div>
+
+</section>
+
+ </div>
+
+<style is:inline>{`
+  .dsl-page {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .dsl-page *,
+  .dsl-page *::before,
+  .dsl-page *::after {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .dsl-page p,
+  .dsl-page li,
+  .dsl-page td,
+  .dsl-page th,
+  .dsl-page h1,
+  .dsl-page h2,
+  .dsl-page h3,
+  .dsl-page h4 {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .dsl-page code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .dsl-page table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .dsl-page table td,
+  .dsl-page table th {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .dsl-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+    padding: clamp(1.1rem, 2.4vw, 1.8rem);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(680px 260px at 0% 0%, color-mix(in srgb, var(--accent) 18%, transparent 82%), transparent 72%),
+      radial-gradient(620px 260px at 100% 100%, color-mix(in srgb, var(--leaf) 14%, transparent 86%), transparent 72%),
+      var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .dsl-hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 0.97;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .dsl-hero__copy p {
+    margin: 0.6rem 0 0;
+    max-width: 64ch;
+    color: var(--text-2);
+  }
+
+  .dsl-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--accent) 64%, var(--text) 36%);
+    font-family: var(--font-mono);
+  }
+
+  .dsl-state {
+    border: 1px solid color-mix(in srgb, var(--border) 82%, var(--accent) 18%);
+    border-radius: 14px;
+    padding: 0.85rem 0.95rem;
+    background: color-mix(in srgb, var(--surface-raised) 92%, var(--accent) 8%);
+    align-self: start;
+  }
+
+  .dsl-state__title {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--muted);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .dsl-state dl {
+    margin: 0;
+    display: grid;
+    gap: 0.46rem;
+  }
+
+  .dsl-state dl div {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    gap: 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .dsl-state dt {
+    color: var(--muted);
+  }
+
+  .dsl-state dd {
+    margin: 0;
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .dsl-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 var(--space-6);
+  }
+
+  .dsl-nav a {
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.34rem 0.68rem;
+    font-size: 0.84rem;
+    color: var(--text-2);
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent 8%);
+  }
+
+  .dsl-nav a:hover {
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 38%, var(--border) 62%);
+    background: color-mix(in srgb, var(--surface-raised) 70%, var(--accent) 30%);
+  }
+
+  .dsl-grid {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0.8rem 0 1rem;
+  }
+
+  .dsl-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dsl-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dsl-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.82rem 0.9rem;
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent 8%);
+  }
+
+  .dsl-card h3 {
+    margin: 0 0 0.42rem;
+    font-size: 1rem;
+  }
+
+  .dsl-card p,
+  .dsl-card ul {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.93rem;
+    line-height: 1.45;
+  }
+
+  .dsl-card ul {
+    padding-left: 1.05rem;
+    display: grid;
+    gap: 0.34rem;
+  }
+
+  .dsl-card--accent {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border) 70%);
+    background: color-mix(in srgb, var(--surface-raised) 76%, var(--accent) 24%);
+  }
+
+  .dsl-rulebar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.72rem;
+    margin: 0.9rem 0 0;
+  }
+
+  .dsl-rulebar > div {
+    border: 1px dashed color-mix(in srgb, var(--border) 76%, var(--accent) 24%);
+    border-radius: 12px;
+    padding: 0.72rem 0.78rem;
+    background: color-mix(in srgb, var(--surface-raised) 95%, transparent 5%);
+  }
+
+  .dsl-rulebar p {
+    margin: 0;
+  }
+
+  .dsl-rulebar__label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .dsl-arch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+  }
+
+  .dsl-arch {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.85rem 0.95rem;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface-raised) 86%, transparent 14%),
+        color-mix(in srgb, var(--surface) 84%, var(--surface-raised) 16%)
+      );
+  }
+
+  .dsl-arch header h3 {
+    margin: 0;
+  }
+
+  .dsl-arch p,
+  .dsl-arch ul {
+    margin: 0.46rem 0 0;
+    color: var(--text-2);
+    font-size: 0.93rem;
+  }
+
+  .dsl-arch ul {
+    padding-left: 1.03rem;
+    display: grid;
+    gap: 0.31rem;
+  }
+
+  .dsl-arch__kicker {
+    margin: 0 0 0.18rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+  }
+
+  .dsl-checklist {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.92rem;
+  }
+
+  .dsl-checklist th,
+  .dsl-checklist td {
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 0.64rem;
+    vertical-align: top;
+    text-align: left;
+  }
+
+  .dsl-checklist thead th {
+    background: color-mix(in srgb, var(--surface-raised) 86%, var(--accent) 14%);
+  }
+
+  .dsl-checklist tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  #diagrams pre {
+    margin-top: 0.45rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface-raised) 90%, transparent 10%);
+    padding: 0.72rem 0.8rem;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    overflow-x: auto;
+  }
+
+  .dsl-diagramLegend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.55rem;
+    margin-top: 0.2rem;
+    color: var(--text-2);
+    font-size: 0.88rem;
+  }
+
+  .dsl-specimens {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .dsl-specimen {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface-raised) 88%, transparent 12%),
+        color-mix(in srgb, var(--surface) 86%, var(--surface-raised) 14%)
+      );
+  }
+
+  .dsl-specimen h3 {
+    margin: 0 0 0.6rem;
+  }
+
+  .dsl-specimen__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .dsl-specimen__bad,
+  .dsl-specimen__good {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.62rem 0.72rem;
+    font-size: 0.9rem;
+  }
+
+  .dsl-specimen__bad {
+    background: color-mix(in srgb, var(--surface-raised) 92%, #ef4444 8%);
+  }
+
+  .dsl-specimen__good {
+    background: color-mix(in srgb, var(--surface-raised) 92%, #22c55e 8%);
+  }
+
+  .dsl-specimen__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .dsl-specimen__bad ul,
+  .dsl-specimen__good ul {
+    margin: 0.38rem 0 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: 0.3rem;
+    color: var(--text-2);
+  }
+
+  .dsl-anatomy {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .dsl-anatomyCard {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.82rem 0.9rem;
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent 8%);
+  }
+
+  .dsl-anatomyCard h3 {
+    margin: 0 0 0.52rem;
+  }
+
+  .dsl-anatomyCard ol {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.33rem;
+    color: var(--text-2);
+    font-size: 0.9rem;
+  }
+
+  .dsl-timeline {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.72rem;
+    border-left: 2px solid color-mix(in srgb, var(--border) 72%, var(--accent) 28%);
+    padding-left: 0.8rem;
+  }
+
+  .dsl-timeline__item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface-raised) 93%, transparent 7%);
+    padding: 0.7rem 0.78rem;
+    position: relative;
+  }
+
+  .dsl-timeline__item::before {
+    content: "";
+    position: absolute;
+    left: -1.31rem;
+    top: 0.95rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: 2px solid color-mix(in srgb, var(--accent) 54%, var(--border) 46%);
+    background: var(--surface);
+  }
+
+  .dsl-timeline__item h3 {
+    margin: 0.2rem 0 0.3rem;
+    font-size: 1rem;
+  }
+
+  .dsl-timeline__item p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 0.93rem;
+  }
+
+  .dsl-timeline__date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.73rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dsl-timeline__item--current {
+    border-color: color-mix(in srgb, var(--accent) 34%, var(--border) 66%);
+    background: color-mix(in srgb, var(--surface-raised) 75%, var(--accent) 25%);
+  }
+
+  @media (max-width: 980px) {
+    .dsl-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .dsl-grid--3 {
+      grid-template-columns: 1fr;
+    }
+
+    .dsl-grid--2,
+    .dsl-rulebar,
+    .dsl-arch-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dsl-specimen__grid,
+    .dsl-anatomy {
+      grid-template-columns: 1fr;
+    }
+  }
+`}</style>

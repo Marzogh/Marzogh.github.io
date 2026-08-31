@@ -6,12 +6,13 @@ import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
 import { getTagMeta, toTagSlug } from '../../utils/tags';
 import { isPublishedEntryData } from '../../utils/publishing';
+import { EDUCATION_VISIBLE } from '../../utils/siteVisibility';
 
 const COLLECTION_CONFIG = [
   { name: 'blog', label: 'Notebook', basePath: '/notebook' },
   { name: 'projects', label: 'Projects', basePath: '/projects' },
   { name: 'docs', label: 'Docs', basePath: '/docs' },
-  { name: 'education', label: 'Education', basePath: '/education' },
+  ...(EDUCATION_VISIBLE ? [{ name: 'education', label: 'Education', basePath: '/education' } as const] : []),
   { name: 'tools', label: 'Tools', basePath: '/tools' },
   { name: 'astrophotography', label: 'Astrophotography', basePath: '/astrophotography' },
 ] as const;
@@ -61,7 +62,7 @@ export async function getStaticPaths() {
     { name: 'blog', label: 'Notebook', basePath: '/notebook' },
     { name: 'projects', label: 'Projects', basePath: '/projects' },
     { name: 'docs', label: 'Docs', basePath: '/docs' },
-    { name: 'education', label: 'Education', basePath: '/education' },
+    ...(EDUCATION_VISIBLE ? [{ name: 'education', label: 'Education', basePath: '/education' } as const] : []),
     { name: 'tools', label: 'Tools', basePath: '/tools' },
     { name: 'astrophotography', label: 'Astrophotography', basePath: '/astrophotography' },
   ] as const;

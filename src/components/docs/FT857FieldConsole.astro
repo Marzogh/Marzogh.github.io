@@ -510,23 +510,23 @@ const groupLabels = {
 };
 ---
 
-<section class="ft-console" data-ft-console>
+<section class="ft-console ft-console--fieldbook" data-ft-console>
   <div class="ft-resource" aria-label="Printable field manual">
     <div>
-      <p class="ft-resource__label">Printable field manual</p>
-      <p class="ft-resource__text">Use this page for quick lookups. Use the PDF when you want the field-card version in the radio bag.</p>
+      <p class="ft-resource__label">Offline field copy</p>
+      <p class="ft-resource__text">Task cards, function rows, menu table and connection checks.</p>
     </div>
-    <a class="ft-resource__pdf" href="/assets/downloads/ft-857d-field-manual.pdf" download>Download PDF</a>
+    <a class="ft-resource__pdf" href="/assets/downloads/ft-857d-field-manual.pdf" download>Download field PDF <span aria-hidden="true">↓</span></a>
   </div>
 
-  <nav class="ft-tabs" aria-label="FT-857D console sections">
-    <button class="is-active" type="button" data-panel-target="tasks">Tasks</button>
-    <button type="button" data-panel-target="rows">Function Rows</button>
-    <button type="button" data-panel-target="menus">Menu Lookup</button>
-    <button type="button" data-panel-target="maps">Controls</button>
+  <nav class="ft-tabs" role="tablist" aria-label="FT-857D reference sections">
+    <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="ft-panel-tasks" data-panel-target="tasks">Operating tasks</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="ft-panel-rows" tabindex="-1" data-panel-target="rows">Function rows</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="ft-panel-menus" tabindex="-1" data-panel-target="menus">Menu items</button>
+    <button type="button" role="tab" aria-selected="false" aria-controls="ft-panel-maps" tabindex="-1" data-panel-target="maps">Connections &amp; controls</button>
   </nav>
 
-  <div class="ft-panel is-active" data-panel="tasks">
+  <div class="ft-panel is-active" id="ft-panel-tasks" role="tabpanel" data-panel="tasks">
     <div class="ft-tools">
       <label class="ft-search">
         <span>Find a task</span>
@@ -569,7 +569,7 @@ const groupLabels = {
     </div>
   </div>
 
-  <div class="ft-panel" data-panel="rows">
+  <div class="ft-panel" id="ft-panel-rows" role="tabpanel" data-panel="rows">
     <div class="ft-row-layout">
       <div class="ft-row-picker">
         <label class="ft-search ft-row-search">
@@ -630,7 +630,7 @@ const groupLabels = {
     </div>
   </div>
 
-  <div class="ft-panel" data-panel="menus">
+  <div class="ft-panel" id="ft-panel-menus" role="tabpanel" data-panel="menus">
     <div class="ft-tools">
       <label class="ft-search">
         <span>Find a menu item</span>
@@ -664,7 +664,7 @@ const groupLabels = {
     </div>
   </div>
 
-  <div class="ft-panel" data-panel="maps">
+  <div class="ft-panel" id="ft-panel-maps" role="tabpanel" data-panel="maps">
     <div class="ft-map-grid">
       <section>
         <h3>Front panel controls</h3>
@@ -722,7 +722,26 @@ const groupLabels = {
       button.addEventListener('click', () => {
         const target = button.getAttribute('data-panel-target');
         setActive(panelButtons, button);
+        panelButtons.forEach((item) => {
+          const active = item === button;
+          item.setAttribute('aria-selected', String(active));
+          item.tabIndex = active ? 0 : -1;
+        });
         panels.forEach((panel) => panel.classList.toggle('is-active', panel.getAttribute('data-panel') === target));
+      });
+    });
+
+    panelButtons.forEach((button, index) => {
+      button.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let next = index;
+        if (event.key === 'ArrowLeft') next = (index - 1 + panelButtons.length) % panelButtons.length;
+        if (event.key === 'ArrowRight') next = (index + 1) % panelButtons.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = panelButtons.length - 1;
+        panelButtons[next]?.focus();
+        panelButtons[next]?.click();
       });
     });
 
@@ -1452,5 +1471,385 @@ const groupLabels = {
       grid-template-columns: 1fr;
       gap: 0.2rem;
     }
+  }
+
+  /* 2026 field-book treatment: dense, task-first, and shared-theme aware. */
+  .ft-console--fieldbook {
+    --ft-amber: #c98518;
+    --ft-lcd: #171814;
+    --ft-lcd-line: #665b3c;
+    --ft-lcd-text: #f2bd53;
+    gap: 0;
+    margin-top: 0;
+    font-size: 0.94rem;
+  }
+
+  .ft-console--fieldbook .ft-resource {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.62rem 0.75rem;
+    border: 1px solid var(--ft-line);
+    border-left: 0;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ft-panel) 90%, transparent);
+    box-shadow: inset 3px 0 0 var(--ft-blue);
+  }
+
+  .ft-console--fieldbook .ft-resource > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.7rem;
+    align-items: baseline;
+  }
+
+  .ft-console--fieldbook .ft-resource__label {
+    color: var(--ft-blue);
+    font: 700 0.64rem var(--font-mono);
+  }
+
+  .ft-console--fieldbook .ft-resource__text {
+    color: var(--ft-muted);
+    font-size: 0.82rem;
+  }
+
+  .ft-console--fieldbook .ft-resource__pdf {
+    align-self: center;
+    padding: 0.42rem 0.6rem;
+    border: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ft-ink);
+    font: 700 0.66rem var(--font-mono);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .ft-console--fieldbook .ft-resource__pdf:hover {
+    border-color: var(--ft-blue);
+    color: var(--ft-blue);
+  }
+
+  .ft-console--fieldbook .ft-tabs {
+    position: sticky;
+    top: var(--header-height, 4.5rem);
+    z-index: 18;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--ft-line);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    backdrop-filter: blur(12px);
+    overscroll-behavior-inline: contain;
+  }
+
+  .ft-console--fieldbook .ft-tabs button {
+    flex: 1 0 auto;
+    min-height: 39px;
+    padding: 0.48rem 0.75rem;
+    border: 0;
+    border-right: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ft-muted);
+    font: 700 0.68rem var(--font-mono);
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ft-console--fieldbook .ft-tabs button:last-child { border-right: 0; }
+  .ft-console--fieldbook .ft-tabs button:hover { background: var(--ft-active); }
+  .ft-console--fieldbook .ft-tabs button.is-active {
+    border-color: var(--ft-line);
+    background: color-mix(in srgb, var(--ft-blue) 6%, transparent);
+    box-shadow: inset 0 -2px 0 var(--ft-blue);
+    color: var(--ft-ink);
+  }
+
+  .ft-console--fieldbook .ft-panel { padding-top: 0.9rem; }
+
+  .ft-console--fieldbook .ft-tools {
+    grid-template-columns: minmax(15rem, 23rem) minmax(0, 1fr);
+    gap: 0.7rem 1rem;
+    align-items: end;
+    margin-bottom: 0.8rem;
+  }
+
+  .ft-console--fieldbook .ft-search { gap: 0.25rem; }
+  .ft-console--fieldbook .ft-search span,
+  .ft-console--fieldbook .ft-menu-count {
+    font: 700 0.62rem var(--font-mono);
+    letter-spacing: 0.07em;
+  }
+
+  .ft-console--fieldbook .ft-search input {
+    min-height: 39px;
+    padding: 0.5rem 0.65rem;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ft-panel) 92%, transparent);
+    font-size: 0.9rem;
+  }
+
+  .ft-console--fieldbook .ft-filterbar { gap: 0.3rem; }
+  .ft-console--fieldbook .ft-filterbar button,
+  .ft-console--fieldbook .ft-tags button {
+    min-height: 29px;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0;
+    font: 700 0.64rem var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .ft-console--fieldbook .ft-task-grid {
+    gap: 0;
+    border-top: 1px solid var(--ft-line);
+    border-left: 1px solid var(--ft-line);
+  }
+
+  .ft-console--fieldbook .ft-task {
+    gap: 0.65rem;
+    padding: 0.85rem;
+    border: 0;
+    border-right: 1px solid var(--ft-line);
+    border-bottom: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ft-panel) 88%, transparent);
+    box-shadow: none;
+  }
+
+  .ft-console--fieldbook .ft-task__head p,
+  .ft-console--fieldbook .ft-task__steps-label {
+    color: var(--ft-blue);
+    font: 700 0.61rem var(--font-mono);
+  }
+
+  .ft-console--fieldbook .ft-task__head h3 { font-size: 1.05rem; }
+  .ft-console--fieldbook .ft-task__head span { font-size: 0.86rem; line-height: 1.4; }
+  .ft-console--fieldbook .ft-task ol { font-size: 0.86rem; line-height: 1.4; }
+
+  .ft-console--fieldbook .ft-task__check {
+    padding: 0.55rem 0.65rem;
+    border: 0;
+    border-left: 3px solid var(--ft-green);
+    border-radius: 0;
+  }
+
+  .ft-console--fieldbook .ft-task__check strong { font-size: 0.76rem; }
+  .ft-console--fieldbook .ft-task__check p { font-size: 0.84rem; }
+  .ft-console--fieldbook .ft-task details {
+    padding: 0.5rem 0.6rem;
+    border-radius: 0;
+    background: transparent;
+    font-size: 0.84rem;
+  }
+
+  .ft-console--fieldbook .ft-task summary { font-size: 0.78rem; }
+
+  .ft-console--fieldbook .ft-row-layout {
+    grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .ft-console--fieldbook .ft-row-picker {
+    position: sticky;
+    top: calc(var(--header-height, 4.5rem) + 3.2rem);
+    gap: 0.5rem;
+  }
+
+  .ft-console--fieldbook .ft-row-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-height: calc(100vh - var(--header-height, 4.5rem) - 9rem);
+    overflow-y: auto;
+    border: 1px solid var(--ft-line);
+    overscroll-behavior-y: auto;
+  }
+
+  .ft-console--fieldbook .ft-row-strip button {
+    grid-template-columns: 1.65rem minmax(0, 1fr);
+    min-height: 36px;
+    padding: 0.35rem 0.45rem;
+    border: 0;
+    border-bottom: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .ft-console--fieldbook .ft-row-strip button:last-child { border-bottom: 0; }
+  .ft-console--fieldbook .ft-row-strip button.is-active {
+    background: var(--ft-active);
+    box-shadow: inset 2px 0 0 var(--ft-blue);
+  }
+
+  .ft-console--fieldbook .ft-row-strip span {
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 0;
+    background: transparent;
+    font-size: 0.68rem;
+  }
+
+  .ft-console--fieldbook .ft-row-strip button.is-active span {
+    background: transparent;
+    color: var(--ft-blue);
+  }
+
+  .ft-console--fieldbook .ft-row-strip strong { font: 600 0.7rem var(--font-mono); }
+  .ft-console--fieldbook .ft-row-card {
+    padding: clamp(0.8rem, 2vw, 1.1rem);
+    border: 1px solid var(--ft-lcd-line);
+    border-radius: 0;
+    background: var(--ft-lcd);
+    color: #eee6d2;
+  }
+
+  .ft-console--fieldbook .ft-row-card__kicker,
+  .ft-console--fieldbook .ft-row-card__alt,
+  .ft-console--fieldbook .ft-row-card__hint { color: #c7bfa9; }
+  .ft-console--fieldbook .ft-row-card__alt strong,
+  .ft-console--fieldbook .ft-abc strong,
+  .ft-console--fieldbook .ft-abc__hold b { color: #fff4d7; }
+
+  .ft-console--fieldbook .ft-row-display {
+    gap: 0;
+    padding: 0;
+    border: 1px solid var(--ft-lcd-line);
+    border-radius: 0;
+    background: #0e100d;
+  }
+
+  .ft-console--fieldbook .ft-row-display span {
+    min-height: 54px;
+    border: 0;
+    border-right: 1px solid var(--ft-lcd-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ft-lcd-text);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--ft-lcd-text) 35%, transparent);
+  }
+  .ft-console--fieldbook .ft-row-display span:last-child { border-right: 0; }
+  .ft-console--fieldbook .ft-abc { gap: 0; border: 1px solid var(--ft-lcd-line); }
+  .ft-console--fieldbook .ft-abc > div {
+    padding: 0.7rem;
+    border: 0;
+    border-right: 1px solid var(--ft-lcd-line);
+    border-radius: 0;
+    background: transparent;
+  }
+  .ft-console--fieldbook .ft-abc > div:last-child { border-right: 0; }
+  .ft-console--fieldbook .ft-abc span {
+    width: 25px;
+    height: 25px;
+    border-radius: 0;
+    background: var(--ft-lcd-text);
+  }
+  .ft-console--fieldbook .ft-abc p { color: #c7bfa9; font-size: 0.84rem; }
+  .ft-console--fieldbook .ft-row-links button,
+  .ft-console--fieldbook .ft-row-related button {
+    min-height: 27px;
+    border-radius: 0;
+    color: var(--ft-lcd-text);
+    font: 600 0.65rem var(--font-mono);
+  }
+
+  .ft-console--fieldbook .ft-menu-count { margin: 0.5rem 0; }
+  .ft-console--fieldbook .ft-menu-list {
+    gap: 0;
+    margin-top: 0;
+    border-top: 1px solid var(--ft-line);
+    border-left: 1px solid var(--ft-line);
+    border-right: 1px solid var(--ft-line);
+  }
+
+  .ft-console--fieldbook .ft-menu-item {
+    grid-template-columns: 3.8rem minmax(0, 1.15fr) minmax(13rem, 0.85fr);
+    gap: 0.7rem;
+    padding: 0.55rem 0.65rem;
+    border: 0;
+    border-bottom: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ft-panel) 82%, transparent);
+  }
+
+  .ft-console--fieldbook .ft-menu-item__num {
+    display: block;
+    min-height: 0;
+    padding-right: 0.65rem;
+    border-right: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ft-blue);
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  .ft-console--fieldbook .ft-menu-item h3 { font-size: 0.88rem; }
+  .ft-console--fieldbook .ft-menu-item p { font-size: 0.8rem; line-height: 1.35; }
+  .ft-console--fieldbook .ft-menu-item span { font: 700 0.58rem var(--font-mono); }
+
+  .ft-console--fieldbook .ft-map-grid { gap: 0; border: 1px solid var(--ft-line); }
+  .ft-console--fieldbook .ft-map-grid section {
+    padding: 0.85rem;
+    border: 0;
+    border-right: 1px solid var(--ft-line);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ft-panel) 84%, transparent);
+  }
+  .ft-console--fieldbook .ft-map-grid section:nth-child(2) { border-right: 0; }
+  .ft-console--fieldbook .ft-map-grid h3 { font-size: 1rem; }
+  .ft-console--fieldbook .ft-dl { gap: 0; }
+  .ft-console--fieldbook .ft-dl div {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+  }
+  .ft-console--fieldbook .ft-dl dt { font-size: 0.72rem; }
+  .ft-console--fieldbook .ft-dl dd { font-size: 0.82rem; }
+  .ft-console--fieldbook .ft-safety-card {
+    border-top: 1px solid var(--ft-line) !important;
+    border-right: 0 !important;
+    border-left: 3px solid var(--ft-amber) !important;
+    border-radius: 0;
+  }
+
+  @media (max-width: 780px) {
+    .ft-console--fieldbook .ft-resource { align-items: center; grid-template-columns: minmax(0, 1fr) auto; }
+    .ft-console--fieldbook .ft-tabs { display: flex; grid-template-columns: none; }
+    .ft-console--fieldbook .ft-tabs button { flex: 0 0 auto; }
+    .ft-console--fieldbook .ft-tools { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-task-grid { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-row-layout { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-row-picker { position: static; }
+    .ft-console--fieldbook .ft-row-strip {
+      display: flex;
+      max-height: none;
+      margin-inline: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0;
+      border: 1px solid var(--ft-line);
+    }
+    .ft-console--fieldbook .ft-row-strip button {
+      flex: 0 0 8.5rem;
+      border-right: 1px solid var(--ft-line);
+      border-bottom: 0;
+    }
+    .ft-console--fieldbook .ft-row-display { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ft-console--fieldbook .ft-abc { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ft-console--fieldbook .ft-menu-item { grid-template-columns: 3.2rem minmax(0, 1fr); }
+    .ft-console--fieldbook .ft-menu-item > div:last-child { grid-column: 2; }
+    .ft-console--fieldbook .ft-map-grid { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-map-grid section { border-right: 0; border-bottom: 1px solid var(--ft-line); }
+    .ft-console--fieldbook .ft-map-grid section:last-child { border-bottom: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .ft-console--fieldbook .ft-resource { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-resource__pdf { justify-self: start; }
+    .ft-console--fieldbook .ft-abc { grid-template-columns: 1fr; }
+    .ft-console--fieldbook .ft-abc > div { border-right: 0; border-bottom: 1px solid var(--ft-lcd-line); }
+    .ft-console--fieldbook .ft-abc > div:last-child { border-bottom: 0; }
   }
 </style>

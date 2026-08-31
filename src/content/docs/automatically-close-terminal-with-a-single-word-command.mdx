@@ -8,40 +8,44 @@ section: Platform Guides
 order: 20
 ---
 
-My Mac is my platform of choice for a lot of the stuff I do. However, one thing that has always bugged me is how when you type
-``` shell
+This is a small macOS Terminal quality-of-life fix: close a Terminal window automatically after its shell exits cleanly, then optionally give that behaviour a single-word command.
+
+<div class="callout callout--note">
+  <strong>Legacy note:</strong> this guide records the Terminal and Bash setup I used in 2017. Current macOS installations normally use Zsh, and the names or locations of Terminal settings can change between releases.
+</div>
+
+## Close Terminal cleanly
+
+When you type:
+
+```shell
 exit
 ```
 
-into Terminal you see this:
+Terminal can leave the completed window open:
+
 ![Terminal 'Exit'](/assets/media/Terminal_exit.png)
 
-No more!
+- Open Terminal's settings.
+- Select the **Profiles** tab.
+- Under **When the shell exits**, select **Close if the shell exited cleanly**.
 
-For those of you who have had enough of it as well, here's a solution.
-
-_P.S. This is not for those of you who are not comfortable with the command line interface. You must have your terminal open and follow the following steps - changing some of the text as and when indicated._
-
-<h3> Stage I - Basics</h3>
-<h6> This will do the job </h6>
-
-- Click on 'Terminal' in your status bar (next to the Apple logo) and click on 'Preferences'
-- Select the 'Profiles' tab
-- Click on the dropdown menu under 'When the shell exits:' and select 'Close if the shell exited cleanly'
 ![Terminal 'Preferences'](/assets/media/Terminal_pref.png)
-- Close the 'Preferences' window
-- That's that. From now on, if you type exit into your terminal, not only will it exit the process, it will close the window.
 
-<h3> Stage II - Customization</h3>
-<h6> If you'd like to add a bit more flair.... </h6>
+Close the settings window. From then on, `exit` ends the shell and closes its Terminal window when the shell exits cleanly.
 
-- Open your .bash_profile by typing the following command into Terminal
-``` shell
+## Add a custom quit command
+
+The original version of this setup used Bash. Open `.bash_profile`:
+
+```shell
 nano ~/.bash_profile
 ```
-- Paste the following into your bash profile and save it.
-``` shell
+
+Add the following alias and save the file:
+
+```shell
 alias quit='osascript -e "do shell script \"osascript -e \\\"tell application \\\\\\\"Terminal\\\\\\\" to quit\\\" &> /dev/null &\""; exit'
 ```
-- You can replace the word 'quit' with any other command of your choice.
-- Now you can exit terminal and close the window at the same time using your own custom command!
+
+You can replace `quit` with another command name. On a current macOS installation using Zsh, the equivalent shell configuration normally belongs in `.zshrc`; review the command before carrying this old alias into a newer setup.

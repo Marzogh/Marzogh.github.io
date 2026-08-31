@@ -12,8 +12,10 @@ import {
   normalizeEducationId,
 } from '../../utils/education';
 import { EDUCATION_LEGACY_REDIRECTS } from '../../utils/educationLegacy';
+import { EDUCATION_VISIBLE } from '../../utils/siteVisibility';
 
 export async function getStaticPaths() {
+  if (!EDUCATION_VISIBLE) return [];
   const entries = await getCollection('education', ({ data }) => !data.draft);
   const contentPaths = entries.map((entry) => ({ params: { slug: normalizeEducationId(entry.id) } }));
   const legacyPaths = Object.keys(EDUCATION_LEGACY_REDIRECTS).map((slug) => ({ params: { slug } }));

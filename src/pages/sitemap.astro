@@ -7,12 +7,13 @@ import { poetry } from '../data/poetry';
 import { YEAR9_DIGITECH_RESOURCES } from '../data/educationYear9DigitalTechnologies';
 import { normalizeEducationId } from '../utils/education';
 import { isPublishedEntryData } from '../utils/publishing';
+import { EDUCATION_VISIBLE } from '../utils/siteVisibility';
 
 const blog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
 const docs = await getCollection('docs', ({ data }) => !data.draft);
 const projects = await getCollection('projects', ({ data }) => !data.draft);
 const tools = await getCollection('tools', ({ data }) => !data.draft);
-const education = await getCollection('education', ({ data }) => !data.draft);
+const education = EDUCATION_VISIBLE ? await getCollection('education', ({ data }) => !data.draft) : [];
 const astrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
 
 const byTitle = (a, b) => a.data.title.localeCompare(b.data.title);
@@ -25,7 +26,7 @@ const staticLinks = [
   { href: '/projects/', label: 'Projects Index' },
   { href: '/tools/', label: 'Tools Index' },
   { href: '/docs/', label: 'Docs Index' },
-  { href: '/education/', label: 'Education Index' },
+  ...(EDUCATION_VISIBLE ? [{ href: '/education/', label: 'Education Index' }] : []),
   { href: '/astrophotography/', label: 'Astrophotography Index' },
   { href: '/poetry/', label: 'Poetry Index' },
   { href: '/poetry/curators-note/', label: 'Poetry Curator Note' },
@@ -94,17 +95,19 @@ const staticLinks = [
         </ul>
       </section>
 
-      <section>
-        <h2>Education</h2>
-        <ul>
-          {education.sort(byTitle).map((entry) => (
-            <li><a href={`/education/${normalizeEducationId(entry.id)}/`}>{entry.data.title}</a></li>
-          ))}
-          {YEAR9_DIGITECH_RESOURCES.sort((a, b) => a.title.localeCompare(b.title)).map((entry) => (
-            <li><a href={`/education/${entry.slug}/`}>{entry.title}</a></li>
-          ))}
-        </ul>
-      </section>
+      {EDUCATION_VISIBLE ? (
+        <section>
+          <h2>Education</h2>
+          <ul>
+            {education.sort(byTitle).map((entry) => (
+              <li><a href={`/education/${normalizeEducationId(entry.id)}/`}>{entry.data.title}</a></li>
+            ))}
+            {YEAR9_DIGITECH_RESOURCES.sort((a, b) => a.title.localeCompare(b.title)).map((entry) => (
+              <li><a href={`/education/${entry.slug}/`}>{entry.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section>
         <h2>Astrophotography</h2>

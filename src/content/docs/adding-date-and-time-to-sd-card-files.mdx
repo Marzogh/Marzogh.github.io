@@ -14,6 +14,10 @@ If you are logging data to an SD card from an Arduino and all your files look li
 
 The short version is that FAT filesystems do not magically know the date and time. You have to provide a callback so the SD library can ask, "what time is it, then?"
 
+<div class="callout callout--note">
+  <strong>Scope:</strong> this note covers the callback pattern used by SD libraries that expose <code>SdFile::dateTimeCallback()</code>. Check the API for the particular SD library in your project before copying it verbatim.
+</div>
+
 ## What you need
 
 - an SD card library that supports `dateTimeCallback`

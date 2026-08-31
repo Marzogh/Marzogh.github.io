@@ -9,6 +9,11 @@ import {
   educationPathFromId,
   getEducationLevelLabel,
 } from '../../utils/education';
+import { EDUCATION_VISIBLE } from '../../utils/siteVisibility';
+
+if (!EDUCATION_VISIBLE) {
+  return Astro.redirect('/404', 302);
+}
 
 interface SearchRow {
   href: string;

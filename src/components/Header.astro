@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import HeaderLink from './HeaderLink.astro';
 import logo from '../assets/Logo.png';
+import { EDUCATION_VISIBLE } from '../utils/siteVisibility';
 ---
 
 <header class="site-header">
@@ -19,7 +20,7 @@ import logo from '../assets/Logo.png';
       <HeaderLink href="/poetry">Poetry</HeaderLink>
       <HeaderLink href="/projects">Projects</HeaderLink>
       <HeaderLink href="/docs">Documentation</HeaderLink>
-      <HeaderLink href="/education">Education</HeaderLink>
+      {EDUCATION_VISIBLE ? <HeaderLink href="/education">Education</HeaderLink> : null}
       <HeaderLink href="/tools">Tools</HeaderLink>
       <HeaderLink href="/astrophotography">Astrophotography</HeaderLink>
       <HeaderLink href="/about">About</HeaderLink>

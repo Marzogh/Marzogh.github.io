@@ -1,296 +1,529 @@
 ---
-const pinouts = [
-  {
-    title: 'ASCII Pinout_ATmega8.txt',
-    chip: 'ATmega8',
-    ascii: `                       +---\\/---+
-         (RESET)  PC6  |1     28|  PC5  (ADC5 / SCL)
-           (RXD)  PD0  |2     27|  PC4  (ADC4 / SDA)
-           (TXD)  PD1  |3     26|  PC3  (ADC3)
-          (INT0)  PD2  |4     25|  PC2  (ADC2)
-          (INT1)  PD3  |5     24|  PC1  (ADC1)
-      (XCK / T0)  PD4  |6     23|  PC0  (ADC0)
-                  VCC  |7     22|  GND
-                  GND  |8     21|  AREF
- (XTAL1 / TOSC1)  PB6  |9     20|  AVCC
- (XTAL2 / TOSC2)  PB7  |10    19|  PB5  (SCK)
-            (T1)  PD5  |11    18|  PB4  (MISO)
-          (AIN0)  PD6  |12    17|  PB3  (MOSI / OC2)
-          (AIN1)  PD7  |13    16|  PB2  (SS / OC1B)
-          (ICP1)  PB0  |14    15|  PB1  (OC1A)
-                       +--------+`,
-  },
-  {
-    title: 'ASCII Pinout_ATTiny13.txt',
-    chip: 'ATTiny13',
-    ascii: `                      +---\\/---+
-                 PB5  |1*     8|  VCC
-                 PB3  |2      7|  PB2
-                 PB4  |3      6|  PB1
-                 GND  |4      5|  PB0
-                      +--------+`,
-  },
-];
+import { avrDipDeviceCount, avrDipPinouts } from '../../data/avrDipPinouts';
 
-function withLineNumbers(text: string) {
-  return text.split('\n').map((line, index) => ({
-    number: index + 1,
-    line,
-  }));
-}
+const pinCounts = [...new Set(avrDipPinouts.map((pinout) => pinout.pins))].sort((a, b) => a - b);
 ---
 
-<section class="ascii-library" aria-label="ASCII DIP pinout library">
-  <div class="ascii-library__intro">
-    <p class="ascii-library__eyebrow">Reference sheet</p>
-    <h2>Ascii art pinouts for various DIP chips</h2>
-    <p>
-      Terminal-friendly pinouts for the moments where a plain-text diagram is faster than opening a datasheet.
-      These are quick reference blocks, not substitutes for the original pin tables.
+<section class="dip-tool" data-dip-tool aria-label="ATmega and ATtiny DIP pinout catalogue">
+  <header class="dip-tool__header">
+    <div>
+      <p class="dip-tool__eyebrow">AVR through-hole reference</p>
+      <h2>Find the chip. Copy the pinout.</h2>
+      <p class="dip-tool__lede">
+        Every documented ATmega and ATtiny device sold in a plastic DIP package, including discontinued parts.
+        Voltage grades and genuinely pin-compatible revisions are grouped together.
+      </p>
+    </div>
+    <p class="dip-tool__scope">
+      <strong>{avrDipDeviceCount}</strong>
+      <span>device names</span>
+      <small>{avrDipPinouts.length} physical layouts</small>
     </p>
+  </header>
+
+  <div class="dip-tool__controls" aria-label="Catalogue filters">
+    <label class="dip-search">
+      <span>Search device or family</span>
+      <input type="search" placeholder="Try ATmega328P or ATtiny…" autocomplete="off" data-dip-search />
+    </label>
+
+    <div class="dip-filterGroup">
+      <span>Family</span>
+      <div class="dip-filterRow" data-filter-group="family">
+        <button type="button" class="is-active" data-dip-filter="family" data-value="all" aria-pressed="true">All</button>
+        <button type="button" data-dip-filter="family" data-value="ATmega" aria-pressed="false">ATmega</button>
+        <button type="button" data-dip-filter="family" data-value="ATtiny" aria-pressed="false">ATtiny</button>
+      </div>
+    </div>
+
+    <div class="dip-filterGroup">
+      <span>Package</span>
+      <div class="dip-filterRow" data-filter-group="pins">
+        <button type="button" class="is-active" data-dip-filter="pins" data-value="all" aria-pressed="true">All</button>
+        {pinCounts.map((pins) => (
+          <button type="button" data-dip-filter="pins" data-value={String(pins)} aria-pressed="false">{pins}-pin</button>
+        ))}
+      </div>
+    </div>
   </div>
 
-  <div class="ascii-library__stack">
-    {pinouts.map((pinout) => (
-      <article class="ascii-panel">
-        <header class="ascii-panel__head">
-          <div class="ascii-panel__titleWrap">
-            <span class="ascii-panel__icon" aria-hidden="true">&lt;&gt;</span>
-            <div class="ascii-panel__titleBlock">
-              <h3>{pinout.title}</h3>
-              <p>{pinout.chip}</p>
+  <p class="dip-tool__result" aria-live="polite" data-dip-result></p>
+
+  <div class="dip-workbench">
+    <nav class="dip-catalogue" aria-label="DIP pinout layouts">
+      {avrDipPinouts.map((pinout, index) => (
+        <button
+          type="button"
+          class:list={['dip-catalogue__item', index === 0 && 'is-active']}
+          data-dip-option={pinout.id}
+          data-family={pinout.family}
+          data-pins={pinout.pins}
+          data-search={`${pinout.name} ${pinout.devices.join(' ')}`.toLowerCase()}
+          aria-current={index === 0 ? 'true' : undefined}
+        >
+          <span class="dip-catalogue__identity">
+            <strong>{pinout.name}</strong>
+            <small>{pinout.devices.length} {pinout.devices.length === 1 ? 'device' : 'aliases'} · {pinout.package}</small>
+          </span>
+          <span class:list={['dip-catalogue__family', `dip-catalogue__family--${pinout.family.toLowerCase()}`]}>{pinout.family}</span>
+        </button>
+      ))}
+    </nav>
+
+    <div class="dip-viewer">
+      {avrDipPinouts.map((pinout, index) => (
+        <article class="dip-pinout" data-dip-panel={pinout.id} hidden={index !== 0}>
+          <header class="dip-pinout__header">
+            <div>
+              <p>{pinout.family} · {pinout.package} · {pinout.lifecycle}</p>
+              <h3>{pinout.name}</h3>
+            </div>
+            <button type="button" class="dip-copy" data-dip-copy data-ascii={pinout.ascii}>Copy ASCII</button>
+          </header>
+
+          <p class="dip-pinout__summary">{pinout.summary}</p>
+
+          <div class="dip-plate" tabindex="0" aria-label={`${pinout.name} ASCII pinout; scroll sideways if needed`}>
+            <div class="dip-plate__label" aria-hidden="true">
+              <span>ASCII PINOUT</span>
+              <b>{pinout.id}.txt</b>
+            </div>
+            <pre><code>{pinout.ascii}</code></pre>
+          </div>
+
+          <div class="dip-pinout__details">
+            <div>
+              <h4>Applies to</h4>
+              <ul class="dip-aliases" aria-label="Grouped device names">
+                {pinout.devices.map((device) => <li>{device}</li>)}
+              </ul>
+            </div>
+            <div class="dip-pinout__note">
+              <h4>Compatibility note</h4>
+              <p>{pinout.note}</p>
+              <a href={pinout.source} target="_blank" rel="noreferrer">Representative official source: {pinout.sourceLabel} <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-
-          <button
-            type="button"
-            class="ascii-panel__raw"
-            data-ascii-raw
-            data-raw={pinout.ascii}
-            aria-label={`Copy raw ASCII for ${pinout.chip}`}
-          >
-            Raw
-          </button>
-        </header>
-
-        <div class="ascii-panel__body">
-          <div class="ascii-panel__gutter" aria-hidden="true">
-            {withLineNumbers(pinout.ascii).map((row) => <span>{row.number}</span>)}
-          </div>
-
-          <div class="ascii-panel__frame">
-            <pre class="ascii-panel__code">{pinout.ascii}</pre>
-          </div>
-        </div>
-      </article>
-    ))}
+        </article>
+      ))}
+    </div>
   </div>
+
+  <footer class="dip-tool__footer">
+    <p><strong>Scope:</strong> plastic PDIP/SPDIP packages only. SOIC, TSSOP, QFN, UDFN, PLCC and other surface-mount packages are intentionally excluded.</p>
+    <p><strong>Bench rule:</strong> use this for orientation and base port positions; use the linked datasheet for electrical limits, fuse behaviour and alternate functions.</p>
+  </footer>
 </section>
 
 <script>
-  const buttons = document.querySelectorAll('[data-ascii-raw]');
+  const tools = document.querySelectorAll<HTMLElement>('[data-dip-tool]');
 
-  buttons.forEach((button) => {
-    button.addEventListener('click', async () => {
-      const raw = button.getAttribute('data-raw') ?? '';
-      const original = button.textContent;
+  tools.forEach((tool) => {
+    const search = tool.querySelector<HTMLInputElement>('[data-dip-search]');
+    const options = [...tool.querySelectorAll<HTMLButtonElement>('[data-dip-option]')];
+    const panels = [...tool.querySelectorAll<HTMLElement>('[data-dip-panel]')];
+    const filters = [...tool.querySelectorAll<HTMLButtonElement>('[data-dip-filter]')];
+    const result = tool.querySelector<HTMLElement>('[data-dip-result]');
+    const state = { family: 'all', pins: 'all', query: '' };
 
-      try {
-        await navigator.clipboard.writeText(raw);
-        button.textContent = 'Copied';
-      } catch {
-        button.textContent = 'Select';
+    const select = (id: string) => {
+      options.forEach((option) => {
+        const active = option.dataset.dipOption === id;
+        option.classList.toggle('is-active', active);
+        if (active) option.setAttribute('aria-current', 'true');
+        else option.removeAttribute('aria-current');
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.dipPanel !== id;
+      });
+    };
+
+    const applyFilters = () => {
+      const visible = options.filter((option) => {
+        const familyMatch = state.family === 'all' || option.dataset.family === state.family;
+        const pinMatch = state.pins === 'all' || option.dataset.pins === state.pins;
+        const queryMatch = !state.query || (option.dataset.search ?? '').includes(state.query);
+        const match = familyMatch && pinMatch && queryMatch;
+        option.hidden = !match;
+        return match;
+      });
+
+      if (result) {
+        result.textContent = visible.length
+          ? `${visible.length} ${visible.length === 1 ? 'layout' : 'layouts'} match`
+          : 'No DIP layouts match those filters.';
       }
 
-      window.setTimeout(() => {
-        button.textContent = original;
-      }, 1600);
+      const active = options.find((option) => option.classList.contains('is-active'));
+      if (!active || active.hidden) {
+        if (visible[0]) select(visible[0].dataset.dipOption ?? '');
+        else panels.forEach((panel) => { panel.hidden = true; });
+      }
+    };
+
+    options.forEach((option) => {
+      option.addEventListener('click', () => select(option.dataset.dipOption ?? ''));
     });
+
+    filters.forEach((filter) => {
+      filter.addEventListener('click', () => {
+        const kind = filter.dataset.dipFilter as 'family' | 'pins';
+        state[kind] = filter.dataset.value ?? 'all';
+        tool.querySelectorAll<HTMLButtonElement>(`[data-dip-filter="${kind}"]`).forEach((peer) => {
+          const active = peer === filter;
+          peer.classList.toggle('is-active', active);
+          peer.setAttribute('aria-pressed', String(active));
+        });
+        applyFilters();
+      });
+    });
+
+    search?.addEventListener('input', () => {
+      state.query = search.value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    tool.querySelectorAll<HTMLButtonElement>('[data-dip-copy]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const original = button.textContent ?? 'Copy ASCII';
+        try {
+          await navigator.clipboard.writeText(button.dataset.ascii ?? '');
+          button.textContent = 'Copied';
+        } catch {
+          button.textContent = 'Copy failed';
+        }
+        window.setTimeout(() => { button.textContent = original; }, 1400);
+      });
+    });
+
+    applyFilters();
   });
 </script>
 
 <style>
-  .ascii-library {
+  .dip-tool {
+    --dip-border: color-mix(in srgb, var(--line) 78%, var(--text) 22%);
+    --dip-soft: color-mix(in srgb, var(--surface) 88%, var(--accent) 12%);
     display: grid;
-    gap: 1.4rem;
-    margin: 1.6rem 0;
+    gap: 1rem;
+    margin: 1rem 0 2rem;
+    color: var(--text);
   }
 
-  .ascii-library__intro {
+  .dip-tool__header {
     display: grid;
-    gap: 0.45rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dip-border);
   }
 
-  .ascii-library__eyebrow {
+  .dip-tool__eyebrow,
+  .dip-pinout__header p,
+  .dip-filterGroup > span,
+  .dip-search > span,
+  .dip-tool__result {
     margin: 0;
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
-  .ascii-library__intro h2,
-  .ascii-library__intro p {
+  .dip-tool__header h2 {
+    margin: 0.28rem 0 0.35rem;
+    font-size: clamp(1.7rem, 3vw, 2.7rem);
+  }
+
+  .dip-tool__lede {
+    max-width: 72ch;
     margin: 0;
-  }
-
-  .ascii-library__intro p:last-child {
-    max-width: 64ch;
     color: var(--text-2);
   }
 
-  .ascii-library__stack {
+  .dip-tool__scope {
     display: grid;
-    gap: 1rem;
-  }
-
-  .ascii-panel {
-    overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid rgba(100, 116, 139, 0.38);
-    background:
-      linear-gradient(180deg, rgba(8, 16, 28, 0.98), rgba(4, 10, 18, 1)),
-      #020817;
-    box-shadow: 0 18px 32px rgba(2, 6, 23, 0.16);
-  }
-
-  .ascii-panel__head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-    padding: 0.85rem 1rem;
-    border-bottom: 1px solid rgba(100, 116, 139, 0.3);
-    background:
-      linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(7, 10, 18, 0.66));
-  }
-
-  .ascii-panel__titleWrap {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-  }
-
-  .ascii-panel__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.9rem;
-    height: 1.9rem;
-    border-radius: 8px;
-    border: 1px solid rgba(148, 163, 184, 0.42);
-    color: #94a3b8;
-    font-family: var(--font-mono);
-    font-size: 0.92rem;
-    font-weight: 700;
-  }
-
-  .ascii-panel__titleBlock {
-    min-width: 0;
-  }
-
-  .ascii-panel__titleBlock h3,
-  .ascii-panel__titleBlock p {
     margin: 0;
+    min-width: 8rem;
+    text-align: right;
   }
 
-  .ascii-panel__titleBlock h3 {
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 0.98rem;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .dip-tool__scope strong {
+    font-size: 2.5rem;
+    line-height: 0.9;
   }
 
-  .ascii-panel__titleBlock p {
+  .dip-tool__scope span,
+  .dip-tool__scope small {
     color: var(--muted);
-    font-size: 0.84rem;
+    font-family: var(--font-mono);
   }
 
-  .ascii-panel__raw {
-    flex: 0 0 auto;
-    padding: 0.55rem 0.9rem;
-    border-radius: 12px;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    background: rgba(30, 41, 59, 0.72);
-    color: #e2e8f0;
+  .dip-tool__controls {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1fr) auto auto;
+    gap: 0.8rem;
+    align-items: end;
+    padding: 0.85rem;
+    border: 1px solid var(--dip-border);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+  }
+
+  .dip-search,
+  .dip-filterGroup {
+    display: grid;
+    gap: 0.38rem;
+  }
+
+  .dip-search input {
+    width: 100%;
+    min-height: 2.55rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--dip-border);
+    border-radius: 0;
+    background: var(--surface-raised);
+    color: var(--text);
     font: inherit;
-    font-weight: 700;
+  }
+
+  .dip-filterRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .dip-filterRow button,
+  .dip-copy {
+    min-height: 2.55rem;
+    padding: 0.5rem 0.72rem;
+    border: 1px solid var(--dip-border);
+    background: var(--surface-raised);
+    color: var(--text-2);
+    font: 700 0.78rem/1 var(--font-mono);
     cursor: pointer;
   }
 
-  .ascii-panel__raw:hover {
-    background: rgba(51, 65, 85, 0.86);
+  .dip-filterRow button:hover,
+  .dip-filterRow button.is-active,
+  .dip-copy:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised));
   }
 
-  .ascii-panel__body {
+  .dip-tool__result {
+    min-height: 1em;
+  }
+
+  .dip-workbench {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(15rem, 0.36fr) minmax(0, 1fr);
+    border: 1px solid var(--dip-border);
+  }
+
+  .dip-catalogue {
+    align-self: start;
+    border-right: 1px solid var(--dip-border);
+  }
+
+  .dip-catalogue__item {
+    display: flex;
+    width: 100%;
+    gap: 0.8rem;
+    align-items: start;
+    justify-content: space-between;
+    padding: 0.78rem 0.82rem;
+    border: 0;
+    border-bottom: 1px solid var(--dip-border);
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .dip-catalogue__item:last-child { border-bottom: 0; }
+  .dip-catalogue__item:hover { background: var(--dip-soft); }
+
+  .dip-catalogue__item.is-active {
+    box-shadow: inset 3px 0 0 var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  }
+
+  .dip-catalogue__identity { display: grid; gap: 0.18rem; }
+  .dip-catalogue__identity strong { font-size: 0.94rem; line-height: 1.25; }
+  .dip-catalogue__identity small { color: var(--muted); line-height: 1.35; }
+
+  .dip-catalogue__family {
+    flex: 0 0 auto;
+    padding: 0.2rem 0.32rem;
+    border: 1px solid currentColor;
+    font: 700 0.62rem/1 var(--font-mono);
+  }
+
+  .dip-catalogue__family--atmega { color: var(--accent); }
+  .dip-catalogue__family--attiny { color: var(--accent-2, #598c72); }
+
+  .dip-viewer { min-width: 0; }
+
+  .dip-pinout {
+    padding: clamp(0.9rem, 2vw, 1.4rem);
+  }
+
+  .dip-pinout[hidden] { display: none; }
+
+  .dip-pinout__header {
+    display: flex;
     gap: 1rem;
     align-items: start;
-    padding: 0.8rem 1rem 1rem;
-    min-width: 0;
+    justify-content: space-between;
   }
 
-  .ascii-panel__gutter {
-    display: grid;
-    gap: 0;
-    padding-top: 0.12rem;
-    color: #9ca3af;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    line-height: 1.5;
-    text-align: right;
-    user-select: none;
+  .dip-pinout__header h3 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
   }
 
-  .ascii-panel__frame {
+  .dip-pinout__summary {
+    max-width: 72ch;
+    margin: 0.65rem 0 1rem;
+    color: var(--text-2);
+  }
+
+  .dip-plate {
+    width: fit-content;
+    max-width: 100%;
     min-width: 0;
     overflow-x: auto;
-    padding: 1rem 1.1rem;
-    border-radius: 18px;
-    border: 1px solid rgba(100, 116, 139, 0.26);
+    border: 1px solid var(--dip-border);
     background:
-      linear-gradient(180deg, rgba(2, 6, 23, 0.78), rgba(1, 4, 18, 0.92)),
-      #020817;
+      linear-gradient(90deg, color-mix(in srgb, var(--accent) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(color-mix(in srgb, var(--accent) 5%, transparent) 1px, transparent 1px),
+      color-mix(in srgb, var(--surface-raised) 92%, var(--accent) 8%);
+    background-size: 1.5rem 1.5rem;
+    color: var(--text);
+    overscroll-behavior-inline: contain;
   }
 
-  .ascii-panel__code {
+  .dip-plate__label {
+    position: sticky;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 100%;
+    padding: 0.48rem 0.65rem;
+    border-bottom: 1px solid var(--dip-border);
+    background: color-mix(in srgb, var(--surface-raised) 96%, var(--accent) 4%);
+    color: var(--muted);
+    font: 600 0.66rem/1 var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+
+  .dip-plate__label span {
+    color: var(--accent);
+  }
+
+  .dip-plate__label b {
+    font: inherit;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .dip-plate pre {
     all: unset;
     display: block;
-    margin: 0;
-    color: #e5e7eb;
-    font-family: var(--font-mono);
-    font-size: 0.94rem;
-    line-height: 1.5;
-    white-space: pre;
-    min-width: max-content;
+    width: max-content;
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: clamp(0.9rem, 2.5vw, 1.5rem);
   }
 
-  @media (max-width: 720px) {
-    .ascii-panel__head {
-      align-items: start;
-      flex-direction: column;
-    }
+  .dip-plate code {
+    color: inherit;
+    font: 500 clamp(0.8rem, 1.2vw, 0.96rem)/1.48 var(--font-mono);
+    white-space: pre;
+  }
 
-    .ascii-panel__raw {
-      align-self: flex-end;
-    }
+  .dip-pinout__details {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(17rem, 1.1fr);
+    gap: 1.2rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--dip-border);
+  }
 
-    .ascii-panel__body {
-      gap: 0.75rem;
-    }
+  .dip-pinout__details h4 {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 
-    .ascii-panel__gutter {
-      font-size: 0.8rem;
-    }
+  .dip-aliases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-    .ascii-panel__code {
-      font-size: 0.86rem;
+  .dip-aliases li {
+    padding: 0.3rem 0.42rem;
+    border: 1px solid var(--dip-border);
+    background: var(--dip-soft);
+    font: 600 0.72rem/1.2 var(--font-mono);
+  }
+
+  .dip-pinout__note p { margin: 0 0 0.55rem; color: var(--text-2); }
+  .dip-pinout__note a { font-size: 0.86rem; }
+
+  .dip-tool__footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 0.2rem;
+  }
+
+  .dip-tool__footer p {
+    margin: 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--accent);
+    color: var(--text-2);
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 960px) {
+    .dip-tool__controls { grid-template-columns: 1fr 1fr; }
+    .dip-search { grid-column: 1 / -1; }
+    .dip-workbench { grid-template-columns: 1fr; }
+    .dip-catalogue {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-right: 0;
+      border-bottom: 1px solid var(--dip-border);
     }
+    .dip-catalogue__item:nth-child(odd) { border-right: 1px solid var(--dip-border); }
+  }
+
+  @media (max-width: 640px) {
+    .dip-tool__header { grid-template-columns: 1fr; gap: 0.8rem; }
+    .dip-tool__scope { grid-template-columns: auto auto; gap: 0.45rem; align-items: baseline; text-align: left; }
+    .dip-tool__scope small { grid-column: 1 / -1; }
+    .dip-tool__controls { grid-template-columns: 1fr; }
+    .dip-search { grid-column: auto; }
+    .dip-catalogue { grid-template-columns: 1fr; }
+    .dip-catalogue__item:nth-child(odd) { border-right: 0; }
+    .dip-pinout__header { align-items: stretch; flex-direction: column; }
+    .dip-copy { align-self: start; }
+    .dip-pinout__details,
+    .dip-tool__footer { grid-template-columns: 1fr; }
+    .dip-plate code { font-size: 0.78rem; }
   }
 </style>

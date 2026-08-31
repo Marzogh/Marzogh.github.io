@@ -1,0 +1,74 @@
+---
+const groups = [
+  {
+    title: 'English manuals',
+    links: [
+      ['Repair Manual PDF', '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_repair-manual_en.pdf'],
+      ['User Manual PDF', '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_user-manual_en.pdf'],
+      ['Parts Catalogue PDF', '/docs/zenit-12xp/manuals_pdf/zenit-12xp_12sd_parts-catalogue_en.pdf'],
+      ['Complete archive ZIP', '/docs/zenit-12xp/zenit-12xp_12sd_english_manual_archive.zip'],
+    ],
+  },
+  {
+    title: 'Source markdown',
+    links: [
+      ['English repair manual', '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_repair-manual_en.md'],
+      ['English user manual', '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_user-manual_en.md'],
+      ['English parts catalogue', '/docs/zenit-12xp/manuals_markdown/zenit-12xp_12sd_parts-catalogue_en.md'],
+      ['Russian source with image placements', '/docs/zenit-12xp/source/zenit-12xp_zenit-12sd_russian_with_image_placements.md'],
+    ],
+  },
+  {
+    title: 'Mappings and references',
+    links: [
+      ['Image placement map (CSV)', '/docs/zenit-12xp/source/zenit-12xp_image_placement_map.csv'],
+      ['Source manifest (CSV)', '/docs/zenit-12xp/source/source_manifest.csv'],
+      ['Original URL index', '/docs/zenit-12xp/source/original_url_index.md'],
+      ['Russian-English glossary', '/docs/zenit-12xp/glossary/zenit-12xp_12sd_glossary_ru-en.md'],
+      ['Translation notes', '/docs/zenit-12xp/translation_notes/translator_notes.md'],
+      ['PDF verification summary', '/docs/zenit-12xp/manuals_pdf/PDF_VERIFICATION_SUMMARY.txt'],
+      ['Archiver toolkit ZIP', '/docs/zenit-12xp/zenit-12xp_zenitcamera_archiver_toolkit.zip'],
+    ],
+  },
+  {
+    title: 'Original Russian sources',
+    links: [
+      ['zenit-12xp-repair.html', 'https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp-repair.html'],
+      ['zenit-12xp.html', 'https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp.html'],
+      ['zenit-12xp-catalog.html', 'https://www.zenitcamera.com/mans/zenit-12xp/zenit-12xp-catalog.html'],
+    ],
+  },
+];
+---
+
+<div class="zenit-archive" aria-label="Zenit documentation archive">
+  {groups.map((group) => (
+    <section>
+      <h3>{group.title}</h3>
+      <ul>
+        {group.links.map(([label, href]) => (
+          <li><a href={href}>{label}<span aria-hidden="true">↗</span></a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .zenit-archive { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1.4rem 0 2rem; border: 1px solid var(--border); }
+  .zenit-archive section { min-width: 0; padding: 1rem; }
+  .zenit-archive section:nth-child(odd) { border-right: 1px solid var(--border); }
+  .zenit-archive section:nth-child(n + 3) { border-top: 1px solid var(--border); }
+  .zenit-archive h3 { margin: 0 0 0.65rem !important; color: var(--accent); font: 0.7rem var(--font-mono); letter-spacing: 0.07em; text-transform: uppercase; }
+  .zenit-archive ul { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .zenit-archive li { margin: 0 !important; border-top: 1px solid var(--border); }
+  .zenit-archive a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; color: var(--text-2); font-size: 0.84rem; text-decoration: none; }
+  .zenit-archive a:hover { color: var(--accent); }
+  .zenit-archive a span { flex: 0 0 auto; }
+
+  @media (max-width: 640px) {
+    .zenit-archive { grid-template-columns: 1fr; }
+    .zenit-archive section:nth-child(odd) { border-right: 0; }
+    .zenit-archive section + section { border-top: 1px solid var(--border); }
+  }
+</style>

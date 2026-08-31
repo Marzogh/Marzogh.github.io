@@ -1,0 +1,138 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { toTagSlug } from '../utils/tags';
+
+interface DocHeading { depth: number; slug: string; text: string; }
+type Props = CollectionEntry<'docs'>['data'] & { slug: string; headings?: DocHeading[] };
+
+const {
+  slug, title, description, pubDate, updatedDate, section = 'General',
+  featured = false, tags = [], headerStyle = 'plain', headings = [],
+} = Astro.props;
+const sectionHeadings = headings.filter((heading) => heading.depth === 2);
+const isZenit = slug === 'zenit-12xp';
+---
+
+<!doctype html>
+<html lang="en">
+  <head><BaseHead title={title} description={description} /></head>
+  <body>
+    <Header />
+    <main class:list={['docs-main', isZenit && 'docs-main--zenit', headerStyle === 'tool' && 'docs-main--tool']}>
+      <article class="docs-shell">
+        <a href="/docs" class="docs-back">← Documentation</a>
+
+        <header class:list={['docs-header', `docs-header--${headerStyle}`]}>
+          <div class="docs-header__meta">
+            <span>{section}</span>
+            <span>{featured ? 'Recommended reference' : 'Documentation'}</span>
+            {pubDate ? <span>Published <FormattedDate date={pubDate} /></span> : null}
+            {updatedDate ? <span>Updated <FormattedDate date={updatedDate} /></span> : null}
+          </div>
+          <h1>{title}</h1>
+          {description ? <p>{description}</p> : null}
+          {tags.length && headerStyle !== 'tool' ? (
+            <nav class="docs-taxonomy" aria-label="Document classification">
+              {tags.map((tag) => <a href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>)}
+            </nav>
+          ) : null}
+        </header>
+
+        <div class="docs-body">
+          <aside class="docs-rail" aria-label="Document navigation">
+            {sectionHeadings.length ? (
+              <>
+                <p class="editorial-kicker">On this page</p>
+                <nav data-scrollspy-nav>
+                  <ol>{sectionHeadings.map((heading) => <li><a href={`#${heading.slug}`} data-scrollspy-link={heading.slug}>{heading.text}</a></li>)}</ol>
+                </nav>
+              </>
+            ) : (
+              <><p class="editorial-kicker">Filed under</p><p class="docs-rail__section">{section}</p></>
+            )}
+          </aside>
+
+          <div class="docs-prose prose prose--docs">
+            <slot />
+            <footer class="docs-end"><span aria-hidden="true">§</span><a href="/docs">Return to Documentation</a></footer>
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  :global(.docs-main) { width: min(100%, 1380px); max-width: 1380px; padding-top: 0; padding-bottom: clamp(4rem, 8vw, 7rem); }
+  .docs-shell { min-width: 0; }
+  .docs-back { display: inline-block; margin-top: 1.5rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
+  .docs-back:hover { color: var(--accent); }
+
+  .docs-header { display: grid; margin-top: 1rem; padding: clamp(1.2rem, 3vw, 2rem) 0; border-block: 1px solid var(--text); }
+  .docs-header--panel { padding-inline: clamp(1.2rem, 3vw, 2rem); background: radial-gradient(700px 240px at 0% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%), var(--surface-raised); }
+  .docs-header--tool { padding-bottom: 1rem; }
+  .docs-header__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem 1rem; margin-bottom: 0.9rem; color: var(--accent); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .docs-header h1 { max-width: 22ch; margin: 0; font-size: clamp(2.2rem, 5vw, 4.8rem); line-height: 0.96; letter-spacing: -0.045em; text-wrap: balance; }
+  .docs-header--tool h1 { max-width: 18ch; font-size: clamp(2.1rem, 4vw, 3.8rem); }
+  .docs-header > p { max-width: 74ch; margin: 1rem 0 0; color: var(--text-2); font-size: clamp(1rem, 1.3vw, 1.15rem); }
+  .docs-taxonomy { display: flex; flex-wrap: wrap; gap: 0.35rem 0.85rem; margin-top: 1rem; }
+  .docs-taxonomy a { color: var(--accent); font-family: var(--font-mono); font-size: 0.67rem; text-decoration: none; }
+
+  .docs-body { display: grid; grid-template-columns: minmax(175px, 220px) minmax(0, 980px); gap: clamp(2rem, 5vw, 5rem); align-items: start; justify-content: start; margin-top: clamp(2rem, 5vw, 4rem); }
+  .docs-rail { position: sticky; top: calc(var(--header-height, 4.5rem) + 1rem); min-width: 0; }
+  .docs-rail > .editorial-kicker { margin-bottom: 0.85rem; }
+  .docs-rail ol { display: grid; margin: 0; padding: 0; border-top: 1px solid var(--text); list-style: none; }
+  .docs-rail li { margin: 0; border-bottom: 1px solid var(--border); }
+  .docs-rail li a { display: block; padding: 0.65rem 0; color: var(--text-2); font-size: 0.74rem; line-height: 1.35; text-decoration: none; }
+  .docs-rail li a:hover, .docs-rail li a.is-active { color: var(--text); }
+  .docs-rail li a.is-active { padding-left: 0.55rem; background: color-mix(in srgb, var(--accent) 6%, transparent); box-shadow: inset 2px 0 0 var(--accent); }
+  .docs-rail__section { margin: 0; color: var(--text-2); font-family: var(--font-mono); font-size: 0.75rem; }
+
+  .docs-prose { min-width: 0; max-width: 980px; color: var(--text-2); }
+  .docs-prose :global(h1:first-child) { display: none; }
+  .docs-prose :global(h2) { margin-top: 2.4rem; padding-top: 0.85rem; border-top: 1px solid var(--border); }
+  .docs-prose :global(h2:first-of-type) { margin-top: 0; }
+  .docs-prose :global(h3) { margin-top: 1.6rem; }
+  .docs-prose :global(li + li) { margin-top: 0.35rem; }
+  .docs-prose :global(table) { width: auto; max-width: 100%; margin: 1.4rem 0; border: 1px solid var(--border); background: var(--surface-raised); }
+  .docs-prose :global(th) { background: var(--surface-accent-soft); }
+  .docs-prose :global(.callout) { margin: 1.4rem 0; padding: 1rem 1.1rem; border: 1px solid var(--border); background: var(--surface-raised); }
+  .docs-prose :global(.callout--note) { border-left: 4px solid var(--accent); background: var(--surface-accent-soft); }
+  .docs-prose :global(.callout--warm) { border-left: 4px solid var(--coral); background: var(--surface-coral-soft); }
+  .docs-prose :global(.callout--warning) { border-left: 4px solid var(--coral); background: var(--surface-coral-soft); }
+  .docs-prose :global(.doc-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+  .docs-prose :global(.doc-card) { padding: 1rem; border: 1px solid var(--border); background: var(--surface-raised); }
+
+  .docs-end { display: flex; justify-content: space-between; gap: 1rem; margin-top: clamp(3rem, 7vw, 6rem); padding-top: 1rem; border-top: 1px solid var(--text); color: var(--muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; }
+  .docs-end a { color: inherit; text-decoration: none; }
+  .docs-end a:hover { color: var(--accent); }
+
+  .docs-main--zenit { position: relative; isolation: isolate; }
+  .docs-main--tool .docs-body { grid-template-columns: minmax(0, 1fr); }
+  .docs-main--tool .docs-rail { display: none; }
+  .docs-main--tool .docs-prose { max-width: none; }
+  .docs-main--zenit::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none; background: linear-gradient(180deg, rgba(22, 117, 224, 0.22), rgba(12, 86, 190, 0.18)), url('/docs/zenit-12xp/blueprints/zenit-blueprint-exploded-p6.webp') center top / cover no-repeat, #cfe1f8; }
+  .docs-main--zenit::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: rgba(247, 251, 255, 0.9); }
+  :global(html[data-theme='dark']) .docs-main--zenit::after { background: rgba(8, 15, 30, 0.84); backdrop-filter: blur(6px); }
+
+  @media (max-width: 760px) {
+    :global(.docs-main) { width: 100%; }
+    .docs-back { margin-inline: 1rem; }
+    .docs-header { padding-inline: 1rem; }
+    .docs-body { grid-template-columns: 1fr; gap: 1.4rem; margin-top: 1.5rem; }
+    .docs-rail { position: sticky; top: var(--header-height, 4.5rem); z-index: 20; overflow-x: auto; padding: 0 1rem; background: color-mix(in srgb, var(--paper) 95%, transparent); backdrop-filter: blur(12px); }
+    .docs-rail > .editorial-kicker, .docs-rail__section { display: none; }
+    .docs-rail nav { width: max-content; min-width: 100%; }
+    .docs-rail ol { display: flex; border-top: 0; border-bottom: 1px solid var(--border); }
+    .docs-rail li { flex: 0 0 auto; border: 0; }
+    .docs-rail li a { padding: 0.7rem 0.8rem; white-space: nowrap; }
+    .docs-rail li a.is-active { padding-left: 0.8rem; background: transparent; box-shadow: inset 0 -2px 0 var(--accent); }
+    .docs-prose { padding-inline: 1rem; }
+    .docs-prose :global(.doc-grid) { grid-template-columns: 1fr; }
+  }
+</style>

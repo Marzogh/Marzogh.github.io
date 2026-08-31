@@ -1,6 +1,6 @@
 ---
 title: ASCII DIP Pinout Cheatsheet
-description: "Terminal-friendly ASCII pinout blocks for common DIP chips, with raw copyable layouts for quick notes and bench work."
+description: "A searchable ASCII catalogue of every historical and current DIP-packaged ATmega and ATtiny, with pin-compatible variants grouped together."
 pubDate: 2017-08-15
 draft: false
 section: Reference
@@ -8,50 +8,9 @@ order: 20
 tags: [electronics, pinout, ascii, dip, reference]
 type: docs
 featured: false
+headerStyle: tool
 ---
 
 import AsciiDipCheatsheet from '../../components/docs/AsciiDipCheatsheet.astro';
 
-<div class="callout callout--note">
-  <strong>TL:DR;</strong> this page is for the moments when a plain-text pinout is faster than opening a datasheet PDF.
-</div>
-
-Sometimes you do not need a polished schematic. Sometimes you just need a plain-text pinout you can drop into a terminal, notes file, README, or repair log without breaking stride.
-
 <AsciiDipCheatsheet />
-
-<div class="doc-grid">
-  <div class="doc-card">
-    <h3>Where this works well</h3>
-    <p>
-      Terminal windows, README files, commit messages, quick bench notes, and those moments where you only need
-      orientation and signal names, not a whole drawing package.
-    </p>
-  </div>
-
-  <div class="doc-card">
-    <h3>What makes it useful</h3>
-    <p>
-      The notch is visible, the numbering stays obvious, and the text survives copy-paste almost anywhere. That
-      makes it good for quick reference in places where an image would be clumsy.
-    </p>
-  </div>
-</div>
-
-## Bench use
-
-The plain-text format is most helpful when you are moving quickly:
-
-- confirming pin 1 orientation before wiring
-- annotating breadboard or perfboard notes
-- posting help requests without drawing a full schematic
-- documenting MCU pins in a repo or repair log
-- checking signal names before applying power to something fragile
-
-## The limitation
-
-ASCII pinouts are great for orientation and quick reference. They are not a replacement for a proper schematic once a project stops being simple.
-
-<div class="callout callout--warm">
-  <strong>Good rule:</strong> if the “quick note” now needs multiple rails, buses, pull-ups, or anything more complicated than basic orientation, it is time to graduate to a real diagram.
-</div>

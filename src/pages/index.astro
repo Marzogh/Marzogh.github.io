@@ -7,12 +7,12 @@ import Header from '../components/Header.astro';
 import ThemeIcon from '../components/ThemeIcon.astro';
 import heroImage from '../assets/home-hero-2026.png';
 import { isPublishedEntryData } from '../utils/publishing';
+import { EDUCATION_VISIBLE } from '../utils/siteVisibility';
 
 const blog = await getCollection('blog', ({ data }) => isPublishedEntryData(data));
 const projects = await getCollection('projects', ({ data }) => !data.draft);
 const tools = await getCollection('tools', ({ data }) => !data.draft);
 const docs = await getCollection('docs', ({ data }) => !data.draft);
-const education = await getCollection('education', ({ data }) => !data.draft && data.showInLanding);
 const astrophotography = await getCollection('astrophotography', ({ data }) => !data.draft);
 
 const slugFor = (entry) => String(entry.slug ?? entry.id ?? '').replace(/\.(md|mdx)$/i, '');
@@ -64,7 +64,7 @@ const sections = [
   { code: 'D', title: 'Documentation', href: '/docs', detail: 'References, manuals and things written down properly.', tone: 'code' },
   { code: 'T', title: 'Tools', href: '/tools', detail: 'Small utilities and instruments I needed.', tone: 'life' },
   { code: 'A', title: 'Astrophotography', href: '/astrophotography', detail: 'Sessions, images and processing notes.', tone: 'light' },
-  { code: 'E', title: 'Education', href: '/education', detail: 'Teaching material I actually use.', tone: 'builds' },
+  ...(EDUCATION_VISIBLE ? [{ code: 'E', title: 'Education', href: '/education', detail: 'Teaching material I actually use.', tone: 'builds' }] : []),
   { code: 'P', title: 'Poetry', href: '/poetry', detail: 'The much older and rather different bit of the site.', tone: 'mind' },
 ];
 
