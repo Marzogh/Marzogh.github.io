@@ -1,97 +1,220 @@
 ---
 title: PDF Link Downloaders
-description: "Three small Python command-line helpers for saving directly linked PDFs from normal pages, same-site crawls, or JavaScript-rendered pages."
+description: "Three small Python scripts for downloading directly linked PDFs from a webpage, a group of pages on the same site, or a JavaScript-rendered page."
 pubDate: 2026-04-26
 draft: false
 tags: [python, pdf, downloader, scraping, utility]
 ---
 
-Sometimes a page has a useful pile of linked PDFs, and the humane thing to do is let the computer do the clicking.
+import CodeDisclosure from '../../components/CodeDisclosure.astro';
 
-The simple version reads one webpage, finds links that point directly to `.pdf` files, and downloads them into a local folder. There are also two heavier versions below: one that crawls more pages on the same site, and one that renders JavaScript-heavy pages with Selenium before looking for PDF links.
+<div className="downloaders-intro">
+  <p>I wrote these because occasionally I find a page containing a large collection of useful PDFs, and clicking every one individually gets old very quickly.</p>
+  <nav aria-label="Choose a PDF downloader">
+    <a href="#single-page"><span>01</span> Single page</a>
+    <a href="#same-site-crawler"><span>02</span> Same-site crawler</a>
+    <a href="#javascript-rendered-pages"><span>03</span> JavaScript-rendered</a>
+  </nav>
+</div>
 
-## Choose a version
+<section className="downloader-option" id="single-page">
+  <div className="downloader-option__heading">
+    <span aria-hidden="true">01</span>
+    <div>
+      <h2>Single page</h2>
+      <p>Use this when the page already contains direct links to PDF files.</p>
+    </div>
+  </div>
 
-### Single-page version
-
-Use this when the page already contains direct PDF links in its HTML.
-
-<p>
-  <a className="buttonLike" href="/assets/downloads/download_pdfs.py" download>
-    Download download_pdfs.py
+  <a className="downloader-button" href="/assets/downloads/download_pdfs.py" download>
+    <span>Download</span>
+    <strong>download_pdfs.py</strong>
+    <i aria-hidden="true">↓</i>
   </a>
-</p>
+
+  <CodeDisclosure sourcePath="public/assets/downloads/download_pdfs.py" lang="python" />
 
 ```bash
 python -m pip install requests beautifulsoup4
 python download_pdfs.py "https://example.com/page-with-pdfs"
 ```
 
-### Same-site crawler version
+  <p>The script finds direct <code>.pdf</code> links on that page and saves the files into <code>downloaded_pdfs</code>.</p>
+</section>
 
-Use this when the PDFs are spread across several pages on the same website. It starts at one page, follows links on the same domain, and downloads any direct PDF links it finds.
+<section className="downloader-option" id="same-site-crawler">
+  <div className="downloader-option__heading">
+    <span aria-hidden="true">02</span>
+    <div>
+      <h2>Same-site crawler</h2>
+      <p>Use this when the PDFs are spread across several pages on the same website.</p>
+    </div>
+  </div>
 
-<p>
-  <a className="buttonLike" href="/assets/downloads/download_pdfs_crawl_site.py" download>
-    Download download_pdfs_crawl_site.py
+  <a className="downloader-button" href="/assets/downloads/download_pdfs_crawl_site.py" download>
+    <span>Download</span>
+    <strong>download_pdfs_crawl_site.py</strong>
+    <i aria-hidden="true">↓</i>
   </a>
-</p>
+
+  <CodeDisclosure sourcePath="public/assets/downloads/download_pdfs_crawl_site.py" lang="python" />
 
 ```bash
 python -m pip install requests beautifulsoup4
 python download_pdfs_crawl_site.py "https://example.com/start-page"
 ```
 
-You can limit how far it wanders:
+  <p>It follows links on the same domain and downloads the PDFs it finds. You can also stop it wandering too far:</p>
 
 ```bash
 python download_pdfs_crawl_site.py "https://example.com/start-page" "my_pdfs" --max-pages 25 --max-depth 2
 ```
+</section>
 
-### Selenium version
+<section className="downloader-option" id="javascript-rendered-pages">
+  <div className="downloader-option__heading">
+    <span aria-hidden="true">03</span>
+    <div>
+      <h2>JavaScript-rendered pages</h2>
+      <p>If the PDF links only appear after JavaScript runs, use the Selenium version.</p>
+    </div>
+  </div>
 
-Use this when a page creates its PDF links after JavaScript runs. This opens the page in headless Chrome, waits for it to render, then searches the rendered HTML for direct PDF links.
-
-<p>
-  <a className="buttonLike" href="/assets/downloads/download_pdfs_selenium.py" download>
-    Download download_pdfs_selenium.py
+  <a className="downloader-button" href="/assets/downloads/download_pdfs_selenium.py" download>
+    <span>Download</span>
+    <strong>download_pdfs_selenium.py</strong>
+    <i aria-hidden="true">↓</i>
   </a>
-</p>
+
+  <CodeDisclosure sourcePath="public/assets/downloads/download_pdfs_selenium.py" lang="python" />
 
 ```bash
 python -m pip install requests beautifulsoup4 selenium
 python download_pdfs_selenium.py "https://example.com/javascript-page"
 ```
 
-You will also need Chrome installed. Recent Selenium versions can usually manage the matching Chrome driver automatically.
+  <p>This uses headless Chrome to render the page before looking for PDF links. Chrome needs to be installed; recent Selenium versions can normally sort out the matching driver themselves.</p>
 
-If the page is slow to load, give it a longer wait:
+  <p>For slower pages:</p>
 
 ```bash
 python download_pdfs_selenium.py "https://example.com/javascript-page" "my_pdfs" --wait 8
 ```
+</section>
 
-## Shared behaviour
+<aside className="downloader-limits" aria-labelledby="downloader-limits-title">
+  <p className="editorial-kicker">A couple of limits</p>
+  <h2 id="downloader-limits-title">Direct links, ordinary access.</h2>
+  <p>All three scripts look for direct PDF links. They are not designed to bypass logins, paywalls, access controls or other technical restrictions, and the crawler stays on the domain where it started.</p>
+  <p>Only download material when you have permission, an appropriate licence, or another lawful basis to make the copy. A file being publicly reachable does not by itself settle copyright, privacy or a website's terms of use.</p>
+  <p>Do not use these scripts to collect personal or sensitive information. Respect the site's published automation guidance and keep request rates modest; stop if the site objects, blocks the requests or asks you to stop.</p>
+  <p>These scripts are provided as general-purpose examples, without warranty. You are responsible for deciding whether a particular download is lawful and appropriate. This is not legal advice.</p>
+</aside>
 
-- saves files into `downloaded_pdfs` unless you provide a custom folder
-- creates the output folder if it does not already exist
-- resolves relative PDF links into absolute URLs
-- checks that each download looks like a PDF response
-- saves each file with a filesystem-safe name
-- avoids overwriting files with duplicate names
+<style>{String.raw`
+  .downloaders-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.62fr);
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--text);
+  }
 
-## Caveats
+  .downloaders-intro > p {
+    max-width: 54ch;
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(1.08rem, 1.7vw, 1.3rem);
+    line-height: 1.55;
+  }
 
-- These scripts look for direct links to PDF files. They do not solve logins, paywalls, or permission problems.
-- The crawler only follows links on the same domain as the starting URL.
-- The Selenium version can see links created by JavaScript, but it still needs those links to exist in the rendered page.
-- Some sites block scraping, require login, or forbid automated downloads.
-- Be sensible with copyright, rate limits, and the site terms.
+  .downloaders-intro nav {
+    display: grid;
+    border-top: 1px solid var(--border);
+  }
 
-## Legal and ethical use
+  .downloaders-intro nav a {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.5rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 0.78rem;
+    text-decoration: none;
+  }
 
-Only download files that you are allowed to access and save. Check the website's terms of use, copyright notices, robots guidance, and any licence attached to the material. Do not use these scripts to bypass paywalls, login requirements, access controls, or technical restrictions.
+  .downloaders-intro nav a:hover { color: var(--accent); }
+  .downloaders-intro nav span { color: var(--muted); font-family: var(--font-mono); font-size: 0.65rem; }
 
-If you are downloading from someone else's site, keep requests modest and respectful. Automated downloads can create load for the site owner, even when the files are publicly linked.
+  .downloader-option {
+    scroll-margin-top: 7rem;
+    margin-top: clamp(2.8rem, 6vw, 5rem);
+    padding-top: 1rem;
+    border-top: 1px solid var(--text);
+  }
 
-This page is a technical note, not legal advice. You are responsible for making sure your use of these scripts is lawful and appropriate where you live and where the website operates.
+  .downloader-option__heading {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .downloader-option__heading > span {
+    padding-top: 0.25rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .downloader-option__heading h2 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: clamp(1.65rem, 3.5vw, 2.45rem);
+    letter-spacing: -0.035em;
+  }
+
+  .downloader-option__heading p {
+    margin: 0.45rem 0 0;
+    color: var(--text-2);
+  }
+
+  .downloader-button {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.8rem;
+    align-items: baseline;
+    margin: 1rem 0 1.4rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--border));
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .downloader-button:hover { background: color-mix(in srgb, var(--accent) 11%, transparent); }
+  .downloader-button span { color: var(--accent); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .downloader-button strong { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 0.88rem; font-weight: 500; }
+  .downloader-button i { font-style: normal; font-size: 1.1rem; }
+
+  .downloader-option > p { max-width: 68ch; }
+
+  .downloader-limits {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface-raised) 78%, transparent);
+  }
+
+  .downloader-limits h2 { margin: 0.35rem 0 1rem; padding: 0; border: 0; font-size: clamp(1.4rem, 3vw, 2rem); }
+  .downloader-limits p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 680px) {
+    .downloaders-intro { grid-template-columns: 1fr; gap: 1.3rem; }
+    .downloader-button { grid-template-columns: 1fr auto; }
+    .downloader-button span { grid-column: 1 / -1; }
+  }
+`}</style>

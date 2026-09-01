@@ -166,6 +166,10 @@ function cloneRecord(record) {
     }
   }
 
+  if (record._source) next._source = { ...record._source };
+  if (record._manualId) next._manualId = record._manualId;
+  if (record._modifiedFields) next._modifiedFields = [...record._modifiedFields];
+
   return next;
 }
 
@@ -373,23 +377,38 @@ function normaliseQso(record) {
 
   return {
     record,
+    source: record._source?.name || 'Manual entry',
+    sourceIndex: record._source?.index ?? -1,
+    sourceRecordIndex: record._source?.recordIndex ?? -1,
     dt,
     utc: dt ? formatUtcTime(dt) : '',
+    dateRaw: String(fields.QSO_DATE?.value || fields.QSO_DATE_OFF?.value || '').trim(),
+    timeRaw: String(fields.TIME_ON?.value || fields.TIME_OFF?.value || '').trim(),
     call: String(fields.CALL?.value || '').trim().toUpperCase(),
+    station: String(fields.STATION_CALLSIGN?.value || '').trim().toUpperCase(),
+    operator: String(fields.OPERATOR?.value || '').trim().toUpperCase(),
     band,
     mode,
+    frequency: String(fields.FREQ?.value || '').trim(),
     rstSent: String(fields.RST_SENT?.value || '').trim(),
     rstReceived: String(fields.RST_RCVD?.value || '').trim(),
     grid: String(fields.GRIDSQUARE?.value || fields.VUCC_GRIDS?.value || '').trim().toUpperCase(),
+    myGrid: String(fields.MY_GRIDSQUARE?.value || '').trim().toUpperCase(),
+    propagation: String(fields.PROP_MODE?.value || '').trim().toUpperCase(),
+    satellite: String(fields.SAT_NAME?.value || '').trim().toUpperCase(),
+    satelliteMode: String(fields.SAT_MODE?.value || '').trim().toUpperCase(),
     ref: String(
-      fields.MY_SIG_INFO?.value ||
       fields.SIG_INFO?.value ||
-      fields.MY_POTA_REF?.value ||
       fields.POTA_REF?.value ||
-      fields.MY_SOTA_REF?.value ||
       fields.SOTA_REF?.value ||
-      fields.MY_WWFF_REF?.value ||
       fields.WWFF_REF?.value ||
+      ''
+    ).trim(),
+    myRef: String(
+      fields.MY_SIG_INFO?.value ||
+      fields.MY_POTA_REF?.value ||
+      fields.MY_SOTA_REF?.value ||
+      fields.MY_WWFF_REF?.value ||
       ''
     ).trim(),
   };
@@ -562,31 +581,31 @@ function validateRecord(record, index = 0) {
   const freq = String(fields.FREQ?.value || '').trim();
 
   if (!call) {
-    warnings.push({ level: 'warning', code: 'missing-call', message: `Record ${index + 1} has no CALL field.` });
+    warnings.push({ level: 'warning', code: 'missing-call', recordIndex: index, message: `Record ${index + 1} has no CALL field.` });
   }
 
   if (!date) {
-    warnings.push({ level: 'warning', code: 'missing-date', message: `Record ${index + 1} has no QSO_DATE.` });
+    warnings.push({ level: 'warning', code: 'missing-date', recordIndex: index, message: `Record ${index + 1} has no QSO_DATE.` });
   } else if (!VALID_DATE_PATTERN.test(date)) {
-    warnings.push({ level: 'warning', code: 'bad-date', message: `Record ${index + 1} has a QSO_DATE that is not YYYYMMDD.` });
+    warnings.push({ level: 'warning', code: 'bad-date', recordIndex: index, message: `Record ${index + 1} has a QSO_DATE that is not YYYYMMDD.` });
   }
 
   if (!time) {
-    warnings.push({ level: 'warning', code: 'missing-time', message: `Record ${index + 1} has no TIME_ON or TIME_OFF.` });
+    warnings.push({ level: 'warning', code: 'missing-time', recordIndex: index, message: `Record ${index + 1} has no TIME_ON or TIME_OFF.` });
   } else if (!VALID_TIME_PATTERN.test(time)) {
-    warnings.push({ level: 'warning', code: 'bad-time', message: `Record ${index + 1} has a time field that is not HHMM or HHMMSS.` });
+    warnings.push({ level: 'warning', code: 'bad-time', recordIndex: index, message: `Record ${index + 1} has a time field that is not HHMM or HHMMSS.` });
   }
 
   if (!mode) {
-    warnings.push({ level: 'warning', code: 'missing-mode', message: `Record ${index + 1} has no MODE or SUBMODE.` });
+    warnings.push({ level: 'warning', code: 'missing-mode', recordIndex: index, message: `Record ${index + 1} has no MODE or SUBMODE.` });
   }
 
   if (!band && !freq) {
-    warnings.push({ level: 'warning', code: 'missing-band', message: `Record ${index + 1} has neither BAND nor FREQ.` });
+    warnings.push({ level: 'warning', code: 'missing-band', recordIndex: index, message: `Record ${index + 1} has neither BAND nor FREQ.` });
   }
 
   if (freq && !Number.isFinite(Number(freq))) {
-    warnings.push({ level: 'warning', code: 'bad-freq', message: `Record ${index + 1} has a FREQ value that is not numeric.` });
+    warnings.push({ level: 'warning', code: 'bad-freq', recordIndex: index, message: `Record ${index + 1} has a FREQ value that is not numeric.` });
   }
 
   if (band && freq) {
@@ -595,6 +614,7 @@ function validateRecord(record, index = 0) {
       warnings.push({
         level: 'warning',
         code: 'band-mismatch',
+        recordIndex: index,
         message: `Record ${index + 1} says ${band} but FREQ looks like ${derived}.`,
       });
     }
@@ -760,16 +780,23 @@ function mergeParsedFiles(files) {
 
     Object.assign(header.appFieldTypes, parsed.header?.appFieldTypes || {});
 
-    (parsed.records || []).forEach((record) => {
-      records.push(index === 0 ? cloneRecord(record) : cloneRecord(record));
+    (parsed.records || []).forEach((record, recordIndex) => {
+      const cloned = cloneRecord(record);
+      cloned._source = {
+        name: parsed.source?.name || `File ${index + 1}`,
+        size: parsed.source?.size || 0,
+        index,
+        recordIndex,
+      };
+      records.push(cloned);
     });
   });
 
   return { header, records };
 }
 
-function makeDownload(filename, content) {
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+function makeDownload(filename, content, type = 'text/plain;charset=utf-8') {
+  const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;

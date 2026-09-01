@@ -2,497 +2,167 @@
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import IndexHeader from '../../components/IndexHeader.astro';
-import CliShell from '../../components/CliShell.astro';
-import { toTagSlug } from '../../utils/tags';
 
 const tools = (await getCollection('tools', ({ data }) => !data.draft)).sort((a, b) => {
-  if (a.data.pubDate && b.data.pubDate) {
-    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
-  }
-
-  if (a.data.pubDate) return -1;
-  if (b.data.pubDate) return 1;
-
-  return a.data.title.localeCompare(b.data.title);
+  const aTime = (a.data.updatedDate ?? a.data.pubDate)?.getTime() ?? 0;
+  const bTime = (b.data.updatedDate ?? b.data.pubDate)?.getTime() ?? 0;
+  return bTime - aTime || a.data.title.localeCompare(b.data.title);
 });
 
-const toolTags = [...new Set(tools.flatMap((tool) => tool.data.tags ?? []))];
-const leadTool = tools[0] ?? null;
-const deckTools = leadTool ? tools.slice(1) : [];
-
-function getToolIdentity(tool: (typeof tools)[number]) {
-  const tags = tool.data.tags ?? [];
-
-  if (tags.some((tag) => ['mapping', 'kml', 'leaflet'].includes(tag))) {
-    return { symbol: '⌖', label: 'Mapping utility' };
-  }
-
-  if (tags.some((tag) => ['adif', 'logging', 'analysis'].includes(tag))) {
-    return { symbol: '▤', label: 'Log utility' };
-  }
-
-  if (tags.some((tag) => ['colour', 'rgb565', 'tft'].includes(tag))) {
-    return { symbol: '◈', label: 'Colour utility' };
-  }
-
-  if (tags.includes('reference')) {
-    return { symbol: '≡', label: 'Reference utility' };
-  }
-
-  return { symbol: '◦', label: 'Utility' };
-}
-
-function toolDateValue(tool: (typeof tools)[number]) {
-  const candidate = tool.data.updatedDate ?? tool.data.pubDate ?? null;
-  return candidate instanceof Date ? candidate.valueOf() : 0;
-}
-
-function formatDateStamp(value: number) {
-  if (!value) return 'n/a';
-  return new Date(value).toISOString().slice(0, 10);
-}
-
-const cliEntries = tools.map((tool) => ({
-  id: tool.id,
-  title: tool.data.title,
-  url: `/tools/${tool.id}`,
-  section: getToolIdentity(tool).label,
-  description: tool.data.description ?? '',
-  tags: tool.data.tags ?? [],
-  updated: toolDateValue(tool),
-  featured: tool.id === leadTool?.id,
-}));
-
-const toolSections = [...new Set(cliEntries.map((entry) => entry.section))];
-const latestToolUpdated = cliEntries.length ? Math.max(...cliEntries.map((entry) => entry.updated)) : 0;
-
-const cliManual = {
-  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level stats for Tools.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
-  help: { name: 'help', synopsis: 'help [command]', description: 'List commands or command help.', examples: ['help', 'help ls'], seeAlso: ['man', 'ls', 'grep'] },
-  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List tool sections or entries in one section.', examples: ['ls', 'ls "Mapping utility"'], seeAlso: ['cd', 'pwd', 'grep'] },
-  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd "Log utility"', 'cd /'], seeAlso: ['pwd', 'ls'] },
-  pwd: { name: 'pwd', synopsis: 'pwd', description: 'Print current virtual path.', examples: ['pwd'], seeAlso: ['cd', 'ls'] },
-  cat: { name: 'cat', synopsis: 'cat <tool-id|title>', description: 'Show summary for a tool entry.', examples: ['cat adif-log-analyser'], seeAlso: ['open', 'man', 'grep'] },
-  open: { name: 'open', synopsis: 'open <tool-id|title>', description: 'Open a tool page.', examples: ['open rgb565-colour-reference'], seeAlso: ['cat', 'man'] },
-  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search title, description, section, and tags.', examples: ['grep map', 'grep colour'], seeAlso: ['find', 'tag', 'ls'] },
-  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find adif'], seeAlso: ['grep', 'tag'] },
-  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List entries by tag match.', examples: ['tag mapping', 'tag reference'], seeAlso: ['grep', 'ls'] },
-  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open manual pages for commands or tool entries.', examples: ['man', 'man ls', 'man adif'], seeAlso: ['help', 'cat', 'open'] },
-  history: { name: 'history', synopsis: 'history', description: 'Show shell command history.', examples: ['history'], seeAlso: ['clear'] },
-  clear: { name: 'clear', synopsis: 'clear', description: 'Clear shell output.', examples: ['clear'], seeAlso: ['history'] },
+const isInstrument = (tool: (typeof tools)[number]) => {
+  const tags = new Set((tool.data.tags ?? []).map((tag) => tag.toLowerCase()));
+  return tags.has('analysis') || tags.has('mapping') || tags.has('leaflet') || tags.has('interactive');
 };
+
+const toolIdentity = (tool: (typeof tools)[number]) => {
+  const tags = new Set((tool.data.tags ?? []).map((tag) => tag.toLowerCase()));
+  if (tags.has('mapping') && tags.has('analysis')) return { mark: '⌖', label: 'Analysis and mapping instrument' };
+  if (tags.has('mapping')) return { mark: '⌖', label: 'Mapping instrument' };
+  if (tags.has('analysis')) return { mark: '≋', label: 'Analysis instrument' };
+  if (tags.has('rgb565') && tags.has('interactive')) return { mark: '◫', label: 'Colour instrument' };
+  if (tags.has('rgb565')) return { mark: '◫', label: 'Colour reference' };
+  if (tags.has('downloader')) return { mark: '↓', label: 'Download utility' };
+  return { mark: '·', label: 'Utility' };
+};
+
+const formatDate = (tool: (typeof tools)[number]) => {
+  const date = tool.data.updatedDate ?? tool.data.pubDate;
+  return date
+    ? new Intl.DateTimeFormat('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+    : 'Undated';
+};
+
+const instruments = tools.filter(isInstrument);
+const references = tools.filter((tool) => !isInstrument(tool));
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead
-      title="Tools — Chips’nCode"
-      description="Interactive utilities, calculators, experiments, and technical playground tools."
-    />
+    <BaseHead title="Tools — Chips’nCode" description="Small, practical utilities for radio logs, maps, colour values, files, and recurring technical jobs." />
   </head>
   <body>
     <Header />
-    <main class="tools-index">
-      <section class="tools-hero">
+    <main class="tools-library">
+      <header class="tools-library__header">
         <div>
-          <IndexHeader
-            eyebrow="Tools"
-            title="Tools"
-            lede="Utilities, references, quick-look calculators, and practical little pages that earn their keep by being faster than reopening the same forum thread."
-          />
+          <p class="editorial-kicker">Working shelf</p>
+          <h1>Tools</h1>
+          <p>Small, practical utilities for radio logs, maps, colour values, files, and the jobs that are too tedious to keep doing by hand.</p>
         </div>
-      </section>
+        <dl aria-label="Tools summary">
+          <div><dt>Tools</dt><dd>{tools.length}</dd></div>
+          <div><dt>Interactive</dt><dd>{instruments.length}</dd></div>
+          <div><dt>References</dt><dd>{references.length}</dd></div>
+        </dl>
+      </header>
 
       {tools.length === 0 ? (
-        <div class="panel panel--soft empty">
-          <p class="empty-title">Tools coming soon.</p>
-          <p class="empty-sub">
-            Publish tools in the <code>tools</code> collection and they will appear here automatically.
-          </p>
-        </div>
+        <p class="tools-empty">Nothing is on the bench yet.</p>
       ) : (
-        <>
-          {leadTool ? (
-            <section class="tool-featureBand" aria-labelledby="tools-featured-heading">
-              <div class="section-head">
+        <div class="tools-directory">
+          {instruments.length ? (
+            <section class="tools-group" aria-labelledby="interactive-tools">
+              <header>
                 <div>
-                  <p class="eyebrow eyebrow--accent">Instrument Rack</p>
-                  <h2 id="tools-featured-heading">Lead utility</h2>
+                  <p class="editorial-kicker">Use in the browser</p>
+                  <h2 id="interactive-tools">Interactive instruments</h2>
                 </div>
-              </div>
-
-              <div class="tool-featureBand__grid">
-                <article class="tool-lead panel">
-                  <div class="tool-identity" aria-hidden="true">
-                    <span class="tool-identity__icon">{getToolIdentity(leadTool).symbol}</span>
-                    <div class="tool-identity__copy">
-                      <span class="tool-identity__label">{getToolIdentity(leadTool).label}</span>
-                      {leadTool.data.tags?.[0] ? (
-                        <a class="tool-identity__tag" href={`/tags/${toTagSlug(leadTool.data.tags[0])}`}>
-                          #{leadTool.data.tags[0]}
-                        </a>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div class="tool-lead__copy">
-                    <div class="tool-lead__meta meta-row">
-                      <div class="meta-cluster">
-                        <span class="meta-kicker">Tool</span>
-                        <span class="meta-status">Lead utility</span>
-                      </div>
-                      {leadTool.data.pubDate ? (
-                        <span class="meta-date tool-lead__date">
-                          <FormattedDate date={leadTool.data.pubDate} />
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <h3 class="tool-lead__title">
-                      <a href={`/tools/${leadTool.id}`}>{leadTool.data.title}</a>
-                    </h3>
-
-                    <p class="tool-lead__desc">{leadTool.data.description}</p>
-
-                    {leadTool.data.tags?.length ? (
-                      <div class="tool-tagRow tag-list">
-                        {leadTool.data.tags.slice(0, 4).map((tag) => (
-                          <a class="tag-link" href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </article>
-
-                {deckTools.length ? (
-                  <div class="tool-deck">
-                    {deckTools.map((tool) => (
-                      <a href={`/tools/${tool.id}`} class="tool-card panel panel--soft" aria-label={`Open tool: ${tool.data.title}`}>
-                        <div class="tool-card__body">
-                          <div class="tool-card__identity" aria-hidden="true">
-                            <span class="tool-identity__icon tool-identity__icon--small">{getToolIdentity(tool).symbol}</span>
-                            <span class="tool-card__label">{getToolIdentity(tool).label}</span>
-                          </div>
-
-                          <div class="tool-card__meta meta-row">
-                            <span class="meta-kicker">Tool</span>
-                            {tool.data.pubDate ? (
-                              <span class="meta-date tool-card__date">
-                                <FormattedDate date={tool.data.pubDate} />
-                              </span>
-                            ) : null}
-                          </div>
-
-                          <h3 class="tool-card__title">{tool.data.title}</h3>
-                          <p class="tool-card__desc">{tool.data.description}</p>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                ) : null}
+                <p>Bring your own data. Processing stays in the browser.</p>
+              </header>
+              <div class="tools-grid">
+                {instruments.map((tool) => {
+                  const identity = toolIdentity(tool);
+                  return (
+                    <a class="tool-card" href={`/tools/${tool.id}`}>
+                      <span class="tool-card__mark" aria-hidden="true">{identity.mark}</span>
+                      <span class="tool-card__copy">
+                        <small>{identity.label}</small>
+                        <strong>{tool.data.title}</strong>
+                        <span>{tool.data.description}</span>
+                      </span>
+                      <span class="tool-card__foot"><time>{formatDate(tool)}</time><i aria-hidden="true">→</i></span>
+                    </a>
+                  );
+                })}
               </div>
             </section>
           ) : null}
-        </>
+
+          {references.length ? (
+            <section class="tools-group" aria-labelledby="reference-tools">
+              <header>
+                <div>
+                  <p class="editorial-kicker">Keep nearby</p>
+                  <h2 id="reference-tools">References and downloads</h2>
+                </div>
+                <p>Compact answers and reusable helpers without the dashboard treatment.</p>
+              </header>
+              <div class="tools-grid">
+                {references.map((tool) => {
+                  const identity = toolIdentity(tool);
+                  return (
+                    <a class="tool-card" href={`/tools/${tool.id}`}>
+                      <span class="tool-card__mark" aria-hidden="true">{identity.mark}</span>
+                      <span class="tool-card__copy">
+                        <small>{identity.label}</small>
+                        <strong>{tool.data.title}</strong>
+                        <span>{tool.data.description}</span>
+                      </span>
+                      <span class="tool-card__foot"><time>{formatDate(tool)}</time><i aria-hidden="true">→</i></span>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
+        </div>
       )}
     </main>
     <Footer />
-
-    <div class="edge-drawer-instance">
-      <input id="tools-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
-      <label
-        for="tools-query-toggle"
-        class="edge-drawer-tab"
-        data-drawer-name="Tools Query"
-        aria-label="Open tools query drawer"
-      >
-        Tools Query
-      </label>
-
-      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="tools-query-toggle">
-        <label for="tools-query-toggle" class="edge-drawer-backdrop" aria-label="Close tools query drawer"></label>
-        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Tools query drawer">
-          <label for="tools-query-toggle" class="edge-drawer-close edge-drawer-close--query">Close</label>
-          <CliShell
-            shellId="tools-cli"
-            shellTitle="tools.query"
-            initialCommand="stat"
-            entries={cliEntries}
-            commandManual={cliManual}
-            statsLines={[
-              { label: 'published_tools', value: tools.length },
-              { label: 'sections', value: toolSections.length },
-              { label: 'tags_in_use', value: toolTags.length },
-              { label: 'dated_entries', value: tools.filter((tool) => tool.data.pubDate).length },
-              { label: 'last_updated', value: formatDateStamp(latestToolUpdated) },
-            ]}
-            presets={['ls', 'grep map', 'tag adif', 'man ls', 'open rgb565']}
-          />
-        </aside>
-      </div>
-    </div>
   </body>
 </html>
 
 <style>
-  .tools-index {
-    max-width: min(1320px, calc(100% - 2 * var(--space-5)));
+  .tools-library { width: min(1180px, calc(100% - 4rem)); max-width: 1180px; padding: clamp(2rem, 5vw, 4.5rem) 0 clamp(5rem, 9vw, 8rem); }
+  .tools-library__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; padding-bottom: clamp(1.5rem, 3vw, 2.4rem); border-bottom: 1px solid var(--text); }
+  .tools-library__header h1 { margin: 0.35rem 0 0; font-size: clamp(3.2rem, 8vw, 7rem); line-height: 0.86; letter-spacing: -0.06em; }
+  .tools-library__header > div > p:last-child { max-width: 64ch; margin: 1.2rem 0 0; color: var(--text-2); font-size: clamp(1rem, 1.3vw, 1.16rem); }
+  .tools-library__header dl { display: grid; grid-template-columns: repeat(3, auto); margin: 0; border-block: 1px solid var(--border); }
+  .tools-library__header dl div { display: grid; gap: 0.2rem; min-width: 5.5rem; padding: 0.65rem 0.85rem; border-left: 1px solid var(--border); }
+  .tools-library__header dt, .tools-library__header dd, .tool-card small, .tool-card__foot { font-family: var(--font-mono); }
+  .tools-library__header dt { color: var(--muted); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tools-library__header dd { margin: 0; color: var(--text); font-size: 0.86rem; font-weight: 650; }
+  .tools-directory { display: grid; gap: clamp(3.5rem, 7vw, 6rem); margin-top: clamp(3rem, 6vw, 5rem); }
+  .tools-group > header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 0.48fr); gap: 2rem; align-items: end; padding-bottom: 0.9rem; border-bottom: 1px solid var(--text); }
+  .tools-group h2 { margin: 0.25rem 0 0; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1; letter-spacing: -0.04em; }
+  .tools-group > header > p { margin: 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+  .tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-card { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: 1fr auto; column-gap: 1rem; min-height: 235px; padding: clamp(1.15rem, 2vw, 1.6rem); border-bottom: 1px solid var(--border); color: inherit; text-decoration: none; }
+  .tool-card:nth-child(even) { border-left: 1px solid var(--border); }
+  .tool-card:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .tool-card__mark { display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border)); color: var(--accent); font-size: 1.45rem; line-height: 1; }
+  .tool-card__copy { display: flex; flex-direction: column; min-width: 0; }
+  .tool-card small { color: var(--accent); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tool-card strong { margin-top: 0.7rem; font-size: clamp(1.35rem, 2.5vw, 2rem); line-height: 1.05; letter-spacing: -0.035em; }
+  .tool-card__copy > span:last-child { max-width: 46ch; margin-top: 0.75rem; color: var(--text-2); font-size: 0.9rem; line-height: 1.55; }
+  .tool-card__foot { grid-column: 2; display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-top: 1.5rem; color: var(--muted); font-size: 0.64rem; text-transform: uppercase; }
+  .tool-card__foot i { color: var(--text); font: normal 1.05rem/1 sans-serif; }
+  .tools-empty { padding: 3rem 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+  @media (max-width: 800px) {
+    .tools-library { width: min(100% - 2rem, 1180px); }
+    .tools-library__header { grid-template-columns: 1fr; }
+    .tools-library__header dl { width: 100%; grid-template-columns: repeat(3, 1fr); }
+    .tools-library__header dl div:first-child { border-left: 0; }
   }
-
-  .tools-hero {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-    align-items: start;
-    margin-bottom: var(--space-6);
-  }
-
-  .empty {
-    padding: var(--space-6);
-  }
-
-  .empty-title {
-    margin: 0 0 0.4rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .empty-sub {
-    margin: 0;
-    color: var(--text-2);
-    max-width: 80ch;
-  }
-
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
-  }
-
-  .section-head h2 {
-    margin: 0;
-  }
-
-  .eyebrow--accent {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--accent) 52%, var(--text) 48%);
-  }
-
-  .tool-featureBand {
-    display: grid;
-    gap: var(--space-5);
-  }
-
-  .tool-featureBand__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .tool-lead,
-  .tool-card {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .tool-lead {
-    display: grid;
-    gap: var(--space-4);
-    background:
-      radial-gradient(540px 220px at top left, rgba(45, 255, 178, 0.1), transparent 70%),
-      radial-gradient(520px 220px at top right, rgba(37, 99, 235, 0.08), transparent 68%),
-      var(--surface-raised);
-  }
-
-  .tool-identity {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    min-width: 0;
-    padding: 0.8rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--surface) 96%, transparent 4%), color-mix(in srgb, var(--surface-raised) 92%, var(--surface) 8%));
-    box-shadow: var(--shadow-sm);
-  }
-
-  .tool-identity__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.35rem;
-    height: 2.35rem;
-    border-radius: 14px;
-    border: 1px solid var(--surface-glass-border);
-    background:
-      radial-gradient(120% 120% at top left, color-mix(in srgb, var(--accent) 18%, transparent 82%), transparent 55%),
-      var(--surface-glass);
-    color: var(--text);
-    font-size: 1.15rem;
-    font-weight: 700;
-    flex: 0 0 auto;
-  }
-
-  .tool-identity__icon--small {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
-  }
-
-  .tool-identity__copy {
-    display: grid;
-    gap: 0.12rem;
-    min-width: 0;
-  }
-
-  .tool-identity__label,
-  .tool-identity__tag,
-  .tool-card__label {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-  }
-
-  .tool-identity__label,
-  .tool-card__label {
-    color: var(--muted);
-    text-transform: lowercase;
-  }
-
-  .tool-identity__tag {
-    color: var(--text-2);
-    text-decoration: none;
-  }
-
-  .tool-identity__tag:hover {
-    color: var(--text);
-  }
-
-  .tool-lead__copy,
-  .tool-card__body {
-    min-width: 0;
-  }
-
-  .tool-lead__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .tool-lead__meta,
-  .tool-card__meta,
-  .tool-tagRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .tool-lead__meta,
-  .tool-card__meta {
-    justify-content: flex-end;
-  }
-
-  .tool-lead__date,
-  .tool-card__date {
-    color: var(--muted);
-    font-size: 0.86rem;
-  }
-
-  .tool-lead__title,
-  .tool-lead__desc,
-  .tool-card__title,
-  .tool-card__desc {
-    margin: 0;
-  }
-
-  .tool-lead__title {
-    font-size: clamp(2rem, 2.8vw, 3.2rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-
-  .tool-lead__title a,
-  .tool-card__title {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .tool-lead__title a:hover,
-  .tool-card:hover .tool-card__title {
-    color: var(--accent);
-  }
-
-  .tool-lead__desc {
-    max-width: 42ch;
-    color: var(--text-2);
-    font-size: clamp(1rem, 1.1vw, 1.15rem);
-  }
-
-  .tool-deck {
-    display: grid;
-    gap: var(--space-4);
-    align-content: start;
-  }
-
-  .tool-card {
-    display: grid;
-    gap: var(--space-3);
-    align-self: start;
-  }
-
-  .tool-card__body {
-    display: grid;
-    gap: var(--space-3);
-  }
-
-  .tool-card__identity {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .tool-card__title {
-    font-size: clamp(1.18rem, 1.35vw, 1.45rem);
-    line-height: 1.14;
-    text-wrap: balance;
-  }
-
-  .tool-card__desc {
-    color: var(--text-2);
-  }
-
-  @media (max-width: 980px) {
-    .tools-hero {
-      grid-template-columns: 1fr;
-    }
-
-    .tool-featureBand__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 780px) {
-    .tools-index {
-      max-width: calc(100% - 2 * var(--space-4));
-    }
-
-    .tool-lead__meta,
-    .tool-card__meta {
-      justify-content: flex-start;
-    }
+  @media (max-width: 620px) {
+    .tools-library { padding-top: 1.5rem; }
+    .tools-library__header h1 { font-size: clamp(3.5rem, 22vw, 5.5rem); }
+    .tools-library__header dl { display: none; }
+    .tools-group > header { grid-template-columns: 1fr; gap: 0.7rem; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .tool-card { min-height: 205px; padding-inline: 0.5rem; }
+    .tool-card:nth-child(even) { border-left: 0; }
   }
 </style>

@@ -1,0 +1,186 @@
+<section class="rgb565" data-rgb565-picker aria-labelledby="rgb565-picker-title">
+  <header class="rgb565__intro">
+    <div>
+      <p class="editorial-kicker">Live conversion</p>
+      <h2 id="rgb565-picker-title">Pick a colour</h2>
+    </div>
+    <p>Choose an ordinary 24-bit colour. The nearest RGB565 value and the colour a 16-bit display can actually reproduce update immediately.</p>
+  </header>
+
+  <div class="rgb565__workbench">
+    <div class="rgb565__source">
+      <label class="rgb565__swatch" data-source-swatch>
+        <span>Source colour</span>
+        <input type="color" value="#f04f38" aria-label="Choose source colour" data-colour />
+      </label>
+      <label class="rgb565__hex">
+        <span>Hex RGB</span>
+        <span class="rgb565__field-prefix">#</span>
+        <input type="text" value="F04F38" maxlength="6" inputmode="text" spellcheck="false" aria-label="Hex RGB value" data-hex />
+      </label>
+    </div>
+
+    <div class="rgb565__channels" aria-label="RGB channels">
+      {[
+        ['Red', 'r', 240],
+        ['Green', 'g', 79],
+        ['Blue', 'b', 56],
+      ].map(([label, channel, value]) => (
+        <div class={`rgb565__channel rgb565__channel--${channel}`}>
+          <label for={`rgb565-${channel}`}>{label}</label>
+          <input id={`rgb565-${channel}`} type="range" min="0" max="255" value={value} data-channel={channel} />
+          <input type="number" min="0" max="255" value={value} aria-label={`${label} value`} data-number={channel} />
+        </div>
+      ))}
+    </div>
+
+    <div class="rgb565__result">
+      <div class="rgb565__display" data-quantized-swatch>
+        <span>RGB565 display colour</span>
+      </div>
+      <dl>
+        <div>
+          <dt>Hex</dt>
+          <dd><output data-out="hex">0xF267</output><button type="button" data-copy="hex">Copy</button></dd>
+        </div>
+        <div>
+          <dt>Decimal</dt>
+          <dd><output data-out="decimal">62055</output><button type="button" data-copy="decimal">Copy</button></dd>
+        </div>
+        <div>
+          <dt>16-bit binary</dt>
+          <dd><output data-out="binary">11110 010011 00111</output><button type="button" data-copy="binary">Copy</button></dd>
+        </div>
+        <div>
+          <dt>Stored channels</dt>
+          <dd><output data-out="channels">R 30 · G 19 · B 7</output></dd>
+        </div>
+        <div>
+          <dt>Reproduced RGB</dt>
+          <dd><output data-out="reproduced">247, 77, 58</output></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="rgb565__code">
+    <p class="editorial-kicker">Ready to paste</p>
+    <code><span data-out="constant">constexpr uint16_t COLOUR = 0xF267;</span></code>
+    <button type="button" data-copy="constant">Copy Arduino constant</button>
+  </div>
+</section>
+
+<script>
+  const clampByte = (value) => Math.max(0, Math.min(255, Number(value) || 0));
+  const padHex = (value, width = 2) => value.toString(16).toUpperCase().padStart(width, '0');
+
+  document.querySelectorAll('[data-rgb565-picker]').forEach((picker) => {
+    const colour = picker.querySelector('[data-colour]');
+    const hex = picker.querySelector('[data-hex]');
+    const sourceSwatch = picker.querySelector('[data-source-swatch]');
+    const quantizedSwatch = picker.querySelector('[data-quantized-swatch]');
+    const ranges = Object.fromEntries([...picker.querySelectorAll('[data-channel]')].map((node) => [node.dataset.channel, node]));
+    const numbers = Object.fromEntries([...picker.querySelectorAll('[data-number]')].map((node) => [node.dataset.number, node]));
+    const outputs = Object.fromEntries([...picker.querySelectorAll('[data-out]')].map((node) => [node.dataset.out, node]));
+
+    const render = (r, g, b) => {
+      r = clampByte(r); g = clampByte(g); b = clampByte(b);
+      const r5 = r >> 3, g6 = g >> 2, b5 = b >> 3;
+      const value = (r5 << 11) | (g6 << 5) | b5;
+      const rr = Math.round(r5 * 255 / 31), gg = Math.round(g6 * 255 / 63), bb = Math.round(b5 * 255 / 31);
+      const rgbHex = `${padHex(r)}${padHex(g)}${padHex(b)}`;
+      const valueHex = `0x${padHex(value, 4)}`;
+      const binary = `${r5.toString(2).padStart(5, '0')} ${g6.toString(2).padStart(6, '0')} ${b5.toString(2).padStart(5, '0')}`;
+
+      colour.value = `#${rgbHex}`;
+      hex.value = rgbHex;
+      for (const [channel, channelValue] of Object.entries({ r, g, b })) {
+        ranges[channel].value = channelValue;
+        numbers[channel].value = channelValue;
+      }
+      sourceSwatch.style.setProperty('--swatch-colour', `#${rgbHex}`);
+      quantizedSwatch.style.setProperty('--swatch-colour', `rgb(${rr} ${gg} ${bb})`);
+      outputs.hex.textContent = valueHex;
+      outputs.decimal.textContent = String(value);
+      outputs.binary.textContent = binary;
+      outputs.channels.textContent = `R ${r5} · G ${g6} · B ${b5}`;
+      outputs.reproduced.textContent = `${rr}, ${gg}, ${bb}`;
+      outputs.constant.textContent = `constexpr uint16_t COLOUR = ${valueHex};`;
+    };
+
+    const renderFromControls = () => render(ranges.r.value, ranges.g.value, ranges.b.value);
+    colour.addEventListener('input', () => {
+      const value = colour.value.slice(1);
+      render(parseInt(value.slice(0, 2), 16), parseInt(value.slice(2, 4), 16), parseInt(value.slice(4, 6), 16));
+    });
+    hex.addEventListener('input', () => {
+      const value = hex.value.replace(/[^0-9a-f]/gi, '').slice(0, 6);
+      hex.value = value.toUpperCase();
+      if (value.length === 6) render(parseInt(value.slice(0, 2), 16), parseInt(value.slice(2, 4), 16), parseInt(value.slice(4, 6), 16));
+    });
+    Object.values(ranges).forEach((input) => input.addEventListener('input', renderFromControls));
+    for (const [channel, input] of Object.entries(numbers)) {
+      input.addEventListener('input', () => { ranges[channel].value = clampByte(input.value); renderFromControls(); });
+    }
+    picker.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
+      const target = outputs[button.dataset.copy];
+      if (!target) return;
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const label = button.textContent;
+      button.textContent = 'Copied';
+      window.setTimeout(() => { button.textContent = label; }, 1200);
+    }));
+    render(240, 79, 56);
+  });
+</script>
+
+<style>
+  .rgb565 { margin-bottom: clamp(3rem, 7vw, 5rem); border-block: 1px solid var(--text); color: var(--text); }
+  .rgb565__intro { display: grid; grid-template-columns: minmax(0, .75fr) minmax(260px, .55fr); gap: 2rem; align-items: end; padding: 1.1rem 0; }
+  .rgb565__intro h2 { margin: .25rem 0 0; padding: 0; border: 0; font-size: clamp(2rem, 5vw, 3.8rem); line-height: .95; letter-spacing: -.045em; }
+  .rgb565__intro > p { max-width: 52ch; margin: 0; color: var(--text-2); font-size: .9rem; line-height: 1.5; }
+  .rgb565__workbench { display: grid; grid-template-columns: minmax(190px, .48fr) minmax(300px, .8fr) minmax(310px, 1fr); border-top: 1px solid var(--border); }
+  .rgb565__source, .rgb565__channels, .rgb565__result { min-width: 0; padding: clamp(1rem, 2.4vw, 1.6rem); }
+  .rgb565__channels, .rgb565__result { border-left: 1px solid var(--border); }
+  .rgb565__source { display: grid; gap: .8rem; align-content: start; }
+  .rgb565__swatch { position: relative; display: grid; align-content: end; aspect-ratio: 1; padding: .8rem; overflow: hidden; border-radius: 0; background: var(--swatch-colour, #f04f38); color: white; cursor: pointer; text-shadow: 0 1px 3px rgb(0 0 0 / .75); }
+  .rgb565__swatch input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+  .rgb565__swatch span, .rgb565__display span { position: relative; z-index: 1; font: 700 .68rem/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+  .rgb565__hex { display: grid; grid-template-columns: auto auto 1fr; align-items: center; border-bottom: 1px solid var(--text); }
+  .rgb565__hex > span:first-child { grid-column: 1/-1; color: var(--muted); font: .62rem var(--font-mono); text-transform: uppercase; }
+  .rgb565__field-prefix { font: 1rem var(--font-mono); }
+  .rgb565__hex input { min-width: 0; padding: .45rem .2rem; border: 0; border-radius: 0; outline: 0; background: transparent; color: var(--text); font: 700 1rem var(--font-mono); }
+  .rgb565__channels { display: grid; align-content: center; gap: 1.1rem; }
+  .rgb565__channel { display: grid; grid-template-columns: 3.2rem minmax(0,1fr) 4rem; gap: .65rem; align-items: center; }
+  .rgb565__channel label { font: 700 .7rem var(--font-mono); text-transform: uppercase; }
+  .rgb565__channel input[type=range] { width: 100%; accent-color: var(--channel-colour); }
+  .rgb565__channel input[type=number] { width: 100%; padding: .4rem; border: 0; border-bottom: 1px solid var(--text); border-radius: 0; background: transparent; color: var(--text); font: .8rem var(--font-mono); }
+  .rgb565__channel--r { --channel-colour: #dc493f; }
+  .rgb565__channel--g { --channel-colour: #38a169; }
+  .rgb565__channel--b { --channel-colour: #3988d4; }
+  .rgb565__result { display: grid; gap: 1rem; }
+  .rgb565__display { display: grid; align-content: end; min-height: 110px; padding: .75rem; border-radius: 0; background: var(--swatch-colour, #f74d3a); color: white; text-shadow: 0 1px 3px rgb(0 0 0 / .75); }
+  .rgb565__result dl { margin: 0; }
+  .rgb565__result dl > div { display: grid; grid-template-columns: 7rem minmax(0,1fr); gap: .7rem; align-items: baseline; padding: .48rem 0; border-bottom: 1px solid var(--border); }
+  .rgb565__result dt { color: var(--muted); font: .62rem var(--font-mono); text-transform: uppercase; }
+  .rgb565__result dd { display: flex; justify-content: space-between; gap: .5rem; min-width: 0; margin: 0; font: 700 .76rem var(--font-mono); }
+  .rgb565 button { border: 0; border-bottom: 1px solid var(--accent); border-radius: 0; background: transparent; color: var(--accent); padding: .15rem 0; font: 700 .62rem var(--font-mono); cursor: pointer; }
+  .rgb565 :is(input, button):focus-visible { border-radius: 0; }
+  .rgb565__code { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 1rem; align-items: center; padding: .8rem 0; border-top: 1px solid var(--border); }
+  .rgb565__code p { margin: 0; }
+  .rgb565__code code { min-width: 0; overflow-x: auto; color: var(--text); font-size: .8rem; white-space: nowrap; }
+  @media (max-width: 900px) {
+    .rgb565__workbench { grid-template-columns: minmax(180px,.45fr) minmax(0,1fr); }
+    .rgb565__result { grid-column: 1/-1; border-top: 1px solid var(--border); border-left: 0; grid-template-columns: minmax(180px,.45fr) minmax(0,1fr); }
+  }
+  @media (max-width: 620px) {
+    .rgb565__intro, .rgb565__workbench, .rgb565__result { grid-template-columns: 1fr; }
+    .rgb565__intro { gap: .7rem; }
+    .rgb565__source, .rgb565__channels, .rgb565__result { padding-inline: 0; }
+    .rgb565__channels { border-left: 0; border-top: 1px solid var(--border); }
+    .rgb565__result { display: grid; }
+    .rgb565__display { min-height: 125px; }
+    .rgb565__code { grid-template-columns: 1fr; gap: .5rem; }
+    .rgb565__code button { justify-self: start; }
+  }
+</style>

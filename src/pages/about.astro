@@ -110,25 +110,29 @@ import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-t
 <style>
   :global(.about-page) { width: min(100%, 1380px); max-width: 1380px; padding-top: 1.5rem; padding-bottom: clamp(4rem, 8vw, 7rem); }
   .about-shell { min-width: 0; }
-  .about-hero { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(440px, 1.08fr); align-items: stretch; border-block: 1px solid var(--text); }
-  .about-hero__copy { display: flex; flex-direction: column; justify-content: center; min-width: 0; padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 4vw, 4rem) clamp(2rem, 5vw, 5rem) 0; }
+  .about-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(440px, 1.1fr); align-items: stretch; border-block: 1px solid var(--text); }
+  .about-hero__copy { display: flex; flex-direction: column; justify-content: center; min-width: 0; padding: clamp(1.25rem, 2vw, 2rem) clamp(1.25rem, 2.5vw, 2.5rem) clamp(1.25rem, 2vw, 2rem) 0; }
   .about-kicker { margin: 0 0 0.85rem; color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
-  .about-hero h1 { max-width: 13ch; margin: 0; font-size: clamp(2.75rem, 5.4vw, 5.6rem); line-height: 0.94; letter-spacing: -0.055em; text-wrap: balance; }
-  .about-lede { max-width: 62ch; margin: 1.5rem 0 0; color: var(--text-2); font-size: clamp(1.02rem, 1.35vw, 1.18rem); line-height: 1.65; }
-  .about-lede--small { max-width: 58ch; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.98rem; }
+  .about-hero h1 { max-width: 17ch; margin: 0; font-size: clamp(2.75rem, 3.4vw, 3.6rem); line-height: 0.96; letter-spacing: -0.05em; text-wrap: balance; }
+  .about-lede { max-width: 64ch; margin: 0.85rem 0 0; color: var(--text-2); font-size: clamp(0.92rem, 0.95vw, 1rem); line-height: 1.48; }
+  .about-lede--small { max-width: 60ch; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--border); font-size: 0.82rem; line-height: 1.45; }
   .about-ppm { color: var(--accent); font-family: var(--font-mono); font-weight: 700; white-space: nowrap; }
 
-  .about-gallery { position: relative; display: grid; grid-template-columns: 0.72fr 1.28fr; grid-template-rows: 0.9fr 1.1fr; min-height: clamp(480px, 52vw, 700px); background: var(--text); border-left: 1px solid var(--text); }
+  .about-gallery { position: relative; display: grid; grid-template-columns: 0.72fr 1.28fr 0.72fr; grid-template-rows: 0.9fr 1.1fr; height: clamp(440px, 34vw, 580px); min-height: 0; background: var(--text); border-left: 1px solid var(--text); }
   .about-gallery figure { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; background: var(--surface-2); }
   .about-gallery figure::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 30%, transparent); }
   .about-gallery :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.88) contrast(1.04); transition: filter 180ms ease, transform 500ms ease; }
   .about-gallery figure:hover :global(img) { filter: saturate(1) contrast(1.02); transform: scale(1.015); }
   .about-gallery__portrait { grid-column: 1; grid-row: 1; border-right: 1px solid var(--paper); border-bottom: 1px solid var(--paper); }
-  .about-gallery__radio { grid-column: 2; grid-row: 1; border-bottom: 1px solid var(--paper); }
-  .about-gallery__field { grid-column: 1 / -1; grid-row: 2; }
-  .about-gallery__moon { position: absolute !important; z-index: 2; right: clamp(0.75rem, 2vw, 1.5rem); bottom: clamp(0.75rem, 2vw, 1.5rem); width: clamp(112px, 16vw, 205px); aspect-ratio: 1; border: clamp(5px, 0.7vw, 9px) solid var(--paper); box-shadow: 0 0 0 1px var(--text); }
+  .about-gallery__portrait :global(img) { object-position: 50% 22%; }
+  .about-gallery__radio { grid-column: 2 / -1; grid-row: 1; border-bottom: 1px solid var(--paper); }
+  .about-gallery__radio :global(img) { object-position: 70% 28%; }
+  .about-gallery__field { grid-column: 1 / 3; grid-row: 2; border-right: 1px solid var(--paper); }
+  .about-gallery__field :global(img) { object-position: 62% 32%; }
+  .about-gallery__moon { grid-column: 3; grid-row: 2; }
+  .about-gallery__moon :global(img) { object-fit: contain; object-position: center; background: #050505; }
 
-  .about-body { display: grid; grid-template-columns: minmax(170px, 210px) minmax(0, 920px); justify-content: start; gap: clamp(2rem, 6vw, 6rem); align-items: start; margin-top: clamp(3rem, 7vw, 6rem); }
+  .about-body { display: grid; grid-template-columns: minmax(170px, 210px) minmax(0, 920px); justify-content: start; gap: clamp(2rem, 6vw, 6rem); align-items: start; margin-top: clamp(2.5rem, 5vw, 4.5rem); }
   .about-rail { position: sticky; top: calc(var(--header-height, 4.5rem) + 1rem); }
   .about-rail nav { display: grid; border-top: 1px solid var(--text); }
   .about-rail a { display: grid; grid-template-columns: 2rem 1fr; gap: 0.5rem; padding: 0.72rem 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 0.76rem; line-height: 1.35; text-decoration: none; }
@@ -156,7 +160,7 @@ import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-t
     .about-hero { grid-template-columns: 1fr; }
     .about-hero__copy { padding-right: 0; }
     .about-hero h1 { max-width: 15ch; }
-    .about-gallery { min-height: min(78vw, 680px); border-top: 1px solid var(--text); border-left: 0; }
+    .about-gallery { height: min(78vw, 680px); min-height: 0; border-top: 1px solid var(--text); border-left: 0; }
     .about-body { grid-template-columns: 170px minmax(0, 1fr); gap: 2.5rem; }
   }
 
@@ -164,8 +168,10 @@ import moonImage from '../assets/astrophotography/iss-over-the-moon/iss-across-t
     :global(.about-page) { width: 100%; padding-inline: 0; padding-top: 0; }
     .about-hero { border-top: 0; }
     .about-hero__copy { padding: 2.5rem 1rem; }
-    .about-gallery { min-height: 125vw; grid-template-columns: 0.9fr 1.1fr; }
-    .about-gallery__field :global(img) { object-position: 40% center; }
+    .about-gallery { height: 125vw; min-height: 0; }
+    .about-gallery__portrait :global(img) { object-position: 50% 18%; }
+    .about-gallery__radio :global(img) { object-position: 72% 24%; }
+    .about-gallery__field :global(img) { object-position: 58% 34%; }
     .about-body { display: block; margin-top: 0; }
     .about-rail { position: sticky; top: var(--header-height, 4.5rem); z-index: 20; overflow-x: auto; padding: 0 1rem; background: color-mix(in srgb, var(--paper) 95%, transparent); backdrop-filter: blur(12px); }
     .about-rail > .about-kicker { display: none; }

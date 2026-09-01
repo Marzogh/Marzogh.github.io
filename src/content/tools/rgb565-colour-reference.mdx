@@ -1,16 +1,19 @@
 ---
 title: RGB565 Colour Reference
-description: "A quick reference for TFT-friendly colour values, plus the conversion math so you do not have to keep re-deriving it on a napkin."
+description: "Pick an ordinary RGB colour and get its TFT-friendly RGB565 value, reproduced colour and ready-to-paste Arduino constant."
 pubDate: 2021-03-21
+updatedDate: 2026-09-01
 draft: false
-tags: [tft, arduino, colour, rgb565, reference]
+tags: [tft, arduino, colour, rgb565, reference, interactive]
 ---
 
-If you have ever bounced between a nice normal RGB colour picker and a tiny TFT library demanding `0xF81F` like that is a perfectly ordinary thing to ask, welcome.
+import Rgb565Picker from '../../components/Rgb565Picker.astro';
 
-This page started life as a quick note and now lives here properly.
+<Rgb565Picker />
 
-## The format
+If you have ever bounced between an ordinary RGB colour picker and a tiny TFT library demanding `0xF81F` as though that is a perfectly ordinary thing to ask, this is the bridge between them.
+
+## What RGB565 stores
 
 RGB565 stores colour in 16 bits:
 
@@ -18,7 +21,7 @@ RGB565 stores colour in 16 bits:
 - 6 bits green
 - 5 bits blue
 
-Green gets the extra bit because human vision is annoyingly picky and hardware people noticed.
+Green gets the extra bit because human vision is more sensitive to changes in green. Red and blue each get 32 possible levels; green gets 64. Converting from 24-bit RGB therefore loses some precision, which is why the picker shows the reproduced colour alongside the source.
 
 ## The conversion
 
@@ -34,7 +37,7 @@ Or, if you prefer to think in ranges:
 - green: `0-255` becomes `0-63`
 - blue: `0-255` becomes `0-31`
 
-## A few useful values
+## Useful fixed values
 
 ```text
 Black   0x0000
@@ -47,10 +50,8 @@ Cyan    0x07FF
 Magenta 0xF81F
 ```
 
-## When this page helps
+## Where it helps
 
 - hard-coding UI colours for TFT displays
-- checking whether a converted value looks sane
-- saving yourself from opening the same old forum thread for the fiftieth time
-
-If I turn this into a fully interactive converter later, this page can remain the quick-reference version for when speed matters more than bells and whistles.
+- comparing the selected colour with what the display can reproduce
+- pasting a `uint16_t` constant directly into Arduino code

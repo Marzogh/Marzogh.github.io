@@ -1,0 +1,26 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+
+const destination = '/tools/adif-log-analyser#map';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="ADIF Contact Map moved — Chips’nCode" description="The ADIF contact map is now part of the ADIF Log Analyser." />
+    <link rel="canonical" href={destination} />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+  </head>
+  <body>
+    <main>
+      <h1>The ADIF map has moved</h1>
+      <p>The map now uses the analyser’s current filtered contacts, so there is no second uploader or competing set of filters.</p>
+      <p><a href={destination}>Open the integrated contact map →</a></p>
+    </main>
+    <script is:inline define:vars={{ destination }}>window.location.replace(destination);</script>
+  </body>
+</html>
+
+<style>
+  main { width: min(46rem, calc(100% - 2rem)); margin: 15vh auto; }
+</style>

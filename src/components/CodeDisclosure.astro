@@ -1,0 +1,52 @@
+---
+import { readFileSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
+import { codeToHtml } from 'shiki';
+
+interface Props {
+  title?: string;
+  sourcePath: string;
+  lang?: string;
+}
+
+const { title = 'Inspect source', sourcePath, lang = 'text' } = Astro.props;
+const source = readFileSync(resolve(process.cwd(), sourcePath), 'utf8');
+const filename = basename(sourcePath);
+const lineCount = source.replace(/\n$/, '').split('\n').length;
+const highlightedSource = await codeToHtml(source, {
+  lang,
+  themes: { light: 'github-light', dark: 'github-dark' },
+});
+---
+
+<details class="code-disclosure">
+  <summary>
+    <span>{title}</span>
+    <small>{filename} · {lineCount} lines</small>
+  </summary>
+  <div class="code-disclosure__source" set:html={highlightedSource} />
+</details>
+
+<style>
+  .code-disclosure { margin: -0.55rem 0 1.5rem; border-bottom: 1px solid var(--border); }
+  .code-disclosure summary { display: flex; gap: 1rem; align-items: baseline; padding: 0.75rem 0; color: var(--text-2); cursor: pointer; list-style: none; }
+  .code-disclosure summary::-webkit-details-marker { display: none; }
+  .code-disclosure summary::before { content: '+'; color: var(--accent); font-family: var(--font-mono); }
+  .code-disclosure[open] summary::before { content: '−'; }
+  .code-disclosure summary span { font-size: 0.8rem; font-weight: 650; }
+  .code-disclosure summary small { margin-left: auto; color: var(--muted); font-family: var(--font-mono); font-size: 0.6rem; font-weight: 400; letter-spacing: 0.03em; text-transform: uppercase; }
+  .code-disclosure__source { margin-bottom: 1rem; }
+  .code-disclosure__source :global(.shiki) { margin: 0; padding: 1rem; overflow-x: auto; border: 1px solid var(--border); background-color: color-mix(in srgb, var(--surface-raised) 72%, var(--surface) 28%) !important; font-size: 0.72rem; line-height: 1.6; tab-size: 2; }
+  .code-disclosure__source :global(code) { color: inherit; }
+  :global(html[data-theme='dark']) .code-disclosure__source :global(.shiki),
+  :global(html[data-theme='dark']) .code-disclosure__source :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+  @media (max-width: 560px) {
+    .code-disclosure summary { align-items: flex-start; }
+    .code-disclosure summary small { max-width: 50%; text-align: right; overflow-wrap: anywhere; }
+  }
+</style>
