@@ -7,15 +7,11 @@
     "npm": ">=9.6.5"
   },
   "scripts": {
-    "sync:living-codex": "node scripts/sync-living-codex.mjs",
-    "predev": "bash scripts/update-living-codex-local.sh",
-    "prebuild": "node scripts/sync-living-codex.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "validate:sitemap": "node scripts/validate-sitemap.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "update:living-codex:local": "bash scripts/update-living-codex-local.sh",
     "astronomy:import": "node scripts/import-astro-almanac.mjs",
     "astronomy:import:bundles": "node scripts/import-astro-bundles.mjs",
     "astronomy:validate": "node scripts/validate-astronomy-manifest.mjs"

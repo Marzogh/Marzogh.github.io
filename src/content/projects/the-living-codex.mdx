@@ -6,7 +6,7 @@ tags: [tools, ttrpg, web-app, character-sheet]
 type: Project
 featured: false
 github: https://github.com/Marzogh/The-Living-Codex
-demo: /living-codex/index.html
+demo: https://chipsncode.com/The-Living-Codex/
 demoLabel: Enter The Living Codex
 headerStyle: panel
 image: /images/projects/living-codex/tarakesh-title.png
@@ -41,23 +41,23 @@ The split between editing and playing became more important as the project grew.
 Edit Mode handles the things I might spend time setting up properly: identity, species, classes and subclasses, ability scores, proficiencies, saving throws, attacks, inventory, spellcasting, currency and character background.
 
 <div className="project-media-pair project-media-pair--interface">
-  <figure><img src="/living-codex/docs/screenshots/create-character-empty.png" alt="The empty character creation screen" /><figcaption>The empty character creation state.</figcaption></figure>
-  <figure><img src="/living-codex/docs/screenshots/create-character-flow.png" alt="Character creation with species and class populated" /><figcaption>Species and class identity appear while the character takes shape.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/create-character-empty.png" alt="The empty character creation screen" /><figcaption>The empty character creation state.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/create-character-flow.png" alt="Character creation with species and class populated" /><figcaption>Species and class identity appear while the character takes shape.</figcaption></figure>
 </div>
 
 Character creation gives an immediate preview of species and class identity rather than dropping straight into an empty form. Once the character exists, the editor groups together the things I am actually likely to work on at the same time.
 
 <div className="interface-gallery">
-  <figure><img src="/living-codex/docs/screenshots/edit-mode-core.png" alt="Living Codex Edit Mode core screen" /><figcaption>Identity, species, class and ability-score setup.</figcaption></figure>
-  <figure><img src="/living-codex/docs/screenshots/edit-mode-spellcraft.png" alt="Living Codex Edit Mode spellcraft screen" /><figcaption>Spellcasting setup and known or prepared spells.</figcaption></figure>
-  <figure><img src="/living-codex/docs/screenshots/edit-mode-combat-mechanics.png" alt="Living Codex combat mechanics editor" /><figcaption>Saves, skills, attacks and derived combat values.</figcaption></figure>
-  <figure><img src="/living-codex/docs/screenshots/edit-mode-gear-inventory.png" alt="Living Codex gear and inventory editor" /><figcaption>Inventory, quantities, notes and equipment.</figcaption></figure>
-  <figure><img src="/living-codex/docs/screenshots/edit-mode-chronicle.png" alt="Living Codex chronicle editor" /><figcaption>Portrait, background, character notes and currency.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/edit-mode-core.png" alt="Living Codex Edit Mode core screen" /><figcaption>Identity, species, class and ability-score setup.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/edit-mode-spellcraft.png" alt="Living Codex Edit Mode spellcraft screen" /><figcaption>Spellcasting setup and known or prepared spells.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/edit-mode-combat-mechanics.png" alt="Living Codex combat mechanics editor" /><figcaption>Saves, skills, attacks and derived combat values.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/edit-mode-gear-inventory.png" alt="Living Codex gear and inventory editor" /><figcaption>Inventory, quantities, notes and equipment.</figcaption></figure>
+  <figure><img src="/images/projects/living-codex/screenshots/edit-mode-chronicle.png" alt="Living Codex chronicle editor" /><figcaption>Portrait, background, character notes and currency.</figcaption></figure>
 </div>
 
 Play Mode strips most of that away. During a session I am much more interested in current HP, AC, initiative, conditions, concentration, spell slots, attacks, trackers and whatever I have just done than I am in editing my character biography.
 
-<figure className="interface-payoff"><img src="/living-codex/docs/screenshots/play-mode-tactical-board.png" alt="The Living Codex Play Mode tactical board" /><figcaption>Play Mode keeps the changing, at-table state in reach.</figcaption></figure>
+<figure className="interface-payoff"><img src="/images/projects/living-codex/screenshots/play-mode-tactical-board.png" alt="The Living Codex Play Mode tactical board" /><figcaption>Play Mode keeps the changing, at-table state in reach.</figcaption></figure>
 
 The play screen therefore behaves more like an at-table board than an editable form. Frequently changing values are easy to reach, while the slower character-definition material stays out of the way.
 
@@ -135,22 +135,7 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000/`. That root page is the canonical v2 application.
 
-<p className="project-link-row"><a href="/living-codex/index.html">Open The Living Codex →</a><a href="https://github.com/Marzogh/The-Living-Codex">Browse the source ↗</a><a href="https://github.com/Marzogh/The-Living-Codex/blob/main/docs/v2-spec.md">Read the v2 specification ↗</a></p>
-
-## Printing a field copy
-
-The project also has a print layout.
-
-I still find a paper character sheet useful in some situations, and I did not want printing to mean squeezing the browser interface onto A4 and hoping for the best. The print view takes the same character state and lays it out as a document intended to be used on paper.
-
-<div className="print-launcher">
-  <div><span className="editorial-kicker">Field copy</span><h3>Turn an exported pack into a printable character record</h3><p>The ZIP is read in this browser and passed to the local print layout; it is not uploaded.</p></div>
-  <form id="lcx-pdf-form"><label htmlFor="lcx-zip">Character pack</label><input id="lcx-zip" type="file" accept=".zip,application/zip" required /><button type="submit">Prepare field copy →</button><p id="lcx-pdf-status" role="status" aria-live="polite"></p></form>
-</div>
-
-It gives me a backup that does not care whether the laptop is charged, connected or behaving itself, and it is much easier to scribble temporary notes on during a session.
-
-<script type="module" src="/scripts/living-codex-print-launcher.mjs"></script>
+<p className="project-link-row"><a href="https://chipsncode.com/The-Living-Codex/">Open The Living Codex →</a><a href="https://github.com/Marzogh/The-Living-Codex">Browse the source ↗</a><a href="https://github.com/Marzogh/The-Living-Codex/blob/main/docs/v2-spec.md">Read the v2 specification ↗</a></p>
 
 <div className="reference-transition"><span>Technical reference</span><p>The rest of this page is for hand-editing a character pack, checking an import or working out why a file has been rejected. The repository remains authoritative.</p></div>
 
@@ -205,6 +190,6 @@ That is the version I use now.
 
 <figure className="interface-payoff"><img src="/images/projects/living-codex/tarakesh-forest.png" alt="Tarakesh in a forest clearing" /><figcaption>The character, rather than the database, remains the point.</figcaption></figure>
 
-<p className="project-link-row project-link-row--final"><a href="/living-codex/index.html">Open The Living Codex →</a><a href="https://github.com/Marzogh/The-Living-Codex">Browse the source ↗</a><a href="https://github.com/Marzogh/The-Living-Codex/blob/main/docs/v2-spec.md">Read the v2 specification ↗</a></p>
+<p className="project-link-row project-link-row--final"><a href="https://chipsncode.com/The-Living-Codex/">Open The Living Codex →</a><a href="https://github.com/Marzogh/The-Living-Codex">Browse the source ↗</a><a href="https://github.com/Marzogh/The-Living-Codex/blob/main/docs/v2-spec.md">Read the v2 specification ↗</a></p>
 
 <p className="project-signoff">The project is MIT licensed. The licence covers the original code and project-authored material. Dungeons &amp; Dragons, Wizards of the Coast and related third-party names, trademarks and copyrighted material remain the property of their respective owners.</p>

@@ -134,37 +134,6 @@ Validate manifest integrity and required files:
 npm run astronomy:validate
 ```
 
-## Living Codex Sync
-
-This site tracks [The Living Codex](https://github.com/Marzogh/The-Living-Codex) as a git submodule:
-
-- Submodule path: `vendor/the-living-codex`
-- Tracking branch: `main`
-- Served route: `/living-codex/*` (synced into `public/living-codex` at build time)
-- Deploy behavior: the build uses the checked-out submodule content when generating the static site.
-
-### Automatic sync
-
-An internal maintenance workflow can refresh the submodule and open an update PR when changes exist.
-
-### Manual fallback sync
-
-Run from repo root:
-
-```bash
-git submodule update --init --recursive
-git submodule update --remote --merge vendor/the-living-codex
-git add .gitmodules vendor/the-living-codex
-git commit -m "chore(sync): bump Living Codex submodule"
-git push origin HEAD
-```
-
-To refresh the static payload locally:
-
-```bash
-npm run sync:living-codex
-```
-
 ## Domain and DNS
 
 Custom domain DNS is managed outside this repository.

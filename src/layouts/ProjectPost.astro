@@ -582,22 +582,6 @@ const meta = [
   .project-prose :global(.project-link-row) { display: flex; flex-wrap: wrap; gap: 0.55rem 1.2rem; padding-block: 0.75rem; border-block: 1px solid var(--border); }
   .project-prose :global(.project-link-row a) { color: var(--tag-ink); font-family: var(--font-mono); font-size: 0.68rem; text-decoration: none; }
 
-  .project-prose :global(.print-launcher) {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-    padding: 1rem 0;
-    border-block: 1px solid var(--text);
-  }
-  .project-prose :global(.print-launcher h3) { margin: 0.35rem 0; }
-  .project-prose :global(.print-launcher p) { margin: 0; color: var(--muted); }
-  .project-prose :global(.print-launcher form) { display: grid; gap: 0.6rem; align-content: start; }
-  .project-prose :global(.print-launcher label) { font: 0.68rem var(--font-mono); text-transform: uppercase; }
-  .project-prose :global(.print-launcher input) { width: 100%; font-size: 0.72rem; }
-  .project-prose :global(.print-launcher button) { width: fit-content; padding: 0.55rem 0.75rem; border: 1px solid var(--text); border-radius: 0; background: transparent; color: var(--text); cursor: pointer; }
-  .project-prose :global(#lcx-pdf-status) { font: 0.65rem var(--font-mono); }
-
   .project-prose :global(.project-note) {
     display: grid;
     gap: 0.55rem;
@@ -864,8 +848,7 @@ const meta = [
     .project-prose :global(.build-gallery),
     .project-prose :global(.project-milestones) { grid-template-columns: 1fr; }
     .project-prose :global(.interface-gallery),
-    .project-prose :global(.workflow-rail),
-    .project-prose :global(.print-launcher) { grid-template-columns: 1fr; }
+    .project-prose :global(.workflow-rail) { grid-template-columns: 1fr; }
     .project-prose :global(.project-intro-panel) { grid-template-columns: 1fr; gap: 1rem; }
     .project-panel-header { grid-template-columns: 1fr; padding: 1rem; }
     .project-panel-header > figure { width: min(100%, 340px); justify-self: center; }
