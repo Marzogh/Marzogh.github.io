@@ -47,6 +47,7 @@ const projects = defineCollection({
       ]).optional(),
       demoLabel: z.string().optional(),
       image: z.string().optional(),
+      imagePresentation: z.enum(['default', 'portrait']).default('default'),
       headerStyle: z.enum(['panel', 'plain']).optional(),
     }),
 });
