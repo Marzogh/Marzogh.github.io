@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An interactive PixInsight 1.9.4 deep-sky processing checklist for broadband OSC astrophotography, with saved browser-local progress and print support.">
+<meta name="theme-color" content="#e9ecef">
+<title>PixInsight Deep-Sky Processing Checklist</title>
+<style>
+:root{
+  --bg:#e9ecef; --paper:#fff; --ink:#17191c; --muted:#62676d; --line:#cfd4d8;
+  --soft:#f5f6f7; --soft2:#fafbfb; --accent:#304b63; --accent2:#476a84;
+  --good:#315d3b; --warn:#8b5700; --bad:#7a2b2b; --code:#eef1f3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.45}
+.page{width:min(1120px,calc(100% - 28px));margin:22px auto 40px;background:var(--paper);box-shadow:0 1px 10px rgba(0,0,0,.14)}
+.sitebar{display:flex;justify-content:space-between;gap:16px;padding:9px 38px;background:#17191c;color:#fff;font-size:11px;letter-spacing:.045em;text-transform:uppercase}
+.sitebar a{color:#fff;text-decoration:none}.sitebar a:hover{text-decoration:underline}.sitebar span{color:#c8cdd1}
+header{padding:32px 38px 22px;border-bottom:3px solid var(--ink)}
+h1{margin:0;font-size:30px;line-height:1.05;letter-spacing:.005em}
+.subtitle{margin-top:8px;color:var(--muted);font-size:14px}
+.topbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 38px;border-bottom:1px solid var(--line);background:var(--soft2);font-size:12px;color:var(--muted)}
+.progress{font-weight:700;color:var(--ink)}
+button{font:inherit;border:1px solid #9ea7ae;background:#fff;color:var(--ink);padding:5px 9px;cursor:pointer;border-radius:3px}
+button:hover{background:var(--soft)}
+main{padding:26px 38px 34px}
+.notice{border-left:4px solid var(--accent);background:var(--soft2);padding:11px 13px;margin:0 0 20px;font-size:13px}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:0 0 22px}
+.flow a{text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--soft);padding:8px 7px;text-align:center;font-size:11px;line-height:1.2}
+.flow a:hover{border-color:var(--accent);background:#fff}
+details{border:1px solid var(--line);margin:0 0 12px;background:#fff;break-inside:avoid}
+summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:12px 14px;background:var(--soft);font-weight:700}
+summary::-webkit-details-marker{display:none}
+summary .num{display:inline-grid;place-items:center;width:26px;height:26px;background:var(--accent);color:#fff;font-size:12px;border-radius:2px}
+summary .path{font-size:11px;font-weight:500;color:var(--muted);text-align:right;max-width:420px}
+.section{padding:14px 16px 17px}
+.purpose{font-size:13px;margin:0 0 12px;color:#2f3337}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.card{border:1px solid var(--line);background:var(--soft2);padding:10px 12px}
+.card h3{font-size:13px;margin:0 0 5px}.card p,.card ul{font-size:12px;margin:4px 0}.card ul{padding-left:18px}
+.control-table,.check-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 12px;font-size:12px}
+.control-table th,.control-table td,.check-table th,.check-table td{border:1px solid var(--line);padding:7px 8px;vertical-align:top}
+.control-table th,.check-table th{background:var(--soft);text-align:left;font-size:11px;letter-spacing:.01em}
+.control-table th:nth-child(1){width:24%}.control-table th:nth-child(2){width:23%}.control-table th:nth-child(3){width:auto}
+.check-table th:nth-child(1){width:34px}.check-table th:nth-child(2){width:26%}.check-table th:nth-child(3){width:auto}
+.tick{width:17px;height:17px;accent-color:var(--accent);vertical-align:middle}
+.metric{font-weight:700}.unit{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+.accept{border-left:4px solid var(--good);background:#f7faf7;padding:9px 11px;font-size:12px;margin-top:10px}
+.reject{border-left:4px solid var(--bad);background:#fcf7f7;padding:9px 11px;font-size:12px;margin-top:8px}
+.warn{border-left:4px solid var(--warn);background:#fffaf2;padding:9px 11px;font-size:12px;margin-top:8px}
+.reference{border:1px dashed #9ea7ae;background:#fbfbfb;padding:9px 11px;font-size:11.5px;margin-top:10px;color:#40454a}
+code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;background:var(--code);padding:1px 4px;font-size:11px}
+kbd{font-family:inherit;border:1px solid #aaa;border-bottom-width:2px;background:#fff;padding:1px 4px;border-radius:3px;font-size:10.5px}
+.small{font-size:11px;color:var(--muted)}
+.quickdecision{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.quickdecision>div{border-top:3px solid var(--line);padding:8px 10px;background:var(--soft2);font-size:11.5px}.quickdecision strong{display:block;margin-bottom:3px}.qd-bad{border-color:var(--bad)!important}.qd-warn{border-color:var(--warn)!important}.qd-good{border-color:var(--good)!important}
+footer{padding:15px 38px 22px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:20px}
+@media(max-width:850px){.page{width:100%;margin:0;box-shadow:none}.sitebar,header,.topbar,main,footer{padding-left:18px;padding-right:18px}.sitebar span{display:none}.flow{grid-template-columns:repeat(3,1fr)}.grid2,.quickdecision{grid-template-columns:1fr}summary{grid-template-columns:34px 1fr}.path{grid-column:2;text-align:left!important}.control-table,.check-table{font-size:11px}}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  html,body{background:#fff}.page{width:auto;margin:0;box-shadow:none}.sitebar{display:none}header{padding:0 0 12px}.topbar{display:none}main{padding:12px 0 0}.flow{display:none}
+  details{break-inside:auto;margin-bottom:8px}details:not([open])>.section{display:block}summary{padding:8px 10px;break-after:avoid}.section{padding:9px 10px 12px}.grid2{gap:8px}.card{padding:7px 9px}
+  .control-table,.check-table{font-size:9.5px}.control-table th,.control-table td,.check-table th,.check-table td{padding:4px 5px}.notice,.accept,.reject,.warn,.reference{font-size:9.5px;padding:6px 8px}
+  footer{padding:10px 0 0}.noprint{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="sitebar noprint"><a href="/projects/pixinsight-deep-sky-processing-checklist">← Project notes</a><span>Chips’nCode · interactive reference</span></div>
+<header>
+  <h1>PixInsight Deep-Sky Processing Checklist</h1>
+  <div class="subtitle">Broadband OSC workflow · PixInsight 1.9.4 · from raw-light screening to finished master and delivery output</div>
+</header>
+<div class="topbar noprint">
+  <span class="progress" id="progress" role="status" aria-live="polite">0 / 0 complete</span>
+  <button type="button" id="expand">Expand all</button>
+  <button type="button" id="collapse">Collapse all</button>
+  <button type="button" id="print">Print / save PDF</button>
+  <button type="button" id="reset">Clear checks</button>
+  <span>Progress stays in this browser and is never uploaded.</span>
+</div>
+<main>
+<p class="notice"><strong>How to use this:</strong> each stage tells you what the tool does, what the important controls mean, what to inspect, and when to go back. Numerical values shown as “reference starting points” are examples, not universal presets. The image itself is the final test.</p>
+
+<nav class="flow" aria-label="Workflow quick links">
+  <a href="#s1">1 Setup</a><a href="#s2">2 Blink</a><a href="#s3">3 Subframes</a><a href="#s4">4 Calibration</a><a href="#s5">5 WBPP</a><a href="#s6">6 QC</a>
+  <a href="#s7">7 Gradient</a><a href="#s8">8 WCS</a><a href="#s9">9 SPCC</a><a href="#s10">10 BXT</a><a href="#s11">11 NXT</a><a href="#s12">12 SXT</a>
+  <a href="#s13">13 Crop</a><a href="#s14">14 Stretch</a><a href="#s15">15 Recombine</a><a href="#s16">16 Local detail</a><a href="#s17">17 Curves</a><a href="#s18">18 Export</a>
+</nav>
+
+<details id="s1" open>
+<summary><span class="num">1</span><span>Working setup and recovery points</span><span class="path">XISF · 32-bit float · local NVMe</span></summary>
+<div class="section">
+<p class="purpose">Keep the archive untouched, process a local working copy, and save named recovery points after every accepted major stage.</p>
+<table class="check-table"><thead><tr><th>✓</th><th>Item</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Local working tree</td><td>Keep source session folders intact. A session is one <code>YYYYMMDD</code> acquisition folder. Do not flatten nights during raw inspection.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Swap storage</td><td>Use local NVMe for PixInsight swap. Avoid network or slow HDD paths for the active processing run.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Working format</td><td>Use <strong>XISF, 32-bit floating point</strong> for major linear and nonlinear stages. Do not use JPEG as an intermediate.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Recovery names</td><td>Useful suffixes: <code>_INT</code>, <code>_GC</code>, <code>_SPCC</code>, <code>_BXT</code>, <code>_NXT</code>, <code>_STARLESS_LINEAR</code>, <code>_STARS_LINEAR</code>, <code>_RECOMBINED</code>, <code>_FINAL</code>.</td></tr>
+</tbody></table>
+<div class="accept"><strong>Proceed when:</strong> the archive is unchanged, the local copy is complete, and you know where each accepted stage will be saved.</div>
+</div></details>
+
+<details id="s2" open>
+<summary><span class="num">2</span><span>Raw-light visual screening with Blink</span><span class="path">Process → ImageInspection → Blink</span></summary>
+<div class="section">
+<p class="purpose">Blink removes gross failures before any measurements. Inspect one session at a time so a bad night, focus shift or transparency change remains obvious.</p>
+<div class="grid2">
+<div class="card"><h3>Selection controls</h3><p>The <strong>highlighted row</strong> is the file selection. The playback checkmark is a separate control.</p><p><kbd>Ctrl</kbd>+click selects non-contiguous rows. <kbd>Shift</kbd>+click selects a continuous range.</p></div>
+<div class="card"><h3>Removing frames</h3><p>Select confirmed rejects, then use <strong>Move selected files to new location</strong>. Move only the local working copies into something like <code>_Rejected\Blink\YYYYMMDD</code>.</p></div>
+</div>
+<table class="check-table"><thead><tr><th>✓</th><th>Inspect</th><th>Keep / reject rule</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Cloud / transparency</td><td>Reject heavy cloud. A clouded frame often has fewer stars and a brighter or flatter background.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Star shape</td><td>Reject severe tracking jumps, doubled stars, obvious trails or wind shake. Inspect centre and corners.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Focus</td><td>Reject major defocus. Keep merely soft or borderline frames for SubframeSelector.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Obstruction / corruption</td><td>Reject frames with obstruction, read failure or obvious corruption.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Satellite / aircraft trail</td><td>Usually keep. Statistical pixel rejection should remove isolated trails in a deep stack. Reject only extreme events or frames with additional quality loss.</td></tr>
+</tbody></table>
+<div class="quickdecision"><div class="qd-bad"><strong>Reject now</strong>Heavy cloud, doubled/trailing stars, major guiding failure, major defocus, obstruction, corruption.</div><div class="qd-warn"><strong>Leave for measurement</strong>Mild softness, small seeing changes, modest transparency changes.</div><div class="qd-good"><strong>Usually keep</strong>Isolated satellite/aircraft trails without other damage.</div></div>
+</div></details>
+
+<details id="s3" open>
+<summary><span class="num">3</span><span>Quantitative frame selection with SubframeSelector</span><span class="path">Process → ImageInspection → SubframeSelector</span></summary>
+<div class="section">
+<p class="purpose">Measure all Blink-approved lights from the same homogeneous telescope + camera + passband dataset. Use measurements together, then inspect borderline frames visually.</p>
+<table class="control-table"><thead><tr><th>Metric</th><th>Units / direction</th><th>What it tells you</th></tr></thead><tbody>
+<tr><td><span class="metric">FWHM</span></td><td><strong>pixels</strong> unless image scale is verified<br><span class="small">lower = tighter</span></td><td>Width of the fitted stellar profile. Look for isolated high-FWHM frames or the clearly poor tail. Do not chase the absolute minimum.</td></tr>
+<tr><td><span class="metric">Eccentricity</span></td><td><strong>dimensionless</strong><br><span class="small">0 = circular; rises toward 1 as elongation increases</span></td><td>Star elongation. Around <strong>0.60 or higher</strong> is a useful review trigger for many OSC datasets, not an automatic rejection limit. Confirm on the image.</td></tr>
+<tr><td><span class="metric">Stars</span></td><td>detected star count<br><span class="small">higher is usually better, all else equal</span></td><td>Strongly affected by transparency and focus. A sudden drop is suspicious, especially when signal/SNR also drops.</td></tr>
+<tr><td><span class="metric">SNR / PSF signal weight</span></td><td>relative quality score<br><span class="small">higher generally = stronger usable signal</span></td><td>Helps identify weak frames. Treat as supporting evidence, not a verdict on its own.</td></tr>
+</tbody></table>
+<div class="grid2"><div class="card"><h3>How to reject</h3><p>In the Measurements table, double-click the green approval icon for a confirmed bad frame so it becomes a red X. Where available, lock/manual approval so an expression does not reverse the decision.</p></div><div class="card"><h3>How to output the approved set</h3><p>Change Routine to <strong>Output Subframes</strong>, select <code>01_ApprovedRaw</code>, then Apply Global. SubframeSelector copies approved files; it does not delete the originals.</p></div></div>
+<table class="check-table"><thead><tr><th>✓</th><th>Decision check</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>FWHM poor tail reviewed</td><td>Reject only frames that are clearly poor relative to the dataset and visually confirm them.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Eccentricity outliers reviewed</td><td>Inspect frames around/above 0.60 and especially isolated high values. Reject only when stars are genuinely elongated.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Stars + signal reviewed together</td><td>Low star count plus low signal is strong evidence for cloud/haze/transparency loss.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Whole-night shifts checked</td><td>If an entire session forms another population, review that session as a population rather than applying one absolute cutoff.</td></tr>
+</tbody></table>
+<div class="accept"><strong>Proceed when:</strong> clear outliers are removed, the bulk of good integration is retained, and every borderline rejection has a visual reason as well as a measurement reason.</div>
+</div></details>
+
+<details id="s4" open>
+<summary><span class="num">4</span><span>Calibration material check</span><span class="path">Before WBPP</span></summary>
+<div class="section">
+<p class="purpose">Calibration must match the physical optical state, not just the camera/filter label.</p>
+<table class="check-table"><thead><tr><th>✓</th><th>Check</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Flats</td><td>Match telescope, camera, passband and optical state. Rotation, dust movement or disassembly can make a flat wrong even if the filenames look right.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Darks</td><td>Prefer exact exposure, gain, offset and temperature matches for cooled CMOS. Do not enable dark scaling/optimization by habit when exact darks exist.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Bias / flat-darks</td><td>Load through the correct frame-type controls and verify they match the calibration strategy actually used.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>CFA / Bayer pattern</td><td>Confirm from metadata or known camera configuration. Do not rely only on memory.</td></tr>
+</tbody></table>
+<div class="reject"><strong>Do not continue</strong> if an unrelated flat or dark is being forced onto a light group. Process that session separately if necessary.</div>
+</div></details>
+
+<details id="s5" open>
+<summary><span class="num">5</span><span>Calibration, registration and integration with WBPP</span><span class="path">Script → Batch Processing → WeightedBatchPreprocessing</span></summary>
+<div class="section">
+<p class="purpose">WBPP performs calibration, debayering, measurement, registration, Local Normalization and integration. Most expensive errors happen before you press Run.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Typical choice</th><th>What it means</th></tr></thead><tbody>
+<tr><td>Debayer</td><td>VNG baseline</td><td>Reconstructs colour channels from the OSC CFA mosaic. Use another method only after a controlled comparison on the actual dataset.</td></tr>
+<tr><td>Generate rejection maps</td><td><strong>On</strong></td><td>Creates diagnostic maps showing pixels rejected as high or low outliers during integration.</td></tr>
+<tr><td>Registration reference</td><td><strong>Auto</strong> first run</td><td>Lets WBPP select a suitable geometric reference unless you deliberately have a better one.</td></tr>
+<tr><td>Grouping keywords</td><td>Off unless needed</td><td>Use only when real metadata/path differences must keep calibration states apart. <strong>Pre</strong> grouping can separate calibration while allowing the calibrated lights to rejoin later; <strong>Post</strong> grouping keeps groups separate into later processing/integration.</td></tr>
+<tr><td>Local Normalization</td><td><strong>On</strong> for multi-night/multi-year</td><td>Corrects spatially varying background/transparency differences between registered lights before integration.</td></tr>
+<tr><td>Image Integration rejection</td><td><strong>Auto</strong> first run</td><td>Lets WBPP choose the initial rejection method from the data/frame count. Change only if the master or rejection maps give you a reason.</td></tr>
+<tr><td>Fast Integration</td><td><strong>Off</strong> for final run</td><td>Quality shortcut. Useful for tests, not the final quality integration.</td></tr>
+<tr><td>AutoCrop</td><td><strong>Off</strong> when preserving full field</td><td>Retains the uncropped master so you can choose the technical crop later.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Before Run</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Old target cleared</td><td>Remove stale files/cache settings from another target where needed.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Approved-light count matches</td><td>Loaded light count must equal the intended approved set.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Calibration summary checked</td><td>Confirm the correct dark and flat are assigned to every light group.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Unexpected groups investigated</td><td>Extra rows usually indicate metadata differences or accidentally mixed data.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Diagnostics passed</td><td>Fix grouping/calibration problems before the expensive run.</td></tr>
+</tbody></table>
+<div class="accept"><strong>After Run:</strong> read the Smart Report. Registration, Local Normalization, astrometry and integration should all complete without unexplained failures. If a frame fails registration/normalization, remove the corresponding approved input if necessary and rerun. Do not accept a partially failed integration.</div>
+</div></details>
+
+<details id="s6" open>
+<summary><span class="num">6</span><span>Integration quality control</span><span class="path">Blink + STF + rejection maps</span></summary>
+<div class="section">
+<p class="purpose">A green WBPP run is not the end. Inspect the registered sequence, the master and both rejection maps before post-processing.</p>
+<table class="check-table"><thead><tr><th>✓</th><th>Inspect</th><th>What good looks like</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Registered lights in Blink</td><td>Stars stay fixed at centre and corners. Only edge coverage changes. No doubled stars, failed interpolation, abnormal distortion or surviving cloud.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Integrated master at 1:1</td><td>Natural star cores, no checkerboard colour, seams, patching or non-astronomical background structure.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>High-rejection map</td><td>Bright transient junk such as trails and hot-pixel remnants should appear here rather than in the master.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Low-rejection map</td><td>Should not contain convincing broad target morphology, dark-cloud shapes or widespread star-shaped rejection patterns.</td></tr>
+</tbody></table>
+<div class="warn"><strong>If a registered frame is bad:</strong> remove the corresponding approved input and rerun WBPP. Do not simply delete one registered output and keep an integration whose normalization/rejection statistics included it.</div>
+<div class="accept"><strong>Proceed when:</strong> the master is clean at 1:1, transient defects are confined to rejection maps, star profiles are intact, and real large-scale structure is not being clipped away.</div>
+</div></details>
+
+<details id="s7" open>
+<summary><span class="num">7</span><span>Gradient correction</span><span class="path">Process → All Processes → GradientCorrection</span></summary>
+<div class="section">
+<p class="purpose">Remove broad illumination/colour gradients without teaching the model that real nebula or dust is “background”. Always inspect the generated model.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Structure Protection</td><td>Protects astronomical structures from being absorbed into the background model.</td><td>Increase when the model starts reproducing dark clouds, nebular rims or compact target structure.</td></tr>
+<tr><td>Generate gradient model</td><td>Outputs the model being subtracted/corrected.</td><td>Keep on while tuning. The model is the main diagnostic.</td></tr>
+<tr><td>Scale</td><td>Sets the characteristic spatial scale considered by the model.</td><td>Larger-scale settings favour broad gradients over local structures.</td></tr>
+<tr><td>Smoothness</td><td>Controls how smoothly the fitted gradient varies across the image.</td><td>Raise when the model becomes too locally flexible or patchy.</td></tr>
+<tr><td>Simplified model / degree</td><td>Restricts the model to a simpler broad surface.</td><td>Useful when the unwanted gradient is genuinely broad and a flexible model starts eating target structure.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Check</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Run on a duplicate</td><td>Keep the accepted integration master untouched.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Model inspected</td><td>Use STF for diagnosis. The model should show broad, smooth low-frequency variation, not recognisable astronomy.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Before/after compared with same STF</td><td>Use the same linked display stretch so you are comparing correction rather than two different Auto Stretches.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Reference example:</strong> Structure Protection 0.50 reproduced real structure in an NGC 6188 test model; 0.80 produced a cleaner broad model. That is an example of how to tune, not a universal target value.</div>
+<div class="accept"><strong>Accept when:</strong> large-scale gradients are reduced while emission, reflection colour and dark dust remain physically plausible.</div>
+</div></details>
+
+<details id="s8" open>
+<summary><span class="num">8</span><span>Astrometry / WCS</span><span class="path">Script → Astrometry → ImageSolver</span></summary>
+<div class="section">
+<p class="purpose">SPCC needs a valid astrometric solution. WBPP may already have written one, so solve only when it is missing or questionable.</p>
+<table class="control-table"><thead><tr><th>Setting</th><th>Meaning</th><th>Rule</th></tr></thead><tbody>
+<tr><td>Reference system</td><td>Coordinate frame used for the solution.</td><td>Use <strong>ICRS</strong>.</td></tr>
+<tr><td>Effective focal length / image scale</td><td>Actual optical sampling of the captured image.</td><td>Use the real reducer/flattener configuration, not the telescope's nominal focal length if the system changed it.</td></tr>
+<tr><td>Pixel size</td><td>Camera pixel pitch used to derive image scale.</td><td>Use the actual camera value.</td></tr>
+<tr><td>Catalogue</td><td>Reference stars for solving.</td><td>Use automatic/local Gaia where available.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Check</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Existing WCS checked</td><td>If SPCC opens with plausible coordinates and scale, do not re-solve by habit.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Solution converged</td><td>Confirm ImageSolver reports a valid WCS and save the solved XISF.</td></tr>
+</tbody></table>
+</div></details>
+
+<details id="s9" open>
+<summary><span class="num">9</span><span>Filter response and SPCC colour calibration</span><span class="path">FilterManager + SpectrophotometricColorCalibration</span></summary>
+<div class="section">
+<p class="purpose">SPCC uses solved stars plus a spectrophotometric catalogue to determine the colour transformation. With an OSC camera behind an extra broadband filter, the effective R/G/B response is the sensor channel response multiplied by the filter transmission.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>What to set</th></tr></thead><tbody>
+<tr><td>QE curve</td><td>Overall sensor quantum-efficiency response.</td><td>Select the appropriate camera/sensor family.</td></tr>
+<tr><td>R / G / B filters</td><td>Effective per-channel passbands.</td><td>For an extra broadband filter, use camera CFA R/G/B × filter transmission curves where available.</td></tr>
+<tr><td>White reference</td><td>Reference spectral population used to set the white balance.</td><td>This workflow uses <strong>Average Spiral Galaxy</strong> for broadband OSC data.</td></tr>
+<tr><td>Catalogue</td><td>Spectrophotometric stellar reference data.</td><td>Use <strong>Gaia DR3/SP</strong>.</td></tr>
+<tr><td>Background Neutralization</td><td>Adjusts the global background balance.</td><td>On nebula-filled fields, first test with it off. If a linked STF still shows a strong cast, use a verified neutral-background ROI rather than the whole image.</td></tr>
+<tr><td>Region of Interest</td><td>Restricts background measurement to a selected preview.</td><td>Choose a patch free of obvious emission, reflection colour and dark lanes.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Check</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Effective passbands correct</td><td>Do not accidentally use bare sensor curves when an additional broadband filter materially changes the passband.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Regression graphs coherent</td><td>Look for well-defined R/G and B/G populations. Dense fields may yield thousands of stars; coherence matters more than one magic source count.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>STF reset after calibration</td><td>Old unlinked display stretches are no longer meaningful after the actual channel balance changes.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Colour physically credible</td><td>No dominant non-physical cast; star colours and real nebular colour relationships should remain believable.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Reference example:</strong> one tested setup used the Sony IMX411/455/461/533/571 QE family, IMX533 + NeoDy effective R/G/B curves, Gaia DR3/SP and a verified background ROI.</div>
+</div></details>
+
+<details id="s10" open>
+<summary><span class="num">10</span><span>Linear restoration with BlurXTerminator</span><span class="path">Process → RCAstro → BlurXTerminator</span></summary>
+<div class="section">
+<p class="purpose">Restore blur and improve real detail while the image is still linear. Do this before denoising.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>Watch for</th></tr></thead><tbody>
+<tr><td>Sharpen Stars</td><td>Strength of stellar restoration/sharpening.</td><td>Too high: hard-edged or unnaturally tiny stars, dark rings.</td></tr>
+<tr><td>Adjust Star Halos</td><td>Changes the broader halo component around stars.</td><td>Use carefully; aggressive negative values can make halos look cut away.</td></tr>
+<tr><td>Automatic PSF</td><td>Lets BXT estimate the point-spread function from the image.</td><td>Normally keep on unless deliberately using a manual/known PSF strategy.</td></tr>
+<tr><td>Sharpen Nonstellar</td><td>Strength applied to nebula, dust and other non-star structure.</td><td>Too high: etched filaments, brittle texture, invented-looking hard edges.</td></tr>
+<tr><td>Correct Only</td><td>Runs the correction/restoration stage without the normal sharpening emphasis.</td><td>Use only when intentionally following a two-pass workflow; otherwise keep off for the normal single restoration pass.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Check</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Representative 1:1 preview</td><td>Include stars, dark boundaries and fine emission structure.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Full-frame 1:1 inspection</td><td>A clean small preview is not enough. Check the entire image for rings, hard cores and brittle texture.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Conservative starting point:</strong> Stars 0.30 · Halos 0.00 · Automatic PSF On · Nonstellar 0.35 · Correct Only Off. Your image may tolerate more or require less.</div>
+<div class="accept"><strong>Accept when:</strong> real structure is clearer without dark rings, hard star cores, etched filaments or crunchy texture.</div>
+</div></details>
+
+<details id="s11" open>
+<summary><span class="num">11</span><span>Linear denoise with NoiseXTerminator</span><span class="path">Process → RCAstro → NoiseXTerminator</span></summary>
+<div class="section">
+<p class="purpose">Reduce random intensity and colour noise after restoration without erasing faint texture.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Intensity / Color Separation</td><td>Lets luminance-like noise and chrominance noise be controlled separately.</td><td>Keep on when colour speckling needs stronger suppression than intensity noise.</td></tr>
+<tr><td>Intensity denoise</td><td>Strength of brightness/noise smoothing.</td><td>Back off if faint dust or mottled emission becomes waxy or featureless.</td></tr>
+<tr><td>Color denoise</td><td>Strength of chrominance-noise reduction.</td><td>Can often be stronger than intensity denoise when colour speckling is the main problem.</td></tr>
+<tr><td>Iterations</td><td>Number of denoise passes within the model.</td><td>More iterations increase the effect; inspect fine structure after every change.</td></tr>
+<tr><td>Frequency Separation</td><td>Separates noise treatment by spatial frequency.</td><td>Leave off for the first simple pass unless you have a specific frequency-domain problem to solve.</td></tr>
+<tr><td>Tile Overlap</td><td>Overlap between processing tiles.</td><td>Helps avoid tile-boundary artefacts.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Starting point:</strong> Intensity/Color Separation On · Frequency Separation Off · Intensity 0.75 · Color 0.90 · Iterations 2 · Tile Overlap 0.20.</div>
+<div class="accept"><strong>Accept when:</strong> background grain is quieter but faint dust and small-scale emission still have natural texture at 1:1.</div>
+</div></details>
+
+<details id="s12" open>
+<summary><span class="num">12</span><span>Optional star separation with StarXTerminator</span><span class="path">Process → RCAstro → StarXTerminator</span></summary>
+<div class="section">
+<p class="purpose">Separate stars and non-stellar structure only when independent stretching will genuinely help. Abandon the branch if real target structure is damaged.</p>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Generate Star Image / Output Difference</td><td>Creates a separate stars component in addition to the starless image.</td><td>On when you intend to stretch and later recombine stars separately.</td></tr>
+<tr><td>Unscreen Stars</td><td>Transforms extracted stars for workflows based on screened/nonlinear recombination.</td><td><strong>Off for linear data</strong> in this workflow.</td></tr>
+<tr><td>Tile Overlap</td><td>Overlap between processing tiles.</td><td>0.20 is the workflow baseline. Inspect the full frame for seams.</td></tr>
+</tbody></table>
+<table class="check-table"><thead><tr><th>✓</th><th>Inspect</th><th>Reject the branch if…</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Starless at 1:1</td><td>Bright-star positions contain holes/smears, compact emission knots are erased, or sharp dust boundaries are damaged.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Stars image at 1:1</td><td>Obvious pieces of nebula/dust have been transferred into the stars image.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Workflow baseline:</strong> latest model · Generate Star Image / Output Difference On · Unscreen Off for linear data · Tile Overlap 0.20.</div>
+</div></details>
+
+<details id="s13" open>
+<summary><span class="num">13</span><span>Technical crop</span><span class="path">Process → Geometry → DynamicCrop</span></summary>
+<div class="section">
+<p class="purpose">Remove only invalid registration borders or defective edge strips. Composition cropping is a separate deliberate decision.</p>
+<table class="check-table"><thead><tr><th>✓</th><th>Action</th><th>Rule</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Draw smallest useful crop</td><td>Keep as much valid field as possible.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Save DynamicCrop instance</td><td>Drag the process triangle to the workspace before applying.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Apply identical crop to starless + stars</td><td>Both components must end with identical pixel dimensions for clean recombination.</td></tr>
+</tbody></table>
+</div></details>
+
+<details id="s14" open>
+<summary><span class="num">14</span><span>Permanent nonlinear stretch</span><span class="path">MAS and/or STF → HistogramTransformation</span></summary>
+<div class="section">
+<p class="purpose">Turn linear data into a visible nonlinear image. Reset STF before judging any permanent stretch: STF is display-only and can otherwise make a permanent stretch look much brighter than it really is.</p>
+<div class="grid2">
+<div class="card"><h3>STF reminder</h3><p>STF does not alter image data. Normal Auto Stretch is a display aid. <strong>Shift+Auto is the boosted auto stretch</strong>, not a more conservative one.</p></div>
+<div class="card"><h3>Starless vs stars</h3><p>A starless image can usually take a stronger stretch. Stretch stars separately and more gently so the field remains natural after recombination.</p></div>
+</div>
+<table class="control-table"><thead><tr><th>MAS control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Target background</td><td>Sets the desired background level after stretching.</td><td>Raise until faint extended signal is visible without turning empty sky grey.</td></tr>
+<tr><td>Aggressiveness</td><td>How strongly MAS opens faint structure.</td><td>Higher values reveal faint signal faster but can flatten the image if pushed.</td></tr>
+<tr><td>Dynamic range compression</td><td>Compresses the spread between bright and faint structures.</td><td>Use to keep bright nebular regions contained while faint signal is lifted.</td></tr>
+<tr><td>Contrast Recovery</td><td>Restores local contrast at a selected spatial scale.</td><td>Stop before dark boundaries become outlined or crunchy.</td></tr>
+<tr><td>Color Saturation / Boost</td><td>Maintains or increases colour through the stretch.</td><td>Use only enough to preserve the SPCC colour relationships.</td></tr>
+<tr><td>Lightness mask</td><td>Modulates the stretch according to image brightness.</td><td>Useful for protecting bright regions while faint areas are opened.</td></tr>
+</tbody></table>
+<table class="control-table"><thead><tr><th>HistogramTransformation control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Shadows</td><td>Black point.</td><td>Keep at 0 unless you have a specific reason to clip. Do not crush faint dust.</td></tr>
+<tr><td>Midtones</td><td>Main nonlinear brightness control. Values below 0.5 brighten the midtones strongly.</td><td>Transfer a linked STF as a starting shape, then back away from an over-aggressive result in Real-Time Preview.</td></tr>
+<tr><td>Highlights</td><td>White point.</td><td>Normally keep at 1 unless intentionally compressing/clipping highlights.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Worked examples, not presets:</strong> starless MAS used Target 0.175, Aggressiveness 0.75, DRC 0.50, Contrast Recovery 1024/1.00, Saturation 0.75, Boost 0.50. Stars HT used Shadows 0, Highlights 1 and Midtones 0.010 after backing away from a much stronger STF-derived value.</div>
+<div class="accept"><strong>Accept when:</strong> faint structure is visible, bright structures retain internal tone, the sky is not grey or clipped black, and star colour survives.</div>
+</div></details>
+
+<details id="s15" open>
+<summary><span class="num">15</span><span>Recombine stars and starless image</span><span class="path">Process → All Processes → PixelMath</span></summary>
+<div class="section">
+<p class="purpose">Create a new recombined image rather than destructively modifying either component.</p>
+<div class="card"><h3>Screen-blend expression</h3><p><code>1 - (1 - starless) * (1 - stars)</code></p><p>For deliberately scaled stars, scale the <em>stars term</em>, for example <code>1 - (1 - starless) * (1 - 0.8*stars)</code>. Do not replace <code>1 - stars</code> with <code>0.8 - stars</code>; that changes the baseline rather than simply scaling star strength.</p></div>
+<table class="control-table"><thead><tr><th>PixelMath setting</th><th>Choice</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Use a single RGB/K expression</td><td>On</td><td>Applies the same screen-blend expression across the colour image.</td></tr>
+<tr><td>Destination</td><td>Create new image</td><td>Keeps starless and stars originals untouched.</td></tr>
+<tr><td>Sample format</td><td>RGB, 32-bit floating point</td><td>Maintains processing precision.</td></tr>
+<tr><td>Rescale result</td><td>Off</td><td>Avoids automatically remapping the result's range.</td></tr>
+<tr><td>Truncate result</td><td>On</td><td>Clamps out-of-range values to the valid image range.</td></tr>
+</tbody></table>
+<div class="accept"><strong>Inspect at 1:1:</strong> bright stars, stars on bright nebulosity and compact target features should show no colour seams, circular cut-outs or obvious recombination halos.</div>
+</div></details>
+
+<details id="s16" open>
+<summary><span class="num">16</span><span>Optional local detail / dynamic-range control</span><span class="path">LocalHistogramEqualization · HDRMultiscaleTransform</span></summary>
+<div class="section">
+<p class="purpose">Use these only when a specific problem remains. Local contrast is best tested on the starless component, then recombined with unchanged stars for judgment.</p>
+<h3 style="font-size:13px;margin:4px 0">LocalHistogramEqualization</h3>
+<table class="control-table"><thead><tr><th>Control</th><th>Meaning</th><th>Use</th></tr></thead><tbody>
+<tr><td>Kernel Radius</td><td>Spatial neighbourhood used to equalize local contrast.</td><td>Larger radius acts on broader structures; smaller radius acts on finer structure.</td></tr>
+<tr><td>Contrast Limit</td><td>Caps how much local contrast can be amplified.</td><td>Keep modest to avoid dark outlines and gritty texture.</td></tr>
+<tr><td>Amount</td><td>Blend strength of the LHE result.</td><td>Use the minimum amount that makes real structure clearer.</td></tr>
+<tr><td>Histogram Resolution</td><td>Precision of the local histograms.</td><td>12-bit / 4096 is the workflow baseline when available.</td></tr>
+<tr><td>Circular Kernel</td><td>Uses a circular local neighbourhood.</td><td>On in the workflow baseline.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Starting point:</strong> Radius 128 · Contrast Limit 1.5 · Amount 0.25 · 12-bit histogram · Circular Kernel On. Compare the recombined result, not just the starless preview.</div>
+<h3 style="font-size:13px;margin:15px 0 4px">HDRMultiscaleTransform, only when bright cores lose structure</h3>
+<p class="small">Use on the nonlinear <strong>starless</strong> branch under a protective mask. Layer count controls the spatial scales included in the dynamic-range compression. A moderate layer count is safer than a very low count. Stop if bright structures become flat/grey or develop dark edge halos. Recombine with the unchanged stars and judge the finished field.</p>
+<div class="reject"><strong>Reject the local-detail pass</strong> if it creates black creases, dark outlines, gritty/mottled texture, flat grey cores or HDR halos.</div>
+</div></details>
+
+<details id="s17" open>
+<summary><span class="num">17</span><span>Final global Curves</span><span class="path">Process → IntensityTransformations → CurvesTransformation</span></summary>
+<div class="section">
+<p class="purpose">The final stage should be small. Adjust contrast and saturation separately in Real-Time Preview.</p>
+<table class="control-table"><thead><tr><th>Channel</th><th>What it controls</th><th>How to use it</th></tr></thead><tbody>
+<tr><td>RGB/K</td><td>Global brightness/contrast relationship.</td><td>Use a mild S-curve. Keep endpoints anchored. Create separation without clipping dark dust or flattening bright nebular tone.</td></tr>
+<tr><td>S</td><td>Colour saturation.</td><td>Reset to a straight curve first, then make a small mid-curve lift. Judge nebula, reflection colour and star colours together.</td></tr>
+</tbody></table>
+<div class="reference"><strong>Worked example:</strong> final saturation used a midpoint <code>0.50 → 0.57</code>. Treat it as a modest reference, not a required value.</div>
+<table class="check-table"><thead><tr><th>✓</th><th>Final 1:1 check</th><th>Pass condition</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Bright stars</td><td>Natural profiles; no new black rings, hard rims or colour seams.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Dark lanes</td><td>Internal gradation remains; not clipped to featureless black.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Bright nebular ridges</td><td>Internal tone remains; no hard contrast outlines.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Starless/recombination artefacts</td><td>No SXT holes, seams or circular cut-outs.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Background</td><td>No residual gradient, colour inversion, posterisation, banding or waxy denoise.</td></tr>
+</tbody></table>
+<div class="accept"><strong>Stop when it passes.</strong> Another tool is not automatically another improvement.</div>
+</div></details>
+
+<details id="s18" open>
+<summary><span class="num">18</span><span>Master save, colour profile and output export</span><span class="path">ICCProfileTransformation + Save As</span></summary>
+<div class="section">
+<p class="purpose">Preserve the full-quality processed master first. Make separate output copies for web, screen, print or archive rather than converting the master itself.</p>
+<table class="check-table"><thead><tr><th>✓</th><th>Output step</th><th>Action</th></tr></thead><tbody>
+<tr><td><input class="tick" type="checkbox"></td><td>Authoritative master</td><td>Save <code>_FINAL.xisf</code> as <strong>32-bit floating point</strong> before any bit-depth, colour-profile, resize or output-format conversion.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Duplicate for delivery</td><td>Create a duplicate for each intended output. Keep the processed XISF master unchanged.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>ICC profile checked</td><td>Check the embedded profile before export. Do not convert a file to the profile it already uses.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Profile chosen for destination</td><td>For normal web and screen viewing, convert the duplicate to <strong>sRGB IEC61966-2.1</strong>. For printing, use the colour space or ICC profile requested by the printer or lab.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Format chosen</td><td>Use <strong>PNG</strong> for lossless screen delivery, <strong>TIFF</strong> for high-quality editing/print transfer, or <strong>JPEG</strong> when smaller files are required.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Bit depth checked</td><td>Keep the master at 32-bit float. For delivery, use 16-bit TIFF/PNG where the destination supports it; JPEG is normally 8-bit.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Resize only if needed</td><td>Resize a delivery copy for a specific display, website, print size or file-size requirement. Do not resize the master.</td></tr>
+<tr><td><input class="tick" type="checkbox"></td><td>Export reopened</td><td>Open the actual exported file and inspect it at 1:1 for colour shifts, clipped blacks/highlights, banding, faint-gradient damage and compression artefacts.</td></tr>
+</tbody></table>
+<div class="grid2">
+<div class="card"><h3>Typical web / screen output</h3><ul><li>sRGB IEC61966-2.1</li><li>PNG when lossless detail matters</li><li>JPEG when file size matters</li><li>Resize only for a known display or upload requirement</li></ul></div>
+<div class="card"><h3>Typical print / archive output</h3><ul><li>Keep the 32-bit XISF master</li><li>Use 16-bit TIFF for high-quality transfer</li><li>Convert to the printer/lab profile only when required</li><li>Keep a separate output copy for every profile or size</li></ul></div>
+</div>
+<div class="accept"><strong>Finished when:</strong> the reopened delivery file matches the master closely at normal viewing size and 1:1, has the intended colour profile and bit depth, and shows no new export artefacts.</div>
+</div></details>
+
+</main>
+<footer><span>Freestanding checklist for PixInsight 1.9.4 broadband OSC processing.</span><span>Reference values are starting points only.</span></footer>
+</div>
+<script>
+(function(){
+  const checks=[...document.querySelectorAll('.tick')];
+  const key='pixinsight-deep-sky-checklist-general-v1';
+  const progress=document.getElementById('progress');
+  function update(){
+    const done=checks.filter(c=>c.checked).length;
+    progress.textContent=`${done} / ${checks.length} complete`;
+    localStorage.setItem(key,JSON.stringify(checks.map(c=>c.checked)));
+  }
+  checks.forEach((check,index)=>{
+    const row=check.closest('tr');
+    const item=row?.querySelector('td:nth-child(2)')?.textContent?.trim();
+    check.setAttribute('aria-label',item ? `Complete: ${item}` : `Complete checklist item ${index+1}`);
+  });
+  try{
+    const saved=JSON.parse(localStorage.getItem(key)||'null');
+    if(Array.isArray(saved)) checks.forEach((c,i)=>{if(typeof saved[i]==='boolean') c.checked=saved[i];});
+  }catch(e){}
+  checks.forEach(c=>c.addEventListener('change',update));
+  document.getElementById('expand').addEventListener('click',()=>document.querySelectorAll('details').forEach(d=>d.open=true));
+  document.getElementById('collapse').addEventListener('click',()=>document.querySelectorAll('details').forEach(d=>d.open=false));
+  document.getElementById('print').addEventListener('click',()=>window.print());
+  document.getElementById('reset').addEventListener('click',()=>{if(confirm('Clear all checklist ticks?')){checks.forEach(c=>c.checked=false);update();}});
+  update();
+})();
+</script>
+</body>
+</html>
