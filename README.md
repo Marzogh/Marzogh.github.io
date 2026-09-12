@@ -1,148 +1,66 @@
-# Chips'nCode
+# Chips’nCode
 
-Astro-powered personal site for technical writing, projects, tools, education resources, poetry, and astrophotography.
+Chips’nCode is where I keep the things I build, investigate, photograph, teach and occasionally get distracted by.
 
-Live deployment is served as a static site.
+The site contains amateur radio, electronics, software, astronomy, technical documentation, teaching resources, photography, poetry and other projects. This repository contains the source for [chipsncode.com](https://chipsncode.com).
 
-## Stack
+## What is here
 
-- Astro 5
-- Astro Content Collections (Markdown/MDX)
-- CI-based static deployment
+- **Notebook:** Investigations, technical notes and rabbit holes.
+- **Projects:** Things built, being built, or documented after considerable experimentation.
+- **Documentation:** Manuals, references, restored material and technical documentation.
+- **Tools:** Utilities and small purpose-built applications.
+- **Education:** Teaching and student resources.
+- **Astrophotography:** Images, observing sessions and processing notes.
+- **Poetry:** Preserved older writing.
 
-## Content Collections
+Different kinds of material use different presentation styles. A technical manual, an image gallery and a project page do not need to look or behave identically.
 
-Content is managed in `src/content/`:
+## How the site is built
 
-- `blog`
-- `docs`
-- `projects`
-- `tools`
-- `education`
-- `poetry`
-- `astrophotography`
+Chips’nCode is statically generated with Astro 5. Content is written in Markdown and MDX and managed through Astro Content Collections. React is used where interactive components are needed, Shiki provides syntax highlighting, and Sharp handles image processing.
 
-Collection schemas and validation live in `src/content.config.ts`.
+Structured content is primarily under `src/content/`, with collection definitions and schemas in `src/content.config.ts`.
 
-## Local Development
+## Running locally
 
-Run all commands from repository root:
+| Command | Purpose |
+| --- | --- |
+| `npm install` | Install the project dependencies. |
+| `npm run dev` | Start the local development server. |
+| `npm run build` | Generate the production site. |
+| `npm run preview` | Preview the production build locally. |
 
-| Command | Action |
-| :-- | :-- |
-| `npm install` | Install dependencies |
-| `npm run dev` | Start local dev server |
-| `npm run build` | Build static site to `dist/` |
-| `npm run preview` | Preview production build locally |
+## Content
 
-## Publishing Workflow
+The current Astro content collections are:
 
-1. Add or edit content in the relevant `src/content/<collection>/` directory.
-2. Include frontmatter fields expected by the schema (for example: `title`, `description`, `pubDate`, `tags`, optional `updatedDate`, optional `featured`).
-3. Run `npm run build` before pushing.
-4. Push through the normal repository workflow to trigger deployment.
-
-Tags are normalized to slug routes under `/tags/<tag-slug>/`.
-
-## Education Resource Import Workflow
-
-For imported standalone lesson pages, use the import script so naming and privacy cleanup stay consistent:
-
-```bash
-node scripts/import-education-resource.mjs \
-  --source "/absolute/path/to/source.html" \
-  --dest-dir "public/education/student-resources/year-12-biology"
+```text
+src/content/
+├── astrophotography/
+├── blog/
+├── docs/
+├── education/
+├── projects/
+└── tools/
 ```
 
-Rules enforced by this workflow:
+The `blog` collection is presented publicly as the Notebook. Routes and page-specific interfaces live in `src/pages/`, reusable components in `src/components/`, and static assets and standalone resources in `public/`. Astro Content Collections validate frontmatter against the schemas in `src/content.config.ts`.
 
-1. Output filenames are standalone slugs with no lesson numbering (for example `gene-expression.html`, not `07-gene-expression.html`).
-2. Numbered lesson labels in the HTML are stripped (for example `Lesson 7:` becomes just the topic heading).
-3. Identifying teacher information is sanitized (`Mr. Bhattaram` is rewritten to `Mr. B`).
-4. Class-code identifiers are stripped from imported HTML content.
+## Site-specific tooling
 
-After importing HTML into `public/education/student-resources/<subject-folder>/`, create a matching MDX wrapper in `src/content/education/...` using `EmbeddedResource` so the resource appears in the Education collection.
+The `scripts/` directory contains site-specific import and validation utilities, including education resource import, astronomy almanac import, astronomy manifest validation and sitemap validation.
 
-## CLI Index Shell
+## Design
 
-The reusable shell component lives at:
+Chips’nCode has a documented site architecture and design language covering the shared foundations of the site and the deliberate differences between its sections. See [Site architecture and design language](/docs/site-architecture-and-design-language/).
 
-- `src/components/CliShell.astro`
-
-It is used on:
-
-- `/docs`
-- `/projects`
-- `/tools`
-- `/notebook`
-
-Notes:
-
-- Supports unix-style commands (`stat`, `ls`, `cd`, `grep`, `tag`, `man`, etc.)
-- Supports per-command help via `--help` / `-h`
-- Manual drawer includes keyboard navigation and clickable `SEE ALSO`
-- Hidden on mobile breakpoints to keep index pages lightweight
-
-## Deployment
-
-- Deployment target: static hosting
-- Build output: static files in `dist/`
-
-Deployment is handled by the repository's configured CI workflow.
-
-## Astronomy Almanac Hooks
-
-This repository includes a stable static integration surface for yearly almanac outputs:
-
-- Route: `/astronomy`
-- Manifest: `public/astronomy/manifest.json`
-- Bundle payload root: `public/astronomy/years/<year>/<site-slug>/`
-
-Import generated almanac outputs from the local almanac project:
-
-```bash
-npm run astronomy:import -- --year=2027 --site='South East Queensland, Australia' --source='/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output'
-```
-
-Import multiple year/site bundles in one command:
-
-Note: `--sites` uses `;;` as the separator to allow commas inside site names.
-
-```bash
-npm run astronomy:import:bundles -- --years=2027,2028 --sites='South East Queensland, Australia;;Southern Tasmania, Australia;;Malabar Coast, India' --source='/Users/prajwal/Documents/GitHub/astroplan/personal-astro-almanac/output'
-```
-Or pass explicit bundles:
-
-```bash
-npm run astronomy:import:bundles -- --bundles='2027|South East Queensland, Australia|/path/to/output;2028|Southern Tasmania, Australia|/path/to/output2'
-```
-
-The importer copies:
-- `almanac.html`
-- `almanac.pdf`
-- `data/`
-- `charts/`
-- `months/`
-- `logs/`
-
-and updates `public/astronomy/manifest.json` so the `/astronomy` page can discover it.
-Manifest entries are automatically preserved and upserted per `(year, site-slug)` so repeated imports do not erase other bundles.
-
-Validate manifest integrity and required files:
-
-```bash
-npm run astronomy:validate
-```
-
-## Domain and DNS
-
-Custom domain DNS is managed outside this repository.
-
-## Repository Layout
+## Repository structure
 
 ```text
 .
 ├── public/
+├── scripts/
 ├── src/
 │   ├── components/
 │   ├── content/
@@ -153,3 +71,5 @@ Custom domain DNS is managed outside this repository.
 ├── package.json
 └── README.md
 ```
+
+The live site is the best place to browse the finished material. This repository is where the machinery, source material and occasional evidence of how much trouble that material caused live.
