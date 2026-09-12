@@ -679,6 +679,16 @@ const meta = [
     object-fit: cover;
   }
 
+  .project-prose :global(.project-media-pair--workflow-results) {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: start;
+  }
+
+  .project-prose :global(.project-media-pair--workflow-results img) {
+    height: auto;
+    object-fit: contain;
+  }
+
   .project-prose :global(.project-video) {
     position: relative;
     aspect-ratio: 16 / 9;

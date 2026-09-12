@@ -9,9 +9,11 @@ type: Interactive Reference
 tags: [astrophotography, pixinsight, image-processing, osc, workflow, quality-control, technical-writing]
 demo: /projects/pixinsight-deep-sky-processing-checklist/checklist/
 demoLabel: Open the checklist
-image: /images/projects/pixinsight-deep-sky-processing-checklist/cover.svg
+image: /images/projects/pixinsight-deep-sky-processing-checklist/ngc-6188-reprocessed.jpg
 headerStyle: panel
 ---
+
+import AnnotatedAstroImage from '../../components/projects/AnnotatedAstroImage.astro';
 
 I started putting this together while reprocessing some of my older astrophotography data and realised how much of my workflow was living in my head.
 
@@ -26,6 +28,38 @@ It is really just my own working checklist, built so I can come back to a datase
   <div><span>55</span><strong>Persistent checks</strong><small>Saved in this browser</small></div>
   <div><span>1.9.4</span><strong>PixInsight scope</strong><small>Broadband OSC workflow</small></div>
 </div>
+
+## The images behind the workflow
+
+These are two of the older datasets I returned to while putting the checklist together. Reprocessing them made the value of a written workflow fairly obvious: both fields contain faint extended structure, dense star fields, strong colour relationships and bright features that make it easy to see when a processing decision has helped—or when it has gone too far.
+
+<div className="project-media-pair project-media-pair--workflow-results">
+  <AnnotatedAstroImage
+    src="/images/projects/pixinsight-deep-sky-processing-checklist/ngc-6188-reprocessed.jpg"
+    alt="Reprocessed NGC 6188 field with dark dust lanes, red emission nebulosity and a dense star field."
+    caption="NGC 6188 and the Dragon’s Egg in Ara, after reprocessing with the documented workflow."
+    annotations={[
+      { label: 'NGC 6193', detail: 'Young open cluster', x: 40, y: 8.5, align: 'east', kind: 'cluster' },
+      { label: 'NGC 6188', detail: 'Rim Nebula · Fighting Dragons of Ara', x: 55, y: 25, align: 'west', kind: 'nebula' },
+      { label: 'NGC 6164/6165', detail: 'Dragon’s Egg · around HD 148937', x: 80, y: 84, align: 'west', kind: 'nebula' },
+    ]}
+  />
+  <AnnotatedAstroImage
+    src="/images/projects/pixinsight-deep-sky-processing-checklist/rho-ophiuchi-reprocessed.jpg"
+    alt="Reprocessed Rho Ophiuchi cloud complex showing reflection nebulosity, dark dust and colourful stars."
+    caption="Rho Ophiuchi revisited: a useful test of colour, gradients, bright stars and faint dust."
+    annotations={[
+      { label: 'Messier 4', detail: 'Globular cluster · NGC 6121', x: 36, y: 14, align: 'west', kind: 'cluster' },
+      { label: 'Antares', detail: 'α Scorpii · yellow IC 4606 glow', x: 72, y: 16.5, align: 'east', kind: 'star' },
+      { label: 'Sh2-9', detail: 'Emission around Sigma Scorpii', x: 20, y: 31, align: 'east', kind: 'nebula' },
+      { label: 'IC 4605', detail: 'Reflection nebula near 22 Scorpii', x: 76, y: 41, align: 'west', kind: 'nebula' },
+      { label: 'IC 4603', detail: 'Reflection nebula and dark dust', x: 46, y: 53, align: 'east', kind: 'nebula' },
+      { label: 'IC 4604', detail: 'Rho Ophiuchi reflection nebula', x: 45, y: 72, align: 'east', kind: 'nebula' },
+    ]}
+  />
+</div>
+
+Field identifications were checked against the corresponding [NASA Rho Ophiuchi reference](https://science.nasa.gov/image-article/apod-2009-july-8-the-dark-river-to-antares/), [ESO NGC 6188 and NGC 6193 reference](https://www.eso.org/public/news/eso1510/) and [NASA NGC 6188 and NGC 6164 reference](https://apod.nasa.gov/apod/ap160330.html).
 
 ## How the checklist is organised
 
@@ -55,6 +89,11 @@ The checklist is intentionally self-contained. It does not require an account, s
 There are controls to expand all stages, collapse them, clear the current run, and print or save the complete checklist as a PDF. The print layout opens the stage content automatically and removes the interactive controls, turning the same source into a practical bench-side reference.
 
 The saved state is versioned. If the checklist structure changes substantially later, a new storage key can be introduced without silently attaching old answers to different questions.
+
+<figure>
+  <img src="/images/projects/pixinsight-deep-sky-processing-checklist/cover.svg" alt="Stylised overview of the checklist interface, showing workflow stages and completed checks." />
+  <figcaption>The checklist keeps the sequence, decisions and acceptance tests together without needing a server-side account.</figcaption>
+</figure>
 
 ## What it deliberately leaves open
 

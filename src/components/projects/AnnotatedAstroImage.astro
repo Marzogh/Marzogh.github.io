@@ -1,0 +1,276 @@
+---
+interface Annotation {
+  label: string;
+  detail: string;
+  x: number;
+  y: number;
+  align?: 'east' | 'west';
+  kind?: 'star' | 'nebula' | 'cluster';
+}
+
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  annotations: Annotation[];
+}
+
+const { src, alt, caption, annotations } = Astro.props;
+---
+
+<figure class="annotated-astro" data-annotated-astro>
+  <div class="annotated-astro__toolbar">
+    <span>Field identification</span>
+    <button type="button" data-annotation-toggle aria-pressed="true">Hide labels</button>
+  </div>
+
+  <div class="annotated-astro__frame">
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+    <ol class="annotated-astro__overlay" data-annotation-overlay aria-label="Objects identified in this image">
+      {annotations.map((annotation, index) => (
+        <li
+          class:list={[
+            'annotated-astro__marker',
+            `annotated-astro__marker--${annotation.align ?? 'east'}`,
+            `annotated-astro__marker--${annotation.kind ?? 'nebula'}`,
+          ]}
+          style={`--marker-x:${annotation.x}%;--marker-y:${annotation.y}%`}
+        >
+          <span class="annotated-astro__dot" aria-hidden="true">{index + 1}</span>
+          <span class="annotated-astro__label">
+            <strong>{annotation.label}</strong>
+            <small>{annotation.detail}</small>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <figcaption>{caption}</figcaption>
+
+  <ol class="annotated-astro__key" aria-label="Field identification key">
+    {annotations.map((annotation, index) => (
+      <li>
+        <span aria-hidden="true">{index + 1}</span>
+        <div><strong>{annotation.label}</strong><small>{annotation.detail}</small></div>
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<script>
+  function initialiseAnnotatedImages() {
+    document.querySelectorAll<HTMLElement>('[data-annotated-astro]').forEach((figure) => {
+      if (figure.dataset.ready === 'true') return;
+
+      const toggle = figure.querySelector<HTMLButtonElement>('[data-annotation-toggle]');
+      const overlay = figure.querySelector<HTMLOListElement>('[data-annotation-overlay]');
+      if (!toggle || !overlay) return;
+
+      figure.dataset.ready = 'true';
+      toggle.addEventListener('click', () => {
+        const labelsVisible = toggle.getAttribute('aria-pressed') === 'true';
+        toggle.setAttribute('aria-pressed', String(!labelsVisible));
+        toggle.textContent = labelsVisible ? 'Show labels' : 'Hide labels';
+        overlay.classList.toggle('annotated-astro__overlay--hidden', labelsVisible);
+      });
+    });
+  }
+
+  initialiseAnnotatedImages();
+  document.addEventListener('astro:page-load', initialiseAnnotatedImages);
+</script>
+
+<style>
+  .annotated-astro {
+    container-type: inline-size;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .annotated-astro__toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid var(--border);
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--surface-raised) 90%, transparent);
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .annotated-astro__toolbar button {
+    padding: 0.25rem 0.45rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .annotated-astro__toolbar button:hover,
+  .annotated-astro__toolbar button:focus-visible {
+    border-color: var(--tag-ink);
+    color: var(--tag-ink);
+  }
+
+  .annotated-astro__frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #05080d;
+  }
+
+  .annotated-astro__frame > img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .annotated-astro__overlay {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: opacity 160ms ease;
+    pointer-events: none;
+  }
+
+  .annotated-astro__overlay--hidden {
+    opacity: 0;
+  }
+
+  .annotated-astro__marker {
+    position: absolute;
+    left: var(--marker-x);
+    top: var(--marker-y);
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    color: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.9));
+  }
+
+  .annotated-astro__marker--west {
+    flex-direction: row-reverse;
+    transform: translateX(-100%);
+  }
+
+  .annotated-astro__dot {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: rgba(4, 8, 14, 0.76);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    font-weight: 800;
+  }
+
+  .annotated-astro__marker--star { color: #ffd27a; }
+  .annotated-astro__marker--nebula { color: #a8e8ff; }
+  .annotated-astro__marker--cluster { color: #bff0c7; }
+
+  .annotated-astro__label {
+    display: grid;
+    min-width: max-content;
+    padding: 0.25rem 0.35rem;
+    border-left: 2px solid currentColor;
+    background: rgba(4, 8, 14, 0.72);
+    line-height: 1.1;
+  }
+
+  .annotated-astro__marker--west .annotated-astro__label {
+    border-right: 2px solid currentColor;
+    border-left: 0;
+    text-align: right;
+  }
+
+  .annotated-astro__label strong {
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: clamp(0.5rem, 0.75vw, 0.66rem);
+    letter-spacing: 0.035em;
+  }
+
+  .annotated-astro__label small {
+    margin-top: 0.12rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: clamp(0.42rem, 0.62vw, 0.55rem);
+  }
+
+  .annotated-astro > figcaption {
+    margin-top: 0.55rem;
+  }
+
+  .annotated-astro__key {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem 0.8rem;
+    margin: 0.8rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .annotated-astro__key li {
+    display: grid;
+    grid-template-columns: 1.35rem minmax(0, 1fr);
+    gap: 0.45rem;
+    align-items: start;
+    min-width: 0;
+  }
+
+  .annotated-astro__key li > span {
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--border);
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+  }
+
+  .annotated-astro__key div {
+    display: grid;
+    line-height: 1.2;
+  }
+
+  .annotated-astro__key strong {
+    font-size: 0.68rem;
+  }
+
+  .annotated-astro__key small {
+    margin-top: 0.12rem;
+    color: var(--text-2);
+    font-size: 0.62rem;
+  }
+
+  @media (max-width: 720px) {
+    .annotated-astro__label small { display: none; }
+    .annotated-astro__key { grid-template-columns: 1fr; }
+  }
+
+  @container (max-width: 430px) {
+    .annotated-astro__label small { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .annotated-astro__label { display: none; }
+    .annotated-astro__dot { width: 1.15rem; height: 1.15rem; font-size: 0.52rem; }
+  }
+
+  @media print {
+    .annotated-astro__toolbar { display: none; }
+  }
+</style>
