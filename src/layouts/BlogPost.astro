@@ -24,7 +24,6 @@ const {
   image,
   tags = [],
   type,
-  author,
   toc = [],
   pullQuotes = [],
   headings = [],
@@ -46,8 +45,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-AU', {
 const meta = [
   ...(pubDate ? [{ label: 'Published', value: dateFormatter.format(pubDate) }] : []),
   ...(updatedDate ? [{ label: 'Updated', value: dateFormatter.format(updatedDate) }] : []),
-  ...(author ? [{ label: 'By', value: author }] : []),
-  ...(!author ? [{ label: 'Format', value: articleKind }] : []),
+  { label: 'Format', value: articleKind },
 ];
 ---
 
@@ -460,7 +458,7 @@ const meta = [
 
   @media (max-width: 900px) {
     .article-body {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 2rem;
     }
 
@@ -486,12 +484,12 @@ const meta = [
     .article-shell--narrative .article-rail { display: none; }
 
     .article-shell--narrative .article-body {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       justify-content: start;
     }
 
     .article-shell--band-plan .article-body {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
