@@ -34,7 +34,6 @@ import lBandVeeDipole from '../../assets/blog/rtl-sdr/l-band-veedipole.jpg';
 import dipoleLBandReception from '../../assets/blog/rtl-sdr/dipole-lband-reception.jpg';
 import fmWaterfall from '../../assets/blog/rtl-sdr/fm-waterfall.jpg';
 import dump1090 from '../../assets/blog/rtl-sdr/dump1090.png';
-import radiosondeBalloon from '../../assets/blog/rtl-sdr/radiosonde-balloon.jpg';
 import noaaApt from '../../assets/blog/rtl-sdr/noaa-19-apt.jpg';
 import arissAward from '../../assets/blog/rtl-sdr/ariss-sstv-award-vk4mpb.png';
 import sstv01 from '../../assets/blog/rtl-sdr/sstv/ariss-2024-01.jpg';
@@ -78,14 +77,14 @@ export const sstvSlides = [
   <figure className="figure">
     <Image src={rtlSdrV3} alt="An RTL-SDR Blog V3 USB software-defined radio receiver with its SMA connector and adapters." widths={[480, 720, 960, 1280]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />
     <figcaption>
-      An RTL-SDR Blog V3 receiver. The multipurpose kit adds the adjustable dipole hardware used in the experiments below.
+      An RTL-SDR Blog V3 receiver with the adapters supplied in the multipurpose kit.
       <span className="credit">Photo: Joeceads, <a href="https://commons.wikimedia.org/wiki/File:Rtl-sdr.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</span>
     </figcaption>
   </figure>
 
   <h2 id="buy">Getting an RTL-SDR</h2>
 
-  <p>There are a lot of cheap USB digital-television dongles, usually labelled DVB-T, being sold as RTL-SDRs. Some are perfectly usable, but for a first receiver I would buy the genuine <strong>RTL-SDR Blog V3 dongle with the multipurpose dipole kit</strong>. It gives you a stable receiver, a threaded SMA antenna socket and an antenna set that can be rearranged for several of the experiments below.</p>
+  <p>There are a lot of cheap USB digital-television dongles, usually labelled DVB-T, being sold as RTL-SDRs. Some are perfectly usable, but for a first receiver I would buy the genuine <strong>RTL-SDR Blog V3 dongle with the multipurpose dipole kit</strong>. It gives you a stable receiver, a threaded SMA antenna socket and an antenna set that can be rearranged for broadcast FM, amateur repeaters, aircraft and satellites.</p>
 
   <p>For Australian buyers, <a className="external" href="https://opensourcesdrlab.com/products/rtl-sdr-v4">OpenSourceSDRLab's RTL-SDR Blog V3 kit listing</a> is usually worth checking before the larger marketplaces. Their product naming has changed over time, so I would check the current dongle revision and kit contents on the listing rather than relying on an old screenshot.</p>
 
@@ -146,16 +145,16 @@ export const sstvSlides = [
   <p>The job is the same on every desktop platform: talk to the RTL-SDR, show the spectrum and waterfall, choose the reception mode, set the width of the slice you want to receive, and adjust the receiver's sensitivity. Radio software calls those last three controls the <strong>mode</strong>, <strong>filter width</strong> and <strong>gain</strong>.</p>
 
   <div className="link-grid">
-    <div className="link-card"><span className="os">Windows · macOS · Linux · Android</span><strong><a className="external" href="https://www.sdrpp.org/">SDR++</a></strong><p>The main receiver used in this article. Its controls and layout are consistent across desktop platforms.</p></div>
+    <div className="link-card"><span className="os">Windows · macOS · Linux · Android</span><strong><a className="external" href="https://www.sdrpp.org/">SDR++</a></strong><p>A cross-platform receiver with a consistent set of controls on each desktop operating system.</p></div>
     <div className="link-card"><span className="os">macOS · Linux</span><strong><a className="external" href="https://gqrx.dk/">Gqrx</a></strong><p>A mature receiver with spectrum, waterfall, recording and good RTL-SDR support.</p></div>
     <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://www.gnuradio.org/">GNU Radio</a></strong><p>Useful once you want to construct the signal-processing chain rather than only operate a receiver.</p></div>
   </div>
 
-  <p>I will refer to <strong>SDR++</strong> in the examples below because it is available across the main desktop platforms. If you use Gqrx or another receiver, the same basic settings still apply: frequency, mode, filter width and gain.</p>
+  <p><strong>SDR++</strong> is available across the main desktop platforms. Gqrx and other receivers use the same basic settings: frequency, mode, filter width and gain.</p>
 
   <p>On Android, SDR++ can work with supported USB SDR hardware over OTG. Direct RTL-SDR use on iPhone and iPad is much less convenient, so I use iOS mainly for pass prediction and tracking rather than as the receiver itself.</p>
 
-  <p>When we get to decoding, use the program written for the job. <a className="external" href="https://www.satdump.org/">SatDump</a> handles satellite telemetry and imagery. <a className="external" href="https://github.com/projecthorus/radiosonde_auto_rx">radiosonde_auto_rx</a> handles weather balloons. ADS-B has its own decoders. GNU Radio comes later, when there is some value in seeing how the receiver itself is put together.</p>
+  <p>Use the program written for the signal you want to decode. <a className="external" href="https://www.satdump.org/">SatDump</a> handles satellite telemetry and imagery. <a className="external" href="https://github.com/projecthorus/radiosonde_auto_rx">radiosonde_auto_rx</a> handles weather balloons. ADS-B has its own decoders. GNU Radio becomes useful once there is some value in seeing how the receiver itself is put together.</p>
 
   <h2 id="fm">Start with ordinary FM radio</h2>
 
@@ -283,21 +282,13 @@ export const sstvSlides = [
   </details>
 
   <figure className="figure map-embed">
-    <iframe src="https://tracker.sondehub.org/#!mt=Mapnik&mz=5&qm=12h&mc=-27.47,153.03" title="Live SondeHub radiosonde tracker centred on eastern Australia" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+    <iframe src="https://tracker.sondehub.org/#!mt=Mapnik&mz=5&qm=12h&mc=-27.47,153.03" title="Live SondeHub radiosonde tracker" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
     <figcaption>
-      The live SondeHub tracker, initially centred on eastern Australia. Select a balloon to see its path, altitude, reported frequency and other flight details. If the map does not load here, <a href="https://tracker.sondehub.org/">open SondeHub in a new tab</a>.
+      Select a balloon to see its path, altitude, reported frequency and other flight details. If the map does not load here, <a href="https://tracker.sondehub.org/">open SondeHub in a new tab</a>.
     </figcaption>
   </figure>
 
-  <figure className="figure">
-    <Image src={radiosondeBalloon} alt="A weather balloon carrying a radiosonde instrument package after launch." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
-    <figcaption>
-      A radiosonde beneath a weather balloon. The instrument package transmits measurements and position data during its ascent.
-      <span className="credit">NOAA / U.S. National Weather Service, <a href="https://commons.wikimedia.org/wiki/File:Radiosonde-wx-balloon.jpg">Wikimedia Commons</a>, public domain.</span>
-    </figcaption>
-  </figure>
-
-  <p>The same flight can be looked at several ways. In science, the atmospheric measurements are the interesting part. In Digital Technologies, there is the route from sensor to packet to RF transmission to decoder. In Mathematics, there is altitude, ascent rate, distance and trajectory. It is still the same balloon.</p>
+  <p>A single balloon flight gives you quite a bit to work with. The temperature, humidity and pressure are science; the packets, radio link and decoder are Digital Technologies; and the altitude, ascent rate and track give you useful mathematics. More importantly, it is real data arriving from a real instrument moving through the atmosphere, not a tidy classroom example.</p>
 
   <h2 id="weather">Receive a weather satellite</h2>
 
@@ -307,7 +298,7 @@ export const sstvSlides = [
 
   <p>This is also the job where the dipole kit earns its keep. Put the long elements on the base, extend each to about <strong>53–54 cm</strong>, lay the antenna horizontally and open the elements into a broad <strong>120-degree V</strong>. Put it outside if you can, or at least near a window and away from the computer.</p>
 
-  <p>The next two images show the same kit in a different L-band satellite experiment. They are useful examples of the V arrangement and the resulting spectrum, but they are not the 137 MHz METEOR-M setup described here.</p>
+  <p>The same hardware can also be opened into a V for other satellite bands. This L-band arrangement is not a 137 MHz METEOR-M antenna: its elements are shorter and it uses a reflector.</p>
 
   <figure className="figure">
     <Image src={lBandVeeDipole} alt="An RTL-SDR dipole opened into a V inside a metal reflector for an L-band satellite reception experiment." widths={[480, 720, 1000]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
@@ -320,7 +311,7 @@ export const sstvSlides = [
   <figure className="figure">
     <Image src={dipoleLBandReception} alt="A spectrum and waterfall display showing L-band satellite signals received with the V-dipole and reflector." widths={[480, 720, 1000]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
     <figcaption>
-      L-band satellite signals received with the arrangement shown above, appearing as narrow traces in the spectrum and waterfall display.
+      L-band satellite signals received with the V-dipole and reflector, appearing as narrow traces in the spectrum and waterfall display.
       <span className="credit">Screenshot: <a href="https://www.rtl-sdr.com/using-our-new-dipole-antenna-kit/">RTL-SDR Blog</a>.</span>
     </figcaption>
   </figure>
@@ -351,7 +342,7 @@ export const sstvSlides = [
   <figure className="figure">
     <Image className="contain" src={noaaApt} alt="A weather-satellite image received from NOAA-19 using Automatic Picture Transmission in May 2025." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
     <figcaption>
-      A historical NOAA-19 APT image received directly on 137.100 MHz in May 2025. NOAA APT ended later that year; the project described above now uses digital METEOR-M LRPT instead.
+      A historical NOAA-19 APT image received directly on 137.100 MHz in May 2025. NOAA APT ended later that year; live weather-satellite work now means digital METEOR-M LRPT instead.
       <span className="credit">NOAA, <a href="https://commons.wikimedia.org/wiki/File:NOAA_19_APT_Image_of_Ukraine_(2_May_2025).jpg">Wikimedia Commons</a>, public domain.</span>
     </figcaption>
   </figure>
@@ -377,7 +368,7 @@ export const sstvSlides = [
 
   <p>Before each pass, check <a className="external" href="https://www.ariss.org/current-status-of-iss-stations.html">ARISS Current Status</a>. The amateur equipment aboard the station changes mode and is sometimes switched off for station operations. The <a className="external" href="https://www.ariss.org/contact-the-iss.html">ARISS frequency page</a> lists the standard frequencies.</p>
 
-  <p>At the time this page was written, ARISS listed the Columbus cross-band voice repeater with a <strong>437.800 MHz downlink</strong>, while the Zvezda radio was being tested with APRS packet data on <strong>437.825 MHz</strong>. Standard ISS amateur frequencies also include 145.800 MHz voice downlink, 145.825 MHz VHF packet and 437.550 MHz SSTV, a mode that sends still pictures as audio tones, when that system is in use. Check ARISS before relying on any of those on a particular day.</p>
+  <p>In June 2026, ARISS listed the Columbus cross-band voice repeater with a <strong>437.800 MHz downlink</strong>, while the Zvezda radio was being tested with APRS packet data on <strong>437.825 MHz</strong>. Standard ISS amateur frequencies also include 145.800 MHz voice downlink, 145.825 MHz VHF packet and 437.550 MHz SSTV, a mode that sends still pictures as audio tones, when that system is in use. Check ARISS before relying on any of those on a particular day.</p>
 
   <p>For the 437.8 MHz downlink, use the short elements vertically. The theoretical quarter-wavelength is about <strong>17 cm</strong>, a little longer than the supplied short elements can reach, so use their maximum length or use the long elements collapsed as far as practical. A simple 70 cm whip will also do useful work.</p>
 
@@ -408,7 +399,7 @@ export const sstvSlides = [
 
   <section className="sstv-audio" aria-labelledby="sstv-audio-title">
     <h3 id="sstv-audio-title">What SSTV sounds like</h3>
-    <p>SSTV sends an image as a sequence of audio tones. This 4 minute 40 second recording was received directly from the ISS using my ID-52. It contains a complete SSTV transmission that suitable decoding software can turn back into an image. Turn the volume down before playing it. The tones are not especially musical.</p>
+    <p>SSTV sends an image as a sequence of audio tones. This 2 minute 20 second recording was received directly from the ISS using my ID-52. It contains a complete SSTV transmission that suitable decoding software can turn back into an image. Turn the volume down before playing it. The tones are not especially musical.</p>
     <audio controls preload="metadata">
       <source src="/audio/rtl-sdr/id-52-sstv-image.wav" type="audio/wav" />
       Your browser does not support WAV audio. <a href="/audio/rtl-sdr/id-52-sstv-image.wav">Download the recording</a> instead.
@@ -428,17 +419,6 @@ export const sstvSlides = [
       <a href={arissAward.src} target="_blank" rel="noopener">Open the certificate</a>
     </div>
   </aside>
-
-  <figure className="figure">
-    <video controls preload="metadata">
-      <source src="https://commons.wikimedia.org/wiki/Special:Redirect/file/R%C3%A9ception_radio_et_r%C3%A9ception_satellite_de_l%27ISS_avec_cl%C3%A9_USB_RTL-SDR.webm" type="video/webm" />
-      Your browser does not support WebM video. <a href="https://commons.wikimedia.org/wiki/File:R%C3%A9ception_radio_et_r%C3%A9ception_satellite_de_l%27ISS_avec_cl%C3%A9_USB_RTL-SDR.webm">Open the video on Wikimedia Commons</a>.
-    </video>
-    <figcaption>
-      Receiving ISS radio and satellite traffic with an RTL-SDR. The video shows the receiver behaviour through a real pass rather than only the final decoded result.
-      <span className="credit">Video: ElectrolabFr, <a href="https://commons.wikimedia.org/wiki/File:R%C3%A9ception_radio_et_r%C3%A9ception_satellite_de_l%27ISS_avec_cl%C3%A9_USB_RTL-SDR.webm">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</span>
-    </figcaption>
-  </figure>
 
   <h2 id="doppler">Pay attention to Doppler</h2>
 
@@ -539,7 +519,7 @@ export const sstvSlides = [
   <figure className="figure">
     <Image src={gnuRadioCompanion} alt="GNU Radio Companion showing a graphical signal-processing flowgraph." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
     <figcaption>
-      GNU Radio Companion turns the receiver into a visible processing chain. This older screenshot is not the FM flowgraph above, but it shows the basic block-and-connection model.
+      GNU Radio Companion turns the receiver into a visible chain of processing blocks and connections.
       <span className="credit">Screenshot: Bhilburn, <a href="https://commons.wikimedia.org/wiki/File:GNU_Radio_Companion_Screenshot.png">Wikimedia Commons</a>, public domain.</span>
     </figcaption>
   </figure>
@@ -558,7 +538,7 @@ export const sstvSlides = [
 
   <p>Then you get to transmit. You can call through a repeater you have been listening to, make simplex contacts, try digital modes, build antennas for both transmit and receive, and eventually communicate directly over the same amateur satellites you started out tracking with the RTL-SDR. The dongle does not become redundant either; it remains a useful second receiver, spectrum display, satellite receiver and general-purpose bit of test gear in an amateur station.</p>
 
-  <p className="signoff">This is VK4MPB saying 73<sup><a href="#note-73" aria-label="Footnote: meaning of 73">&#42;</a></sup> and going clear on the Chips’nCode repeater.</p>
-  <p id="note-73" className="signoff-note"><span aria-hidden="true">&#42;</span> 73 is amateur-radio shorthand for “best regards”.</p>
+  <p className="signoff">This is VK4MPB saying 73<sup>&#42;</sup> and going clear on the Chips’nCode repeater.</p>
+  <p className="signoff-note"><span aria-hidden="true">&#42;</span> 73 is amateur-radio shorthand for “best regards”.</p>
 
 </div>
