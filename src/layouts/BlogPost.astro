@@ -24,12 +24,20 @@ const {
   image,
   tags = [],
   type,
+  author,
+  toc = [],
   pullQuotes = [],
   headings = [],
 } = Astro.props;
 
-const sectionHeadings = headings.filter((heading) => heading.depth === 2);
+const sectionHeadings = toc.length
+  ? toc.map((heading) => ({ ...heading, depth: 2 }))
+  : headings.filter((heading) => heading.depth === 2);
 const articleKind = type ?? (tags.length ? 'Field note' : 'Essay');
+const articleKindClass = articleKind
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/(^-|-$)/g, '');
 const dateFormatter = new Intl.DateTimeFormat('en-AU', {
   day: '2-digit',
   month: 'short',
@@ -38,7 +46,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-AU', {
 const meta = [
   ...(pubDate ? [{ label: 'Published', value: dateFormatter.format(pubDate) }] : []),
   ...(updatedDate ? [{ label: 'Updated', value: dateFormatter.format(updatedDate) }] : []),
-  { label: 'Format', value: articleKind },
+  ...(author ? [{ label: 'By', value: author }] : []),
+  ...(!author ? [{ label: 'Format', value: articleKind }] : []),
 ];
 ---
 
@@ -51,7 +60,7 @@ const meta = [
     <Header />
 
     <main class="article-main">
-      <article class:list={['article-shell', `article-shell--${articleKind.toLowerCase().replaceAll(' ', '-')}`]}>
+      <article class:list={['article-shell', `article-shell--${articleKindClass}`]}>
         <a href="/notebook" class="article-back">← Notebook</a>
 
         <PageHeader
@@ -237,7 +246,11 @@ const meta = [
   .article-rail {
     position: sticky;
     top: 112px;
+    max-height: calc(100vh - 136px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding-top: 0.3rem;
+    scrollbar-width: thin;
   }
 
   .article-rail ol {
@@ -451,7 +464,11 @@ const meta = [
       gap: 2rem;
     }
 
-    .article-rail { position: static; }
+    .article-rail {
+      position: static;
+      max-height: none;
+      overflow-y: visible;
+    }
     .article-rail nav { overflow-x: auto; }
 
     .article-rail ol {

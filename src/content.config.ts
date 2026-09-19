@@ -17,6 +17,11 @@ const blog = defineCollection({
       draft: z.boolean().default(false),
       tags: z.array(z.string()).default([]),
       type: z.string().optional(),
+      author: z.string().optional(),
+      toc: z.array(z.object({
+        slug: z.string(),
+        text: z.string(),
+      })).default([]),
       pullQuotes: z.array(z.string()).default([]),
       featured: z.boolean().default(false),
       image: z.string().optional(),

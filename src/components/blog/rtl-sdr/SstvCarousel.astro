@@ -1,0 +1,258 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Slide {
+  src: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  slides: Slide[];
+}
+
+const { slides } = Astro.props;
+---
+
+<figure class="sstv-carousel" data-sstv-carousel aria-labelledby="sstv-carousel-caption">
+  <div
+    class="sstv-carousel__viewport"
+    data-sstv-viewport
+    id="sstv-slide-track"
+    tabindex="0"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="SSTV images received from the International Space Station"
+  >
+    <ol class="sstv-carousel__track">
+      {slides.map((slide, index) => (
+        <li
+          class="sstv-carousel__slide"
+          data-sstv-slide
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${index + 1} of ${slides.length}`}
+        >
+          <a href={slide.src.src} target="_blank" rel="noopener" aria-label={`Open image ${index + 1} of ${slides.length} at full size`}>
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              widths={[480, 640]}
+              sizes="(max-width: 900px) 100vw, 640px"
+              loading="lazy"
+              draggable={false}
+            />
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="sstv-carousel__controls" aria-label="SSTV gallery controls">
+    <button type="button" data-sstv-previous aria-controls="sstv-slide-track" aria-label="Previous SSTV image">← Previous</button>
+    <span class="sstv-carousel__count" data-sstv-count aria-live="polite">1 / {slides.length}</span>
+    <button type="button" data-sstv-next aria-controls="sstv-slide-track" aria-label="Next SSTV image">Next →</button>
+  </div>
+
+  <figcaption id="sstv-carousel-caption">
+    Nine commemorative images received and decoded by VK4MPB during the November 2024 ARISS SSTV event. Open any image to inspect the full-resolution reception.
+  </figcaption>
+</figure>
+
+<script>
+  const initialiseSstvCarousels = () => {
+    document.querySelectorAll<HTMLElement>('[data-sstv-carousel]').forEach((carousel) => {
+      if (carousel.dataset.ready === 'true') return;
+
+      const viewport = carousel.querySelector<HTMLElement>('[data-sstv-viewport]');
+      const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-sstv-slide]'));
+      const previous = carousel.querySelector<HTMLButtonElement>('[data-sstv-previous]');
+      const next = carousel.querySelector<HTMLButtonElement>('[data-sstv-next]');
+      const count = carousel.querySelector<HTMLElement>('[data-sstv-count]');
+      if (!viewport || !previous || !next || !count || slides.length === 0) return;
+
+      carousel.dataset.ready = 'true';
+      let activeIndex = 0;
+      let scrollFrame = 0;
+
+      const update = (index: number) => {
+        activeIndex = Math.max(0, Math.min(index, slides.length - 1));
+        count.textContent = `${activeIndex + 1} / ${slides.length}`;
+        previous.disabled = activeIndex === 0;
+        next.disabled = activeIndex === slides.length - 1;
+      };
+
+      const goTo = (index: number, behaviour: ScrollBehavior = 'smooth') => {
+        const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
+        viewport.scrollTo({ left: target.offsetLeft, behavior: behaviour });
+      };
+
+      previous.addEventListener('click', () => goTo(activeIndex - 1));
+      next.addEventListener('click', () => goTo(activeIndex + 1));
+
+      viewport.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          goTo(activeIndex - 1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          goTo(activeIndex + 1);
+        }
+        if (event.key === 'Home') {
+          event.preventDefault();
+          goTo(0);
+        }
+        if (event.key === 'End') {
+          event.preventDefault();
+          goTo(slides.length - 1);
+        }
+      });
+
+      viewport.addEventListener('scroll', () => {
+        cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(() => {
+          const nearest = slides.reduce((best, slide, index) => (
+            Math.abs(slide.offsetLeft - viewport.scrollLeft) < Math.abs(slides[best].offsetLeft - viewport.scrollLeft)
+              ? index
+              : best
+          ), 0);
+          update(nearest);
+        });
+      }, { passive: true });
+
+      window.addEventListener('resize', () => goTo(activeIndex, 'auto'), { passive: true });
+      update(0);
+    });
+  };
+
+  initialiseSstvCarousels();
+  document.addEventListener('astro:page-load', initialiseSstvCarousels);
+</script>
+
+<style>
+  .sstv-carousel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .sstv-carousel__viewport {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+    background: #050505;
+    border: 1px solid var(--border);
+    touch-action: pan-x pan-y;
+  }
+
+  .sstv-carousel__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sstv-carousel__viewport:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+  }
+
+  .sstv-carousel__track {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sstv-carousel__track > .sstv-carousel__slide {
+    display: grid;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    aspect-ratio: 640 / 496;
+    place-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    background: #050505;
+  }
+
+  .sstv-carousel__slide a {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+  }
+
+  .sstv-carousel__slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .sstv-carousel__controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.65rem;
+  }
+
+  .sstv-carousel__controls button {
+    width: fit-content;
+    min-height: 40px;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+
+  .sstv-carousel__controls button:last-child {
+    justify-self: end;
+  }
+
+  .sstv-carousel__controls button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .sstv-carousel__controls button:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+
+  .sstv-carousel__count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sstv-carousel figcaption {
+    display: block;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    margin-top: 0.7rem;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--tag-ink);
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sstv-carousel__viewport {
+      scroll-behavior: auto;
+    }
+  }
+</style>
