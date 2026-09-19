@@ -68,7 +68,7 @@ export const sstvSlides = [
 
   <p>A radiosonde is a good example of why I like the overlap. It is simultaneously a set of environmental sensors, a radio transmitter, a stream of digital data and a moving point in three-dimensional space. A weather satellite brings in orbital motion, waves, Doppler shift, antennas, digital signals and image data. Even an ordinary FM station gives you a useful way to make frequency, bandwidth, signal strength and noise visible.</p>
 
-  <p>Over the past year I have been building more of that thinking into the <strong>Year 9 Digital Technologies class I teach</strong>. We have worked with Python, networks, packets, addresses, DNS, routers, latency, bandwidth and the physical systems underneath the internet. This is not much of a curriculum detour. The <a className="external" href="https://www.australiancurriculum.edu.au/curriculum-information/understand-this-learning-area/technologies">Australian Curriculum: Digital Technologies</a> explicitly covers digital systems and networks, including how data is transmitted, managed and secured. The wireless part is often the bit students are asked to accept without ever seeing it.</p>
+  <p>Over the past year I have been building more of that thinking into the Year 9 Digital Technologies class I teach. We have worked with Python, networks, packets, addresses, DNS, routers, latency, bandwidth and the physical systems underneath the internet. This is not much of a curriculum detour. The <a className="external" href="https://www.australiancurriculum.edu.au/curriculum-information/understand-this-learning-area/technologies">Australian Curriculum: Digital Technologies</a> explicitly covers digital systems and networks, including how data is transmitted, managed and secured. The wireless part is often the bit students are asked to accept without ever seeing it.</p>
 
   <p>An RTL-SDR gives us a way to look at that radio layer directly. It is a small USB software-defined receiver. Add an antenna and a computer and you can examine a large part of the radio spectrum around you. The <strong>spectrum</strong> is a live graph of signal strength across a range of frequencies. The <strong>waterfall</strong> is that same graph recorded down the screen over time. Signals become visible shapes: you can see how wide they are, watch them come and go, compare their strength, record them and, when they contain digital information, hand them to software that can decode what is being transmitted.</p>
 
@@ -90,7 +90,7 @@ export const sstvSlides = [
 
   <div className="note"><p>I have no interest in making this a shopping guide. The important bits are an RTL2832U-based receiver, a stable internal frequency reference, an SMA connector and an antenna you can put somewhere sensible. If you already own a working RTL-SDR, use it.</p></div>
 
-  <h2 id="antenna">The antenna kit is worth learning properly</h2>
+  <h2 id="antenna">Getting the antenna right</h2>
 
   <p>The older RTL-SDR kits often came with a single magnetic-base telescopic whip. A whip still works, especially for strong local signals, and it is a perfectly good way to start. The current RTL-SDR Blog kit is more useful because the same hardware can also be assembled as a dipole.</p>
 
@@ -140,15 +140,20 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <h2 id="software">Software without assuming everybody runs Windows</h2>
+  <h2 id="software">Pick your receiver software</h2>
 
   <p>The job is the same on every desktop platform: talk to the RTL-SDR, show the spectrum and waterfall, choose the reception mode, set the width of the slice you want to receive, and adjust the receiver's sensitivity. Radio software calls those last three controls the <strong>mode</strong>, <strong>filter width</strong> and <strong>gain</strong>.</p>
 
-  <div className="link-grid">
-    <div className="link-card"><span className="os">Windows · macOS · Linux · Android</span><strong><a className="external" href="https://www.sdrpp.org/">SDR++</a></strong><p>A cross-platform receiver with a consistent set of controls on each desktop operating system.</p></div>
-    <div className="link-card"><span className="os">macOS · Linux</span><strong><a className="external" href="https://gqrx.dk/">Gqrx</a></strong><p>A mature receiver with spectrum, waterfall, recording and good RTL-SDR support.</p></div>
-    <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://www.gnuradio.org/">GNU Radio</a></strong><p>Useful once you want to construct the signal-processing chain rather than only operate a receiver.</p></div>
-  </div>
+  <details className="resource-drawer">
+    <summary>Receiver software by platform</summary>
+    <div className="resource-drawer__body">
+      <div className="link-grid">
+        <div className="link-card"><span className="os">Windows · macOS · Linux · Android</span><strong><a className="external" href="https://www.sdrpp.org/">SDR++</a></strong><p>A cross-platform receiver with a consistent set of controls on each desktop operating system.</p></div>
+        <div className="link-card"><span className="os">macOS · Linux</span><strong><a className="external" href="https://gqrx.dk/">Gqrx</a></strong><p>A mature receiver with spectrum, waterfall, recording and good RTL-SDR support.</p></div>
+        <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://www.gnuradio.org/">GNU Radio</a></strong><p>Useful once you want to construct the signal-processing chain rather than only operate a receiver.</p></div>
+      </div>
+    </div>
+  </details>
 
   <p><strong>SDR++</strong> is available across the main desktop platforms. Gqrx and other receivers use the same basic settings: frequency, mode, filter width and gain.</p>
 
@@ -281,12 +286,17 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <figure className="figure map-embed">
-    <iframe src="https://tracker.sondehub.org/#!mt=Mapnik&mz=5&qm=12h&mc=-27.47,153.03" title="Live SondeHub radiosonde tracker" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
-    <figcaption>
-      Select a balloon to see its path, altitude, reported frequency and other flight details. If the map does not load here, <a href="https://tracker.sondehub.org/">open SondeHub in a new tab</a>.
-    </figcaption>
-  </figure>
+  <details className="resource-drawer">
+    <summary>Open the live SondeHub map</summary>
+    <div className="resource-drawer__body">
+      <figure className="figure map-embed">
+        <iframe src="https://tracker.sondehub.org/#!mt=Mapnik&mz=5&qm=12h&mc=-27.47,153.03" title="Live SondeHub radiosonde tracker" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+        <figcaption>
+          Select a balloon to see its path, altitude, reported frequency and other flight details. If the map does not load here, <a href="https://tracker.sondehub.org/">open SondeHub in a new tab</a>.
+        </figcaption>
+      </figure>
+    </div>
+  </details>
 
   <p>A single balloon flight gives you quite a bit to work with. The temperature, humidity and pressure are science; the packets, radio link and decoder are Digital Technologies; and the altitude, ascent rate and track give you useful mathematics. More importantly, it is real data arriving from a real instrument moving through the atmosphere, not a tidy classroom example.</p>
 
@@ -357,14 +367,19 @@ export const sstvSlides = [
 
   <p>Passes tend to arrive in groups as the orbital ground track moves relative to your location. You may have several useful opportunities over a day or two, then a run of less convenient ones. There is no reason to calculate this by hand.</p>
 
-  <div className="link-grid">
-    <div className="link-card"><span className="os">iPhone · iPad</span><strong><a className="external" href="https://apps.apple.com/au/app/iss-detector/id1198597805">ISS Detector</a></strong><p>This is what I use on iOS. It gives pass times, direction and alerts; the extensions add radio and weather satellites.</p></div>
-    <div className="link-card"><span className="os">Android</span><strong><a className="external" href="https://play.google.com/store/apps/details?id=com.runar.issdetector">ISS Detector</a></strong><p>The Android version provides the same basic pass-prediction workflow.</p></div>
-    <div className="link-card"><span className="os">Android</span><strong><a className="external" href="https://github.com/rt-bishop/Look4Sat">Look4Sat</a></strong><p>Open source and more explicitly aimed at amateur-radio satellite tracking.</p></div>
-    <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://github.com/csete/gpredict">Gpredict</a></strong><p>A full desktop tracker for satellites, passes, azimuth and elevation.</p></div>
-    <div className="link-card"><span className="os">Any browser</span><strong><a className="external" href="https://www.amsat.org/track/?satellite=ISS">AMSAT pass predictor</a></strong><p>Enter your position and get upcoming ISS passes without installing anything.</p></div>
-    <div className="link-card"><span className="os">Visual sighting</span><strong><a className="external" href="https://spotthestation.nasa.gov/">NASA Spot the Station</a></strong><p>Useful if you also want to see the ISS, but it only highlights passes that are favourable for visual observation.</p></div>
-  </div>
+  <details className="resource-drawer">
+    <summary>Pass-prediction tools</summary>
+    <div className="resource-drawer__body">
+      <div className="link-grid">
+        <div className="link-card"><span className="os">iPhone · iPad</span><strong><a className="external" href="https://apps.apple.com/au/app/iss-detector/id1198597805">ISS Detector</a></strong><p>This is what I use on iOS. It gives pass times, direction and alerts; the extensions add radio and weather satellites.</p></div>
+        <div className="link-card"><span className="os">Android</span><strong><a className="external" href="https://play.google.com/store/apps/details?id=com.runar.issdetector">ISS Detector</a></strong><p>The Android version provides the same basic pass-prediction workflow.</p></div>
+        <div className="link-card"><span className="os">Android</span><strong><a className="external" href="https://github.com/rt-bishop/Look4Sat">Look4Sat</a></strong><p>Open source and more explicitly aimed at amateur-radio satellite tracking.</p></div>
+        <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://github.com/csete/gpredict">Gpredict</a></strong><p>A full desktop tracker for satellites, passes, azimuth and elevation.</p></div>
+        <div className="link-card"><span className="os">Any browser</span><strong><a className="external" href="https://www.amsat.org/track/?satellite=ISS">AMSAT pass predictor</a></strong><p>Enter your position and get upcoming ISS passes without installing anything.</p></div>
+        <div className="link-card"><span className="os">Visual sighting</span><strong><a className="external" href="https://spotthestation.nasa.gov/">NASA Spot the Station</a></strong><p>Useful if you also want to see the ISS, but it only highlights passes that are favourable for visual observation.</p></div>
+      </div>
+    </div>
+  </details>
 
   <p>Before each pass, check <a className="external" href="https://www.ariss.org/current-status-of-iss-stations.html">ARISS Current Status</a>. The amateur equipment aboard the station changes mode and is sometimes switched off for station operations. The <a className="external" href="https://www.ariss.org/contact-the-iss.html">ARISS frequency page</a> lists the standard frequencies.</p>
 
