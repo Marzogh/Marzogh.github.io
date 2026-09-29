@@ -1,0 +1,167 @@
+---
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  lede?: string;
+}
+
+const {
+  eyebrow = 'Nabhastala / 2026',
+  title = 'Choose an observing location',
+  lede,
+} = Astro.props;
+
+const locations = [
+  {
+    name: 'South East Queensland, Australia',
+    coordinates: '27.5° S · 153.0° E',
+    timezone: 'Australia/Brisbane',
+    href: '/nabhastala/sites/se-qld/2026/',
+  },
+  {
+    name: 'Southern Tasmania, Australia',
+    coordinates: '42.75° S · 146.98° E',
+    timezone: 'Australia/Hobart',
+    href: '/nabhastala/sites/southern-tasmania/2026/',
+  },
+  {
+    name: 'Malabar Coast, India',
+    coordinates: '11.26° N · 75.78° E',
+    timezone: 'Asia/Kolkata',
+    href: '/nabhastala/sites/malabar-coast/2026/',
+  },
+];
+---
+
+<section class="nabhastala-picker" aria-labelledby="nabhastala-picker-title">
+  <header>
+    <p>{eyebrow}</p>
+    <h2 id="nabhastala-picker-title">{title}</h2>
+    {lede ? <div class="nabhastala-picker__lede">{lede}</div> : null}
+  </header>
+
+  <div class="nabhastala-picker__locations">
+    {locations.map((location) => (
+      <a href={location.href}>
+        <span class="nabhastala-picker__place">{location.name}</span>
+        <span class="nabhastala-picker__coordinates">{location.coordinates}</span>
+        <span class="nabhastala-picker__timezone">{location.timezone}</span>
+        <span class="nabhastala-picker__action">Open 2026 field almanac →</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .nabhastala-picker {
+    margin-block: clamp(2rem, 5vw, 4rem);
+    border-block: 1px solid var(--text);
+  }
+
+  .nabhastala-picker > header {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.35fr) minmax(0, 0.65fr);
+    gap: 0.7rem clamp(1rem, 4vw, 3rem);
+    align-items: end;
+    padding-block: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .nabhastala-picker > header > p {
+    margin: 0;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nabhastala-picker h2 {
+    margin: 0;
+    font-size: clamp(1.55rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+  }
+
+  .nabhastala-picker__lede {
+    grid-column: 2;
+    max-width: 68ch;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  .nabhastala-picker__locations {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--border);
+  }
+
+  .nabhastala-picker__locations a {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 12rem;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border-left: 1px solid var(--border);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 140ms ease, color 140ms ease;
+  }
+
+  .nabhastala-picker__locations a:first-child { border-left: 0; }
+
+  .nabhastala-picker__locations a:hover {
+    background: color-mix(in srgb, var(--tag-ink) 8%, transparent);
+  }
+
+  .nabhastala-picker__locations a:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  .nabhastala-picker__place {
+    max-width: 22ch;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .nabhastala-picker__coordinates,
+  .nabhastala-picker__timezone,
+  .nabhastala-picker__action {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+  }
+
+  .nabhastala-picker__coordinates {
+    margin-top: 0.9rem;
+    color: var(--text-2);
+  }
+
+  .nabhastala-picker__timezone {
+    margin-top: 0.25rem;
+    color: var(--muted);
+  }
+
+  .nabhastala-picker__action {
+    margin-top: auto;
+    padding-top: 1.4rem;
+    color: var(--tag-ink);
+    font-weight: 700;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 760px) {
+    .nabhastala-picker > header { grid-template-columns: 1fr; }
+    .nabhastala-picker__lede { grid-column: 1; }
+    .nabhastala-picker__locations { grid-template-columns: 1fr; }
+    .nabhastala-picker__locations a {
+      min-height: 0;
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+    .nabhastala-picker__locations a:first-child { border-top: 0; }
+  }
+</style>

@@ -5,6 +5,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import IndexHeader from '../../components/IndexHeader.astro';
+import NabhastalaLocationPicker from '../../components/NabhastalaLocationPicker.astro';
 
 const sessions = (await getCollection('astrophotography', ({ data }) => !data.draft)).sort(
   (a, b) => (b.data.sessionDate?.valueOf() ?? 0) - (a.data.sessionDate?.valueOf() ?? 0)
@@ -47,6 +48,12 @@ function formatSessionDate(d: any) {
           { label: 'targets_logged', value: astrophotographyTargets.length },
           { label: 'featured_sessions', value: sessions.filter((session) => session.data.featured).length },
         ]}
+      />
+
+      <NabhastalaLocationPicker
+        eyebrow="Planning / Nabhastala"
+        title="Plan before you shoot"
+        lede="Planning a session? Nabhastala turns the year ahead into practical observing windows for three locations, including Galactic Centre visibility, planets, eclipses, meteor showers and monthly field guides."
       />
 
       {sessions.length === 0 ? (
