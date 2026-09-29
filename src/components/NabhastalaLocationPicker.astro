@@ -55,7 +55,6 @@ const locations = [
 <style>
   .nabhastala-picker {
     margin-block: clamp(2rem, 5vw, 4rem);
-    border-block: 1px solid var(--text);
   }
 
   .nabhastala-picker > header {
@@ -77,6 +76,8 @@ const locations = [
 
   .nabhastala-picker h2 {
     margin: 0;
+    padding-top: 0;
+    border-top: 0;
     font-size: clamp(1.55rem, 3vw, 2.5rem);
     line-height: 1.05;
     letter-spacing: -0.035em;
@@ -92,7 +93,7 @@ const locations = [
   .nabhastala-picker__locations {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid var(--border);
+    border-block: 1px solid var(--border);
   }
 
   .nabhastala-picker__locations a {

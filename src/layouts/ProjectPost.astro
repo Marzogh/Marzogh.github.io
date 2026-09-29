@@ -27,6 +27,8 @@ const {
   demo,
   demoLabel,
   image,
+  imageCredit,
+  titleLockup,
   imagePresentation = 'default',
   headerStyle = 'plain',
   headings = [],
@@ -65,7 +67,51 @@ const meta = [
                 <span>Projects / {projectKind}</span>
                 {pubDate ? <span>Published {dateFormatter.format(pubDate)}</span> : null}
               </div>
-              <h1 id="project-title">{title}</h1>
+              {titleLockup ? (
+                <div class="project-title-lockup">
+                  <div class="project-title-lockup__primary">
+                    <h1 id="project-title" lang={titleLockup.primaryLanguage} aria-label={title}>
+                      {titleLockup.primary}
+                      {titleLockup.footnote ? (
+                        <sup class="project-title-lockup__note-ref">
+                          <a href="#project-title-note" aria-label="See the meaning of Nabhastala">*</a>
+                        </sup>
+                      ) : null}
+                    </h1>
+                    {titleLockup.primarySubtitle ? (
+                      <span>
+                        {titleLockup.primarySubtitle}
+                        {titleLockup.mottoFootnote ? (
+                          <sup class="project-title-lockup__note-ref">
+                            <a href="#project-motto-note" aria-label="See the translation of the Nabhastala motto">†</a>
+                          </sup>
+                        ) : null}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span class="project-title-lockup__rule" aria-hidden="true"></span>
+                  <div class="project-title-lockup__secondary">
+                    <strong>
+                      {titleLockup.secondary ?? title}
+                      {titleLockup.footnote ? (
+                        <sup class="project-title-lockup__note-ref">
+                          <a href="#project-title-note" aria-label="See the meaning of Nabhastala">*</a>
+                        </sup>
+                      ) : null}
+                    </strong>
+                    {titleLockup.secondarySubtitle ? (
+                      <span>
+                        {titleLockup.secondarySubtitle}
+                        {titleLockup.mottoFootnote ? (
+                          <sup class="project-title-lockup__note-ref">
+                            <a href="#project-motto-note" aria-label="See the translation of the Nabhastala motto">†</a>
+                          </sup>
+                        ) : null}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              ) : <h1 id="project-title">{title}</h1>}
               <p>{description}</p>
               {tags.length ? (
                 <nav class="project-taxonomy" aria-label="Project classification">
@@ -80,8 +126,12 @@ const meta = [
               ) : null}
             </div>
             {image ? (
-              <figure class:list={[imagePresentation === 'portrait' && 'project-panel-header__media--portrait']}>
+              <figure class:list={[
+                imagePresentation === 'portrait' && 'project-panel-header__media--portrait',
+                imageCredit && 'project-panel-header__media--credited',
+              ]}>
                 <img src={image} alt="" loading="eager" decoding="async" />
+                {imageCredit ? <figcaption>{imageCredit}</figcaption> : null}
               </figure>
             ) : null}
           </header>
@@ -114,6 +164,7 @@ const meta = [
             {image ? (
               <figure class="project-hero">
                 <img src={image} alt="" loading="eager" decoding="async" />
+                {imageCredit ? <figcaption>{imageCredit}</figcaption> : null}
               </figure>
             ) : null}
           </>
@@ -143,8 +194,16 @@ const meta = [
           <div class="project-prose prose">
             <slot />
             <footer class="project-end">
-              <span aria-hidden="true">■</span>
-              <a href="/projects">Return to Projects</a>
+              {titleLockup?.footnote ? (
+                <p id="project-title-note" class="project-end__note"><span aria-hidden="true">*</span>{titleLockup.footnote}</p>
+              ) : null}
+              {titleLockup?.mottoFootnote ? (
+                <p id="project-motto-note" class="project-end__note"><span aria-hidden="true">†</span>{titleLockup.mottoFootnote}</p>
+              ) : null}
+              <div class="project-end__return">
+                <span aria-hidden="true">■</span>
+                <a href="/projects">Return to Projects</a>
+              </div>
             </footer>
           </div>
         </div>
@@ -218,6 +277,56 @@ const meta = [
     letter-spacing: -0.045em;
   }
 
+  .project-title-lockup {
+    display: grid;
+    grid-template-columns: auto 1px minmax(0, auto);
+    gap: clamp(0.8rem, 2vw, 1.25rem);
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .project-title-lockup__primary,
+  .project-title-lockup__secondary {
+    display: grid;
+    gap: 0.18rem;
+  }
+
+  .project-title-lockup__primary h1 {
+    font-size: clamp(2.6rem, 5vw, 4.8rem);
+    letter-spacing: -0.035em;
+  }
+
+  .project-title-lockup__primary span,
+  .project-title-lockup__secondary span {
+    color: var(--muted);
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .project-title-lockup__secondary strong {
+    color: var(--text);
+    font-size: clamp(1rem, 1.6vw, 1.35rem);
+    line-height: 1.1;
+  }
+
+  .project-title-lockup__note-ref {
+    margin-left: 0.12em;
+    font-size: 0.8em;
+    line-height: 0;
+  }
+
+  .project-title-lockup__note-ref a {
+    color: var(--tag-ink);
+    text-decoration: none;
+  }
+
+  .project-title-lockup__rule {
+    align-self: stretch;
+    min-height: 3.5rem;
+    background: var(--border);
+  }
+
   .project-panel-header__copy > p {
     max-width: 55ch;
     margin: 1rem 0 0;
@@ -283,6 +392,29 @@ const meta = [
     min-width: 0;
     min-height: 0;
     object-fit: contain;
+  }
+
+  .project-panel-header > .project-panel-header__media--credited {
+    display: block;
+    aspect-ratio: auto;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .project-panel-header > .project-panel-header__media--credited img {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 86%, var(--surface-raised) 14%);
+  }
+
+  .project-panel-header figcaption,
+  .project-hero figcaption {
+    margin-top: 0.45rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.45;
   }
 
   .project-panel-header > .project-panel-header__media--portrait {
@@ -622,21 +754,37 @@ const meta = [
   .project-prose :global(h2:first-child) { margin-top: 0; }
 
   .project-end {
-    display: flex;
-    gap: 0.7rem;
-    align-items: center;
     margin-top: clamp(3rem, 7vw, 6rem);
     padding-top: 1rem;
     border-top: 1px solid var(--text);
+  }
+
+  .project-end__note {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.5;
+  }
+
+  .project-end__note span {
+    margin-right: 0.35rem;
+    color: var(--tag-ink);
+  }
+
+  .project-end__return {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
-  .project-end span { color: var(--tag-ink); font-size: 0.55rem; }
-  .project-end a { color: var(--text); text-decoration: none; }
-  .project-end a:hover { color: var(--accent); }
+  .project-end__return span { color: var(--tag-ink); font-size: 0.55rem; }
+  .project-end__return a { color: var(--text); text-decoration: none; }
+  .project-end__return a:hover { color: var(--accent); }
 
   .project-prose :global(.spec-grid),
   .project-prose :global(.cap-grid),
@@ -876,6 +1024,8 @@ const meta = [
     .project-panel-header { grid-template-columns: 1fr; padding: 1rem; }
     .project-panel-header > figure { width: min(100%, 340px); justify-self: center; }
     .project-panel-header h1 { font-size: clamp(2.3rem, 12vw, 3.7rem); }
+    .project-title-lockup { grid-template-columns: 1fr; gap: 0.55rem; }
+    .project-title-lockup__rule { width: 4rem; min-height: 1px; }
     .project-prose :global(.project-intro-panel figure) { width: min(100%, 220px); justify-self: center; margin-bottom: -1rem; }
     .project-prose :global(.interface-gallery figure:last-child) { grid-column: auto; }
     .project-prose :global(.workflow-rail div),
