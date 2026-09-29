@@ -17,18 +17,24 @@ const locations = [
     coordinates: '27.5° S · 153.0° E',
     timezone: 'Australia/Brisbane',
     href: '/nabhastala/sites/se-qld/2026/',
+    heroLight: '/images/projects/nabhastala/locations/nabhastala-se-qld-light-mode-hero.webp',
+    heroDark: '/images/projects/nabhastala/locations/nabhastala-se-qld-dark-mode-hero.webp',
   },
   {
     name: 'Southern Tasmania, Australia',
     coordinates: '42.75° S · 146.98° E',
     timezone: 'Australia/Hobart',
     href: '/nabhastala/sites/southern-tasmania/2026/',
+    heroLight: '/images/projects/nabhastala/locations/nabhastala-southern-tasmania-light-mode-hero.webp',
+    heroDark: '/images/projects/nabhastala/locations/nabhastala-southern-tasmania-dark-mode-hero.webp',
   },
   {
     name: 'Malabar Coast, India',
     coordinates: '11.26° N · 75.78° E',
     timezone: 'Asia/Kolkata',
     href: '/nabhastala/sites/malabar-coast/2026/',
+    heroLight: '/images/projects/nabhastala/locations/nabhastala-malabar-coast-light-mode-hero.webp',
+    heroDark: '/images/projects/nabhastala/locations/nabhastala-malabar-coast-dark-mode-hero.webp',
   },
 ];
 ---
@@ -43,10 +49,17 @@ const locations = [
   <div class="nabhastala-picker__locations">
     {locations.map((location) => (
       <a href={location.href}>
-        <span class="nabhastala-picker__place">{location.name}</span>
-        <span class="nabhastala-picker__coordinates">{location.coordinates}</span>
-        <span class="nabhastala-picker__timezone">{location.timezone}</span>
-        <span class="nabhastala-picker__action">Open 2026 field almanac →</span>
+        <span
+          class="nabhastala-picker__hero"
+          aria-hidden="true"
+          style={`--hero-light: url("${location.heroLight}"); --hero-dark: url("${location.heroDark}");`}
+        ></span>
+        <span class="nabhastala-picker__details">
+          <span class="nabhastala-picker__place">{location.name}</span>
+          <span class="nabhastala-picker__coordinates">{location.coordinates}</span>
+          <span class="nabhastala-picker__timezone">{location.timezone}</span>
+          <span class="nabhastala-picker__action">Open 2026 field almanac →</span>
+        </span>
       </a>
     ))}
   </div>
@@ -100,8 +113,7 @@ const locations = [
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 12rem;
-    padding: clamp(1rem, 2.5vw, 1.5rem);
+    min-height: 18rem;
     border-left: 1px solid var(--border);
     color: inherit;
     text-decoration: none;
@@ -119,6 +131,39 @@ const locations = [
     z-index: 1;
     outline: 2px solid var(--accent);
     outline-offset: -2px;
+  }
+
+  .nabhastala-picker__hero {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 1;
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--border);
+    background-image: var(--hero-light);
+    background-position: center;
+    background-size: cover;
+  }
+
+  :global(html[data-theme='dark']) .nabhastala-picker__hero {
+    background-image: var(--hero-dark);
+  }
+
+  :global(html[data-theme='light']) .nabhastala-picker__hero {
+    background-image: var(--hero-light);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(html:not([data-theme='light'])) .nabhastala-picker__hero {
+      background-image: var(--hero-dark);
+    }
+  }
+
+  .nabhastala-picker__details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
   }
 
   .nabhastala-picker__place {
