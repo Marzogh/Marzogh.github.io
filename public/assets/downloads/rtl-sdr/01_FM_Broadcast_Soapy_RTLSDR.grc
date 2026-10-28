@@ -1,0 +1,246 @@
+options:
+  parameters:
+    author: Prajwal Bhattaram
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: Soapy RTL-SDR normal tuner. 105.3 MHz example; change centre frequency for
+      other areas. FFT filter 2400000 -> 240000, WBFM 240000 -> 48000.
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: chipsncode_fm_receiver
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ChipsnCode - FM broadcast receiver
+    window_size: (1150,800)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 8
+    rotation: 0
+    state: enabled
+blocks:
+- name: rf_rate
+  id: variable
+  parameters:
+    comment: Receiver sample rate, samples per second
+    value: '2400000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 8
+    rotation: 0
+    state: enabled
+- name: station_freq
+  id: variable
+  parameters:
+    value: '105300000'
+    comment: 'Example: 105.3 MHz. Replace with a strong local FM station in hertz.'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 200
+    - 8
+    rotation: 0
+    state: enabled
+- name: soapy_rtlsdr_source_0
+  id: soapy_rtlsdr_source
+  parameters:
+    type: fc32
+    dev_args: ''''''
+    samp_rate: rf_rate
+    center_freq: station_freq
+    freq_correction: '0'
+    agc: 'False'
+    gain: '20'
+    bias: 'False'
+    bufflen: '262144'
+    comment: Normal tuner mode. Change station_freq to a strong local FM broadcast.
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 30
+    - 155
+    rotation: 0
+    state: enabled
+- name: filter_fft_low_pass_filter_0
+  id: filter_fft_low_pass_filter
+  parameters:
+    type: ccc
+    decim: '10'
+    gain: '1'
+    samp_rate: rf_rate
+    cutoff_freq: '100000'
+    width: '10000'
+    win: window.WIN_HAMMING
+    beta: '6.76'
+    nthreads: '1'
+    comment: Retain the desired FM signal; reduce 2400000 samples/s to 240000.
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 295
+    - 155
+    rotation: 0
+    state: enabled
+- name: analog_wfm_rcv_0
+  id: analog_wfm_rcv
+  parameters:
+    quad_rate: '240000'
+    audio_decimation: '5'
+    comment: Recover mono FM audio at 48000 samples per second.
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 570
+    - 155
+    rotation: 0
+    state: enabled
+- name: audio_sink_0
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Mono FM audio, 48000 samples per second, float samples
+    device_name: ''
+    num_inputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '48000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 850
+    - 155
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    axislabels: 'True'
+    bw: rf_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: station_freq
+    fftsize: '4096'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label: Relative gain
+    label1: Raw FM spectrum
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: FM spectrum
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_RECTANGULAR
+    ymax: '0'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 285
+    - 430
+    rotation: 0
+    state: enabled
+connections:
+- - soapy_rtlsdr_source_0
+  - '0'
+  - filter_fft_low_pass_filter_0
+  - '0'
+- - filter_fft_low_pass_filter_0
+  - '0'
+  - analog_wfm_rcv_0
+  - '0'
+- - analog_wfm_rcv_0
+  - '0'
+  - audio_sink_0
+  - '0'
+- - soapy_rtlsdr_source_0
+  - '0'
+  - qtgui_freq_sink_x_0
+  - '0'
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0

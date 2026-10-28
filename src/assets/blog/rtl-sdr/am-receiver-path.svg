@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1900 480" role="img" aria-label="2. AM: recover sound from strength changes">
+<rect width="1900" height="480" fill="#f6f9fa"/>
+<rect x="0" y="0" width="16" height="480" fill="#087c89"/>
+<text x="55" y="71" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="42" fill="#102838">2. AM: recover sound from strength changes</text>
+<text x="55" y="115" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#425d6b">The same receiver needs a different audio-decoding path</text>
+<rect x="55.0" y="170" width="275.0" height="165" rx="9" fill="#e1f3f5" stroke="#accbd0" stroke-width="3"/>
+<text x="192.5" y="226" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">RTL-SDR</text>
+<text x="192.5" y="262" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Source</text>
+<text x="192.5" y="308" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">Receive radio data</text>
+<path d="M 336.0 252 h 10.0" stroke="#087c89" stroke-width="5" fill="none"/>
+<path d="M 346.0 243 l 10 9 -10 9" stroke="#087c89" stroke-width="4" fill="none"/>
+<rect x="358.0" y="170" width="275.0" height="165" rx="9" fill="#e1f3f5" stroke="#accbd0" stroke-width="3"/>
+<text x="495.5" y="226" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Frequency Xlating</text>
+<text x="495.5" y="262" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">FIR Filter</text>
+<text x="495.5" y="308" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">Select AM station</text>
+<path d="M 639.0 252 h 10.0" stroke="#087c89" stroke-width="5" fill="none"/>
+<path d="M 649.0 243 l 10 9 -10 9" stroke="#087c89" stroke-width="4" fill="none"/>
+<rect x="661.0" y="170" width="275.0" height="165" rx="9" fill="#e4f3eb" stroke="#accbd0" stroke-width="3"/>
+<text x="798.5" y="226" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Complex to</text>
+<text x="798.5" y="262" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Mag</text>
+<text x="798.5" y="308" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">Detect amplitude</text>
+<path d="M 942.0 252 h 10.0" stroke="#087c89" stroke-width="5" fill="none"/>
+<path d="M 952.0 243 l 10 9 -10 9" stroke="#087c89" stroke-width="4" fill="none"/>
+<rect x="964.0" y="170" width="275.0" height="165" rx="9" fill="#e4f3eb" stroke="#accbd0" stroke-width="3"/>
+<text x="1101.5" y="239" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">DC Blocker</text>
+<text x="1101.5" y="289" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">Remove offset</text>
+<path d="M 1245.0 252 h 10.0" stroke="#087c89" stroke-width="5" fill="none"/>
+<path d="M 1255.0 243 l 10 9 -10 9" stroke="#087c89" stroke-width="4" fill="none"/>
+<rect x="1267.0" y="170" width="275.0" height="165" rx="9" fill="#e1f3f5" stroke="#accbd0" stroke-width="3"/>
+<text x="1404.5" y="226" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Rational</text>
+<text x="1404.5" y="262" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Resampler</text>
+<text x="1404.5" y="308" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">48000 samples/s</text>
+<path d="M 1548.0 252 h 10.0" stroke="#087c89" stroke-width="5" fill="none"/>
+<path d="M 1558.0 243 l 10 9 -10 9" stroke="#087c89" stroke-width="4" fill="none"/>
+<rect x="1570.0" y="170" width="275.0" height="165" rx="9" fill="#fff4d8" stroke="#accbd0" stroke-width="3"/>
+<text x="1707.5" y="239" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="25" text-anchor="middle" fill="#102838">Audio Sink</text>
+<text x="1707.5" y="289" font-family="Arial,Helvetica,sans-serif" font-size="21" text-anchor="middle" fill="#425d6b">Play sound</text>
+<text x="1845" y="440" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#425d6b">Chips&#39;nCode | RTL-SDR and GNU Radio</text></svg>

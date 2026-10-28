@@ -46,6 +46,9 @@ import sstv09 from '../../assets/blog/rtl-sdr/sstv/ariss-2024-09.jpg';
 import sstv11 from '../../assets/blog/rtl-sdr/sstv/ariss-2024-11.jpg';
 import sstv12 from '../../assets/blog/rtl-sdr/sstv/ariss-2024-12.jpg';
 import fo29Doppler from '../../assets/blog/rtl-sdr/fo29-doppler.jpg';
+import fmReceiverPath from '../../assets/blog/rtl-sdr/fm-receiver-path.png';
+import amReceiverPath from '../../assets/blog/rtl-sdr/am-receiver-path.png';
+import directSamplingPath from '../../assets/blog/rtl-sdr/direct-sampling-path.png';
 import gnuRadioCompanion from '../../assets/blog/rtl-sdr/gnu-radio-companion.png';
 
 export const sstvSlides = [
@@ -73,6 +76,8 @@ export const sstvSlides = [
   <p>An RTL-SDR gives us a way to look at that radio layer directly. It is a small USB software-defined receiver. Add an antenna and a computer and you can examine a large part of the radio spectrum around you. The <strong>spectrum</strong> is a live graph of signal strength across a range of frequencies. The <strong>waterfall</strong> is that same graph recorded down the screen over time. Signals become visible shapes: you can see how wide they are, watch them come and go, compare their strength, record them and, when they contain digital information, hand them to software that can decode what is being transmitted.</p>
 
   <p>You can do all of that without transmitting anything and without needing an amateur radio licence.</p>
+
+  <p className="note">I’m in south-east Queensland (SEQ), so the frequencies in this guide are examples that work for me. If you’re elsewhere, choose local stations and services.</p>
 
   <figure className="figure">
     <Image src={rtlSdrV3} alt="An RTL-SDR Blog V3 USB software-defined radio receiver with its SMA connector and adapters." widths={[480, 720, 960, 1280]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />
@@ -501,35 +506,19 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <h2 id="gnuradio">Start pulling the receiver apart in GNU Radio</h2>
+<h2 id="gnuradio">Start pulling the receiver apart in GNU Radio</h2>
 
-  <p>Once you are comfortable with the controls in SDR++ or Gqrx, GNU Radio becomes much more useful. Instead of giving you a finished receiver, GNU Radio lets you connect signal-processing blocks to build one yourself. It runs on Windows, macOS and Linux. The <a className="external" href="https://wiki.gnuradio.org/index.php/InstallingGR">GNU Radio installation guide</a> covers the normal routes, while <a className="external" href="https://github.com/radioconda/radioconda-installer">Radioconda</a> provides a convenient cross-platform bundle that includes GNU Radio, Gqrx and related tools.</p>
+In SDR++, you chose a frequency and a mode, and the software worked out how to recover the sound. GNU Radio lets you see and build the steps that SDR++ normally handles for you.
 
-  <p>Go back to FM broadcast because you already know what the result should sound like. A simple GNU Radio Companion receiver can be built as:</p>
+We'll use **GNU Radio Companion (GRC)**, where a program is made from connected blocks. Each block does one job. One block collects radio data, another selects a station, another recovers the sound, and the final block plays it. A connected set of blocks is called a **flowgraph**.
 
-  <div className="code-flow" aria-label="GNU Radio flowgraph">RTL-SDR Source → Low Pass Filter → WBFM Receive → Audio Sink</div>
+We will put together three receivers using an RTL-SDR Blog V3:
 
-  <p>If the RTL-SDR is sampling at 2.4 million samples per second (MS/s), one reasonable beginner arrangement is to reduce that stream to 240 thousand samples per second (kS/s) before the FM demodulator, then produce 48 kHz audio for the sound card. GNU Radio calls that rate reduction <strong>decimation</strong>. The exact values are less important than understanding why each block is there.</p>
+- an ordinary FM broadcast receiver;
+- an AM receiver for aircraft radio;
+- an AM receiver for **792 kHz**, which uses the V3's special direct-sampling mode.
 
-  <p>The source block chooses the hardware and centre frequency. The filter selects the part of the sampled spectrum you want. The FM demodulator recovers audio from the frequency changes. The audio sink sends the result to the speakers.</p>
-
-  <details className="try">
-    <summary>
-      <span className="try-summary-line"><span className="try-kicker">Try it</span><span className="try-title">Rebuild the FM receiver in GNU Radio</span></span>
-      <span className="try-teaser">Use a station you have already received successfully, recreate the basic path in GNU Radio Companion, then change the filter and sample-rate stages one at a time.</span>
-    </summary>
-    <div className="try-body">
-      <p>Once audio works, add a Frequency Sink or Waterfall Sink before and after the filter. A sink is simply a block that displays or plays the data it receives. Record the raw <strong>I/Q samples</strong>, the paired numbers used to preserve a radio signal's amplitude and phase, and play them back later without the dongle connected. That makes the boundary between the physical receiver and the software processing much easier to see.</p>
-      <div className="settings">
-        <div className="setting"><b>Source rate</b><span>2.4 MS/s example</span></div>
-        <div className="setting"><b>After filter</b><span>240 kS/s example</span></div>
-        <div className="setting"><b>Audio</b><span>48 kHz</span></div>
-        <div className="setting"><b>Demodulator</b><span>WBFM Receive</span></div>
-        <div className="setting"><b>Add next</b><span>Frequency / Waterfall Sink</span></div>
-        <div className="setting"><b>Experiment</b><span>Filter width, tuning, recording</span></div>
-      </div>
-    </div>
-  </details>
+We will start with a familiar FM station, then reuse the same basic signal path for ordinary AM and finally medium-wave AM.
 
   <figure className="figure">
     <Image src={gnuRadioCompanion} alt="GNU Radio Companion showing a graphical signal-processing flowgraph." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
@@ -539,7 +528,200 @@ export const sstvSlides = [
     </figcaption>
   </figure>
 
-  <p>For a student who has already worked with Python, data and networks, this is where radio stops looking like a separate hobby. It is another physical source of data that software can sample, filter, interpret and act on.</p>
+### Before you begin
+
+The [GNU Radio installation guide](https://wiki.gnuradio.org/index.php/InstallingGR) covers Windows, macOS and Linux. [Radioconda](https://github.com/radioconda/radioconda-installer) provides a bundle that includes GNU Radio, Gqrx and related tools. These examples use GNU Radio 3.10 with SoapyRTLSDR support.
+
+Connect your antenna and plug the RTL-SDR into your computer. Close SDR++ or any other radio program before opening GNU Radio, because only one program can normally use the receiver at a time. Start with your computer's sound turned down.
+
+Open **GNU Radio Companion**. You should see an empty workspace with an **Options** block, a **Variable** block and a panel where you can search for new blocks. If a block is hard to find, type its name in the block search. Double-click a block to edit its settings. Drag between matching connection points to join two blocks.
+
+Open **Options** and set **Generate Options** to **QT GUI**. This allows your receiver to show controls and graphs while it runs. Check that the flowgraph uses **Python** as its output language.
+
+One last thing about the numbers below: GNU Radio asks for many frequencies in **hertz (Hz)**. For example, a station at 105.3 megahertz (MHz) is entered as **105300000**. Always enter the complete number shown in the instructions, without spaces or commas.
+
+### 1. Build an FM broadcast receiver
+
+An FM broadcast is a good starting point because you already know what it should sound like. Choose a strong local FM station you were able to hear in SDR++.
+
+Our first receiver will have just four working blocks:
+
+**RTL-SDR Source → FFT Low Pass Filter → WBFM Receive → Audio Sink**
+
+[Download the FM broadcast receiver flowgraph (.grc)](/assets/downloads/rtl-sdr/01_FM_Broadcast_Soapy_RTLSDR.grc)
+
+<figure className="figure">
+  <Image src={fmReceiverPath} alt="FM receiver: RTL-SDR source, FFT low pass filter, WBFM decoder and audio output." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+</figure>
+
+The **Source** receives radio signals through the antenna. The **Filter** keeps the part of the signal we want. **WBFM Receive** takes the FM signal and recovers the sound. The **Audio Sink** plays that sound through your computer.
+
+#### Add the source
+
+1. Find the existing **Variable** block named `samp_rate`. Open it, change its **ID** to `rf_rate` and set its **Value** to `2400000`. This tells GNU Radio to collect 2.4 million samples every second.
+2. Find and add **Soapy RTLSDR Source**. If you have a working **Osmocom Source** instead, you can use it, but the settings labels may differ slightly.
+3. Open the source block and use the following values:
+
+| Setting | Enter this | What it means |
+|---|---|---|
+| Sample Rate | `2400000` or `rf_rate` | Collect 2.4 million samples per second |
+| Center Frequency | Your chosen station in Hz | For example, `105300000` means 105.3 MHz |
+| Output Type | **Complex Float32** | The form of radio data the next block expects |
+| Automatic Gain Control | **Off** to begin with | Keep the receiving settings predictable |
+| RF Gain | `20` as a starting point | Adjust only if reception is too weak or overloaded |
+
+Keep the source in its **normal receiving mode**, with direct sampling off.
+
+#### Add the filter
+
+Search for **FFT Low Pass Filter**, add it to the workspace and open its settings. This block keeps the chosen FM station while reducing unwanted signals around it.
+
+| Setting | Enter this |
+|---|---|
+| Type | **Complex to Complex** |
+| Sample Rate | `2400000` |
+| Cutoff Frequency | `100000` |
+| Transition Width | `10000` |
+| Decimation | `10` |
+| Gain | `1` |
+
+That last unfamiliar word, **decimation**, just means reducing the amount of data passed to the next block. The source collects **2400000** samples per second. After dividing that by **10**, the filter produces **240000** samples per second.
+
+#### Recover the sound
+
+Add **WBFM Receive**. The name means *wideband FM receiver*. Open it and enter:
+
+| Setting | Enter this |
+|---|---|
+| Channel Rate (sometimes labelled Quadrature Rate) | `240000` |
+| Audio Decimation | `5` |
+
+The WBFM Receive block produces **48000** audio samples every second. Add an **Audio Sink** and set its **Sample Rate** to `48000`.
+
+Connect the blocks in this order:
+
+1. **Soapy RTLSDR Source** output to **FFT Low Pass Filter** input.
+2. **FFT Low Pass Filter** output to **WBFM Receive** input.
+3. **WBFM Receive** output to **Audio Sink** input.
+
+The coloured connections must match the input and output types. If GNU Radio refuses a connection, check that the filter is **Complex to Complex**.
+
+Save your own version as `FM_Receiver.grc` (or begin from the linked example). Click **Generate**, then **Execute** (the Run button). You should hear your chosen FM station. If you hear noise, check that the station frequency is correct, the audio is unmuted and the filter and WBFM settings match the table.
+
+**Look at what you made.** The physical radio receives the signal, but GNU Radio decides which data to keep and how to turn it into sound. Try changing the source frequency to another local FM station, one that you know is available.
+
+#### Add a spectrum display
+
+Once audio works, add a **QT GUI Frequency Sink**. Set **Type** to **Complex**, **Bandwidth** to `2400000` and **Center Frequency** to the same number used by the Source. Connect it to a **second branch** from the Source. Leave the original connection to the filter in place.
+
+When you run the flowgraph again, you should see peaks in the spectrum. The broad area around your station represents the FM broadcast. The display is for observing the signal. It does not change the sound.
+
+### 2. Change your receiver to AM
+
+We will now recover sound from a different kind of signal. FM carries sound through changes in frequency. **AM**, short for *amplitude modulation*, carries sound through changes in the strength of the signal.
+
+Aircraft voice radio uses AM. For aircraft approaching Brisbane from the Gold Coast direction, try **125.6 MHz**, the **Brisbane Approach** frequency for the south-east sector. The [Airservices ERSA entry](https://www.airservicesaustralia.com/aip/current/ersa/FAC_YBBN_03SEP2026.pdf) lists this frequency for the sector within 30 nautical miles of the airport, south-east of the extended runway 01R/19L centreline.
+
+Listen for short exchanges between pilots and air traffic control. There will be gaps between transmissions, so leave the receiver running for a while.
+
+Save a copy as `AM_Receiver.grc` (or open the linked AM example). Keep the **Source**, **Audio Sink** and optional Frequency Sink. Remove the **FFT Low Pass Filter** and **WBFM Receive** blocks from the audio path. Replace them with the following pathway:
+
+**RTL-SDR Source → Frequency Xlating FIR Filter → Complex to Mag → DC Blocker → Rational Resampler → Audio Sink**
+
+[Download the normal-tuner AM receiver flowgraph (.grc)](/assets/downloads/rtl-sdr/02_AM_Normal_Tuner_Soapy_RTLSDR.grc)
+
+<figure className="figure">
+  <Image src={amReceiverPath} alt="AM receiver: source, frequency translating filter, envelope detector, DC blocker, rate converter and audio output." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+</figure>
+
+It has more blocks than the FM receiver because we are building the AM detection step ourselves. **Complex to Mag** is the key block: it follows the signal's changing strength to recover the information carried by AM.
+
+#### Select the aircraft channel
+
+Set the **Source Center Frequency** to `125650000`. That's **125.65 MHz**, which is **50000 Hz above** our target station at **125600000 Hz**. We're doing this deliberately to avoid an unwanted spike that some receivers create at the centre of the display.
+
+Add a **Frequency Xlating FIR Filter**. This block selects a narrow part of the radio spectrum and moves it into the middle of the data we want to decode.
+
+Enter these settings:
+
+| Setting | Enter this |
+|---|---|
+| Type | **Complex to Complex (Real Taps)** |
+| Decimation | `30` |
+| Center Frequency | `-50000` |
+| Sample Rate | `2400000` |
+| Taps | `firdes.low_pass(1, rf_rate, 5000, 2000, window.WIN_HAMMING)` |
+
+Copy the entire **Taps** entry exactly, including the commas and brackets. `rf_rate` is the sample-rate variable that we set to `2400000` earlier. The expression tells GNU Radio how to select the narrow AM channel. The `-50000` setting moves our chosen station to the middle of that channel.
+
+The filter reduces the data rate from **2400000** to **80000** samples per second.
+
+#### Recover and play the AM sound
+
+Add the following blocks in order:
+
+1. **Complex to Mag**. It converts the changing signal strength into a stream containing the audio information. It has no special settings to change for this receiver.
+2. **DC Blocker**. Set its data type to **Float**, if that option is shown. This removes a steady offset left behind by the AM detector.
+3. **Rational Resampler**. Choose **Float to Float**, set **Interpolation** to `3` and **Decimation** to `5`. The 80000 samples per second become **48000** samples per second, suitable for the Audio Sink.
+4. Keep your **Audio Sink** at `48000`.
+
+Connect each block to the next and check that there are no red error messages in GRC. Save, generate and run the file. With aircraft in range and a suitable antenna, you should hear pilots speaking to air traffic control. You may hear aircraft more clearly than the ground controller.
+
+You may also add a **QT GUI Time Sink** on a second branch after the resampler. Choose **Float** and set **Sample Rate** to `48000`. You will see the recovered audio change as someone speaks.
+
+If you hear nothing, first check the station in SDR++ with AM mode. If SDR++ cannot receive it either, the problem may be the signal or antenna rather than your flowgraph. If SDR++ works and GNU Radio does not, compare the Source frequency, the `-50000` setting, the Taps entry and the sample rates.
+
+### 3. Receive AM at 792 kHz with the V3's special mode
+
+The next station is much lower in frequency: **ABC Radio National on 792 kHz**, which is **792000 Hz** or **0.792 MHz**. To find another service, use the [ABC frequency and coverage search](https://help.abc.net.au/hc/en-us/articles/9078078088335-How-can-I-listen-to-ABC-Radio-National).
+
+The RTL-SDR Blog V3's normal tuner cannot reach that frequency. But the V3 has a built-in alternative path called **direct sampling**, which can receive much lower frequencies without modifying the device.
+
+The AM decoding blocks you just built are still useful. We're changing **how the RTL-SDR receives the signal**, not the way GNU Radio recovers AM sound.
+
+Save a new copy as `AM_792kHz_Receiver.grc` (or open the linked direct-sampling example).
+
+[Download the RTL-SDR V3 direct-sampling AM flowgraph (.grc)](/assets/downloads/rtl-sdr/03_AM_792kHz_V3_Direct_Sampling.grc)
+
+<figure className="figure">
+  <Image src={directSamplingPath} alt="The V3 normal tuner and Q-branch direct sampling paths feed the same AM decoder." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+</figure>
+
+#### Change the source mode
+
+Stop the flowgraph and close any other SDR program. For the V3's Q-branch direct sampling, the RTL-SDR driver uses the setting `direct_samp=2`. This is a device setting; it is not the station frequency.
+
+Replace the ordinary source with a **Soapy Custom Source**. Set **Driver** to the quoted text `'rtlsdr'`, **Output Type** to **Complex Float32**, **Num Channels** to `1`, and **Sample Rate** to `2400000`. In **Ch0: Other settings**, enter the quoted text `'direct_samp=2'`. Leave **Device Arguments** empty. This settings field is important: entering the option only as a device argument may not activate Q-branch reception. The downloadable flowgraph already contains these values, so you can open it and compare the settings.
+
+Set the source **Center Frequency** to `842000`. This is 50 kHz above Radio National at **792000 Hz**. Keep the same **Frequency Xlating FIR Filter** as before, including its **Center Frequency** of `-50000` and its Taps entry. That selects the 792 kHz broadcast.
+
+The rest of the signal path remains:
+
+**Frequency Xlating FIR Filter → Complex to Mag → DC Blocker → Rational Resampler → Audio Sink**
+
+Keep the output rate at **48000** samples per second. Generate and run the flowgraph.
+
+#### What should happen?
+
+If reception is strong enough, you should hear recognisable Radio National speech through your speakers. The program may also display a narrow signal near the station frequency.
+
+The small dipole supplied with many RTL-SDR kits is intended mainly for higher frequencies. **If the kit dipole is all you have, extend both telescopic arms as far as they will go**, then try moving it around the room or placing it near a window. That gives it the best chance of picking up a medium-wave signal, although the antenna is still much shorter than ideal. A suitable medium-wave loop or properly connected long wire of around 5 metres or more will usually work better. Never connect an antenna to household electrical wiring, and keep outdoor antennas well clear of power lines.
+
+A weak or missing station does not automatically mean the flowgraph is wrong. Some V3 units have reduced sensitivity below **2000000 Hz**. If you only see a sharp spike exactly in the centre of the display, that may be a receiver artefact rather than a station. Compare the spectrum with what you can actually hear.
+
+**When you finish, use the ordinary-tuner FM or AM flowgraph to return to higher frequencies. The Q-branch setting belongs only to the direct-sampling receiver.**
+
+### Look at the three receivers together
+
+| What you received | Frequency example | What changed in GNU Radio? |
+|---|---|---|
+| Broadcast FM | A local station between 87.5 and 108 MHz | WBFM Receive recovers sound from FM |
+| Aircraft radio AM | 125.6 MHz | Complex to Mag recovers sound from AM |
+| Medium-wave AM | 792 kHz | The same AM blocks work, but the V3 uses Q-branch direct sampling |
+
+Open the saved flowgraphs side by side. Which blocks stay the same? Which blocks change? Can you point to the block that selects the signal, and to the block that recovers the sound?
+
+That is the useful part of GNU Radio: you can see what the receiver is doing, change one part, run it again and find out whether your change worked. For someone who has used Python or visual programming, the idea is familiar. Data enters, each stage processes it, and a result comes out.
 
   <h2 id="next">Amateur radio from here</h2>
 
