@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Adjust the kit dipole for the signal">
+ <rect x="0" y="0" width="1200" height="520" rx="12" fill="#102838"/>
+ <text x="46" y="57" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="bold" fill="#ffffff">Adjust the kit dipole for the signal</text>
+ <line x1="46" y1="83" x2="1154" y2="83" stroke="#497384" stroke-width="1"/>
+ 
+<text x="60" y="125" fill="#9fe7ee" font-family="Arial" font-size="22">FM</text>
+<text x="60" y="156" fill="#ffffff" font-family="Arial" font-size="18">About 75 cm each</text>
+<line x1="210" y1="120" x2="210" y2="400" stroke="#c4d7dc" stroke-width="6" stroke-linecap="round"/>
+<circle cx="210" cy="260" r="15" fill="#30c4d7"/>
+<text x="328" y="125" fill="#9fe7ee" font-family="Arial" font-size="22">AIRCRAFT AM</text>
+<text x="328" y="156" fill="#ffffff" font-family="Arial" font-size="18">About 60 cm each</text>
+<line x1="490" y1="146" x2="490" y2="382" stroke="#c4d7dc" stroke-width="6" stroke-linecap="round"/>
+<circle cx="490" cy="264" r="15" fill="#30c4d7"/>
+<text x="620" y="125" fill="#f7c577" font-family="Arial" font-size="22">792 kHz</text>
+<text x="620" y="156" fill="#ffffff" font-family="Arial" font-size="18">Fully extend both</text>
+<text x="620" y="182" fill="#ffffff" font-family="Arial" font-size="18">kit elements if needed</text>
+<line x1="874" y1="102" x2="874" y2="438" stroke="#f0c171" stroke-width="8" stroke-linecap="round"/>
+<circle cx="874" cy="268" r="15" fill="#f7c577"/>
+<rect x="918" y="217" width="244" height="115" rx="8" fill="#25485a"/>
+<text x="935" y="252" fill="#ffffff" font-family="Arial" font-size="17">Still very short</text>
+<text x="935" y="280" fill="#ffffff" font-family="Arial" font-size="17">for medium wave.</text>
+<text x="935" y="309" fill="#f7c577" font-family="Arial" font-size="17">Long wire is better.</text>
+<text x="53" y="480" fill="#b0cbd1" font-family="Arial" font-size="16">Conceptual illustration, not to scale. Keep all elements vertical for these three reception tests.</text>
+
+ </svg>

@@ -49,6 +49,12 @@ import fo29Doppler from '../../assets/blog/rtl-sdr/fo29-doppler.jpg';
 import fmReceiverPath from '../../assets/blog/rtl-sdr/fm-receiver-path.png';
 import amReceiverPath from '../../assets/blog/rtl-sdr/am-receiver-path.png';
 import directSamplingPath from '../../assets/blog/rtl-sdr/direct-sampling-path.png';
+import adsbAntenna from '../../assets/blog/rtl-sdr/adsb-antenna-1090mhz.png';
+import adsbPath from '../../assets/blog/rtl-sdr/adsb-signal-to-map.png';
+import weatherDipole from '../../assets/blog/rtl-sdr/weather-satellite-137mhz-v-dipole.png';
+import fmAmWidth from '../../assets/blog/rtl-sdr/fm-am-signal-width.png';
+import samplingModes from '../../assets/blog/rtl-sdr/normal-vs-direct-sampling.png';
+import antennaAdjustments from '../../assets/blog/rtl-sdr/antenna-adjustments.png';
 import gnuRadioCompanion from '../../assets/blog/rtl-sdr/gnu-radio-companion.png';
 
 export const sstvSlides = [
@@ -71,8 +77,6 @@ export const sstvSlides = [
 
   <p>A radiosonde is a good example of why I like the overlap. It is simultaneously a set of environmental sensors, a radio transmitter, a stream of digital data and a moving point in three-dimensional space. A weather satellite brings in orbital motion, waves, Doppler shift, antennas, digital signals and image data. Even an ordinary FM station gives you a useful way to make frequency, bandwidth, signal strength and noise visible.</p>
 
-  <p>Over the past year I have been building more of that thinking into the Year 9 Digital Technologies class I teach. We have worked with Python, networks, packets, addresses, DNS, routers, latency, bandwidth and the physical systems underneath the internet. This is not much of a curriculum detour. The <a className="external" href="https://www.australiancurriculum.edu.au/curriculum-information/understand-this-learning-area/technologies">Australian Curriculum: Digital Technologies</a> explicitly covers digital systems and networks, including how data is transmitted, managed and secured. The wireless part is often the bit students are asked to accept without ever seeing it.</p>
-
   <p>An RTL-SDR gives us a way to look at that radio layer directly. It is a small USB software-defined receiver. Add an antenna and a computer and you can examine a large part of the radio spectrum around you. The <strong>spectrum</strong> is a live graph of signal strength across a range of frequencies. The <strong>waterfall</strong> is that same graph recorded down the screen over time. Signals become visible shapes: you can see how wide they are, watch them come and go, compare their strength, record them and, when they contain digital information, hand them to software that can decode what is being transmitted.</p>
 
   <p>You can do all of that without transmitting anything and without needing an amateur radio licence.</p>
@@ -89,9 +93,13 @@ export const sstvSlides = [
 
   <h2 id="buy">Getting an RTL-SDR</h2>
 
-  <p>There are a lot of cheap USB digital-television dongles, usually labelled DVB-T, being sold as RTL-SDRs. Some are perfectly usable, but for a first receiver I would buy the genuine <strong>RTL-SDR Blog V3 dongle with the multipurpose dipole kit</strong>. It gives you a stable receiver, a threaded SMA antenna socket and an antenna set that can be rearranged for broadcast FM, amateur repeaters, aircraft and satellites.</p>
+Many inexpensive USB digital-TV receivers have been repurposed as software-defined radios. Some work perfectly well, but the genuine RTL-SDR Blog receivers are an easier starting point because their frequency stability, antenna connection and support are well documented.
 
-  <p>For Australian buyers, <a className="external" href="https://opensourcesdrlab.com/products/rtl-sdr-v4">OpenSourceSDRLab's RTL-SDR Blog V3 kit listing</a> is usually worth checking before the larger marketplaces. Their product naming has changed over time, so I would check the current dongle revision and kit contents on the listing rather than relying on an old screenshot.</p>
+The examples in this article use the **RTL-SDR Blog V3** and its telescopic dipole kit. If you already have a working receiver, keep using it. Later RTL-SDR models have different capabilities and settings, especially at lower frequencies, so check the instructions for your exact model before following the direct-sampling experiment.
+
+For a first kit, look for a genuine receiver with a suitable antenna, coaxial cable and a stand or mounting option. The antenna is often more important to successful reception than a small difference between receivers.
+
+  <p>For Australian buyers, <a className="external" href="https://opensourcesdrlab.com/products/rtl-sdr-v4">OpenSourceSDRLab's RTL-SDR receiver listing</a> is usually worth checking before the larger marketplaces. Their product naming has changed over time, so I would check the current dongle revision and kit contents on the listing rather than relying on an old screenshot.</p>
 
   <div className="note"><p>I have no interest in making this a shopping guide. The important bits are an RTL2832U-based receiver, a stable internal frequency reference, an SMA connector and an antenna you can put somewhere sensible. If you already own a working RTL-SDR, use it.</p></div>
 
@@ -123,7 +131,9 @@ export const sstvSlides = [
 
   <p>At 145 MHz, for example, a full wavelength is about 2.07 metres, so each dipole element is about 51 cm. Around 137 MHz for weather satellites, each element is about 54 cm. At 1090 MHz for ADS-B, a quarter wavelength is only about 6.9 cm. For receive-only work these are useful starting lengths rather than dimensions that need to be exact to the nearest millimetre.</p>
 
-  <p>For most terrestrial signals in the VHF and UHF ranges, meaning very high frequency and ultra high frequency, set the dipole vertically. If you only have a whip, a vertical whip is also a sensible default. For 137 MHz weather satellites, the same dipole can be laid horizontally and opened into a V. RTL-SDR Blog recommends about <strong>53.4 cm per element</strong> and an included angle of roughly <strong>120 degrees</strong>.</p>
+At much lower frequencies, the same kit becomes a compromise. A medium-wave station at 792 kHz has a wavelength of roughly **379 metres**. The supplied dipole cannot come close to a quarter-wave length. If it is your only antenna, extend **both telescopic elements as far as possible** and try different positions, preferably away from computers and power supplies. A suitable medium-wave loop or properly installed long wire will usually do better. Never attach a receiving antenna to household wiring or place it near power lines.
+
+  <p>For most terrestrial signals in the VHF and UHF ranges, meaning very high frequency and ultra high frequency, set the dipole vertically. If you only have a whip, a vertical whip is also a sensible default. For 137 MHz weather satellites, fit the long elements, extend each to about <strong>53.4 cm</strong>, and open the dipole into a broad <strong>120-degree V</strong> lying in a horizontal plane. This uses longer elements than the L-band setup shown later.</p>
 
   <p>The supplied kit is intended for receiving. Do not connect it to a transmitter.</p>
 
@@ -155,6 +165,7 @@ export const sstvSlides = [
       <div className="link-grid">
         <div className="link-card"><span className="os">Windows · macOS · Linux · Android</span><strong><a className="external" href="https://www.sdrpp.org/">SDR++</a></strong><p>A cross-platform receiver with a consistent set of controls on each desktop operating system.</p></div>
         <div className="link-card"><span className="os">macOS · Linux</span><strong><a className="external" href="https://gqrx.dk/">Gqrx</a></strong><p>A mature receiver with spectrum, waterfall, recording and good RTL-SDR support.</p></div>
+        <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://www.sdrangel.org/">SDRangel</a></strong><p>Receive and decode ADS-B messages, then display aircraft positions on a map.</p></div>
         <div className="link-card"><span className="os">Windows · macOS · Linux</span><strong><a className="external" href="https://www.gnuradio.org/">GNU Radio</a></strong><p>Useful once you want to construct the signal-processing chain rather than only operate a receiver.</p></div>
       </div>
     </div>
@@ -164,32 +175,32 @@ export const sstvSlides = [
 
   <p>On Android, SDR++ can work with supported USB SDR hardware over OTG. Direct RTL-SDR use on iPhone and iPad is much less convenient, so I use iOS mainly for pass prediction and tracking rather than as the receiver itself.</p>
 
+When a signal carries digital information, ordinary receiver software may show you that something is transmitting without telling you what the messages mean. That is where a decoder comes in. For the aircraft example below, **SDRangel** is particularly useful because it can operate the RTL-SDR, decode ADS-B messages and show received aircraft on a map within the same application. **SatDump** is the corresponding tool we'll use for weather-satellite images.
+
   <p>Use the program written for the signal you want to decode. <a className="external" href="https://www.satdump.org/">SatDump</a> handles satellite telemetry and imagery. <a className="external" href="https://github.com/projecthorus/radiosonde_auto_rx">radiosonde_auto_rx</a> handles weather balloons. ADS-B has its own decoders. GNU Radio becomes useful once there is some value in seeing how the receiver itself is put together.</p>
 
-  <h2 id="fm">Start with ordinary FM radio</h2>
+<h2 id="fm">Start with FM, then try AM</h2>
 
-  <p>The first thing I would receive is an ordinary FM broadcast station. It is not particularly exotic, which is exactly why it is useful. In Australia the broadcast FM band runs from <strong>87.5 to 108 MHz</strong>, and a strong local station gives you a signal you already know should work.</p>
+SDR++ is a good place to get comfortable with a new RTL-SDR. It lets you choose a frequency, see what is being received, and turn a radio signal back into sound. The spectrum shows signal strength across frequencies; the waterfall shows how those signals change over time.
 
-  <p>Use the dipole vertically with both long elements somewhere around 70–80 cm, or use a vertical whip. Tune a station you know, select <strong>WFM</strong>, meaning wideband FM, and get clean audio. Then deliberately change one thing at a time while watching the spectrum and listening to the result.</p>
+I would start with an ordinary FM station. Once that works, the same receiver can pick up aircraft radio using AM. Finally, if you have an **RTL-SDR Blog V3**, you can use its special direct-sampling mode to listen to a medium-wave station that its normal tuner cannot reach.
 
-  <details className="try">
-    <summary>
-      <span className="try-summary-line"><span className="try-kicker">Try it</span><span className="try-title">Receive a local FM station</span></span>
-      <span className="try-teaser">Use a strong station you already know to learn the controls, then deliberately make the reception worse and work out which change caused it.</span>
-    </summary>
-    <div className="try-body">
-      <p>Start with the station centred in the filter. Once it sounds clean, narrow the filter, tune slightly high or low, reduce the RF gain, increase it again and change the antenna length. RF gain controls how strongly the receiver amplifies incoming radio signals. Watch the waterfall as you make each change.</p>
-      <div className="settings">
-        <div className="setting"><b>Frequency</b><span>87.5–108 MHz</span></div>
-        <div className="setting"><b>Mode</b><span>WFM</span></div>
-        <div className="setting"><b>Filter</b><span>~180 kHz to start</span></div>
-        <div className="setting"><b>Antenna</b><span>Vertical dipole ~70–80 cm per side, or whip</span></div>
-        <div className="setting"><b>Look for</b><span>Broad continuous FM signal</span></div>
-        <div className="setting"><b>Change</b><span>Filter, tuning, RF gain, antenna length</span></div>
-      </div>
-      <p>Success is not just hearing the station. You should be able to make the audio worse on purpose and explain why.</p>
-    </div>
-  </details>
+These instructions use the **RTL-SDR Blog V3 with the dipole antenna kit**. They assume SDR++ is installed and that no other receiver program is using the dongle. Other RTL-SDR models may have different tuning limits or direct-sampling options.
+
+### First, find a local FM station
+
+FM broadcasts are ideal for a first test. They are often strong, you probably know a nearby station already, and you can immediately tell whether the sound is right. Australian FM broadcasts use **87.5 to 108 MHz**.
+
+Connect the **two long telescopic elements** to the dipole base. Extend each one to about **75 cm**, and stand the antenna vertically, with one element pointing up and the other down. If all you have is a single whip, use it vertically.
+
+1. Plug the antenna into the RTL-SDR and the RTL-SDR into the computer. Open **SDR++**.
+2. Open the **Source** panel on the left. Choose **RTL-SDR** and select your dongle. Set **Direct Sampling** to **Off** or the normal sampling mode. If there is a sample-rate selector, **2.048 million samples per second (2048000)** is a reasonable starting point. SDR++ may show this as **2.048 MS/s**.
+3. Press the **Play** button. The spectrum should begin updating and the waterfall should start scrolling.
+4. Use the frequency display at the top to tune a known local FM station. For example, **105.3 MHz** is **105300000 Hz**. Use an actual station in your area rather than assuming there will be one at the example frequency.
+5. Open the **Radio** panel and select **WFM**, meaning wideband FM. Start with a filter width of about **180 kHz** (180000 Hz). The selected channel appears as a highlighted region in the spectrum. Depending on the SDR++ version, you can adjust the width in the Radio panel or by dragging the edges of that region.
+6. Turn the computer or SDR++ volume up slowly. You should hear music or speech. If the audio is weak or distorted, check the antenna, tune to the middle of the visible station and adjust the gain in the Source panel.
+
+A broadcast FM signal usually looks **wide** on the spectrum and forms a fairly broad vertical band on the waterfall. If you narrow the filter until only a small part of the station fits inside it, the audio will usually get worse.
 
   <figure className="figure">
     <Image src={fmWaterfall} alt="Software-defined radio spectrum and waterfall showing several strong FM broadcast stations." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
@@ -198,6 +209,78 @@ export const sstvSlides = [
       <span className="credit">Image: Wtshymanski, <a href="https://commons.wikimedia.org/wiki/File:Waterfall_FM_Broadcast.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</span>
     </figcaption>
   </figure>
+
+Try moving the antenna away from your computer, then compare its signal with the antenna beside the computer. Keep the gain and frequency unchanged while you do this. Watch whether the signal rises above the surrounding background noise, rather than judging only how high the peak looks.
+
+### Next, listen to AM within the normal tuning range
+
+AM stands for **amplitude modulation**. While FM carries sound through small changes in frequency, AM carries sound through changes in the strength of the radio signal. SDR++ needs to use the corresponding receiving mode to recover the audio properly.
+
+Aircraft voice radio uses AM at frequencies the RTL-SDR V3 can receive normally. Try **125.6 MHz (125600000 Hz)**, the **Brisbane Approach** south-east sector frequency used by aircraft approaching from the Gold Coast direction. The [Airservices ERSA entry](https://www.airservicesaustralia.com/aip/current/ersa/FAC_YBBN_03SEP2026.pdf) lists the sector and frequency. Listen for short exchanges between pilots and air traffic control, with gaps between transmissions.
+
+To try it:
+
+1. Keep **Direct Sampling** turned **Off**. The normal RTL-SDR tuner works at this frequency.
+2. Shorten the dipole's two long elements to about **60 cm** each, still vertical. This is a suitable starting length for the aircraft band.
+3. Tune the frequency display to **125.6 MHz (125600000 Hz)**, or to a published local aircraft voice frequency.
+4. In **Radio**, switch from **WFM** to **AM**. Set the receive filter to about **8 to 10 kHz** (8000 to 10000 Hz).
+5. Leave the receiver running and listen for pilots speaking to air traffic control. You may hear aircraft more clearly than the ground controller.
+
+Look at the display again. The received AM signal should occupy a much **narrower** band than a broadcast FM station. If you switch back to WFM without moving the frequency, you will no longer be using the right method to recover that voice transmission.
+
+<figure className="figure">
+  <Image src={fmAmWidth} alt="Illustrative spectrum shapes comparing a broad FM broadcast with a narrower aircraft AM voice signal." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>FM broadcasts and AM voice signals occupy different amounts of spectrum. These shapes are illustrations.</figcaption>
+</figure>
+
+No audio does not necessarily mean a broken receiver. The channel may be quiet, aircraft may be out of range, or nearby buildings may block the signal. Try moving the antenna to a clearer position.
+
+### Finally, receive 792 kHz with the V3's direct-sampling mode
+
+The ordinary AM radio band is much lower in frequency than aircraft radio. For this test, tune **ABC Radio National on 792 kHz**, which is **0.792 MHz (792000 Hz)**.
+
+The RTL-SDR Blog V3's **normal tuner begins at about 24 MHz**, so it cannot tune directly to 0.792 MHz in its ordinary mode. The V3 has a second receiving path called **direct sampling** that can reach lower frequencies. It is supported by the V3 hardware, although performance is different from ordinary VHF and UHF reception.
+
+<figure className="figure">
+  <Image src={samplingModes} alt="FM and 125.6 MHz aircraft AM use the normal tuner; 792 kHz AM uses V3 Q-branch direct sampling." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>Use the normal tuner for FM and aircraft AM, and Q-branch direct sampling for 792 kHz.</figcaption>
+</figure>
+
+If the telescopic dipole from the kit is your only antenna, **extend both of its long elements as far as they will go**. Move the antenna away from computers, USB chargers and other likely sources of interference, and try a window or an outdoor location if it is safe. This is a compromise: the 792 kHz wavelength is about **379 metres**, so a small dipole is much shorter than an efficient antenna for this band. A suitable long-wire antenna of approximately **5 metres or more**, or a medium-wave loop, usually gives a better chance of reception. Never connect an antenna to electrical wiring or place it near power lines.
+
+For the RTL-SDR Blog V3 in SDR++:
+
+1. **Stop the receiver** using the Play/Stop button.
+2. Open **Source** and locate **Direct Sampling**. Select **Q Branch**. If SDR++ does not offer this option, check that you have selected the RTL-SDR source and that the receiver and driver support the feature. Some RTL-SDR Blog driver versions can switch modes automatically when you tune below the normal tuner's range.
+3. **Start the receiver again**, then tune to **792 kHz (792000 Hz)**. The display may express that as **0.792 MHz**.
+4. In the **Radio** panel, select **AM** with a filter width of roughly **8 to 10 kHz** (8000 to 10000 Hz).
+5. Listen for recognisable speech. If the signal is weak, try repositioning the antenna and moving it away from electrical noise sources.
+
+At such a low frequency, you may see a sharp peak exactly in the middle of the display even when no radio station is being received. That can be a receiver-generated centre spike. **Hearing recognisable programme audio** is a much stronger indication that you have actually received the station.
+
+Some V3 receivers have extra attenuation below **2 MHz**, which can make medium-wave signals harder to hear. Use the [ABC frequency and coverage search](https://help.abc.net.au/hc/en-us/articles/9078078088335-How-can-I-listen-to-ABC-Radio-National) to find another service for your area. The [V3 user guide](https://www.rtl-sdr.com/rtl-sdr-blog-v-3-dongles-user-guide/) explains the direct-sampling path and its limitations.
+
+**Before returning to an FM or aircraft frequency, stop the receiver and switch Direct Sampling back to Off.**
+
+### What changed between the three tests?
+
+<div style={{ overflowX: "auto" }} tabIndex={0} role="region" aria-label="Compare SDR++ receiver settings">
+  <table style={{ minWidth: "36rem" }}>
+    <thead><tr><th scope="col">What you received</th><th scope="col">Example frequency</th><th scope="col">SDR++ mode</th><th scope="col">RTL-SDR setting</th></tr></thead>
+    <tbody>
+      <tr><td>Ordinary FM broadcast</td><td>A local station between 87.5 and 108 MHz</td><td>WFM</td><td>Normal tuner</td></tr>
+      <tr><td>Aircraft radio</td><td>Approach traffic at 125.6 MHz</td><td>AM</td><td>Normal tuner</td></tr>
+      <tr><td>Medium-wave AM broadcast</td><td>Radio National at 792 kHz</td><td>AM</td><td>V3 direct sampling, Q Branch</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<figure className="figure">
+  <Image src={antennaAdjustments} alt="Vertical kit dipoles with 75 cm elements for FM, 60 cm for aircraft AM, and fully extended elements for medium-wave." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>Starting lengths per element: about 75 cm for FM and 60 cm for aircraft AM. Fully extended elements are a fallback for medium-wave.</figcaption>
+</figure>
+
+The last two tests both use AM. The change at 792 kHz is in the **receiver's hardware path**, not in the method SDR++ uses to recover the sound. The antenna and the signal-processing settings both matter, and a poor signal is worth investigating before assuming that one of the settings is wrong.
 
   <h2 id="ham">Listen to amateur radio</h2>
 
@@ -227,33 +310,47 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <h2 id="adsb">ADS-B: receive aircraft directly</h2>
+<h2 id="adsb">ADS-B: receive aircraft directly</h2>
 
-  <p>Aircraft are a good first digital signal because there is usually something in the sky and the decoded result is immediately recognisable. <strong>ADS-B</strong> stands for Automatic Dependent Surveillance–Broadcast. Aircraft use it to broadcast information such as identity, position, altitude and speed. Most Mode S and ADS-B traffic you will receive with this setup uses <strong>1090 MHz</strong>.</p>
+An aircraft can tell us quite a lot without anybody speaking on the radio. Many aircraft regularly transmit short digital messages containing their identity, location, altitude and speed. This system is called **ADS-B**, short for *Automatic Dependent Surveillance–Broadcast*. In this experiment, we will receive messages on **1090 MHz**.
 
-  <p>Start in SDR++ rather than going straight to a decoder. Put the receiver on 1090 MHz and watch. You are not looking for a continuous tone or a voice signal. ADS-B consists of very short pulse bursts, so with aircraft in range you should see repeated flashes on the waterfall.</p>
+You may already have looked at ordinary FM or AM broadcasts in SDR++. ADS-B looks different. Its messages are very short bursts, so they can appear as brief flashes in the waterfall. There is no voice to listen to. We need software that understands those messages.
 
-  <p>The short elements in the RTL-SDR kit are the right ones here. A theoretical quarter wavelength at 1090 MHz is about <strong>6.9 cm</strong>, which sits comfortably inside their adjustment range.</p>
+### Start with the antenna
 
-  <p>Once you have seen the activity, hand the dongle to an ADS-B decoder. On Windows, <a className="external" href="https://github.com/gvanem/Dump1090">Dump1090 for Windows</a> can receive directly from an RTL-SDR and includes a local web map. On Linux and Raspberry Pi, dump1090/readsb-based installations are common, and a small Pi can become a permanent receiver that serves its aircraft map over your network. The original <a className="external" href="https://github.com/antirez/dump1090">dump1090 source</a> is also useful if you want to see how the decoder works.</p>
+Fit the **short telescopic elements** to the kit's dipole base and place the antenna vertically, with one element pointing up and the other down. At 1090 MHz, each side of a dipole should be about **6.9 cm electrically**. The metal mounting fitting contributes some of that length, so approximately **5 cm of visible telescopic element on each side** is a sensible first setting for this kit. Use this as a starting point and adjust it while watching reception. Try moving the antenna away from the computer, towards a window or somewhere with a clearer view of the sky.
 
-  <details className="try">
-    <summary>
-      <span className="try-summary-line"><span className="try-kicker">Try it</span><span className="try-title">See 1090 MHz traffic before decoding it</span></span>
-      <span className="try-teaser">Collapse the short dipole elements to around 7 cm, centre the receiver on 1090 MHz and look for brief repeated bursts from aircraft in range.</span>
-    </summary>
-    <div className="try-body">
-      <p>Keep the antenna vertical and somewhere reasonably clear of the computer. At this stage the exact demodulation mode is not important because you are using the spectrum display rather than listening to audio.</p>
-      <div className="settings">
-        <div className="setting"><b>Frequency</b><span>1090 MHz</span></div>
-        <div className="setting"><b>Signal</b><span>Mode S / ADS-B pulse bursts</span></div>
-        <div className="setting"><b>Antenna</b><span>Short dipole ~7 cm per side</span></div>
-        <div className="setting"><b>Look for</b><span>Fast vertical flashes on waterfall</span></div>
-        <div className="setting"><b>Decode with</b><span>dump1090 / readsb family</span></div>
-        <div className="setting"><b>Result</b><span>Locally received aircraft map</span></div>
-      </div>
-    </div>
-  </details>
+<figure className="figure">
+  <Image src={adsbAntenna} alt="Vertical kit dipole with about 5 cm of visible metal per arm and a conductive centre fitting." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>Start with the short elements collapsed. The centre fitting contributes to each arm’s electrical length.</figcaption>
+</figure>
+
+### Decode the messages in SDRangel
+
+**SDRangel** can receive the signal, decode the messages and show aircraft on a map. Download the version for your operating system from the [SDRangel releases](https://github.com/f4exb/sdrangel/releases) and install it. The following steps follow the program's receiver, channel and ADS-B controls. Their positions may move slightly between versions.
+
+1. **Close SDR++** and any other program that might be using the USB dongle. Normally only one program can control it at a time.
+2. Plug in the RTL-SDR, open **SDRangel**, and add an **Rx** (receiving) device if one is not already open. Choose the RTL-SDR from the device list. SDRangel may label it **RTL-SDR** or **RTL-SDR (R820T/R828D)** depending on its drivers.
+3. In **Preferences → My Position**, set your approximate receiving location. SDRangel uses it for distance, bearings and some aircraft position calculations. In the RTL-SDR device controls, set the **centre frequency to 1090 MHz**: enter **1090000** in the kHz control, or **1090000000** if a control explicitly asks for hertz.
+4. Set the **sample rate to 2.4 million samples per second**: enter **2400000** for samples per second, or **2400** in a kS/s control. ADS-B has very short pulses, so a much lower sample rate may miss information needed by the decoder. If there is a device decimation control, leave it at **1** to begin with. The ADS-B demodulator also has a channel sample-rate setting; its normal **2 million samples per second (2000000)** setting is suitable as a starting point.
+5. Add a **receive channel** using the device window's **Add Channel** control. Select **ADS-B Demodulator**, choose **Apply**, and close the selection window. Leave its frequency offset at **0** if the source is tuned to 1090 MHz.
+6. Start the receiver using the **Play/Start** control in the device window. Watch the ADS-B decoder's messages and aircraft table. If messages arrive successfully, entries should begin appearing, though it may take time for enough position messages to arrive.
+7. Use the ADS-B decoder’s map to see aircraft with received positions. You can also send aircraft to SDRangel’s separate [Map feature](https://github.com/f4exb/sdrangel/blob/master/plugins/feature/map/readme.md).
+
+<figure className="figure">
+  <Image src={adsbPath} alt="Aircraft messages travel through the antenna and RTL-SDR to SDRangel, which decodes positions for a map." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>The map plots positions decoded from received radio messages.</figcaption>
+</figure>
+
+You may first see message counts or aircraft identifiers without any map markers. That is normal: the software needs suitable position messages before it can plot an aircraft. A map may also use an internet connection to load map tiles or enrich aircraft details, even though the radio messages themselves are received locally.
+
+If nothing appears, check that the antenna is connected, the source is actually running, the frequency is **1090 MHz**, the sample rate is at least **2000000**, and the ADS-B Demodulator has been added to the correct receiving device. Try increasing or decreasing gain rather than simply setting it as high as possible. Move the antenna away from the computer and give it several minutes. Aircraft may be behind buildings or outside receiving range.
+
+You can confirm that you are receiving rather than merely looking at an internet aircraft tracker by stopping the receiver: the incoming message counter should stop changing. The map may still display aircraft that were received earlier, so the list and message count are better checks than the map alone.
+
+There are other useful decoders, including [dump1090](https://github.com/antirez/dump1090) and **readsb**, particularly if you want a Raspberry Pi to run continuously. SDRangel is a good first choice when you want to explore the signal and see the decoded result in one place.
+
+On Windows, [Dump1090 for Windows](https://github.com/gvanem/Dump1090) is another option. For more detail on SDRangel’s controls, see the [ADS-B Demodulator documentation](https://github.com/f4exb/sdrangel/blob/master/plugins/channelrx/demodadsb/readme.md).
 
   <figure className="figure">
     <Image className="contain" src={dump1090} alt="A dump1090 terminal showing aircraft identifiers, altitudes, speeds, positions, tracks and received message counts." widths={[480, 749]} sizes="(max-width: 900px) 100vw, 749px" loading="lazy" />
@@ -273,13 +370,17 @@ export const sstvSlides = [
 
   <p>Once you can see the signal, <a className="external" href="https://github.com/projecthorus/radiosonde_auto_rx">Project Horus radiosonde_auto_rx</a> can scan, identify supported sonde types, decode their telemetry and upload positions to SondeHub. The <a className="external" href="https://github.com/projecthorus/radiosonde_auto_rx/wiki">auto_rx wiki</a> covers installation and configuration.</p>
 
+There are two separate jobs here. **SondeHub** helps you find a real balloon and its reported frequency. **radiosonde_auto_rx** receives and decodes the radio messages, then can send position and sensor readings back to SondeHub. Seeing a narrow signal in SDR++ tells you that a transmitter might be present, but SDR++'s NFM mode does not by itself decode the weather measurements.
+
+For a first attempt, locate a balloon on the [SondeHub tracker](https://sondehub.org/), copy its reported frequency and see whether it is close enough to receive. Then follow the [radiosonde_auto_rx installation and configuration guide](https://github.com/projecthorus/radiosonde_auto_rx/wiki) for a Raspberry Pi or another Linux machine. Close SDR++ before starting the decoder so it can use the dongle. Give the automatic receiver time to identify the sonde's signal and display telemetry. If your first attempt fails, check whether the balloon is still transmitting and whether the frequency on SondeHub has changed.
+
   <details className="try">
     <summary>
       <span className="try-summary-line"><span className="try-kicker">Try it</span><span className="try-title">Find a live weather balloon</span></span>
       <span className="try-teaser">Use SondeHub to choose an active sonde, tune the exact frequency it reports, and look for the steady narrow telemetry signal before asking a decoder to interpret it.</span>
     </summary>
     <div className="try-body">
-      <p>If SondeHub lists a sonde on 401.500 MHz, put 401.500 MHz into the SDR program, select narrow FM and watch for a persistent digital signal. It will look quite different from the intermittent amateur voice you heard earlier.</p>
+      <p>If SondeHub lists a sonde on 401.500 MHz, put 401.500 MHz into the SDR program and watch for a persistent digital signal. You can choose NFM while inspecting it, but a radio audio mode does not decode its telemetry. To read the measurements, use radiosonde_auto_rx or another suitable decoder.</p>
       <div className="settings">
         <div className="setting"><b>Typical range</b><span>400–403 MHz</span></div>
         <div className="setting"><b>Common AU channels</b><span>400.5 / 401.5 / 402.5 MHz</span></div>
@@ -303,7 +404,7 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <p>A single balloon flight gives you quite a bit to work with. The temperature, humidity and pressure are science; the packets, radio link and decoder are Digital Technologies; and the altitude, ascent rate and track give you useful mathematics. More importantly, it is real data arriving from a real instrument moving through the atmosphere, not a tidy classroom example.</p>
+  <p>A single balloon flight gives you temperature, humidity, pressure and a changing position to explore. The packets arrive from an instrument moving through the atmosphere, so you can follow both the weather measurements and the radio link as the flight progresses.</p>
 
   <h2 id="weather">Receive a weather satellite</h2>
 
@@ -311,10 +412,31 @@ export const sstvSlides = [
 
   <p>The current beginner route is the digital <strong>LRPT</strong>, or Low Rate Picture Transmission, signals from the <strong>METEOR-M</strong> satellites. <a className="external" href="https://www.satdump.org/">SatDump</a> is the program I would use for these. It runs on <a className="external" href="https://www.satdump.org/download.html">Windows, macOS, Linux and Android</a>. It can control the RTL-SDR, turn the radio signal back into digital data, and reconstruct the image.</p>
 
-  <p>This is also the job where the dipole kit earns its keep. Put the long elements on the base, extend each to about <strong>53–54 cm</strong>, lay the antenna horizontally and open the elements into a broad <strong>120-degree V</strong>. Put it outside if you can, or at least near a window and away from the computer.</p>
+For a first attempt at **METEOR-M LRPT** weather-satellite reception, the antenna is the important part of the setup. Fit the **long telescopic elements** to the supplied dipole base. Extend each element to approximately **53.4 cm** and arrange them in a wide **120-degree V**, lying in a horizontal plane. Place the antenna outside in a safe location if possible, or near a window away from computers and electrical noise.
 
-  <p>The same hardware can also be opened into a V for other satellite bands. This L-band arrangement is not a 137 MHz METEOR-M antenna: its elements are shorter and it uses a reflector.</p>
+<figure className="figure">
+  <Image src={weatherDipole} alt="Top view of a horizontal 120-degree V-dipole with two 53.4 cm elements for 137 MHz reception." widths={[640, 960, 1200]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
+  <figcaption>For 137 MHz reception, keep both 53.4 cm elements in a horizontal plane with a 120-degree opening.</figcaption>
+</figure>
 
+  <p>You need a pass prediction before you start. On iPhone and iPad I use <a className="external" href="https://apps.apple.com/au/app/iss-detector/id1198597805">ISS Detector</a>; its satellite extensions can track far more than just the ISS. On Android, <a className="external" href="https://play.google.com/store/apps/details?id=com.runar.issdetector">ISS Detector</a> works as well, while <a className="external" href="https://github.com/rt-bishop/Look4Sat">Look4Sat</a> is a radio-oriented open-source alternative. On Windows, macOS and Linux, <a className="external" href="https://github.com/csete/gpredict">Gpredict</a> is a full desktop satellite tracker. The <a className="external" href="https://www.amsat.org/track/">AMSAT web predictor</a> is useful from any browser.</p>
+
+A pass that rises well above the horizon is a better first choice than one that barely appears. Check that the METEOR satellite is currently transmitting LRPT and confirm its **current frequency** using SatDump or an up-to-date satellite-status source. Do not rely on an old fixed frequency from a tutorial.
+
+### Receive the image with SatDump
+
+1. Connect the RTL-SDR and antenna. Close SDR++ or any other application already using the device.
+2. Open **SatDump** and choose the live reception or recording workflow. Use the **Recorder** tab, or **Add → Recorder** in versions with an Add menu, then select the RTL-SDR as the input device.
+3. Select an appropriate **METEOR-M LRPT** processing preset for the satellite and its current transmission. Confirm the frequency and other preset values against the current satellite status rather than copying an unrelated older screenshot.
+4. Start the receiver shortly before the predicted pass. Watch the signal and received-data indicators as the satellite rises.
+5. Continue until the pass ends, then use SatDump's processing or image viewer to inspect the decoded image, depending on the workflow selected.
+
+The first image may be incomplete. Missing lines or gaps can indicate weak reception, local interference, a low pass or settings that did not match the transmission. Try a higher pass and compare. SatDump's controls and preset names change with releases, so check the [current SatDump documentation](https://docs.satdump.org/) if the menu differs from the example above.
+
+<details className="resource-drawer">
+  <summary>Another use for the kit: L-band</summary>
+  <div className="resource-drawer__body">
+    <p>The same hardware can also be opened into a V for other satellite bands. This L-band arrangement uses short elements and a reflector. The 137 MHz setup above uses long elements without a reflector.</p>
   <figure className="figure">
     <Image src={lBandVeeDipole} alt="An RTL-SDR dipole opened into a V inside a metal reflector for an L-band satellite reception experiment." widths={[480, 720, 1000]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
     <figcaption>
@@ -330,29 +452,8 @@ export const sstvSlides = [
       <span className="credit">Screenshot: <a href="https://www.rtl-sdr.com/using-our-new-dipole-antenna-kit/">RTL-SDR Blog</a>.</span>
     </figcaption>
   </figure>
-
-  <p>You need a pass prediction before you start. On iPhone and iPad I use <a className="external" href="https://apps.apple.com/au/app/iss-detector/id1198597805">ISS Detector</a>; its satellite extensions can track far more than just the ISS. On Android, <a className="external" href="https://play.google.com/store/apps/details?id=com.runar.issdetector">ISS Detector</a> works as well, while <a className="external" href="https://github.com/rt-bishop/Look4Sat">Look4Sat</a> is a radio-oriented open-source alternative. On Windows, macOS and Linux, <a className="external" href="https://github.com/csete/gpredict">Gpredict</a> is a full desktop satellite tracker. The <a className="external" href="https://www.amsat.org/track/">AMSAT web predictor</a> is useful from any browser.</p>
-
-  <p>Choose a pass that gets reasonably high in your sky. A satellite that reaches 60 or 70 degrees elevation is much easier for a first attempt than one that barely scrapes the horizon.</p>
-
-  <details className="try">
-    <summary>
-      <span className="try-summary-line"><span className="try-kicker">Try it</span><span className="try-title">Receive a METEOR-M LRPT pass</span></span>
-      <span className="try-teaser">Set the kit up as a 137 MHz V-dipole, choose a good predicted pass, start SatDump before the pass begins and let it receive and reconstruct the digital image.</span>
-    </summary>
-    <div className="try-body">
-      <p>Check the current METEOR operating frequency in SatDump or a current satellite-frequency reference before the pass; payload frequencies and status can change. Start the receiver a few minutes before the predicted beginning of the pass so you are not trying to configure it after the signal has arrived.</p>
-      <div className="settings">
-        <div className="setting"><b>Band</b><span>137 MHz weather-satellite band</span></div>
-        <div className="setting"><b>Signal</b><span>METEOR-M LRPT</span></div>
-        <div className="setting"><b>Antenna</b><span>53–54 cm per element</span></div>
-        <div className="setting"><b>Geometry</b><span>Horizontal V, ~120°</span></div>
-        <div className="setting"><b>Track with</b><span>ISS Detector / Look4Sat / Gpredict / AMSAT</span></div>
-        <div className="setting"><b>Decode with</b><span>SatDump</span></div>
-      </div>
-      <p>Your first image may have gaps, broken lines or sections that never decode. That is useful evidence. Try a higher pass, move the antenna, get farther from buildings and compare the result.</p>
-    </div>
-  </details>
+  </div>
+</details>
 
   <figure className="figure">
     <Image className="contain" src={noaaApt} alt="A weather-satellite image received from NOAA-19 using Automatic Picture Transmission in May 2025." widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 860px" loading="lazy" />
@@ -386,9 +487,9 @@ export const sstvSlides = [
     </div>
   </details>
 
-  <p>Before each pass, check <a className="external" href="https://www.ariss.org/current-status-of-iss-stations.html">ARISS Current Status</a>. The amateur equipment aboard the station changes mode and is sometimes switched off for station operations. The <a className="external" href="https://www.ariss.org/contact-the-iss.html">ARISS frequency page</a> lists the standard frequencies.</p>
+Before a pass, check the [ARISS current station status](https://www.ariss.org/current-status-of-iss-stations.html). The amateur-radio equipment aboard the ISS can change modes, and it is sometimes turned off during station operations. The [ARISS frequency page](https://www.ariss.org/contact-the-iss.html) lists the published receiving frequencies. The two pages answer different questions: **what frequency is used**, and **whether that equipment is working in the mode you expect right now**.
 
-  <p>In June 2026, ARISS listed the Columbus cross-band voice repeater with a <strong>437.800 MHz downlink</strong>, while the Zvezda radio was being tested with APRS packet data on <strong>437.825 MHz</strong>. Standard ISS amateur frequencies also include 145.800 MHz voice downlink, 145.825 MHz VHF packet and 437.550 MHz SSTV, a mode that sends still pictures as audio tones, when that system is in use. Check ARISS before relying on any of those on a particular day.</p>
+For example, the ISS cross-band voice repeater has used a **437.800 MHz downlink**, which you can receive with an ordinary RTL-SDR when it is active and within range. Digital packet operations have also used **437.825 MHz**. **145.800 MHz** is a familiar voice downlink for scheduled contacts. SSTV image transmissions happen during announced events and can use different frequencies and modes, so check the event details instead of assuming an older frequency is always correct. These are examples of activities and published channels, not a promise that you will hear a transmission during every pass.
 
   <p>For the 437.8 MHz downlink, use the short elements vertically. The theoretical quarter-wavelength is about <strong>17 cm</strong>, a little longer than the supplied short elements can reach, so use their maximum length or use the long elements collapsed as far as practical. A simple 70 cm whip will also do useful work.</p>
 
@@ -398,6 +499,8 @@ export const sstvSlides = [
       <span className="try-teaser">Choose a reasonably high pass, check ARISS to make sure the repeater is actually active, and have the receiver running several minutes before AOS.</span>
     </summary>
     <div className="try-body">
+A **downlink** is the frequency transmitted from the ISS toward Earth. That is the one you tune when you are only listening. You do not need the repeater's uplink frequency or an amateur radio licence to receive it. At **437.800 MHz**, the moving station may sound slightly off-frequency because of Doppler shift. Keep enough spectrum visible to follow the signal and adjust the tuning gradually if necessary.
+
       <p>Centre the display around 437.800 MHz but leave enough spectrum visible on either side to follow Doppler shift. The signal may arrive several kilohertz above the published frequency while the station is approaching, cross that frequency near closest approach, then continue below it as the ISS recedes.</p>
       <div className="settings">
         <div className="setting"><b>Check first</b><span>ARISS Current Status</span></div>

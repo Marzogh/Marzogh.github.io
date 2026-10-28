@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Why FM and AM look different">
+ <rect x="0" y="0" width="1200" height="520" rx="12" fill="#102838"/>
+ <text x="46" y="57" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="bold" fill="#ffffff">Why FM and AM look different</text>
+ <line x1="46" y1="83" x2="1154" y2="83" stroke="#497384" stroke-width="1"/>
+ 
+<text x="52" y="137" fill="#a5e8ef" font-size="20" font-family="Arial">FM BROADCAST</text>
+<text x="52" y="170" fill="#e5f4f7" font-size="17" font-family="Arial">Wide signal, often carrying music</text>
+<text x="52" y="322" fill="#f6cf8a" font-size="20" font-family="Arial">AIRCRAFT AM</text>
+<text x="52" y="355" fill="#e5f4f7" font-size="17" font-family="Arial">Narrower signal, carrying voice</text>
+<rect x="470" y="117" width="672" height="139" rx="7" fill="#163f51" stroke="#3a7181"/>
+<rect x="470" y="299" width="672" height="139" rx="7" fill="#163f51" stroke="#3a7181"/>
+<line x1="486" x2="1128" y1="239" y2="239" stroke="#93b7c0" stroke-width="2"/>
+<line x1="486" x2="1128" y1="422" y2="422" stroke="#93b7c0" stroke-width="2"/>
+<path d="M490 229 L560 228 L588 220 L604 182 L630 164 L669 150 L721 142 L790 145 L852 150 L899 168 L930 195 L946 224 L970 230 L1128 231" fill="none" stroke="#30c4d7" stroke-width="5" stroke-linejoin="round"/>
+<path d="M490 414 L753 414 L775 403 L790 364 L799 331 L807 360 L823 399 L845 414 L1128 414" fill="none" stroke="#f4b955" stroke-width="5" stroke-linejoin="round"/>
+<text x="1126" y="276" text-anchor="end" fill="#abc5cc" font-size="14" font-family="Arial">Illustrative spectrum shapes</text>
+<text x="1126" y="459" text-anchor="end" fill="#abc5cc" font-size="14" font-family="Arial">Not real receiver measurements</text>
+
+ </svg>

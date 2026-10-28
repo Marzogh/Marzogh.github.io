@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Three stations, two hardware paths">
+ <rect x="0" y="0" width="1200" height="520" rx="12" fill="#102838"/>
+ <text x="46" y="57" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="bold" fill="#ffffff">Three stations, two hardware paths</text>
+ <line x1="46" y1="83" x2="1154" y2="83" stroke="#497384" stroke-width="1"/>
+ 
+<rect x="42" y="118" width="350" height="310" rx="9" fill="#183e50" stroke="#3a7181"/>
+<rect x="424" y="118" width="350" height="310" rx="9" fill="#183e50" stroke="#3a7181"/>
+<rect x="806" y="118" width="350" height="310" rx="9" fill="#183e50" stroke="#3a7181"/>
+<text x="65" y="159" fill="#e8f6f8" font-size="24" font-weight="bold" font-family="Arial">FM broadcast</text>
+<text x="65" y="195" fill="#a1dfe7" font-size="22" font-family="Arial">87.5–108 MHz</text>
+<text x="65" y="244" fill="#ffffff" font-size="19" font-family="Arial">Normal tuner</text>
+<text x="65" y="278" fill="#ffffff" font-size="19" font-family="Arial">WFM mode</text>
+<text x="65" y="350" fill="#c5dce0" font-size="18" font-family="Arial">Broad FM channels</text>
+<text x="447" y="159" fill="#e8f6f8" font-size="24" font-weight="bold" font-family="Arial">Aircraft AM</text>
+<text x="447" y="195" fill="#a1dfe7" font-size="22" font-family="Arial">125.6 MHz</text>
+<text x="447" y="244" fill="#ffffff" font-size="19" font-family="Arial">Normal tuner</text>
+<text x="447" y="278" fill="#ffffff" font-size="19" font-family="Arial">AM mode</text>
+<text x="447" y="350" fill="#c5dce0" font-size="18" font-family="Arial">Narrow voice channel</text>
+<text x="829" y="159" fill="#e8f6f8" font-size="24" font-weight="bold" font-family="Arial">Medium-wave AM</text>
+<text x="829" y="195" fill="#f8c978" font-size="22" font-family="Arial">792 kHz</text>
+<text x="829" y="244" fill="#ffffff" font-size="19" font-family="Arial">Q-branch direct</text>
+<text x="829" y="278" fill="#ffffff" font-size="19" font-family="Arial">sampling + AM</text>
+<text x="829" y="350" fill="#c5dce0" font-size="18" font-family="Arial">V3 special HF path</text>
+<text x="44" y="477" fill="#e4f0f2" font-size="17" font-family="Arial"></text>
+
+ </svg>
