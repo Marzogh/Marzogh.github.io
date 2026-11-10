@@ -87,10 +87,10 @@ For instance, here's a command configuring a nominal 100 ms exposure at readout 
 A5 03 06 00 64 03
 ```
 
-Changing the acquisition mode from `0x06` to `0x07` requests the same exposure with 2×2 binning:
+Changing the readout mode from `0x03` to `0x07` requests the same exposure with 2×2 binning:
 
 ```text
-A5 03 07 00 64 03
+A5 03 06 00 64 07
 ```
 
 To acquire an image, the driver needs to prepare the camera, configure the readout window and start the exposure. It then polls the camera's status until the exposure is complete, initiates image readout, collects the expected amount of data, and finally tells the camera to stop before checking that it's returned to idle.
