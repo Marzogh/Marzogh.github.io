@@ -19,6 +19,8 @@ type Props = CollectionEntry<'projects'>['data'] & {
 const {
   title,
   description,
+  author,
+  articleStyle = 'default',
   pubDate,
   updatedDate,
   tags = [],
@@ -42,6 +44,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-AU', {
   year: 'numeric',
 });
 const meta = [
+  ...(author ? [{ label: 'Author', value: author }] : []),
   ...(pubDate ? [{ label: 'Published', value: dateFormatter.format(pubDate) }] : []),
   ...(updatedDate ? [{ label: 'Updated', value: dateFormatter.format(updatedDate) }] : []),
   { label: 'Format', value: projectKind },
@@ -57,7 +60,7 @@ const meta = [
     <Header />
 
     <main class="project-main">
-      <article class:list={['project-shell', headerStyle === 'panel' && 'project-shell--panel']}>
+      <article class:list={['project-shell', headerStyle === 'panel' && 'project-shell--panel', articleStyle === 'editorial' && 'project-shell--editorial']}>
         <a href="/projects" class="project-back">← Projects</a>
 
         {headerStyle === 'panel' ? (
@@ -161,7 +164,7 @@ const meta = [
               ) : null}
             </div>
 
-            {image ? (
+            {image && articleStyle !== 'editorial' ? (
               <figure class="project-hero">
                 <img src={image} alt="" loading="eager" decoding="async" />
                 {imageCredit ? <figcaption>{imageCredit}</figcaption> : null}
@@ -171,6 +174,16 @@ const meta = [
         )}
 
         <div class="project-body">
+          {articleStyle === 'editorial' && sectionHeadings.length ? (
+            <details class="project-mobile-contents">
+              <summary>On this page</summary>
+              <nav aria-label="Article sections">
+                <ol>{sectionHeadings.map((heading) => (
+                  <li><a href={`#${heading.slug}`}>{heading.text}</a></li>
+                ))}</ol>
+              </nav>
+            </details>
+          ) : null}
           <aside class="project-rail" aria-label="Project navigation">
             {sectionHeadings.length ? (
               <>
@@ -514,6 +527,36 @@ const meta = [
   }
 
   .project-prose { min-width: 0; max-width: 930px; }
+  .project-mobile-contents { display: none; }
+  .project-shell--editorial :global(.page-header__lede) { font-style: italic; }
+  .project-shell--editorial .project-prose :global(> p),
+  .project-shell--editorial .project-prose :global(> h2),
+  .project-shell--editorial .project-prose :global(> pre) { max-width: 72ch; }
+  .project-shell--editorial .project-prose :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+  .project-shell--editorial .project-prose :global(a:has(> img)) {
+    display: block;
+    cursor: zoom-in;
+  }
+  .project-shell--editorial .project-prose :global(p:has(> img)),
+  .project-shell--editorial .project-prose :global(p:has(> a > img)) { max-width: none; }
+  .project-shell--editorial .project-prose :global(p:has(> img) + p:has(> em:only-child)),
+  .project-shell--editorial .project-prose :global(p:has(> a > img) + p:has(> em:only-child)) {
+    margin-top: -0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-2);
+  }
+  @media (max-width: 900px) {
+    .project-shell--editorial .project-rail { display: none; }
+    .project-shell--editorial .project-mobile-contents { display: block; }
+    .project-mobile-contents summary { cursor: pointer; font-weight: 700; }
+    .project-mobile-contents ol { padding-left: 1.25rem; }
+    .project-mobile-contents li { margin-top: 0.65rem; }
+  }
   .project-prose :global(h1:first-child) { display: none; }
 
   .project-prose :global(.project-facts) {

@@ -38,6 +38,8 @@ const projects = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      author: z.string().optional(),
+      articleStyle: z.enum(['default', 'editorial']).default('default'),
       pubDate: z.coerce.date().optional(),
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),
