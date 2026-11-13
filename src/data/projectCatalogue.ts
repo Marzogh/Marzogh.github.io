@@ -25,7 +25,7 @@ export const projectCatalogue: CatalogueProject[] = [
     id: 'vishvadrish', title: 'Viśvadṛś',
     description: 'Explore weather-satellite imagery and make time-lapses.',
     href: 'https://chipsncode.com/vishvadrish/', action: 'Open the viewer',
-    image: '/images/projects/vishvadrish/vishvadrish-social-opengraph.webp',
+    image: '/images/projects/vishvadrish/vishvadrish-social-banner.webp',
     cover: 'social', typeface: 'plex', pubDate: '2026-11-14',
   },
   {
