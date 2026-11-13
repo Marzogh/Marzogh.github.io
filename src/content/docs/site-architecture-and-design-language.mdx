@@ -2,7 +2,7 @@
 title: Current Design Language
 description: "How the present Chips'nCode visual system joins technical notes, project stories, poetry, documentation and image-led work without flattening them into one template."
 pubDate: 2026-08-31
-updatedDate: 2026-08-31
+updatedDate: 2026-11-14
 draft: false
 section: Site Meta
 order: 1
@@ -46,6 +46,8 @@ The global header and footer establish the site before a collection takes over. 
 The home page is a switchboard rather than a résumé. Its full-width, shallow cinematic hero brings the site's recurring interests—radio, code, field work and astronomy—into one scene. Latest work appears in compact cards with fixed square thumbnails. Where no image exists, engraved monograms provide an intentional replacement rather than an empty box. Explore and theme links repeat that visual language without turning into another wall of identical cards.
 
 ### Notebook
+
+The Notebook index opens with a lead article and two supporting entries, followed by the remaining articles in newest-first order. The archive uses a bounded, keyboard-focusable scroll area beside its tag rail. A stronger bottom fade indicates entries below the visible area; the top fade appears only after content has scrolled above it. The fades extend up to 4rem at the bottom and 2rem at the top, shrinking as each scroll boundary approaches. There is no top fade at the beginning or bottom fade at the end, so the first and last entries remain fully readable. Scroll and resize events and font loading update the fade distances. Without JavaScript, the list retains its scrollbar and has no fade.
 
 Notebook pages are editorial longform. Technical articles use generous readable columns, a sticky section rail and subtle scroll highlighting. Tools and inspectors may break wider when the information genuinely needs the room, but ordinary prose does not inherit that width automatically.
 

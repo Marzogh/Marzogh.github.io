@@ -213,6 +213,23 @@ const cliManual = {
   </body>
 </html>
 
+<script>
+  const archive = document.querySelector<HTMLElement>('.archive__entries');
+  if (archive) {
+    const updateFades = () => {
+      const above = Math.max(0, archive.scrollTop);
+      const below = Math.max(0, archive.scrollHeight - archive.clientHeight - above);
+      archive.style.setProperty('--archive-scroll-above', `${above}px`);
+      archive.style.setProperty('--archive-scroll-below', `${below}px`);
+      archive.dataset.scrollFades = '';
+    };
+    archive.addEventListener('scroll', updateFades, { passive: true });
+    new ResizeObserver(updateFades).observe(archive);
+    document.fonts.ready.then(updateFades);
+    updateFades();
+  }
+</script>
+
 <style>
   .blog-index {
     max-width: min(1380px, calc(100% - 2 * var(--space-5)));
@@ -772,12 +789,21 @@ const cliManual = {
     padding-right: 0.7rem;
     scrollbar-color: var(--muted) transparent;
     scrollbar-width: thin;
-    mask-image: linear-gradient(to bottom, transparent 0, black 1.25rem, black calc(100% - 1.25rem), transparent 100%);
   }
 
   .archive__entries:focus-visible {
     outline: 1px solid var(--accent);
     outline-offset: 0.35rem;
+  }
+
+  .archive__entries[data-scroll-fades] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black min(2rem, var(--archive-scroll-above)),
+      black calc(100% - min(4rem, var(--archive-scroll-below))),
+      transparent 100%
+    );
   }
 
   .archive__entries :global(.editorial-row:first-child) {
