@@ -1,0 +1,18 @@
+---
+interface Props { target: string; }
+const { target } = Astro.props;
+const canonical = new URL(target, Astro.site);
+const redirectScript = `window.location.replace(${JSON.stringify(target)} + window.location.search + window.location.hash);`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="noindex" />
+    <title>Article moved to Notebook</title>
+    <script is:inline set:html={redirectScript} />
+    <noscript><meta http-equiv="refresh" content={`0;url=${target}`} /></noscript>
+  </head>
+  <body><p>This article has moved to <a href={target}>Notebook</a>.</p></body>
+</html>

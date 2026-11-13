@@ -1,0 +1,30 @@
+---
+import type { CatalogueProject } from '../../data/projectCatalogue';
+interface Props { project: CatalogueProject; eager?: boolean; }
+const { project, eager = false } = Astro.props;
+---
+<a class:list={['project-cover', `project-cover--${project.cover}`]} href={project.href} aria-label={`Open ${project.title}`}>
+  <img src={project.image} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  {project.cover === 'birds' && <div class="cover-title" aria-hidden="true">The Birds<br />They Saw<span>Australian birds<br />in historical art</span></div>}
+  {project.cover === 'codex' && <div class="cover-title" aria-hidden="true"><span>The</span>Living<br />Codex</div>}
+  {project.cover === 'memory' && <div class="cover-title" aria-hidden="true">SPIMemory<span>Flash &amp; FRAM</span></div>}
+</a>
+<style>
+  .project-cover { display: block; aspect-ratio: 40 / 21; position: relative; overflow: hidden; container-type: inline-size; text-decoration: none; }
+  .project-cover img { display: block; max-width: none; width: 100%; height: 100%; object-fit: cover; border: 0; border-radius: 0; }
+  .project-cover--social { background: #030d19; }
+  .project-cover--social img { object-fit: contain; }
+  .cover-title { position: absolute; }
+  .project-cover--birds { background: #ead3b3; color: #3c3028; }
+  .project-cover--birds img { position: absolute; top: 0; right: 0; width: auto; height: 100%; mix-blend-mode: multiply; }
+  .project-cover--birds .cover-title { top: 22%; left: 6%; font: 700 6.7cqw/1.2 'Cinzel Decorative', serif; letter-spacing: -0.035em; }
+  .project-cover--birds .cover-title span { display: block; margin-top: 13%; font: 400 2.7cqw/1.5 Georgia, serif; letter-spacing: 0.035em; }
+  .project-cover--codex { background: #111b13; color: #f3d89c; }
+  .project-cover--codex img { position: absolute; right: 0; top: 0; width: 64%; height: 100%; object-position: 49% 29%; }
+  .project-cover--codex .cover-title { left: 7%; top: 19%; font: 400 9.3cqw/0.98 'IM Fell English', Georgia, serif; letter-spacing: -0.035em; }
+  .project-cover--codex .cover-title > span { display: block; font-size: 4.6cqw; font-style: italic; margin-bottom: 0.5em; }
+  .project-cover--memory .cover-title { top: 39%; left: 49%; color: #f8eee3; font: 400 6.1cqw/1.15 'IBM Plex Mono', monospace; letter-spacing: -0.055em; }
+  .project-cover--memory .cover-title span { display: block; margin-top: 1em; font-size: 2.5cqw; letter-spacing: 0.06em; }
+  .project-cover:focus-visible { outline: 2px solid var(--text); outline-offset: 5px; }
+  @media (forced-colors: active) { .cover-title { color: CanvasText; background: Canvas; } }
+</style>

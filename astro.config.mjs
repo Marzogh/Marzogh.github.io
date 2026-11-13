@@ -18,6 +18,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !page.includes('/education/digital-technologies-yr9-2026/') &&
+        !/\/projects\/(?:openstarshoot|kite-lifted-endfed-activation|pixinsight-deep-sky-processing-checklist)\/?$/.test(page) &&
         !page.includes('/education/student-resources/digital-technologies-yr9-2026/'),
     }),
     react(),

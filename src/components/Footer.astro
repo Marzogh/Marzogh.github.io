@@ -1,25 +1,9 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/Logo.png';
 const today = new Date();
 ---
 
 <footer class="site-footer" aria-label="Site footer">
 	<div class="footer__inner">
-		<div class="footer__brand">
-			<a class="footer__brandLink" href="/" aria-label="ChipsnCode home">
-				<Image
-					class="footer__logo"
-					src={logo}
-					alt="ChipsnCode logo"
-					width={88}
-					height={88}
-					format="webp"
-					quality={80}
-				/>
-				<span class="footer__brandText">ChipsnCode</span>
-			</a>
-		</div>
 
 		<div class="footer__meta">
 			<div class="footer__copy">&copy; {today.getFullYear()} ChipsnCode</div>
@@ -51,144 +35,15 @@ const today = new Date();
 	</div>
 </footer>
 <style>
-	.site-footer {
-		padding: 2.25rem 1.5rem 3rem;
-		background: var(--paper);
-		color: var(--text);
-		font-size: 0.95rem;
-	}
-
-	.footer__inner {
-		max-width: 1320px;
-		margin: 0 auto;
-		padding-top: 1.25rem;
-		border-top: 1px solid var(--border-2);
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 1.25rem;
-		align-items: start;
-	}
-
-	@media (min-width: 900px) {
-		.footer__inner {
-			grid-template-columns: 260px 1fr;
-			align-items: center;
-		}
-	}
-
-	.footer__brandLink {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		text-decoration: none;
-		color: var(--text);
-		font-weight: 700;
-		letter-spacing: -0.01em;
-		white-space: nowrap;
-	}
-
-	.footer__brandText {
-		white-space: nowrap;
-	}
-
-	.footer__logo {
-		display: block;
-		width: 44px;
-		height: 44px;
-		border-radius: 0;
-		border: 0;
-		background: transparent;
-		box-shadow: none;
-		object-fit: cover;
-		flex: 0 0 44px;
-	}
-
-	.footer__meta {
-		display: grid;
-		grid-template-columns: 1fr auto;
-		align-items: center;
-		gap: 0.5rem 1rem;
-		font-size: 0.82rem;
-	}
-
-	.footer__copy {
-		font-weight: 700;
-		letter-spacing: -0.01em;
-		grid-column: 1;
-	}
-
-	.footer__license {
-		margin-top: 0.25rem;
-		color: var(--muted);
-		font-size: 0.8rem;
-		grid-column: 1 / -1;
-	}
-
-	.footer__license a {
-		color: var(--link);
-		text-decoration: none;
-		font-weight: 700;
-	}
-
-	.footer__license a:hover {
-		color: var(--link-hover);
-		text-decoration: underline;
-	}
-
-	.footer__disclaimer {
-		margin-top: 0.35rem;
-		color: var(--muted);
-		font-size: 0.75rem;
-		max-width: 80ch;
-		grid-column: 1 / -1;
-	}
-
-	.footer__links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		justify-content: flex-end;
-		align-items: center;
-		grid-column: 2;
-	}
-
-	.iconbtn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 42px;
-		height: 42px;
-		border-radius: var(--radius-sm);
-		border: 0;
-		background: transparent;
-		color: color-mix(in srgb, var(--text) 78%, var(--muted) 22%);
-		text-decoration: none;
-		box-shadow: none;
-	}
-
-	.iconbtn:hover {
-		color: var(--text);
-		background: color-mix(in srgb, var(--accent) 10%, transparent 90%);
-	}
-
-	.iconbtn:focus-visible {
-		outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent 45%);
-		outline-offset: 2px;
-		background: color-mix(in srgb, var(--accent) 12%, transparent 88%);
-	}
-
-	@media (max-width: 899px) {
-		.footer__meta {
-			text-align: left;
-		}
-	}
-
-	@media (min-width: 900px) {
-		.footer__meta {
-			text-align: right;
-		}
-		.footer__disclaimer {
-			margin-left: auto;
-		}
-	}
+  .site-footer { padding: 0 1.5rem 1.5rem; color: var(--text); }
+  .footer__inner { max-width: 1320px; margin: 0 auto; padding-top: 0.75rem; border-top: 1px solid var(--border-2); }
+  .footer__meta { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.25rem 1rem; font-size: 0.82rem; line-height: 1.5; }
+  .footer__copy { font-weight: 700; grid-column: 1; }
+  .footer__links { display: flex; align-items: center; gap: 0.35rem; grid-column: 2; }
+  .footer__license, .footer__disclaimer { grid-column: 1 / -1; color: var(--text-2); font-size: 0.75rem; }
+  .footer__license a { color: var(--text); text-underline-offset: 0.2em; }
+  .iconbtn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; color: var(--text); text-decoration: none; }
+  .iconbtn:hover { color: var(--accent); }
+  .iconbtn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  @media (pointer: coarse) { .iconbtn { width: 44px; height: 44px; } }
 </style>

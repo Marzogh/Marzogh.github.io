@@ -1,276 +1,70 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
-import CliShell from '../../components/CliShell.astro';
-import EditorialHeading from '../../components/EditorialHeading.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-import PageHeader from '../../components/PageHeader.astro';
-import { toTagSlug } from '../../utils/tags';
-
-const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
-  const aTime = a.data.pubDate?.getTime() ?? 0;
-  const bTime = b.data.pubDate?.getTime() ?? 0;
-  return bTime - aTime || a.data.title.localeCompare(b.data.title);
-});
-
-const featured = projects.filter((project) => project.data.featured);
-const topCandidates = featured.length ? [...featured, ...projects.filter((project) => !project.data.featured)] : projects;
-const leadProject = topCandidates[0] ?? null;
-const supportingProjects = topCandidates.slice(1, 3);
-const topIds = new Set([leadProject?.id, ...supportingProjects.map((project) => project.id)].filter(Boolean));
-const archiveProjects = projects.filter((project) => !topIds.has(project.id));
-const projectTags = [...new Set(projects.flatMap((project) => project.data.tags ?? []))];
-const projectTypes = [...new Set(projects.map((project) => project.data.type ?? 'Project'))];
-
-const dateFormatter = new Intl.DateTimeFormat('en-AU', { day: '2-digit', month: 'short', year: 'numeric' });
-const formatDate = (date?: Date) => date ? dateFormatter.format(date) : 'Undated';
-const latestUpdated = projects.reduce((latest, project) => {
-  const value = (project.data.updatedDate ?? project.data.pubDate)?.getTime() ?? 0;
-  return Math.max(latest, value);
-}, 0);
-const dateStamp = (value: number) => value ? new Date(value).toISOString().slice(0, 10) : 'n/a';
-const projectKind = (project: (typeof projects)[number]) => project.data.type ?? 'Project';
-const projectMark = (project: (typeof projects)[number]) => projectKind(project).replace(/[^A-Za-z]/g, '').charAt(0) || 'P';
-
-const cliEntries = projects.map((project) => ({
-  id: project.id,
-  title: project.data.title,
-  url: `/projects/${project.id}`,
-  section: projectKind(project),
-  description: project.data.description,
-  tags: project.data.tags ?? [],
-  updated: (project.data.updatedDate ?? project.data.pubDate)?.getTime() ?? 0,
-  featured: Boolean(project.data.featured),
-}));
-
-const cliManual = {
-  stat: { name: 'stat', synopsis: 'stat', description: 'Show top-level stats for Projects.', examples: ['stat'], seeAlso: ['help', 'ls', 'man'] },
-  help: { name: 'help', synopsis: 'help [command]', description: 'List commands or command help.', examples: ['help', 'help grep'], seeAlso: ['man', 'ls', 'grep'] },
-  ls: { name: 'ls', synopsis: 'ls [section]', description: 'List project sections or entries in one section.', examples: ['ls', 'ls Monitoring'], seeAlso: ['cd', 'pwd', 'grep'] },
-  cd: { name: 'cd', synopsis: 'cd <section> | cd /', description: 'Change virtual section context.', examples: ['cd Monitoring', 'cd /'], seeAlso: ['pwd', 'ls'] },
-  pwd: { name: 'pwd', synopsis: 'pwd', description: 'Print current virtual path.', examples: ['pwd'], seeAlso: ['cd', 'ls'] },
-  cat: { name: 'cat', synopsis: 'cat <project-id|title>', description: 'Show a project summary.', examples: ['cat local-signals'], seeAlso: ['open', 'man', 'grep'] },
-  open: { name: 'open', synopsis: 'open <project-id|title>', description: 'Open a project page.', examples: ['open local-signals'], seeAlso: ['cat', 'man'] },
-  grep: { name: 'grep', synopsis: 'grep <query>', description: 'Search titles, descriptions, sections, and tags.', examples: ['grep radio', 'grep weather'], seeAlso: ['find', 'tag', 'ls'] },
-  find: { name: 'find', synopsis: 'find <query>', description: 'Alias for grep.', examples: ['find hardware'], seeAlso: ['grep', 'tag'] },
-  tag: { name: 'tag', synopsis: 'tag <name>', description: 'List entries by tag match.', examples: ['tag amateur-radio'], seeAlso: ['grep', 'ls'] },
-  man: { name: 'man', synopsis: 'man [command|topic]', description: 'Open command or project manual pages.', examples: ['man', 'man ls', 'man local-signals'], seeAlso: ['help', 'cat', 'open'] },
-  history: { name: 'history', synopsis: 'history', description: 'Show shell command history.', examples: ['history'], seeAlso: ['clear'] },
-  clear: { name: 'clear', synopsis: 'clear', description: 'Clear shell output.', examples: ['clear'], seeAlso: ['history'] },
-};
+import ProjectCover from '../../components/projects/ProjectCover.astro';
+import { projectCatalogue } from '../../data/projectCatalogue';
+import '../../styles/project-catalogue.css';
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title="Projects — Chips’nCode" description="Hardware builds, field experiments, software systems, repairs, and the notes left behind while making them work." />
+    <BaseHead title="Projects | Chips’nCode" description="Almanacs, collections, applications and other things I’ve made." />
   </head>
   <body>
     <Header />
-
-    <main class="projects-index">
-      <PageHeader
-        kicker="Projects / workshop"
-        title="Built, tested, repaired, and occasionally persuaded."
-        lede="Hardware builds, field experiments, software systems and repair work—kept with enough detail to show what survived contact with reality."
-        variant="index-rail"
-        id="projects-title"
-        stats={[
-          { label: 'Published', value: projects.length },
-          { label: 'Featured', value: featured.length },
-          { label: 'Formats', value: projectTypes.length },
-          { label: 'Last updated', value: dateStamp(latestUpdated) },
-        ]}
-      />
-
-      {leadProject ? (
-        <section class="front-bench" aria-labelledby="front-bench-title">
-          <EditorialHeading kicker="Front bench" title="Featured projects" id="front-bench-title" align="split" />
-
-          <div class="front-bench__layout">
-            <article class="project-lead">
-              <div class="project-lead__copy">
-                <div class="project-lead__meta">
-                  <p class="editorial-meta">{projectKind(leadProject)}</p>
-                  <span>{formatDate(leadProject.data.pubDate)}</span>
-                </div>
-                <h2><a href={`/projects/${leadProject.id}`}>{leadProject.data.title}</a></h2>
-                <p>{leadProject.data.description}</p>
-                <div class="project-lead__tags">
-                  {leadProject.data.tags.slice(0, 5).map((tag) => <a href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>)}
-                </div>
-                <a class="project-lead__open" href={`/projects/${leadProject.id}`}>Open project →</a>
-              </div>
-
-              <a class:list={['project-lead__media', !leadProject.data.image && 'project-visual--fallback']} href={`/projects/${leadProject.id}`} aria-label={`Open project: ${leadProject.data.title}`}>
-                {leadProject.data.image ? <img src={leadProject.data.image} alt="" loading="eager" decoding="async" /> : <span>{projectMark(leadProject)}</span>}
-              </a>
-            </article>
-
-            <aside class="front-bench__support" aria-label="More featured projects">
-              {supportingProjects.map((project) => (
-                <article class="project-support">
-                  <div>
-                    <p class="editorial-meta">{projectKind(project)} / {formatDate(project.data.pubDate)}</p>
-                    <h3><a href={`/projects/${project.id}`}>{project.data.title}</a></h3>
-                    <p>{project.data.description}</p>
-                  </div>
-                  <a class:list={['project-support__visual', !project.data.image && 'project-visual--fallback']} href={`/projects/${project.id}`} aria-label={`Open project: ${project.data.title}`}>
-                    {project.data.image ? <img src={project.data.image} alt="" loading="lazy" decoding="async" /> : <span>{projectMark(project)}</span>}
-                  </a>
-                </article>
-              ))}
-            </aside>
-          </div>
-        </section>
-      ) : null}
-
-      {archiveProjects.length ? (
-        <section class="project-archive" aria-labelledby="project-archive-title">
-          <aside class="project-archive__rail">
-            <p class="editorial-kicker">Archive</p>
-            <h2 id="project-archive-title">Everything else</h2>
-            <p>Completed work, active experiments, documentation projects and field reports.</p>
-            <nav aria-label="Browse project tags">
-              {projectTags.slice(0, 8).map((tag) => <a href={`/tags/${toTagSlug(tag)}`}>#{tag}</a>)}
-            </nav>
-          </aside>
-
-          <div class="project-archive__entries" tabindex="0" aria-label="Project archive entries">
-            {archiveProjects.map((project) => (
-              <article class="project-row">
-                <div class="project-row__meta">
-                  <span>{projectKind(project)}</span>
-                  <time datetime={project.data.pubDate?.toISOString()}>{formatDate(project.data.pubDate)}</time>
-                </div>
-                <div class="project-row__copy">
-                  <h3><a href={`/projects/${project.id}`}>{project.data.title}</a></h3>
-                  <p>{project.data.description}</p>
-                  <a class="project-row__open" href={`/projects/${project.id}`}>View project →</a>
-                </div>
-                <a class:list={['project-row__visual', !project.data.image && 'project-visual--fallback']} href={`/projects/${project.id}`} aria-label={`Open project: ${project.data.title}`}>
-                  {project.data.image ? <img src={project.data.image} alt="" loading="lazy" decoding="async" /> : <span>{projectMark(project)}</span>}
+    <main class="projects-index" aria-labelledby="projects-title">
+      <header class="catalogue-heading">
+        <h1 id="projects-title">Projects</h1>
+      </header>
+      <div class="catalogue" data-project-grid>
+        {projectCatalogue.map((project) => (
+          <article class:list={['catalogue-entry', `catalogue-type--${project.typeface}`]} aria-labelledby={`title-${project.id}`}>
+            <ProjectCover project={project} />
+            <div class="catalogue-copy">
+              <h2 id={`title-${project.id}`}><a href={project.href}>{project.title}</a></h2>
+              <p class="catalogue-description">{project.description}</p>
+              <div class="catalogue-links">
+                <a class="catalogue-open" href={project.href}>
+                  {project.action}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
                 </a>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
-    </main>
-
-    <Footer />
-
-    <div class="edge-drawer-instance">
-      <input id="projects-query-toggle" class="edge-drawer-toggle edge-drawer-toggle--query" type="checkbox" />
-      <label for="projects-query-toggle" class="edge-drawer-tab" data-drawer-name="Projects Query" aria-label="Open projects query drawer">Projects Query</label>
-      <div class="edge-drawer-overlay edge-drawer-overlay--query" data-edge-drawer="projects-query-toggle">
-        <label for="projects-query-toggle" class="edge-drawer-backdrop" aria-label="Close projects query drawer"></label>
-        <aside class="edge-drawer-panel edge-drawer-panel--query" role="dialog" aria-modal="true" aria-label="Projects query drawer">
-          <label for="projects-query-toggle" class="edge-drawer-close edge-drawer-close--query" aria-label="Close projects query drawer">×</label>
-          <CliShell
-            shellId="projects-cli"
-            shellTitle="projects.query"
-            initialCommand="stat"
-            entries={cliEntries}
-            commandManual={cliManual}
-            statsLines={[
-              { label: 'published_projects', value: projects.length },
-              { label: 'formats', value: projectTypes.length },
-              { label: 'tags_in_use', value: projectTags.length },
-              { label: 'featured_projects', value: featured.length },
-              { label: 'last_updated', value: dateStamp(latestUpdated) },
-            ]}
-            presets={['ls', 'grep radio', 'tag hardware', 'man ls', 'open local-signals']}
-          />
-        </aside>
+                {project.about && <a href={project.about} aria-label={`About ${project.title}`}>About</a>}
+                {project.source && <a href={project.source} aria-label={`${project.title} source on GitHub`}>Source</a>}
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
-    </div>
+    </main>
+    <script is:inline>
+      const projectGrid = document.querySelector('[data-project-grid]');
+      if (projectGrid) {
+        const entries = Array.from(projectGrid.children);
+        for (let index = entries.length - 1; index > 0; index--) {
+          const other = Math.floor(Math.random() * (index + 1));
+          [entries[index], entries[other]] = [entries[other], entries[index]];
+        }
+        entries.forEach((entry, index) => {
+          projectGrid.append(entry);
+          const image = entry.querySelector('img');
+          if (image) image.loading = index < 2 ? 'eager' : 'lazy';
+        });
+      }
+    </script>
+    <Footer />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Projects',
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: projectCatalogue.map((project, index) => ({
+          '@type': 'ListItem', position: index + 1,
+          item: { '@type': 'CreativeWork', name: project.title, description: project.description,
+            url: new URL(project.href, Astro.site).href,
+            ...(project.pubDate ? { datePublished: project.pubDate } : {}),
+          },
+        })),
+      },
+    })} />
   </body>
 </html>
-
-<style>
-  .projects-index { width: min(100% - 48px, 1500px); max-width: none; padding-top: 0; }
-  .front-bench { margin-top: clamp(2rem, 4vw, 3.5rem); }
-  .front-bench__layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr); border-block: 1px solid var(--text); }
-
-  .project-lead { display: grid; grid-template-columns: minmax(0, 1fr) clamp(180px, 28vw, 420px); min-width: 0; border-right: 1px solid var(--border); }
-  .project-lead__copy { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: clamp(1.2rem, 3vw, 2.5rem); }
-  .project-lead__meta { display: flex; justify-content: space-between; gap: 1rem; width: 100%; color: var(--muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; }
-  .project-lead__meta p { margin: 0; }
-  .project-lead h2 { margin: clamp(1.1rem, 2vw, 1.8rem) 0 0; font-size: clamp(1.8rem, 3vw, 3.15rem); line-height: 1.02; letter-spacing: -0.04em; }
-  .project-lead h2 a,
-  .project-support h3 a,
-  .project-row h3 a { color: inherit; text-decoration: none; }
-  .project-lead h2 a:hover,
-  .project-support h3 a:hover,
-  .project-row h3 a:hover { color: var(--accent); }
-  .project-lead__copy > p { max-width: 54ch; margin: 1rem 0 0; color: var(--text-2); font-size: 1rem; line-height: 1.55; }
-  .project-lead__tags { display: flex; flex-wrap: wrap; gap: 0.45rem 0.8rem; margin-top: 1rem; }
-  .project-lead__tags a { color: var(--tag-ink); font-family: var(--font-mono); font-size: 0.64rem; text-decoration: none; }
-  .project-lead__open,
-  .project-row__open { margin-top: auto; padding-top: 1.4rem; color: var(--text); font-weight: 700; text-decoration: none; }
-
-  .project-lead__media,
-  .project-support__visual,
-  .project-row__visual { display: block; overflow: hidden; border-left: 1px solid var(--border); text-decoration: none; }
-  .project-lead__media img,
-  .project-support__visual img,
-  .project-row__visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .project-lead__media { min-height: 330px; }
-
-  .front-bench__support { display: grid; }
-  .project-support { display: grid; grid-template-columns: minmax(0, 1fr) 118px; min-width: 0; padding-left: 1.2rem; border-bottom: 1px solid var(--border); }
-  .project-support:last-child { border-bottom: 0; }
-  .project-support > div { padding: 1.2rem 1rem 1.2rem 0; }
-  .project-support .editorial-meta { margin: 0; color: var(--muted); font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
-  .project-support h3 { margin: 0.7rem 0 0; font-size: 1.12rem; line-height: 1.15; }
-  .project-support div > p:last-child { display: -webkit-box; overflow: hidden; margin: 0.65rem 0 0; color: var(--text-2); font-size: 0.8rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-
-  .project-visual--fallback { display: grid; place-items: center; background: color-mix(in srgb, var(--tag-ink) 5%, transparent); }
-  .project-visual--fallback span { color: color-mix(in srgb, var(--tag-ink) 68%, transparent); font-family: var(--font-filigree); font-size: clamp(3.2rem, 7vw, 6.5rem); font-weight: 400; font-synthesis: none; line-height: 1; }
-
-  .project-archive { display: grid; grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr); gap: clamp(2rem, 5vw, 5rem); margin-top: clamp(4rem, 8vw, 7rem); align-items: start; }
-  .project-archive__rail { position: sticky; top: calc(var(--header-height, 4.5rem) + 1rem); }
-  .project-archive__rail h2 { margin: 0.7rem 0 0; font-size: clamp(2rem, 3.5vw, 3.5rem); line-height: 1; letter-spacing: -0.045em; }
-  .project-archive__rail > p:not(.editorial-kicker) { max-width: 30ch; margin: 1rem 0 0; color: var(--text-2); line-height: 1.55; }
-  .project-archive__rail nav { display: flex; flex-wrap: wrap; gap: 0.45rem 0.75rem; margin-top: 1.4rem; }
-  .project-archive__rail nav a { color: var(--tag-ink); font-family: var(--font-mono); font-size: 0.65rem; text-decoration: none; }
-
-  .project-archive__entries { max-height: min(72vh, 850px); overflow-y: auto; overscroll-behavior: auto; border-top: 1px solid var(--text); scrollbar-color: var(--border) transparent; }
-  .project-archive__entries:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .project-row { display: grid; grid-template-columns: 140px minmax(0, 1fr) 140px; min-height: 140px; border-bottom: 1px solid var(--border); }
-  .project-row__meta { display: flex; flex-direction: column; gap: 0.45rem; padding: 1rem 1rem 1rem 0; color: var(--muted); font-family: var(--font-mono); font-size: 0.63rem; text-transform: uppercase; }
-  .project-row__copy { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 1rem 1.4rem; border-left: 1px solid var(--border); }
-  .project-row h3 { margin: 0; font-size: clamp(1.12rem, 1.6vw, 1.5rem); line-height: 1.15; }
-  .project-row__copy > p { display: -webkit-box; overflow: hidden; margin: 0.6rem 0 0; color: var(--text-2); font-size: 0.86rem; line-height: 1.48; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-  .project-row__open { padding-top: 0.8rem; font-size: 0.78rem; }
-  .project-row__visual { aspect-ratio: 1; }
-  .project-row__visual.project-visual--fallback span { font-size: 4rem; }
-
-  @media (max-width: 1050px) {
-    .front-bench__layout { grid-template-columns: 1fr; }
-    .project-lead { border-right: 0; }
-    .front-bench__support { grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--border); }
-    .project-support:first-child { border-right: 1px solid var(--border); }
-    .project-support { border-bottom: 0; }
-  }
-
-  @media (max-width: 780px) {
-    .projects-index { width: min(100% - 28px, 1500px); }
-    .project-lead { grid-template-columns: 1fr; }
-    .project-lead__media { min-height: 250px; border-top: 1px solid var(--border); border-left: 0; }
-    .front-bench__support { grid-template-columns: 1fr; }
-    .project-support:first-child { border-right: 0; border-bottom: 1px solid var(--border); }
-    .project-archive { grid-template-columns: 1fr; }
-    .project-archive__rail { position: static; }
-    .project-row { grid-template-columns: 100px minmax(0, 1fr) 104px; }
-  }
-
-  @media (max-width: 560px) {
-    .project-support { grid-template-columns: minmax(0, 1fr) 92px; }
-    .project-row { grid-template-columns: minmax(0, 1fr) 92px; }
-    .project-row__meta { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; padding: 0.7rem 0; }
-    .project-row__copy { border-left: 0; padding-left: 0; }
-  }
-</style>

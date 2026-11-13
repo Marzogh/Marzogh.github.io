@@ -1,0 +1,65 @@
+/* Keep the processing article figures and scope readable in Notebook. */
+  .article-shell--interactive-reference .prose .project-milestones {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 1.5rem 0 2rem;
+    border-block: 1px solid var(--text);
+  }
+
+  .article-shell--interactive-reference .prose .project-milestones div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.18rem 0.65rem;
+    padding: 0.75rem 0.9rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .article-shell--interactive-reference .prose .project-milestones div:first-child { padding-left: 0; border-left: 0; }
+  .article-shell--interactive-reference .prose .project-milestones span {
+    grid-row: 1 / 3;
+    color: var(--tag-ink);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .article-shell--interactive-reference .prose .project-milestones strong { font-size: 0.82rem; line-height: 1.25; }
+  .article-shell--interactive-reference .prose .project-milestones small {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+
+  .article-shell--interactive-reference .prose .project-media-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .article-shell--interactive-reference .prose .project-media-pair figure { margin: 0; }
+  .article-shell--interactive-reference .prose .project-media-pair img {
+    width: 100%;
+    height: clamp(250px, 32vw, 410px);
+    object-fit: cover;
+  }
+
+  .article-shell--interactive-reference .prose .project-media-pair--workflow-results {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: start;
+  }
+
+  .article-shell--interactive-reference .prose .project-media-pair--workflow-results img {
+    height: auto;
+    object-fit: contain;
+  }
+
+
+@media (max-width: 650px) {
+  .article-shell--interactive-reference .prose .project-milestones,
+  .article-shell--interactive-reference .prose .project-media-pair { grid-template-columns: 1fr; }
+  .article-shell--interactive-reference .prose .project-milestones div { padding: 0.65rem 0; border-left: 0; border-top: 1px solid var(--border); }
+  .article-shell--interactive-reference .prose .project-milestones div:first-child { border-top: 0; }
+}
